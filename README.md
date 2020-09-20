@@ -2,11 +2,11 @@
 
 ## How To Use
  - `#define` to define a variable
- - `#if` `#elif` `#else` to control the flow and `#endif` to close `#if` statemenets
- - `#text` for debuging purposes, makes plain text.
+ - `#if` `#elif` `#else` to control the flow and `#endif` to close `#if` statements
+ - `#text` for debugging purposes, makes plain text.
  - `#paste` to paste a variable defined in the scope it is located on. 
  - `#with` to replace multiple sequences in its scope with other ones and `#endwith` to close `#with` statements
- - `#make` to replace mutlipe sequences in the name of the file with other ones
+ - `#make` to replace multiple sequences in the name of the file with other ones
 
 ## How To Use `#with`
  This code: 
@@ -46,8 +46,7 @@
  System.out.println("name");
  System.out.println("package");
  ```
- Will make the same file names and count as the `#make` example
- And the half the file outputs as the `#with` example!
+ Will make the same file names and count as the `#make` example, And the half the file outputs as the `#with` example!
  
  The file with the name `android.apk`
  ```
@@ -62,7 +61,7 @@
  ```
 
 ## Why `#with name:name package:package`?
- becouse `#with` accepts array of pairs of `string:logic`, and referencing the variable `name` and `package` will make `#with` change its behaviour depending on witch file it is on.
+ because `#with` accepts array of pairs of `string:logic`, and referencing the variable `name` and `package` will make `#with` change its behaviour depending on witch file it is on.
 
 
 ## How to invoke
