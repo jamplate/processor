@@ -65,7 +65,7 @@ public class LogicParser implements PollParser<Logic> {
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
-	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|(==)|(!)");
+	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|(==)|(!(?!=))");
 
 	@Override
 	public Logic link(List poll) {
@@ -118,8 +118,8 @@ public class LogicParser implements PollParser<Logic> {
 	 * </ul>
 	 *
 	 * @param poll the poll to parse any constant in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void parseConstants(List poll) {
@@ -173,10 +173,10 @@ public class LogicParser implements PollParser<Logic> {
 	 * </ul>
 	 *
 	 * @param poll the poll to parse any equation in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs; if an equation has no element
-	 *                                before or after it; if an element before or after an equation
-	 *                                has not been resolved into a {@link Logic}.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs; if an equation has no element
+	 *                              before or after it; if an element before or after an equation
+	 *                              has not been resolved into a {@link Logic}.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void parseEquations(List poll) {
@@ -224,10 +224,10 @@ public class LogicParser implements PollParser<Logic> {
 	 * </ul>
 	 *
 	 * @param poll the poll to parse any equation in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs; if a negation has no element
-	 *                                after it; if an element after a negation has not been resolved
-	 *                                into a {@link Logic}.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs; if a negation has no element
+	 *                              after it; if an element after a negation has not been resolved
+	 *                              into a {@link Logic}.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void parseNegations(List poll) {
@@ -267,8 +267,8 @@ public class LogicParser implements PollParser<Logic> {
 	 * </ul>
 	 *
 	 * @param poll the to parse any reference in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void parseReferences(List poll) {
@@ -312,8 +312,8 @@ public class LogicParser implements PollParser<Logic> {
 	 * statements in parenthesis in a {@link String} should remain in the given {@code poll}.
 	 *
 	 * @param poll the poll to parse any equation in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void processParenthesis(List poll) {
@@ -361,8 +361,8 @@ public class LogicParser implements PollParser<Logic> {
 	 * </ul>
 	 *
 	 * @param poll the poll to rearrange the whitespaces in it.
-	 * @throws NullPointerException   if the given {@code poll} is null.
-	 * @throws ParseException if any parse exception occurs.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected void processWhitespaces(List poll) {
