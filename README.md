@@ -1,4 +1,4 @@
-### Jamplates is a C-style pre-processor that mainly made for Java.
+### Jamplate is a C-style pre-processor that mainly made for Java.
 
 ## How To
  - `#define` to define a variable
