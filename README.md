@@ -1,6 +1,6 @@
 ### Jamplate is a C-style pre-processor that mainly made for Java.
 
-## How To
+## How To Use
  - `#define` to define a variable
  - `#if` `#elif` `#else` to control the flow and `#endif` to close `#if` statemenets
  - `#text` for debuging purposes, makes plain text.
@@ -63,3 +63,8 @@
 
 ## Why `#with name:name package:package`?
  becouse `#with` accepts array of pairs of `string:logic`, and referencing the variable `name` and `package` will make `#with` change its behaviour depending on witch file it is on.
+
+
+## How to invoke
+ It could be invoked with the gradle plug (still not completed). 
+ Or it could be invoked using the class `org.jamplate.Jamplate`.
