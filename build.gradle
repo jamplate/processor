@@ -1,0 +1,15 @@
+plugins {
+	id 'java'
+}
+
+group 'org.cufy'
+version 'alpha'
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	testImplementation 'junit:junit:4.12'
+}
