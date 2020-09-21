@@ -41,7 +41,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n?(?!\\\\)#(([^#\\n\\r])|((?<=\\\\)(#|\\n|\\r|(\\r\\n))))*(((?<!(\\\\)|(\\\\\r))([#\\n\\r]))|$)");
+	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n?(?!\\\\)#(([^#\\n])|((?<=\\\\)([#\\n])))*(((?<!\\\\)([#\\n]))|$)");
 
 	protected static final Pattern PATTERN_DEFINE = Pattern.compile("^#DEFINE", Pattern.CASE_INSENSITIVE);
 	protected static final Pattern PATTERN_DEFINE_VALUE = Pattern.compile("^\\s*(?<ADDRESS>\\S+)\\s*(?<LOGIC>.*)$");
@@ -113,6 +113,7 @@ public class ScopeParser implements PollParser<Scope> {
 		Objects.requireNonNull(poll, "poll");
 
 		//clear all scopes
+		this.processSpecialCases(poll);
 		this.processScopes(poll);
 
 		//clear remaining commands
@@ -499,6 +500,23 @@ public class ScopeParser implements PollParser<Scope> {
 						.replace("\\#", "#");
 
 				iterator.add(after);
+			}
+		}
+	}
+
+	protected void processSpecialCases(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				String string = (String) object;
+
+				iterator.set(
+						string.replace("\r", "")
+				);
 			}
 		}
 	}
