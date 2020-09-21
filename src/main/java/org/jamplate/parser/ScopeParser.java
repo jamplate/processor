@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Scope}s.
  *
  * @author LSafer
- * @version 0.0.1
+ * @version 0.0.3
  * @since 0.0.1 ~2020.09.19
  */
 public class ScopeParser implements PollParser<Scope> {
@@ -37,6 +37,12 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.2 ~2020.09.21
 	 */
 	protected static final Pattern COMMON_PARAMETERS_ARRAY = Pattern.compile("\\s*(?<PARAMETER>(?:[^|]|(?:(?<=\\\\)[|]))*\\S)\\s*(?=[|]|$)");
+	/**
+	 * Common pattern to extract single integer parameter.
+	 *
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected static final Pattern COMMON_PARAMETERS_INTEGER = Pattern.compile("^\\s*(?<LOGIC>\\d*)\\s*$");
 	/**
 	 * Common pattern to extract single logic parameter.
 	 *
@@ -145,6 +151,19 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	protected static final Pattern PATTERN_IF_PARAMETERS = ScopeParser.COMMON_PARAMETERS_LOGIC;
+
+	/**
+	 * A pattern to be used to detect {@link Line} commands.
+	 *
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected static final Pattern PATTERN_LINE = Pattern.compile("^#(LINE|LN)", Pattern.CASE_INSENSITIVE);
+	/**
+	 * A pattern to be used to extract the parameters of an {@link Line} command.
+	 *
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected static final Pattern PATTERN_LINE_PARAMETERS = ScopeParser.COMMON_PARAMETERS_INTEGER;
 
 	/**
 	 * A pattern to be used to detect {@link Make} commands.
@@ -273,8 +292,10 @@ public class ScopeParser implements PollParser<Scope> {
 	public void parse(List poll) {
 		Objects.requireNonNull(poll, "poll");
 
-		//clear all scopes
+		//pre-parsing
 		this.processSpecialCases(poll);
+
+		//clear all scopes
 		this.processScopes(poll);
 
 		//clear remaining commands
@@ -284,6 +305,7 @@ public class ScopeParser implements PollParser<Scope> {
 		this.parseEndifs(poll);
 		this.parseEndwiths(poll);
 		this.parseIfs(poll);
+		this.parseLines(poll);
 		this.parseMakes(poll);
 		this.parsePastes(poll);
 		this.parseTexts(poll);
@@ -520,6 +542,45 @@ public class ScopeParser implements PollParser<Scope> {
 						String logic = valueMatcher.group("LOGIC");
 
 						iterator.set(new If(
+								this.logic.parse(logic)
+						));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Parse all the line statements in a {@link String} in the given {@code poll} into {@link Line}
+	 * scopes.
+	 *
+	 * @param poll the poll to parse all the line statements in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected void parseLines(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				//target Strings only
+				String string = (String) object;
+				Matcher matcher = ScopeParser.PATTERN_LINE.matcher(string);
+
+				if (matcher.find()) {
+					//target #LINE or #LN commands only
+					String value = string.substring(matcher.end());
+					Matcher valueMatcher = ScopeParser.PATTERN_LINE_PARAMETERS.matcher(value);
+
+					if (valueMatcher.find()) {
+						//target valid #LINE parameters only
+						String logic = valueMatcher.group("LOGIC");
+
+						iterator.set(new Line(
 								this.logic.parse(logic)
 						));
 					}
