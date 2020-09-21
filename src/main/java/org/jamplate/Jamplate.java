@@ -42,19 +42,19 @@ public final class Jamplate {
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	private final static LogicParser LOGIC_PARSER = new LogicParser();
+	private static final LogicParser LOGIC_PARSER = new LogicParser();
 	/**
 	 * A global instance of the class {@link ScopeParser}.
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	private final static ScopeParser SCOPE_PARSER = new ScopeParser(LOGIC_PARSER);
+	private static final ScopeParser SCOPE_PARSER = new ScopeParser(Jamplate.LOGIC_PARSER);
 	/**
 	 * A global instance of the class {@link ScopeProcessor}.
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	private final static ScopeProcessor PROCESSOR = new ScopeProcessor(SCOPE_PARSER);
+	private static final ScopeProcessor PROCESSOR = new ScopeProcessor(Jamplate.SCOPE_PARSER);
 
 	/**
 	 * Process the given {@code input} file, then output the results to the given {@code output}
@@ -80,7 +80,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		PROCESSOR.process(input, output, memory);
+		Jamplate.PROCESSOR.process(input, output, memory);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		return PROCESSOR.process(input, output, memory);
+		return Jamplate.PROCESSOR.process(input, output, memory);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		return PROCESSOR.process(input, memory);
+		return Jamplate.PROCESSOR.process(input, memory);
 	}
 
 	/**

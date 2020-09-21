@@ -87,18 +87,18 @@ public class LogicParser implements PollParser<Logic> {
 		Objects.requireNonNull(poll, "poll");
 
 		//clear all parenthesis
-		processParenthesis(poll);
+		this.processParenthesis(poll);
 
 		//clear all constants, references
-		parseConstants(poll);
-		parseReferences(poll);
+		this.parseConstants(poll);
+		this.parseReferences(poll);
 
 		//reform whitespaces
-		processWhitespaces(poll);
+		this.processWhitespaces(poll);
 
 		//clear all negations, equations
-		parseNegations(poll);
-		parseEquations(poll);
+		this.parseNegations(poll);
+		this.parseEquations(poll);
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class LogicParser implements PollParser<Logic> {
 
 				iterator.remove();
 
-				Matcher matcher = PATTERN_CONSTANT.matcher(string);
+				Matcher matcher = this.PATTERN_CONSTANT.matcher(string);
 				int i = 0;
 				while (matcher.find()) {
 					int start = matcher.start();
@@ -283,7 +283,7 @@ public class LogicParser implements PollParser<Logic> {
 
 				iterator.remove();
 
-				Matcher matcher = PATTERN_REFERENCE.matcher(string);
+				Matcher matcher = this.PATTERN_REFERENCE.matcher(string);
 				int i = 0;
 				while (matcher.find()) {
 					int start = matcher.start();
@@ -326,7 +326,7 @@ public class LogicParser implements PollParser<Logic> {
 			if (next instanceof String) {
 				String string = (String) next;
 
-				String[] array = parenthesis(string);
+				String[] array = this.parenthesis(string);
 
 				if (array[1] != null) {
 					iterator.remove();
@@ -335,11 +335,11 @@ public class LogicParser implements PollParser<Logic> {
 						//already processed!
 						iterator.add(array[0]);
 
-					iterator.add(parse(array[1]));
+					iterator.add(this.parse(array[1]));
 
 					if (array[2] != null) {
 						List list = new ArrayList(Collections.singleton(array[2]));
-						processParenthesis(list);
+						this.processParenthesis(list);
 
 						for (Object object : list)
 							iterator.add(object);
@@ -377,7 +377,7 @@ public class LogicParser implements PollParser<Logic> {
 
 				iterator.remove();
 
-				Matcher matcher = PATTERN_WHITESPACES.matcher(string);
+				Matcher matcher = this.PATTERN_WHITESPACES.matcher(string);
 				int i = 0;
 				while (matcher.find()) {
 					int start = matcher.start();
@@ -417,7 +417,7 @@ public class LogicParser implements PollParser<Logic> {
 		Objects.requireNonNull(s, "s");
 
 		List<int[]> literals = new ArrayList();
-		Matcher matcher = PATTERN_CONSTANT.matcher(s);
+		Matcher matcher = this.PATTERN_CONSTANT.matcher(s);
 		while (matcher.find())
 			literals.add(new int[]{
 					matcher.start(),
@@ -450,12 +450,12 @@ public class LogicParser implements PollParser<Logic> {
 	private String[] parenthesis(String s) {
 		Objects.requireNonNull(s, "s");
 
-		int i = indexOf(s, '(', 0);
+		int i = this.indexOf(s, '(', 0);
 		int j = i;
 		int k = i;
 		while (!(j < k || k == -1)) {
-			j = indexOf(s, ')', j + 1);
-			k = indexOf(s, '(', k + 1);
+			j = this.indexOf(s, ')', j + 1);
+			k = this.indexOf(s, '(', k + 1);
 		}
 
 		if (i == -1 || j == -1)

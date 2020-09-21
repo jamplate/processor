@@ -66,7 +66,7 @@ public class If extends AbstractForkScope {
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	public final Logic condition() {
-		return condition;
+		return this.condition;
 	}
 
 	@Override

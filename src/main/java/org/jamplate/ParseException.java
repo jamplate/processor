@@ -51,7 +51,7 @@ public class ParseException extends RuntimeException {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ParseException(String message, String text) {
-		super(details(message, text, 0));
+		super(ParseException.details(message, text, 0));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class ParseException extends RuntimeException {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ParseException(String message, String text, int index) {
-		super(details(message, text, index));
+		super(ParseException.details(message, text, index));
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ParseException extends RuntimeException {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ParseException(String message, Throwable cause, String text) {
-		super(details(message, text, 0), cause);
+		super(ParseException.details(message, text, 0), cause);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class ParseException extends RuntimeException {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ParseException(String message, Throwable cause, String text, int index) {
-		super(details(message, text, index), cause);
+		super(ParseException.details(message, text, index), cause);
 	}
 
 	/**
