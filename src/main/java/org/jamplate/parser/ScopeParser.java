@@ -853,7 +853,7 @@ public class ScopeParser implements PollParser<Scope> {
 							.replace("\\\n", "\n")
 							.replace("\\\r\n", "\r\n")
 							.trim()
-							.replaceAll("[^\\\\]#$", "")
+							.replaceAll("(?<!\\\\)#$", "")
 							.replace("\\#", "#");
 
 					if (!before.isEmpty())
