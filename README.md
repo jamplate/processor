@@ -42,7 +42,7 @@
  This code (at the top of the file!):
  ```
  #make name: "android", package: "apk" | name: "windows", package: "exe"
- #with name:name package:package
+ #with name:name, package:package
  System.out.println("name");
  System.out.println("package");
  ```
@@ -59,10 +59,9 @@
  System.out.println("windows");
  System.out.println("exe");
  ```
-
-## Why `#with name:name package:package`?
+ 
+ Why `#with name:name, package:package`?
  because `#with` accepts array of pairs of `string:logic`, and referencing the variable `name` and `package` will make `#with` change its behaviour depending on witch file it is on.
-
 
 ## How to invoke
  It could be invoked with the gradle plug (still not completed). 
