@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Logic}s.
  *
  * @author LSafer
- * @version 0.0.1
+ * @version 0.0.3
  * @since 0.0.1 ~2020.09.19
  */
 public class LogicParser implements PollParser<Logic> {
@@ -85,6 +85,9 @@ public class LogicParser implements PollParser<Logic> {
 	@Override
 	public void parse(List poll) {
 		Objects.requireNonNull(poll, "poll");
+
+		//pre-parsing
+		this.processSpecialCases(poll);
 
 		//clear all parenthesis
 		this.processParenthesis(poll);
@@ -345,6 +348,34 @@ public class LogicParser implements PollParser<Logic> {
 							iterator.add(object);
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Process all special cases.
+	 * <p>
+	 * The special cases:
+	 * <ul>
+	 *     <li>Empty strings</li>
+	 * </ul>
+	 *
+	 * @param poll the poll to solve the special cases in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected void processSpecialCases(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				String string = (String) object;
+
+				if (string.trim().isEmpty())
+					iterator.set(new Constant(string));
 			}
 		}
 	}
