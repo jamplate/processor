@@ -61,8 +61,17 @@ public interface Logic {
 	 */
 	default boolean evaluateBoolean(Memory memory) {
 		Objects.requireNonNull(memory, "memory");
+
 		String value = this.evaluate(memory);
-		return Boolean.parseBoolean(value);
+
+		switch (value) {
+			case "":
+			case "0":
+			case "false":
+				return false;
+			default:
+				return true;
+		}
 	}
 
 	/**
@@ -75,10 +84,17 @@ public interface Logic {
 	 */
 	default Number evaluateNumber(Memory memory) {
 		Objects.requireNonNull(memory, "memory");
+
 		String value = this.evaluate(memory);
-		return value.contains(".") ?
-			   Double.parseDouble(value) :
-			   Long.parseLong(value);
+
+		try {
+			if (value.contains("."))
+				return Double.parseDouble(value);
+			else
+				return Long.parseLong(value);
+		} catch (NumberFormatException ignored) {
+			return 0;
+		}
 	}
 
 	/**
