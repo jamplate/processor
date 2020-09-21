@@ -137,10 +137,11 @@
         #text
         #with
         ```
-      - Ignore case: `unchecked`
-      - Click `OK`
-    - Add a new item to the `File Name Pattern` list after choosing the previously created `Jamplate` File Type.
-      - Type `*.jamplate`
-      - Click `OK`
+    - Ignore case: `unchecked`
+    - Click `OK`
+
+  - Add a new item to the `File Name Pattern` list after choosing the previously created `Jamplate` File Type.
+    - Type `*.jamplate`
+    - Click `OK`
 
   - Now, intellij has syntax highlighting for `.jamplate` files!
