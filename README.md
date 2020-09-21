@@ -67,3 +67,6 @@
 ## How to invoke
  It could be invoked with the gradle plug (still not completed). 
  Or it could be invoked using the class `org.jamplate.Jamplate`.
+
+## Syntax Highlighting
+  - For `Intellij IDEA`, see [Intellij.md](https://github.com/cufyorg/jamplate-processor/blob/master/Intellij.md)
