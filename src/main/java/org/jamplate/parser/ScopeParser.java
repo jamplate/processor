@@ -72,7 +72,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n?((?<!\\\\)#)(([^#\\n])|((?<=\\\\)[#\\n]))*(((?<!\\\\)[#\\n])|$)");
+	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n?(?:(?<!\\\\)#)(?:(?:[^#\\n])|(?:(?<=\\\\)[#\\n]))*(?:(?:(?<!\\\\)[#\\n])|$)");
 
 	/**
 	 * A pattern to be used to detected {@link Define} commands.
