@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Logic}s.
  *
  * @author LSafer
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1 ~2020.09.19
  */
 public class LogicParser implements PollParser<Logic> {
@@ -65,7 +65,7 @@ public class LogicParser implements PollParser<Logic> {
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
-	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|(==)|(!(?!=))");
+	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|[|]|[&]|(!=)|(==)|(!(?!=))");
 
 	@Override
 	public Logic link(List poll) {
@@ -101,6 +101,8 @@ public class LogicParser implements PollParser<Logic> {
 
 		//clear all negations, equations
 		this.parseNegations(poll);
+		this.parseAnds(poll);
+		this.parseOrs(poll);
 		this.parseEquations(poll);
 	}
 
@@ -108,6 +110,55 @@ public class LogicParser implements PollParser<Logic> {
 	public List poll(String string) {
 		Objects.requireNonNull(string, "string");
 		return new ArrayList(Collections.singleton(string));
+	}
+
+	/**
+	 * Parse any possible {@link And}s in the given {@code poll}. After calling this method, no and
+	 * statement in a {@link String} should remain in the given {@code poll}.
+	 * <p>
+	 * Clear these before calling this method:
+	 * <ul>
+	 *     <li>{@link #processParenthesis(List)}</li>
+	 *     <li>{@link #parseConstants(List)}</li>
+	 *     <li>{@link #parseReferences(List)}</li>
+	 *     <li>{@link #processWhitespaces(List)}</li>
+	 *     <li>{@link #parseNegations(List)}</li>
+	 *     <li>any statement that could be before or next to a and</li>
+	 * </ul>
+	 *
+	 * @param poll the poll to parse any and in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs; if an and has no element before
+	 *                              or after it; if an element before or after an and has not been
+	 *                              resolved into a {@link Logic}.
+	 * @since 0.0.1 ~2020.09.19
+	 */
+	protected void parseAnds(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+
+			if (next instanceof String) {
+				String string = (String) next;
+
+				if (string.equals("&"))
+					try {
+						iterator.remove();
+						Logic rightLogic = (Logic) iterator.next();
+						iterator.remove();
+						Logic leftLogic = (Logic) iterator.previous();
+						iterator.remove();
+
+						Logic logic = new And(leftLogic, rightLogic);
+
+						iterator.add(logic);
+					} catch (NoSuchElementException | ClassCastException e) {
+						throw new ParseException("Invalid And", e);
+					}
+			}
+		}
 	}
 
 	/**
@@ -253,6 +304,55 @@ public class LogicParser implements PollParser<Logic> {
 						iterator.set(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
 						throw new ParseException("Invalid Negation", e);
+					}
+			}
+		}
+	}
+
+	/**
+	 * Parse any possible {@link Or}s in the given {@code poll}. After calling this method, no or
+	 * statement in a {@link String} should remain in the given {@code poll}.
+	 * <p>
+	 * Clear these before calling this method:
+	 * <ul>
+	 *     <li>{@link #processParenthesis(List)}</li>
+	 *     <li>{@link #parseConstants(List)}</li>
+	 *     <li>{@link #parseReferences(List)}</li>
+	 *     <li>{@link #processWhitespaces(List)}</li>
+	 *     <li>{@link #parseNegations(List)}</li>
+	 *     <li>any statement that could be before or next to an or</li>
+	 * </ul>
+	 *
+	 * @param poll the poll to parse any or in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs; if an or has no element before or
+	 *                              after it; if an element before or after an or has not been
+	 *                              resolved into a {@link Logic}.
+	 * @since 0.0.1 ~2020.09.19
+	 */
+	protected void parseOrs(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+
+			if (next instanceof String) {
+				String string = (String) next;
+
+				if (string.equals("|"))
+					try {
+						iterator.remove();
+						Logic rightLogic = (Logic) iterator.next();
+						iterator.remove();
+						Logic leftLogic = (Logic) iterator.previous();
+						iterator.remove();
+
+						Logic logic = new Or(leftLogic, rightLogic);
+
+						iterator.add(logic);
+					} catch (NoSuchElementException | ClassCastException e) {
+						throw new ParseException("Invalid Equation", e);
 					}
 			}
 		}
