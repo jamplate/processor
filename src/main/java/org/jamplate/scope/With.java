@@ -72,8 +72,22 @@ public class With extends AbstractForkScope {
 	}
 
 	@Override
-	public Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
+	public boolean tryAttach(Scope scope) {
+		Objects.requireNonNull(scope, "scope");
+		return scope instanceof Endwith &&
+			   super.tryAttach(scope);
+	}
+
+	@Override
+	public boolean tryBranch(Scope branch) {
+		Objects.requireNonNull(branch, "branch");
+		return false;
+	}
+
+	@Override
+	protected Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(appendable, "appendable");
+		Objects.requireNonNull(memory, "memory");
 
 		if (this.fork != null)
 			for (Map<String, Logic> option : this.options)
@@ -92,17 +106,5 @@ public class With extends AbstractForkScope {
 				}
 
 		return super.invoke(appendable, memory);
-	}
-
-	@Override
-	public boolean tryAttach(Scope scope) {
-		Objects.requireNonNull(scope, "scope");
-		return scope instanceof Endwith &&
-			   super.tryAttach(scope);
-	}
-
-	@Override
-	public boolean tryBranch(Scope branch) {
-		return false;
 	}
 }
