@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Logic}s.
  *
  * @author LSafer
- * @version 0.0.4
+ * @version 0.0.6
  * @since 0.0.1 ~2020.09.19
  */
 public class LogicParser implements PollParser<Logic> {
@@ -65,7 +65,7 @@ public class LogicParser implements PollParser<Logic> {
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
-	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|[|]|[&]|(!=)|(==)|(!(?!=))");
+	protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|[|]|[+]|[&]|(!=)|(==)|(!(?!=))");
 
 	@Override
 	public Logic link(List poll) {
@@ -101,6 +101,7 @@ public class LogicParser implements PollParser<Logic> {
 
 		//clear all negations, equations
 		this.parseNegations(poll);
+		this.parseAdditions(poll);
 		this.parseAnds(poll);
 		this.parseOrs(poll);
 		this.parseEquations(poll);
@@ -110,6 +111,55 @@ public class LogicParser implements PollParser<Logic> {
 	public List poll(String string) {
 		Objects.requireNonNull(string, "string");
 		return new ArrayList(Collections.singleton(string));
+	}
+
+	/**
+	 * Parse any possible {@link Addition}s in the given {@code poll}. After calling this method, no
+	 * addition statement in a {@link String} should remain in the given {@code poll}.
+	 * <p>
+	 * Clear these before calling this method:
+	 * <ul>
+	 *     <li>{@link #processParenthesis(List)}</li>
+	 *     <li>{@link #parseConstants(List)}</li>
+	 *     <li>{@link #parseReferences(List)}</li>
+	 *     <li>{@link #processWhitespaces(List)}</li>
+	 *     <li>{@link #parseNegations(List)}</li>
+	 *     <li>any statement that could be before or next to an addition</li>
+	 * </ul>
+	 *
+	 * @param poll the poll to parse any addition in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs; if an addition has no element
+	 *                              before or after it; if an element before or after an addition
+	 *                              has not been resolved into a {@link Logic}.
+	 * @since 0.0.6 ~2020.09.22
+	 */
+	protected void parseAdditions(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+
+			if (next instanceof String) {
+				String string = (String) next;
+
+				if (string.equals("+"))
+					try {
+						iterator.remove();
+						Logic rightLogic = (Logic) iterator.next();
+						iterator.remove();
+						Logic leftLogic = (Logic) iterator.previous();
+						iterator.remove();
+
+						Logic logic = new Addition(leftLogic, rightLogic);
+
+						iterator.add(logic);
+					} catch (NoSuchElementException | ClassCastException e) {
+						throw new ParseException("Invalid Addition", e);
+					}
+			}
+		}
 	}
 
 	/**
