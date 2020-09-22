@@ -23,7 +23,7 @@ import java.util.Objects;
  * A logic evaluates to {@code true} if ether two logics evaluates to {@code true}.
  *
  * @author LSafer
- * @version 0.0.4
+ * @version 0.0.6
  * @since 0.0.4 ~2020.09.22
  */
 public class Or implements Logic {
@@ -53,6 +53,26 @@ public class Or implements Logic {
 		Objects.requireNonNull(right, "right");
 		this.left = left;
 		this.right = right;
+	}
+
+	/**
+	 * Get the {@link #left} logic of this.
+	 *
+	 * @return the {@link #left} logic of this.
+	 * @since 0.0.6 ~2020.09.22
+	 */
+	public final Logic left() {
+		return this.left;
+	}
+
+	/**
+	 * Get the {@link #right} logic of this.
+	 *
+	 * @return the {@link #right} logic of this.
+	 * @since 0.0.6 ~2020.09.22
+	 */
+	public final Logic right() {
+		return this.right;
 	}
 
 	@Override
