@@ -48,7 +48,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 *
 	 * @since 0.0.3 ~2020.09.21
 	 */
-	protected static final Pattern COMMON_PARAMETERS_INTEGER = Pattern.compile("^\\s*(?<LOGIC>\\d*)\\s*$");
+	protected static final Pattern COMMON_PARAMETERS_INTEGER = Pattern.compile("^\\s*(?<LOGIC>[-]?\\d*)\\s*$");
 	/**
 	 * Common pattern to extract single logic parameter.
 	 *
@@ -79,7 +79,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n?(?:(?<!\\\\)#)(?:(?:[^#\\n])|(?:(?<=\\\\)[#\\n]))*(?:(?:(?<!\\\\)[#\\n])|$)");
+	protected static final Pattern PATTERN_COMMANDS = Pattern.compile("\\n*\\t*(?:(?<!\\\\)#)(?:(?:[^#\\n])|(?:(?<=\\\\)[#\\n]))*(?:(?:(?<!\\\\)(#|(\\n*)))|$)");
 
 	/**
 	 * A pattern to be used to detected {@link Define} commands.
