@@ -9,6 +9,7 @@
  - `#ln` and `#line` to add `\n` multiple times in the product file.
  - `#lt` and `#tab` to add `\t` multiple times in the product file.
  - `#with` to replace multiple sequences in its scope with other ones and `#endwith` to close `#with` statements
+ - `#for` to repeat the sequences in its scope multiple times and `#endfor` to close `#for` statements
  - `#make` to replace multiple sequences in the name of the file with other ones
 
 ## How To Use `#with`

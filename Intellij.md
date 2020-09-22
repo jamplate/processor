@@ -101,15 +101,20 @@
         #Define
         #ELIF
         #ELSE
+        #ENDFOR
         #ENDIF
         #ENDWITH
         #ElIf
         #Elif
         #Else
+        #EndFor
         #EndIf
         #EndWith
+        #Endfor
         #Endif
         #Endwith
+        #FOR
+        #For
         #IF
         #If
         #LINE
@@ -133,8 +138,10 @@
         #define
         #elif
         #else
+        #endfor
         #endif
         #endwith
+        #for
         #if
         #line
         #ln

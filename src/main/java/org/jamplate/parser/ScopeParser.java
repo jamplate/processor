@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Scope}s.
  *
  * @author LSafer
- * @version 0.0.8
+ * @version 0.0.9
  * @since 0.0.1 ~2020.09.19
  */
 public class ScopeParser implements PollParser<Scope> {
@@ -121,6 +121,19 @@ public class ScopeParser implements PollParser<Scope> {
 	protected static final Pattern PATTERN_ELSE_PARAMETERS = ScopeParser.COMMON_PARAMETER_NON;
 
 	/**
+	 * A pattern to be used to detect {@link Endfor} commands.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_ENDFOR = Pattern.compile("^#ENDFOR", Pattern.CASE_INSENSITIVE);
+	/**
+	 * A pattern to be used to extract the parameters of an {@link Endfor} command.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_ENDFOR_PARAMETERS = ScopeParser.COMMON_PARAMETER_NON;
+
+	/**
 	 * A pattern to be used to detect {@link Endif} commands.
 	 *
 	 * @since 0.0.1 ~2020.09.20
@@ -145,6 +158,31 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	protected static final Pattern PATTERN_ENDWITH_PARAMETERS = ScopeParser.COMMON_PARAMETER_NON;
+
+	/**
+	 * A pattern to be used to detect {@link For} commands.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_FOR = Pattern.compile("^#FOR", Pattern.CASE_INSENSITIVE);
+	/**
+	 * A pattern to be used to extract a pair from a {@link For} command.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_FOR_PAIR = ScopeParser.COMMON_PARAMETER_PAIR;
+	/**
+	 * A pattern to be used to extract a parameter from a {@link For} command.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_FOR_PARAMETER = ScopeParser.COMMON_PARAMETER_ARRAY;
+	/**
+	 * A pattern to be used to extract the parameters of a {@link For} command.
+	 *
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_FOR_PARAMETERS = ScopeParser.COMMON_PARAMETERS_ARRAY;
 
 	/**
 	 * A pattern to be used to detect {@link If} commands.
@@ -335,8 +373,10 @@ public class ScopeParser implements PollParser<Scope> {
 		this.parseDefines(poll);
 		this.parseElifs(poll);
 		this.parseElse(poll);
+		this.parseEndfors(poll);
 		this.parseEndifs(poll);
 		this.parseEndwiths(poll);
+		this.parseFors(poll);
 		this.parseIfs(poll);
 		this.parseLines(poll);
 		this.parseMakes(poll);
@@ -475,6 +515,42 @@ public class ScopeParser implements PollParser<Scope> {
 	}
 
 	/**
+	 * Parse all the endfors statements in a {@link String} in the given {@code poll} into {@link
+	 * Endfor} scopes.
+	 *
+	 * @param poll the poll to parse all the endfor statements in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected void parseEndfors(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				//target Strings only
+				String string = (String) object;
+				Matcher matcher = ScopeParser.PATTERN_ENDFOR.matcher(string);
+
+				if (matcher.find()) {
+					//target #ENDFOR commands only
+					String value = string.substring(matcher.end());
+					Matcher valueMatcher = ScopeParser.PATTERN_ENDFOR_PARAMETERS.matcher(value);
+
+					if (valueMatcher.find()) {
+						//target #ENDFOR with valid parameters only
+
+						iterator.set(new Endfor());
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Parse all the endif statements in a {@link String} in the given {@code poll} into {@link
 	 * Endif} scopes.
 	 *
@@ -541,6 +617,71 @@ public class ScopeParser implements PollParser<Scope> {
 
 						iterator.set(new Endwith());
 					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Parse all the for statements in a {@link String} in the given {@code poll} into {@link For}
+	 * scopes.
+	 *
+	 * @param poll the poll to parse all the for statements in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
+	 * @since 0.0.9 ~2020.09.22
+	 */
+	protected void parseFors(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				//target Strings only
+				String string = (String) object;
+				Matcher matcher = ScopeParser.PATTERN_FOR.matcher(string);
+
+				if (matcher.find()) {
+					//target #FOR commands only
+					String value = string.substring(matcher.end());
+					Matcher valueMatcher = ScopeParser.PATTERN_FOR_PARAMETERS.matcher(value);
+
+					List<Map<String, Logic>> options = new ArrayList<>();
+
+					//compute parameters
+					while (valueMatcher.find()) {
+						String parameter = valueMatcher.group("PARAMETER")
+								.replace("\\|", "|");
+						Matcher parameterMatcher = ScopeParser.PATTERN_FOR_PARAMETER.matcher(parameter);
+
+						Map<String, Logic> option = new HashMap<>();
+
+						while (parameterMatcher.find()) {
+							String pair = parameterMatcher.group("PARAMETER")
+									.replace("\\,", ",");
+							Matcher pairMatcher = ScopeParser.PATTERN_FOR_PAIR.matcher(pair);
+
+							if (pairMatcher.find()) {
+								//process valid parameters only
+								String key = pairMatcher.group("KEY");
+								String logic = pairMatcher.group("LOGIC");
+
+								option.put(
+										key,
+										this.logic.parse(logic)
+								);
+							}
+						}
+
+						options.add(option);
+					}
+
+					//Replace
+					iterator.set(new For(
+							options.toArray(new Map[0])
+					));
 				}
 			}
 		}
@@ -885,8 +1026,8 @@ public class ScopeParser implements PollParser<Scope> {
 						Map<String, Logic> option = new HashMap<>();
 
 						while (parameterMatcher.find()) {
-							String pair = parameterMatcher.group("PARAMETER");
-							//									.replace("\\,", ",");
+							String pair = parameterMatcher.group("PARAMETER")
+									.replace("\\,", ",");
 							Matcher pairMatcher = ScopeParser.PATTERN_WITH_PAIR.matcher(pair);
 
 							if (pairMatcher.find()) {
