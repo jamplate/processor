@@ -122,6 +122,8 @@
         #Paste
         #TEXT
         #Text
+        #VAR
+        #Var
         #WITH
         #With
         #define
@@ -135,6 +137,7 @@
         #make
         #paste
         #text
+        #var
         #with
         ```
     - Ignore case: `unchecked`

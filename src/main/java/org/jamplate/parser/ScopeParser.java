@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Scope}s.
  *
  * @author LSafer
- * @version 0.0.3
+ * @version 0.0.5
  * @since 0.0.1 ~2020.09.19
  */
 public class ScopeParser implements PollParser<Scope> {
@@ -37,6 +37,12 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.2 ~2020.09.21
 	 */
 	protected static final Pattern COMMON_PARAMETERS_ARRAY = Pattern.compile("\\s*(?<PARAMETER>(?:[^|]|(?:(?<=\\\\)[|]))*\\S)\\s*(?=[|]|$)");
+	/**
+	 * Common pattern to extract definition parameters.
+	 *
+	 * @since 0.0.5 ~2020.09.22
+	 */
+	protected static final Pattern COMMON_PARAMETERS_DEF = Pattern.compile("^\\s*(?<ADDRESS>\\S+)\\s*(?<LOGIC>.*)$");
 	/**
 	 * Common pattern to extract single integer parameter.
 	 *
@@ -67,6 +73,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	protected static final Pattern COMMON_PARAMETER_PAIR = Pattern.compile("\\s*(?<KEY>\\S+)\\s*:\\s*(?<LOGIC>\\S+)\\s*");
+
 	/**
 	 * A pattern that catches jamplate commands.
 	 *
@@ -85,7 +92,7 @@ public class ScopeParser implements PollParser<Scope> {
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	protected static final Pattern PATTERN_DEFINE_PARAMETERS = Pattern.compile("^\\s*(?<ADDRESS>\\S+)\\s*(?<LOGIC>.*)$");
+	protected static final Pattern PATTERN_DEFINE_PARAMETERS = ScopeParser.COMMON_PARAMETERS_DEF;
 
 	/**
 	 * A pattern to be used to detect {@link Elif} commands.
@@ -217,6 +224,19 @@ public class ScopeParser implements PollParser<Scope> {
 	protected static final Pattern PATTERN_TEXT_PARAMETERS = Pattern.compile("^\\s*(?<TEXT>.*)$");
 
 	/**
+	 * A pattern to be used to detected {@link Var} commands.
+	 *
+	 * @since 0.0.5 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_VAR = Pattern.compile("^#VAR", Pattern.CASE_INSENSITIVE);
+	/**
+	 * A pattern to be used to extract the parameters of a {@link Var} command.
+	 *
+	 * @since 0.0.5 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_VAR_PARAMETER = ScopeParser.COMMON_PARAMETERS_DEF;
+
+	/**
 	 * A pattern to be used to detect {@link With} commands.
 	 *
 	 * @since 0.0.1 ~2020.09.20
@@ -309,6 +329,7 @@ public class ScopeParser implements PollParser<Scope> {
 		this.parseMakes(poll);
 		this.parsePastes(poll);
 		this.parseTexts(poll);
+		this.parseVars(poll);
 		this.parseWiths(poll);
 
 		//clear leftovers
@@ -348,7 +369,7 @@ public class ScopeParser implements PollParser<Scope> {
 					Matcher valueMatcher = ScopeParser.PATTERN_DEFINE_PARAMETERS.matcher(value);
 
 					if (valueMatcher.find()) {
-						//target value #DEFINE parameters only
+						//target valid #DEFINE parameters only
 						String address = valueMatcher.group("ADDRESS");
 						String logic = valueMatcher.group("LOGIC");
 
@@ -725,6 +746,48 @@ public class ScopeParser implements PollParser<Scope> {
 
 						iterator.set(new Text(
 								text
+						));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Parse all the var statements in a {@link String} in the given {@code poll} into {@link Var}
+	 * scopes.
+	 *
+	 * @param poll the poll to parse all the var statements in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
+	 * @since 0.0.1 ~2020.09.20
+	 */
+	protected void parseVars(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				//target Strings only
+				String string = (String) object;
+				Matcher matcher = ScopeParser.PATTERN_VAR.matcher(string);
+
+				if (matcher.find()) {
+					//target #VAR commands only
+					String value = string.substring(matcher.end());
+					Matcher valueMatcher = ScopeParser.PATTERN_VAR_PARAMETER.matcher(value);
+
+					if (valueMatcher.find()) {
+						//target valid #VAR parameters only
+						String address = valueMatcher.group("ADDRESS");
+						String logic = valueMatcher.group("LOGIC");
+
+						//Replace
+						iterator.set(new Var(
+								address,
+								this.logic.parse(logic)
 						));
 					}
 				}

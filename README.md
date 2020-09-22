@@ -1,7 +1,8 @@
 ### Jamplate is a C-style pre-processor that mainly made for Java.
 
 ## How To Use
- - `#define` to define a variable
+ - `#define` to define a constant (yet overridable) value to a specified address
+ - `#var` to define a variable (also overridable) value to a specified address
  - `#if` `#elif` `#else` to control the flow and `#endif` to close `#if` statements
  - `#text` for debugging purposes, makes plain text.
  - `#paste` to paste a variable defined in the scope it is located on. 
