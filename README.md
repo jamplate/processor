@@ -66,7 +66,7 @@
  because `#with` accepts array of pairs of `string:logic`, and referencing the variable `name` and `package` will make `#with` change its behaviour depending on witch file it is on.
 
 ## How to invoke
- It could be invoked with the gradle plugin (still not completed). 
+ It could be invoked with the [Jamplate Gradle Plugin](https://github.com/cufyorg/jamplate-gradle-plugin). 
  Or it could be invoked using the class `org.jamplate.Jamplate`.
 
 ## Syntax Highlighting
