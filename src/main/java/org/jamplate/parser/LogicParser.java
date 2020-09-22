@@ -52,7 +52,7 @@ public class LogicParser implements PollParser<Logic> {
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
-	protected final Pattern PATTERN_REFERENCE = Pattern.compile("(\\w|\\d)+");
+	protected final Pattern PATTERN_REFERENCE = Pattern.compile("(-|\\w|\\d)+");
 	/**
 	 * A pattern that detects whitespaces or any places that could be a whitespace. The pattern
 	 * should be used after clearing:
