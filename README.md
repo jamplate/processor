@@ -7,6 +7,7 @@
  - `#text` for debugging purposes, makes plain text.
  - `#paste` to paste a variable defined in the scope it is located on. 
  - `#ln` and `#line` to add `\n` multiple times in the product file.
+ - `#lt` and `#tab` to add `\t` multiple times in the product file.
  - `#with` to replace multiple sequences in its scope with other ones and `#endwith` to close `#with` statements
  - `#make` to replace multiple sequences in the name of the file with other ones
 

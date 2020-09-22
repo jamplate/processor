@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * The default jamplate parser that parses {@link String}s into {@link Scope}s.
  *
  * @author LSafer
- * @version 0.0.5
+ * @version 0.0.8
  * @since 0.0.1 ~2020.09.19
  */
 public class ScopeParser implements PollParser<Scope> {
@@ -211,6 +211,19 @@ public class ScopeParser implements PollParser<Scope> {
 	protected static final Pattern PATTERN_PASTE_PARAMETERS = ScopeParser.COMMON_PARAMETERS_LOGIC;
 
 	/**
+	 * A pattern to be used to detect {@link Tab} commands.
+	 *
+	 * @since 0.0.8 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_TAB = Pattern.compile("^#(TAB|LT)", Pattern.CASE_INSENSITIVE);
+	/**
+	 * A pattern to be used to extract the parameters of an {@link Tab} command.
+	 *
+	 * @since 0.0.8 ~2020.09.22
+	 */
+	protected static final Pattern PATTERN_TAB_PARAMETERS = ScopeParser.COMMON_PARAMETERS_INTEGER;
+
+	/**
 	 * A pattern to be used to detect {@link Text} commands.
 	 *
 	 * @since 0.0.1 ~2020.09.20
@@ -328,6 +341,7 @@ public class ScopeParser implements PollParser<Scope> {
 		this.parseLines(poll);
 		this.parseMakes(poll);
 		this.parsePastes(poll);
+		this.parseTabs(poll);
 		this.parseTexts(poll);
 		this.parseVars(poll);
 		this.parseWiths(poll);
@@ -706,6 +720,45 @@ public class ScopeParser implements PollParser<Scope> {
 						String logic = valueMatcher.group("LOGIC");
 
 						iterator.set(new Paste(
+								this.logic.parse(logic)
+						));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Parse all the line statements in a {@link String} in the given {@code poll} into {@link Tab}
+	 * scopes.
+	 *
+	 * @param poll the poll to parse all the tab statements in it.
+	 * @throws NullPointerException if the given {@code poll} is null.
+	 * @throws ParseException       if any parse exception occurs.
+	 * @since 0.0.3 ~2020.09.21
+	 */
+	protected void parseTabs(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+
+			if (object instanceof String) {
+				//target Strings only
+				String string = (String) object;
+				Matcher matcher = ScopeParser.PATTERN_TAB.matcher(string);
+
+				if (matcher.find()) {
+					//target #TAB or #LT commands only
+					String value = string.substring(matcher.end());
+					Matcher valueMatcher = ScopeParser.PATTERN_TAB_PARAMETERS.matcher(value);
+
+					if (valueMatcher.find()) {
+						//target valid #TAB parameters only
+						String logic = valueMatcher.group("LOGIC");
+
+						iterator.set(new Tab(
 								this.logic.parse(logic)
 						));
 					}

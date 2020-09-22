@@ -114,13 +114,17 @@
         #If
         #LINE
         #LN
+        #LT
         #Line
         #Ln
+        #Lt
         #MAKE
         #Make
         #PASTE
         #Paste
+        #TAB
         #TEXT
+        #Tab
         #Text
         #VAR
         #Var
@@ -134,8 +138,10 @@
         #if
         #line
         #ln
+        #lt
         #make
         #paste
+        #tab
         #text
         #var
         #with
