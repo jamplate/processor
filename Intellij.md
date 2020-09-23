@@ -8,7 +8,7 @@
     - Block comment start: `/*`
     - Block comment end: `*/`
     - Hex prefix: `0x`
-    - Number postfixes: `D, F, L`
+    - Number postfixes: `DFL`
     - Support paired braces: `checked`
     - Support paired brackets: `checked`
     - Support paired parens: `checked`
@@ -80,16 +80,6 @@
         ```
     - Keywords (3):
         ```
-        0
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
         \#
         \,
         \|
