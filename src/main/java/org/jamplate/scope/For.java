@@ -23,6 +23,7 @@ import org.jamplate.memory.ScopeMemory;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A scope that has a {@link #fork} scope that will be invoked for each number of times. Each time
@@ -69,6 +70,26 @@ public class For extends AbstractForkScope {
 	 */
 	public final Map<String, Logic>[] options() {
 		return this.options.clone();
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner("|", "#FOR", "");
+
+		for (Map<String, Logic> option : this.options) {
+			if (option != null) {
+				StringJoiner joiner1 = new StringJoiner(", ", "", "");
+
+				for (Map.Entry<String, Logic> entry : option.entrySet())
+					joiner1.add(entry.getKey())
+							.add(":")
+							.add(entry.getValue().toString());
+
+				joiner.add(joiner1.toString());
+			}
+		}
+
+		return joiner.toString();
 	}
 
 	@Override

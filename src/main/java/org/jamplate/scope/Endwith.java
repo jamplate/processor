@@ -30,6 +30,11 @@ package org.jamplate.scope;
  */
 public class Endwith extends AbstractJoinScope {
 	@Override
+	public String toString() {
+		return "#ENDWITH";
+	}
+
+	@Override
 	public boolean tryAttachTo(Scope scope) {
 		return scope instanceof With &&
 			   super.tryAttachTo(scope);

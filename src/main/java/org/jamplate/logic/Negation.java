@@ -62,4 +62,9 @@ public class Negation implements Logic {
 		boolean logic = this.logic.evaluateBoolean(memory);
 		return logic ? "false" : "true";
 	}
+
+	@Override
+	public String toString() {
+		return "!" + this.logic;
+	}
 }

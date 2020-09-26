@@ -96,4 +96,9 @@ public class Addition implements Logic {
 
 		return left + right;
 	}
+
+	@Override
+	public String toString() {
+		return this.left + " + " + this.right;
+	}
 }

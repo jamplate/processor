@@ -65,4 +65,9 @@ public class Reference implements Logic {
 			   this.address :
 			   logic.evaluate(memory);
 	}
+
+	@Override
+	public String toString() {
+		return this.address;
+	}
 }

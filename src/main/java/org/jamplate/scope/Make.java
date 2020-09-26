@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A scope that makes multiple files with different names.
@@ -86,5 +87,25 @@ public class Make extends AbstractHeadScope {
 				else
 					this.next.invoke(optionFile, optionMemory);
 			}
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner("|", "#MAKE", "");
+
+		for (Map<String, Logic> option : this.options) {
+			if (option != null) {
+				StringJoiner joiner1 = new StringJoiner(", ", "", "");
+
+				for (Map.Entry<String, Logic> entry : option.entrySet())
+					joiner1.add(entry.getKey())
+							.add(":")
+							.add(entry.getValue().toString());
+
+				joiner.add(joiner1.toString());
+			}
+		}
+
+		return joiner.toString();
 	}
 }

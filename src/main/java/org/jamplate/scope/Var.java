@@ -101,6 +101,11 @@ public class Var extends AbstractScope {
 	}
 
 	@Override
+	public String toString() {
+		return "#VAR " + this.address + " " + this.value;
+	}
+
+	@Override
 	protected Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(appendable, "appendable");
 		Objects.requireNonNull(memory, "memory");

@@ -72,4 +72,9 @@ public class Text extends AbstractScope {
 
 		return super.invoke(appendable, memory);
 	}
+
+	@Override
+	public String toString() {
+		return "#TEXT " + this.text;
+	}
 }

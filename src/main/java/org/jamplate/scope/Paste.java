@@ -68,4 +68,9 @@ public class Paste extends AbstractScope {
 
 		return super.invoke(appendable, memory);
 	}
+
+	@Override
+	public String toString() {
+		return "#PASTE " + this.logic;
+	}
 }

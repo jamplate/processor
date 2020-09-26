@@ -50,6 +50,11 @@ public class Line extends AbstractScope {
 	}
 
 	@Override
+	public String toString() {
+		return "#LINE " + this.logic;
+	}
+
+	@Override
 	protected Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(appendable, "appendable");
 		Objects.requireNonNull(memory, "memory");

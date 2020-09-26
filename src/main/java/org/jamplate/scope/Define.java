@@ -104,4 +104,9 @@ public class Define extends AbstractScope {
 			   this.value :
 			   super.memory(address);
 	}
+
+	@Override
+	public String toString() {
+		return "#DEFINE " + this.address + " " + this.value;
+	}
 }

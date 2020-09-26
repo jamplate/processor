@@ -30,6 +30,11 @@ package org.jamplate.scope;
  */
 public class Endfor extends AbstractJoinScope {
 	@Override
+	public String toString() {
+		return "#ENDFOR";
+	}
+
+	@Override
 	public boolean tryAttachTo(Scope scope) {
 		return scope instanceof For &&
 			   super.tryAttachTo(scope);

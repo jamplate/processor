@@ -83,4 +83,9 @@ public class Equation implements Logic {
 		boolean logic = Logic.equals(memory, this.left, this.right);
 		return logic ? "true" : "false";
 	}
+
+	@Override
+	public String toString() {
+		return this.left + " == " + this.right;
+	}
 }

@@ -47,6 +47,11 @@ public class Else extends AbstractTipScope {
 	}
 
 	@Override
+	public String toString() {
+		return "#ELSE";
+	}
+
+	@Override
 	public boolean tryAttachTo(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return (scope instanceof If || scope instanceof Elif) &&

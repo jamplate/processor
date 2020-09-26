@@ -99,4 +99,9 @@ public class If extends AbstractForkScope {
 		return (branch instanceof Elif || branch instanceof Else) &&
 			   super.tryBranch(branch);
 	}
+
+	@Override
+	public String toString() {
+		return "#IF " + this.condition;
+	}
 }

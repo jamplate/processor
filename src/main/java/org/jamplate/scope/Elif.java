@@ -85,6 +85,11 @@ public class Elif extends AbstractBranchScope {
 	}
 
 	@Override
+	public String toString() {
+		return "#ELIF " + this.condition;
+	}
+
+	@Override
 	public boolean tryAttachTo(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return (scope instanceof If || scope instanceof Elif) &&

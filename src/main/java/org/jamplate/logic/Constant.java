@@ -61,4 +61,9 @@ public class Constant implements Logic {
 		Objects.requireNonNull(memory, "scope");
 		return this.value;
 	}
+
+	@Override
+	public String toString() {
+		return "\"" + this.value + "\"";
+	}
 }

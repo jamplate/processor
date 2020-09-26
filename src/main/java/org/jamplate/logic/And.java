@@ -83,4 +83,9 @@ public class And implements Logic {
 			   "true" :
 			   "false";
 	}
+
+	@Override
+	public String toString() {
+		return this.left + " & " + this.right;
+	}
 }

@@ -32,6 +32,11 @@ import java.util.Objects;
  */
 public class Endif extends AbstractJoinScope {
 	@Override
+	public String toString() {
+		return "#ENDIF";
+	}
+
+	@Override
 	public boolean tryAttachTo(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return scope instanceof If &&
