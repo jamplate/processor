@@ -79,7 +79,7 @@ public class LogicParser implements PollParser<Logic> {
 			else
 				throw new ParseException("Logic not resolved", String.valueOf(object));
 		} else
-			throw new ParseException("Logics not resolved to a single logic");
+			throw new ParseException("Logics not resolved to a single logic", poll.toString());
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class LogicParser implements PollParser<Logic> {
 
 						iterator.add(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
-						throw new ParseException("Invalid Addition", e);
+						throw new ParseException("Invalid Addition", e, poll.toString());
 					}
 			}
 		}
@@ -205,7 +205,7 @@ public class LogicParser implements PollParser<Logic> {
 
 						iterator.add(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
-						throw new ParseException("Invalid And", e);
+						throw new ParseException("Invalid And", e, poll.toString());
 					}
 			}
 		}
@@ -308,7 +308,7 @@ public class LogicParser implements PollParser<Logic> {
 
 						iterator.add(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
-						throw new ParseException("Invalid Equation", e);
+						throw new ParseException("Invalid Equation", e, poll.toString());
 					}
 			}
 		}
@@ -353,7 +353,7 @@ public class LogicParser implements PollParser<Logic> {
 
 						iterator.set(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
-						throw new ParseException("Invalid Negation", e);
+						throw new ParseException("Invalid Negation", e, poll.toString());
 					}
 			}
 		}
@@ -402,7 +402,7 @@ public class LogicParser implements PollParser<Logic> {
 
 						iterator.add(logic);
 					} catch (NoSuchElementException | ClassCastException e) {
-						throw new ParseException("Invalid Equation", e);
+						throw new ParseException("Invalid Equation", e, poll.toString());
 					}
 			}
 		}
