@@ -20,7 +20,7 @@ package org.jamplate.scope;
  * <p>
  * Relations:
  * <ul>
- *     <li>Previous: null</li>
+ *     <li>Previous: {@link HeadScope}</li>
  *     <li>Next: {@link Scope}</li>
  * </ul>
  *

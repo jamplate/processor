@@ -22,7 +22,7 @@ import java.util.Objects;
  * <p>
  * Relations:
  * <ul>
- *     <li>Previous: null</li>
+ *     <li>Previous: {@link HeadScope}</li>
  *     <li>Next: {@link Scope}</li>
  * </ul>
  *
@@ -34,6 +34,7 @@ public abstract class AbstractHeadScope extends AbstractScope implements HeadSco
 	@Override
 	public boolean tryAttachTo(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
-		return false;
+		return scope instanceof HeadScope &&
+			   super.tryAttachTo(scope);
 	}
 }

@@ -32,7 +32,7 @@ import java.util.StringJoiner;
  * <p>
  * Relations:
  * <ul>
- *     <li>Previous: null</li>
+ *     <li>Previous: {@link Make}</li>
  *     <li>Next: {@link Scope}</li>
  * </ul>
  *
@@ -107,5 +107,11 @@ public class Make extends AbstractHeadScope {
 		}
 
 		return joiner.toString();
+	}
+
+	@Override
+	public boolean tryAttachTo(Scope scope) {
+		return scope instanceof Make &&
+			   super.tryAttachTo(scope);
 	}
 }
