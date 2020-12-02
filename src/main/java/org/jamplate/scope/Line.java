@@ -15,7 +15,8 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.AbstractScope;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;

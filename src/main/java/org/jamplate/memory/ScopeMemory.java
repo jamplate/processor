@@ -15,8 +15,10 @@
  */
 package org.jamplate.memory;
 
-import org.jamplate.logic.Logic;
-import org.jamplate.scope.Scope;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.AbstractMemory;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.link.Scope;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,19 +32,13 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.19
  */
-public class ScopeMemory implements Memory {
+public class ScopeMemory extends AbstractMemory {
 	/**
 	 * A map supporting this memory.
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected final Map<String, Logic> map;
-	/**
-	 * The old memory this memory may has been made with.
-	 *
-	 * @since 0.0.1 ~2020.09.19
-	 */
-	protected final Memory memory;
 	/**
 	 * The source scope of this memory.
 	 *
@@ -59,7 +55,6 @@ public class ScopeMemory implements Memory {
 	 */
 	public ScopeMemory(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
-		this.memory = null;
 		this.scope = scope;
 		this.map = Collections.emptyMap();
 	}
@@ -75,7 +70,6 @@ public class ScopeMemory implements Memory {
 	public ScopeMemory(Scope scope, Map<String, Logic> map) {
 		Objects.requireNonNull(scope, "scope");
 		Objects.requireNonNull(map, "map");
-		this.memory = null;
 		this.scope = scope;
 		this.map = new HashMap(map);
 	}
@@ -89,9 +83,8 @@ public class ScopeMemory implements Memory {
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	public ScopeMemory(Memory memory, Scope scope) {
-		Objects.requireNonNull(memory, "memory");
+		super(memory);
 		Objects.requireNonNull(scope, "scope");
-		this.memory = memory;
 		this.scope = scope;
 		this.map = Collections.emptyMap();
 	}
@@ -107,10 +100,9 @@ public class ScopeMemory implements Memory {
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	public ScopeMemory(Memory memory, Scope scope, Map<String, Logic> map) {
-		Objects.requireNonNull(memory, "memory");
+		super(memory);
 		Objects.requireNonNull(scope, "scope");
 		Objects.requireNonNull(map, "map");
-		this.memory = memory;
 		this.scope = scope;
 		this.map = new HashMap(map);
 	}
@@ -118,13 +110,11 @@ public class ScopeMemory implements Memory {
 	@Override
 	public Logic find(String address) {
 		Objects.requireNonNull(address, "address");
-		Logic logic = this.scope.memory(address);
+		Logic logic = this.scope.find(address);
 		return logic == null ?
 			   this.map.containsKey(address) ?
 			   this.map.get(address) :
-			   this.memory == null ?
-			   null :
-			   this.memory.find(address) :
+			   super.find(address) :
 			   logic;
 	}
 }

@@ -15,8 +15,10 @@
  */
 package org.jamplate.parser;
 
-import org.jamplate.ParseException;
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.AbstractParser;
+import org.cufy.preprocessor.link.Scope;
+import org.cufy.preprocessor.ParseException;
 import org.jamplate.scope.*;
 
 import java.util.*;
@@ -30,7 +32,7 @@ import java.util.regex.Pattern;
  * @version 0.0.9
  * @since 0.0.1 ~2020.09.19
  */
-public class ScopeParser implements PollParser<Scope> {
+public class ScopeParser extends AbstractParser<Scope> {
 	/**
 	 * Common pattern to extract array of parameters.
 	 *
@@ -327,40 +329,58 @@ public class ScopeParser implements PollParser<Scope> {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ScopeParser(Parser<Logic> logic) {
+		super(Collections.emptyList());
 		Objects.requireNonNull(logic, "logic");
 		this.logic = logic;
 	}
 
 	@Override
-	public Scope link(List poll) {
+	public boolean link(List poll) {
 		Objects.requireNonNull(poll, "poll");
 
-		if (poll.size() > 0) {
-			Object object = poll.get(0);
+		ListIterator iterator = poll.listIterator();
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
 
 			if (object instanceof Scope) {
 				Scope scope = (Scope) object;
 
-				ListIterator iterator = poll.listIterator(1);
 				while (iterator.hasNext()) {
-					Object object1 = iterator.next();
+					Object o = iterator.next();
 
-					if (object1 instanceof Scope) {
-						Scope scope1 = (Scope) object1;
+					if (o instanceof Scope) {
+						Scope s = (Scope) o;
 
-						scope.tryPush(scope1);
+						if (scope.pushElement(s))
+							iterator.remove();
 					}
 				}
 
-				return scope;
-			} else
-				throw new ParseException("Scope not resolved", String.valueOf(object));
-		} else
-			throw new ParseException("Scopes resolved to non");
+				return true;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
-	public void parse(List poll) {
+	public Scope make(List poll) {
+		Objects.requireNonNull(poll, "poll");
+
+		if (poll.size() == 1) {
+			Object object = poll.get(0);
+
+			if (object instanceof Scope)
+				return (Scope) object;
+
+			throw new ParseException("Scope not resolved", String.valueOf(object));
+		}
+
+		throw new ParseException("Scopes not resolved to a single scope!", String.valueOf(poll));
+	}
+
+	@Override
+	public boolean parse(List poll) {
 		Objects.requireNonNull(poll, "poll");
 
 		//pre-parsing
@@ -388,12 +408,22 @@ public class ScopeParser implements PollParser<Scope> {
 
 		//clear leftovers
 		this.processLeftovers(poll);
+		return true;
 	}
 
 	@Override
 	public List poll(String string) {
 		Objects.requireNonNull(string, "string");
 		return new ArrayList(Collections.singletonList(string));
+	}
+
+	@Override
+	public boolean process(List poll) {
+		return true;
+	}
+
+	public Parser<Logic> getLogicParser() {
+		return this.logic;
 	}
 
 	/**

@@ -15,6 +15,8 @@
  */
 package org.jamplate.scope;
 
+import org.cufy.preprocessor.link.Scope;
+
 /**
  * A scope that closes {@link With}.
  * <p>
@@ -35,8 +37,8 @@ public class Endwith extends AbstractJoinScope {
 	}
 
 	@Override
-	public boolean tryAttachTo(Scope scope) {
+	public boolean setPrevious(Scope scope) {
 		return scope instanceof With &&
-			   super.tryAttachTo(scope);
+			   super.setPrevious(scope);
 	}
 }

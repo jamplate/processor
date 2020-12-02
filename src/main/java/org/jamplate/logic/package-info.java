@@ -14,16 +14,10 @@
  *	limitations under the License.
  */
 /**
- * The {@link org.jamplate.logic.Logic}s is the base 'COMPILING'/'PROCESSING' units for the
- * jamplates logical statements. The logics should be used in 3 stages:
- * <ol>
- *     <li>Construction stage</li>
- *     <li>Linkage stage</li>
- *     <li>Usage stage (by a scopes)</li>
- * </ol>
+ * Implementations of the package {@link org.jamplate.logic}.
  *
  * @author LSafer
- * @version 0.0.1
- * @since 0.0.1 ~2020.09.19
+ * @version 0.0.b
+ * @since 0.0.b ~2020.10.02
  */
 package org.jamplate.logic;

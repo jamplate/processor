@@ -15,6 +15,8 @@
  */
 package org.jamplate.scope;
 
+import org.cufy.preprocessor.link.Scope;
+
 import java.util.Objects;
 
 /**
@@ -37,9 +39,9 @@ public class Endif extends AbstractJoinScope {
 	}
 
 	@Override
-	public boolean tryAttachTo(Scope scope) {
+	public boolean setPrevious(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return scope instanceof If &&
-			   super.tryAttachTo(scope);
+			   super.setPrevious(scope);
 	}
 }

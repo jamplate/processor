@@ -15,8 +15,10 @@
  */
 package org.jamplate.memory;
 
-import org.jamplate.logic.Constant;
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.AbstractMemory;
+import org.cufy.preprocessor.invoke.Memory;
+import org.jamplate.logic.Literal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,22 +31,16 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.20
  */
-public class ConstantMemory implements Memory {
+public class ConstantMemory extends AbstractMemory {
 	/**
 	 * The map holding the values of this memory.
 	 *
 	 * @since 0.0.1 ~2020.09.20
 	 */
-	protected final Map<String, Constant> map;
-	/**
-	 * The backup memory to ask if the key was not found in this memory.
-	 *
-	 * @since 0.0.1 ~2020.09.20
-	 */
-	protected final Memory memory;
+	protected final Map<String, Literal> map;
 
 	/**
-	 * Construct a new constant memory (a memory with {@link Constant}s).
+	 * Construct a new constant memory (a memory with {@link Literal}s).
 	 *
 	 * @param memory the memory to evaluate the values with.
 	 * @param map    the map to evaluate its values then store it in this memory.
@@ -52,14 +48,13 @@ public class ConstantMemory implements Memory {
 	 * @since 0.0.1 ~2020.09.20
 	 */
 	public ConstantMemory(Memory memory, Map<String, Logic> map) {
-		Objects.requireNonNull(memory, "memory");
+		super(memory);
 		Objects.requireNonNull(map, "map");
-		this.memory = memory;
 		this.map = new HashMap();
 		map.forEach((address, logic) ->
 				this.map.put(
 						address,
-						new Constant(logic.evaluate(memory))
+						new Literal(logic.evaluateString(memory))
 				)
 		);
 	}
@@ -69,8 +64,6 @@ public class ConstantMemory implements Memory {
 		Objects.requireNonNull(address, "address");
 		return this.map.containsKey(address) ?
 			   this.map.get(address) :
-			   this.memory == null ?
-			   null :
-			   this.memory.find(address);
+			   super.find(address);
 	}
 }

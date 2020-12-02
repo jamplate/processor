@@ -15,9 +15,14 @@
  */
 package org.jamplate.logic;
 
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.AbstractLogic;
+import org.cufy.text.Element;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.text.Memory;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A scope that joins two logics.
@@ -26,79 +31,135 @@ import java.util.Objects;
  * @version 0.0.6
  * @since 0.0.6 ~2020.09.22
  */
-public class Addition implements Logic {
+public class Addition extends AbstractLogic<Object> {
 	/**
-	 * The logic at the left.
+	 * Targets {@code add} statements.
+	 * <ul>
+	 *     <li>{@code OPERATOR} the operator detected</li>
+	 * </ul>
 	 *
-	 * @since 0.0.6 ~2020.09.22
+	 * @since 0.0.b ~2020.09.29
 	 */
-	protected final Logic left;
-	/**
-	 * The logic at the right.
-	 *
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	protected final Logic right;
+	public static final Pattern PATTERN = Pattern.compile("(?<OPERATOR>[+])");
 
-	/**
-	 * Construct a new logic that joins two logics.
-	 *
-	 * @param left  the logic at the left.
-	 * @param right the logic at the right.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public Addition(Logic left, Logic right) {
-		Objects.requireNonNull(left, "left");
-		Objects.requireNonNull(right, "right");
-		this.left = left;
-		this.right = right;
-	}
+	@Override
+	public Object evaluate(Memory memory) {
+		Objects.requireNonNull(memory, "memory");
 
-	/**
-	 * Get the {@link #left} logic of this.
-	 *
-	 * @return the {@link #left} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic left() {
-		return this.left;
-	}
+		Object object = this.previous.evaluate(memory);
+		Object o = this.next.evaluate(memory);
 
-	/**
-	 * Get the {@link #right} logic of this.
-	 *
-	 * @return the {@link #right} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic right() {
-		return this.right;
+		//join numbers
+		if (object instanceof Number && o instanceof Number)
+			return ((Number) object).doubleValue() +
+				   ((Number) o).doubleValue();
+
+		//join strings
+		return Objects.toString(object, "") +
+			   Objects.toString(o, "");
 	}
 
 	@Override
-	public String evaluate(Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		String left = this.left.evaluate(memory);
-		String right = this.right.evaluate(memory);
+	public boolean isReserved() {
+		return true;
+	}
 
-		//double join
-		if (left.matches("^\\d*[.]\\d*$") &&
-			right.matches("^\\d*[.]\\d*$"))
-			return String.valueOf(
-					Double.parseDouble(left) +
-					Double.parseDouble(right)
-			);
-		else if (left.matches("^\\d*$") &&
-				 right.matches("^\\d*$"))
-			return String.valueOf(
-					Long.parseLong(left) +
-					Long.parseLong(right)
-			);
+	@Override
+	public boolean setBranch(Element branch) {
+		return false;
+	}
 
-		return left + right;
+	@Override
+	public boolean setFork(Element fork) {
+		return false;
+	}
+
+	@Override
+	public boolean setNext(Element next) {
+		return (!(next instanceof Logic)) &&
+			   super.setNext(next);
 	}
 
 	@Override
 	public String toString() {
-		return this.left + " + " + this.right;
+		return String.join(
+				" + ",
+				Objects.toString(this.previous, ""),
+				Objects.toString(this.next, "")
+		);
+	}
+
+	/**
+	 * The default parser class of the {@link Addition} logic.
+	 *
+	 * @author LSafer
+	 * @version 0.0.b
+	 * @since 0.0.b ~2020.09.29
+	 */
+	public static class ParserVote implements Element.Parser {
+		@Override
+		public Element parse(Element element) {
+			Objects.requireNonNull(element, "element");
+			Matcher matcher = Addition.PATTERN.matcher(element.getSource())
+					.region(element.getBeginIndex(), element.getEndIndex());
+
+			while (matcher.find())
+				if (!Element.reserved(element, matcher.start(), matcher.end()))
+					for (Element fork)
+		}
+
+		//		@Override
+		//		public boolean link(List poll) {
+		//			return Poll.iterate(poll, Element.link());
+		//		}
+		//
+		//		@Override
+		//		public boolean parse(List poll) {
+		//			return Poll.iterate(poll, Operators.parse(
+		//					Addition.PATTERN,
+		//					operator -> {
+		//						switch (operator) {
+		//							case "+":
+		//								return new Addition();
+		//							default:
+		//								throw new InternalError("Unknown operator: " + operator);
+		//						}
+		//					}
+		//			));
+		//		}
 	}
 }
+//
+//	/**
+//	 * Construct a new addition operator with its {@link #previous} and {@link #next} not
+//	 * initialized.
+//	 *
+//	 * @since 0.0.b ~2020.10.02
+//	 */
+//	public Addition() {
+//	}
+//
+//	/**
+//	 * Construct a new logic that joins two logics.
+//	 *
+//	 * @param left  the logic at the left.
+//	 * @param right the logic at the right.
+//	 * @since 0.0.6 ~2020.09.22
+//	 */
+//	public Addition(Logic left, Logic right) {
+//		super(left, right);
+//	}
+
+//						Polls.iterateMatches(
+//								poll,
+//								Addition.PATTERN,
+//								Operators.parse(operator -> {
+//									switch (operator) {
+//										case "+":
+//											return new Addition();
+//										default:
+//											throw new InternalError(
+//													"Unknown operator: " + operator);
+//									}
+//								})
+//						);

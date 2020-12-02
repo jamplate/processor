@@ -15,55 +15,86 @@
  */
 package org.jamplate.logic;
 
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.AbstractParser;
+import org.cufy.preprocessor.Poll;
+import org.jamplate.util.Values;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
- * A logic that evaluates to a constant value.
+ * A logic that holds a constant value.
  *
  * @author LSafer
- * @version 0.0.1
- * @since 0.0.1 ~2020.09.16
+ * @version 0.0.b
+ * @since 0.0.b ~2020.10.04
  */
-public class Constant implements Logic {
+public class Constant extends AbstractValue {
 	/**
-	 * The value this logic will evaluate.
+	 * Target {@code constant} statements.
+	 * <ul>
+	 *     <li>{@code VALUE} the constant value</li>
+	 * </ul>
 	 *
-	 * @since 0.0.1 ~2020.09.16
+	 * @since 0.0.b ~2020.10.05
 	 */
-	protected final String value;
+	public static final Pattern PATTERN = Pattern.compile("(?<VALUE>(" +
+														  "(?:(?:true)|(?:false))|" +
+														  "(?:(?:\\d[.]?\\d)+)" +
+														  "))");
 
 	/**
-	 * Construct a new logic that returns the given {@code text} when it gets evaluated.
+	 * Construct a new constant with its {@link #value} not initialized.
 	 *
-	 * @param text the text this logic will evaluates.
-	 * @throws NullPointerException if the given {@code text} is null.
-	 * @since 0.0.1 ~2020.09.16
+	 * @since 0.0.b ~2020.10.04
 	 */
-	public Constant(String text) {
-		Objects.requireNonNull(text, "text");
-		this.value = text;
+	public Constant() {
 	}
 
 	/**
-	 * Get the {@link #value} of this.
+	 * Construct a new constant with its {@link #value} initialized to the given {@code value}.
 	 *
-	 * @return the {@link #value} of this.
-	 * @since 0.0.1 ~2020.09.19
+	 * @param value the value of the constructed constant.
+	 * @throws NullPointerException if the given {@code value} is null.
+	 * @since 0.0.b ~2020.10.04
 	 */
-	public final String value() {
-		return this.value;
+	public Constant(String value) {
+		super(value);
 	}
 
 	@Override
-	public String evaluate(Memory memory) {
-		Objects.requireNonNull(memory, "scope");
+	public Object evaluate(Memory memory) {
+		Objects.requireNonNull(memory, "memory");
+		//auto evaluated :)
 		return this.value;
 	}
 
 	@Override
 	public String toString() {
-		return "\"" + this.value + "\"";
+		return this.value;
+	}
+
+	/**
+	 * The default parser class of the {@link Constant} logic.
+	 *
+	 * @author LSafer
+	 * @version 0.0.b
+	 * @since 0.0.b ~2020.10.05
+	 */
+	public static class Parser extends AbstractParser.AbstractVote<Constant> {
+		@Override
+		public boolean parse(List poll) {
+			return Poll.iterate(poll, Values.parse(
+					Constant.PATTERN,
+					Constant::new
+			));
+		}
 	}
 }
+//			Polls.iterateMatches(
+//					poll,
+//					Constant.PATTERN,
+//					Values.parse(Constant::new)
+//			);

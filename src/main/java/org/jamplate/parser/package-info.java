@@ -14,8 +14,8 @@
  *	limitations under the License.
  */
 /**
- * Parsers that parses jamplate code into {@link org.jamplate.scope.Scope}s and {@link
- * org.jamplate.logic.Logic}s.
+ * Parsers that parses jamplate code into {@link org.cufy.preprocessor.link.Scope}s and {@link
+ * org.cufy.preprocessor.link.Logic}s.
  *
  * @author LSafer
  * @version 0.0.1

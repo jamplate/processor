@@ -12,4 +12,5 @@ repositories {
 
 dependencies {
 	testImplementation 'junit:junit:4.12'
+	compile 'org.jetbrains:annotations:16.0.2'
 }

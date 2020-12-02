@@ -15,7 +15,8 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.AbstractScope;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class Paste extends AbstractScope {
 		Objects.requireNonNull(appendable, "appendable");
 		Objects.requireNonNull(memory, "memory");
 
-		appendable = appendable.append(this.logic.evaluate(memory));
+		appendable = appendable.append(this.logic.evaluateString(memory));
 
 		return super.invoke(appendable, memory);
 	}

@@ -1,12 +1,15 @@
 package org.jamplate;
 
-import org.jamplate.logic.*;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.AbstractScope;
+import org.cufy.preprocessor.link.Scope;
+import org.jamplate.logic.Equation;
+import org.jamplate.logic.Literal;
+import org.jamplate.logic.Negation;
+import org.jamplate.logic.Reference;
 import org.jamplate.memory.EmptyMemory;
-import org.jamplate.memory.MapMemory;
-import org.jamplate.parser.LogicParser;
-import org.jamplate.parser.PollParser;
-import org.jamplate.parser.ScopeParser;
 import org.jamplate.scope.*;
+import org.jamplate.util.Strings;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,9 +17,40 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("ALL")
 public class MiscTest {
+	@Test
+	public void A() {
+		//		System.out.println(
+		//				Strings.extract(
+		//						Pattern.compile(""),
+		//						""
+		//				)
+		//		);
+		//
+		//		//		MatchResult result = Strings.group(
+		//		//				"outer(inner(first)\")\"\"(\"(second))",
+		//		//				new Pattern[]{Literal.PATTERN},
+		//		//				Pattern.compile("[(]"),
+		//		//				Pattern.compile("[)]")
+		//		//		);
+		//		//
+		//		//		System.out.println(result.group());
+		//
+		//		String source = "first, second , \",\" , fourth, fifth, sixth";
+		//		String[] strings = Strings.split(
+		//				source,
+		//				new Pattern[]{Literal.PATTERN},
+		//				new Pattern[0],
+		//				Pattern.compile(",")
+		//		);
+		//
+		//		for (String str : strings)
+		//			System.out.println(str);
+	}
+
 	@Test
 	public void If_Elif_Else() throws IOException {
 		//#BLOCK "START\n"
@@ -39,8 +73,8 @@ public class MiscTest {
 		}) {
 			AbstractScope[] scopes = {
 					new Text("START\n"),
-					new Define("big", new Constant(options[0])),
-					new Define("small", new Constant(options[1])),
+					new Define("big", new Literal(options[0])),
+					new Define("small", new Literal(options[1])),
 					new If(new Reference("big")),
 					new Text("I am big\n"),
 					new Elif(new Reference("small")),
@@ -62,74 +96,74 @@ public class MiscTest {
 
 	@Test
 	public void Switch() throws IOException {
-		AbstractScope[] scopes = {
-				new Paste(new Switch(
-						new Constant("Makeup"),
-						new Constant("Atom"), new Constant("Plain"),
-						new Constant("Spark"), new Constant("Flu"),
-						new Constant("Makeup"), new Constant("Jamplates")
-				))
-		};
-
-		String expected =
-				//				"Plain" +
-				//										"Flu" +
-				//				"Spark" +
-				"Jamplates" +
-				"";
-
-		test(scopes, expected);
+		//		AbstractScope[] scopes = {
+		//				new Paste(new Switch(
+		//						new Literal("Makeup"),
+		//						new Literal("Atom"), new Literal("Plain"),
+		//						new Literal("Spark"), new Literal("Flu"),
+		//						new Literal("Makeup"), new Literal("Jamplates")
+		//				))
+		//		};
+		//
+		//		String expected =
+		//				//				"Plain" +
+		//				//										"Flu" +
+		//				//				"Spark" +
+		//				"Jamplates" +
+		//				"";
+		//
+		//		test(scopes, expected);
 	}
 
-	@Test
-	public void logic() {
-		LogicParser linker = new LogicParser();
-
-		Logic logic = linker.parse("!(Asteroid2 == \"People\") == (!(\"false\" == true))");
-
-		{
-			Equation equation = (Equation) logic;
-
-			{
-				Negation left = (Negation) equation.left();
-				Negation right = (Negation) equation.right();
-
-				{
-					Equation equation1 = (Equation) left.logic();
-
-					{
-						Reference left1 = (Reference) equation1.left();
-						Constant right1 = (Constant) equation1.right();
-
-						{
-							Assert.assertEquals("Asteroid2", left1.address());
-							Assert.assertEquals("People", right1.value());
-						}
-					}
-				}
-				{
-					Equation equation1 = (Equation) right.logic();
-
-					{
-						Constant left1 = (Constant) equation1.left();
-						Reference right1 = (Reference) equation1.right();
-
-						{
-							Assert.assertEquals("false", left1.value());
-							Assert.assertEquals("true", right1.address());
-						}
-					}
-				}
-			}
-		}
-
-		Assert.assertEquals("false", logic.evaluate(
-				new MapMemory(Collections.singletonMap(
-						"Asteroid2",
-						new Constant("People")
-				))
-		));
-	}
+	//	@Test
+	//	public void logic() {
+	//		LogicParser linker = (LogicParser) ((ScopeParser) Jamplate.INSTANCE.getParser()).getLogicParser();
+	//
+	//		Logic logic = linker.parse("!(Asteroid2 == \"People\") == (!(\"false\" == true))");
+	//
+	//		{
+	//			Equation equation = (Equation) logic;
+	//
+	//			{
+	//				Negation left = (Negation) equation.getLeft();
+	//				Negation right = (Negation) equation.getRight();
+	//
+	//				{
+	//					Equation equation1 = (Equation) left.getLogic();
+	//
+	//					{
+	//						Reference left1 = (Reference) equation1.getLeft();
+	//						Literal right1 = (Literal) equation1.getRight();
+	//
+	//						{
+	//							Assert.assertEquals("Asteroid2", left1.getValue());
+	//							Assert.assertEquals("People", right1.getValue());
+	//						}
+	//					}
+	//				}
+	//				{
+	//					Equation equation1 = (Equation) right.getLogic();
+	//
+	//					{
+	//						Literal left1 = (Literal) equation1.getLeft();
+	//						Reference right1 = (Reference) equation1.getRight();
+	//
+	//						{
+	//							Assert.assertEquals("false", left1.getValue());
+	//							Assert.assertEquals("true", right1.getValue());
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//
+	//		Assert.assertEquals("false", logic.evaluateString(
+	//				new MapMemory(Collections.singletonMap(
+	//						"Asteroid2",
+	//						new Literal("People")
+	//				))
+	//		));
+	//	}
 
 	@Test
 	@Ignore
@@ -143,34 +177,34 @@ public class MiscTest {
 				new LinkedHashMap()
 		};
 
-		options0[0].put("A", new Constant("A"));
-		options0[0].put("B", new Constant("B"));
-		options0[1].put("A", new Constant("X"));
-		options0[1].put("B", new Constant("Y"));
+		options0[0].put("A", new Literal("A"));
+		options0[0].put("B", new Literal("B"));
+		options0[1].put("A", new Literal("X"));
+		options0[1].put("B", new Literal("Y"));
 
-		options1[0].put("0", new Constant("0"));
-		options1[0].put("1", new Constant("1"));
-		options1[0].put("0", new Constant("8"));
-		options1[0].put("1", new Constant("9"));
+		options1[0].put("0", new Literal("0"));
+		options1[0].put("1", new Literal("1"));
+		options1[0].put("0", new Literal("8"));
+		options1[0].put("1", new Literal("9"));
 
 		Scope make0 = new Make(options0);
 		Scope make1 = new Make(options1);
 		Scope with0 = new With(options0);
 		Scope with1 = new With(options1);
-		Scope iff = new If(new Equation(new Reference("A"), new Constant("X")));
+		Scope iff = new If(new Equation(new Reference("A"), new Literal("X")));
 		Scope ift = new Text("\nIT IS AN X");
 		Scope ei = new Endif();
 		Scope text = new Text(
 				"AB 01"
 		);
 
-		System.out.println(make0.tryPush(make1));
-		System.out.println(make0.tryPush(with0));
-		System.out.println(make0.tryPush(with1));
-		System.out.println(make0.tryPush(iff));
-		System.out.println(make0.tryPush(ift));
-		System.out.println(make0.tryPush(ei));
-		System.out.println(make0.tryPush(text));
+		System.out.println(make0.pushElement(make1));
+		System.out.println(make0.pushElement(with0));
+		System.out.println(make0.pushElement(with1));
+		System.out.println(make0.pushElement(iff));
+		System.out.println(make0.pushElement(ift));
+		System.out.println(make0.pushElement(ei));
+		System.out.println(make0.pushElement(text));
 
 		make0.invoke(new File("test/AB 01"), new EmptyMemory());
 	}
@@ -183,10 +217,10 @@ public class MiscTest {
 				new HashMap()
 		};
 
-		options[0].put("A", new Constant("Arch"));
-		options[0].put("B", new Constant("Boat"));
-		options[1].put("A", new Constant("Ant"));
-		options[1].put("B", new Constant("Billy"));
+		options[0].put("A", new Literal("Arch"));
+		options[0].put("B", new Literal("Boat"));
+		options[1].put("A", new Literal("Ant"));
+		options[1].put("B", new Literal("Billy"));
 
 		Map<String, Logic> redirects = new HashMap();
 
@@ -195,32 +229,32 @@ public class MiscTest {
 
 		Make make = new Make(options);
 		With with = new With(redirects);
-		If i = new If(new Equation(new Reference("A"), new Constant("Ant")));
+		If i = new If(new Equation(new Reference("A"), new Literal("Ant")));
 		Text t = new Text("As are good");
 		Endif endIf = new Endif();
 		Text text = new Text("AB");
 
-		make.tryPush(with);
-		make.tryPush(i);
-		make.tryPush(t);
-		make.tryPush(endIf);
-		make.tryPush(text);
+		make.push(with);
+		make.push(i);
+		make.push(t);
+		make.push(endIf);
+		make.push(text);
 
 		make.invoke(new File("test/AB"), new EmptyMemory());
 	}
 
-	@Test
-	public void parser() {
-		PollParser<Scope> parser = new ScopeParser(new LogicParser());
-
-		Scope scope = parser.parse(
-				"#Define a null\n" +
-				"#Text Oh my\\\n" +
-				"Is not that great?\n #PASTE a#"
-		);
-
-		int i = 0;
-	}
+	//	@Test
+	//	public void parser() {
+	//		Parser<Scope> parser = Jamplate.INSTANCE.getParser();
+	//
+	//		Scope scope = parser.parse(
+	//				"#Define a null\n" +
+	//				"#Text Oh my\\\n" +
+	//				"Is not that great?\n #PASTE a#"
+	//		);
+	//
+	//		int i = 0;
+	//	}
 
 	@Test
 	public void scopeChain() throws IOException {
@@ -259,27 +293,41 @@ public class MiscTest {
 	}
 
 	@Test
+	public void split() {
+		//		String source = "abc|def|j\"||||\"hi";
+		String source = "abc\"|\"de|f\"|\"j\"||||\"hi";
+		String[] split = Strings.split(
+				source,
+				new Pattern[]{Literal.PATTERN},
+				new Pattern[0],
+				Pattern.compile("[|]")
+		);
+
+		System.out.println(Arrays.toString(split));
+	}
+
+	@Test
 	public void test10() throws IOException {
 		Scope firstScope = new Text("A text block");
-		Scope s1 = new Define("Variable", new Constant(""));
-		Scope s2 = new If(new Equation(new Reference("Variable"), new Constant("VariableValue")));
+		Scope s1 = new Define("Variable", new Literal(""));
+		Scope s2 = new If(new Equation(new Reference("Variable"), new Literal("VariableValue")));
 		Scope s3 = new Text("IF was true");
-		Scope s4 = new Elif(new Equation(new Reference("Variable"), new Constant("AnotherVariableValue")));
+		Scope s4 = new Elif(new Equation(new Reference("Variable"), new Literal("AnotherVariableValue")));
 		Scope s5 = new Text("Elif was true");
 		Scope s6 = new Else();
 		Scope s7 = new Text("Else invoked");
 		Scope s8 = new Endif();
 		Scope s9 = new Text("If ended");
 
-		firstScope.tryPush(s1);
-		firstScope.tryPush(s2);
-		firstScope.tryPush(s3);
-		firstScope.tryPush(s4);
-		firstScope.tryPush(s5);
-		firstScope.tryPush(s6);
-		firstScope.tryPush(s7);
-		firstScope.tryPush(s8);
-		firstScope.tryPush(s9);
+		firstScope.pushElement(s1);
+		firstScope.pushElement(s2);
+		firstScope.pushElement(s3);
+		firstScope.pushElement(s4);
+		firstScope.pushElement(s5);
+		firstScope.pushElement(s6);
+		firstScope.pushElement(s7);
+		firstScope.pushElement(s8);
+		firstScope.pushElement(s9);
 
 		String results = firstScope.invoke(new EmptyMemory());
 
@@ -305,15 +353,15 @@ public class MiscTest {
 				new LinkedHashMap()
 		};
 
-		options[0].put("A", new Constant("A"));
-		options[0].put("B", new Constant("B"));
-		options[0].put("C", new Constant("C"));
-		options[1].put("A", new Constant("L"));
-		options[1].put("B", new Constant("M"));
-		options[1].put("C", new Constant("N"));
-		options[2].put("A", new Constant("X"));
-		options[2].put("B", new Constant("Y"));
-		options[2].put("C", new Constant("Z"));
+		options[0].put("A", new Literal("A"));
+		options[0].put("B", new Literal("B"));
+		options[0].put("C", new Literal("C"));
+		options[1].put("A", new Literal("L"));
+		options[1].put("B", new Literal("M"));
+		options[1].put("C", new Literal("N"));
+		options[2].put("A", new Literal("X"));
+		options[2].put("B", new Literal("Y"));
+		options[2].put("C", new Literal("Z"));
 
 		AbstractScope[] scopes = {
 				new Text("START\n"),
@@ -371,7 +419,7 @@ public class MiscTest {
 		for (int i = 1; i < scopes.length; i++) {
 			AbstractScope scope = scopes[i];
 
-			if (!head.tryPush(scope))
+			if (!head.pushElement(scope))
 				throw new RuntimeException(
 						"Scope scopes[" + i + "](" + scope + ") cannot be pushed"
 				);

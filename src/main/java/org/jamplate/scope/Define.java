@@ -15,8 +15,10 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Constant;
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.AbstractScope;
+import org.cufy.preprocessor.link.Scope;
+import org.jamplate.logic.Literal;
+import org.cufy.preprocessor.link.Logic;
 
 import java.util.Objects;
 
@@ -32,7 +34,10 @@ import java.util.Objects;
  * @author LSafer
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.17
+ * @deprecated it clashes with the {@code #DEFINE} command in {@code C} lang. Also it is redundant
+ * 		since {@link With} exists.
  */
+@Deprecated
 public class Define extends AbstractScope {
 	/**
 	 * The address this scope is defining.
@@ -74,7 +79,7 @@ public class Define extends AbstractScope {
 		Objects.requireNonNull(address, "address");
 		Objects.requireNonNull(text, "text");
 		this.address = address;
-		this.value = new Constant(text);
+		this.value = new Literal(text);
 	}
 
 	/**
@@ -98,11 +103,11 @@ public class Define extends AbstractScope {
 	}
 
 	@Override
-	public Logic memory(String address) {
+	public Logic find(String address) {
 		Objects.requireNonNull(address, "address");
 		return this.address.equals(address) ?
 			   this.value :
-			   super.memory(address);
+			   super.find(address);
 	}
 
 	@Override

@@ -15,9 +15,16 @@
  */
 package org.jamplate.logic;
 
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.ParseException;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.AbstractParser;
+import org.jamplate.util.Operators;
+import org.cufy.preprocessor.Poll;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * A logic evaluates to {@code true} if both two logics evaluates to {@code true}.
@@ -26,19 +33,25 @@ import java.util.Objects;
  * @version 0.0.6
  * @since 0.0.4 ~2020.09.22
  */
-public class And implements Logic {
+public class And extends AbstractOperator {
 	/**
-	 * The logic in the left.
+	 * Targets {@code and} statements.
+	 * <ul>
+	 *     <li>{@code OPERATOR} the operator detected</li>
+	 * </ul>
 	 *
-	 * @since 0.0.4 ~2020.09.22
+	 * @since 0.0.b ~2020.09.29
 	 */
-	protected final Logic left;
+	public static final Pattern PATTERN = Pattern.compile("(?<OPERATOR>[&][&]?)");
+
 	/**
-	 * The logic in the right.
+	 * Construct a new and operator with its {@link #left} and {@link #right} not initialized.
 	 *
-	 * @since 0.0.4 ~2020.09.22
+	 * @since 0.0.b ~2020.10.02
 	 */
-	protected final Logic right;
+	public And() {
+
+	}
 
 	/**
 	 * Construct a new {@code and} statement.
@@ -49,43 +62,49 @@ public class And implements Logic {
 	 * @since 0.0.4 ~2020.09.22
 	 */
 	public And(Logic left, Logic right) {
-		Objects.requireNonNull(left, "left");
-		Objects.requireNonNull(right, "right");
-		this.left = left;
-		this.right = right;
-	}
-
-	/**
-	 * Get the {@link #left} logic of this.
-	 *
-	 * @return the {@link #left} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic left() {
-		return this.left;
-	}
-
-	/**
-	 * Get the {@link #right} logic of this.
-	 *
-	 * @return the {@link #right} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic right() {
-		return this.right;
+		super(left, right);
 	}
 
 	@Override
-	public String evaluate(Memory memory) {
+	public Object evaluate(Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.left.evaluateBoolean(memory) &&
-			   this.right.evaluateBoolean(memory) ?
-			   "true" :
-			   "false";
+		return this.left.evaluateBoolean(memory) &
+			   this.right.evaluateBoolean(memory);
 	}
 
 	@Override
 	public String toString() {
 		return this.left + " & " + this.right;
+	}
+
+	/**
+	 * The default parser class of the {@link And} logic.
+	 *
+	 * @author LSafer
+	 * @version 0.0.b
+	 * @since 0.0.b ~2020.09.29
+	 */
+	public static class Parser extends AbstractParser.AbstractVote<And> {
+		@Override
+		public boolean link(List poll) {
+			return Poll.iterate(poll, Operators.link(And.class));
+		}
+
+		@Override
+		public boolean parse(List poll) {
+			return Poll.iterate(poll, Operators.parse(
+					And.PATTERN,
+					operator -> {
+						switch (operator) {
+							case "&":
+								return new And();
+							case "&&":
+								throw new ParseException("Unsupported operator: " + operator);
+							default:
+								throw new InternalError("Unknown operator: " + operator);
+						}
+					}
+			));
+		}
 	}
 }

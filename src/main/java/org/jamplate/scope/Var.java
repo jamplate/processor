@@ -15,8 +15,10 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Constant;
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.AbstractScope;
+import org.cufy.preprocessor.link.Scope;
+import org.jamplate.logic.Literal;
+import org.cufy.preprocessor.link.Logic;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;
@@ -53,7 +55,7 @@ public class Var extends AbstractScope {
 	public Var(String address) {
 		Objects.requireNonNull(address, "address");
 		this.address = address;
-		this.value = new Constant("");
+		this.value = new Literal("");
 	}
 
 	/**
@@ -93,11 +95,11 @@ public class Var extends AbstractScope {
 	}
 
 	@Override
-	public synchronized Logic memory(String address) {
+	public synchronized Logic find(String address) {
 		Objects.requireNonNull(address, "address");
 		return this.address.equals(address) ?
 			   this.value :
-			   super.memory(address);
+			   super.find(address);
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class Var extends AbstractScope {
 		Objects.requireNonNull(memory, "memory");
 
 		//little journey to previous scopes :)...
-		for (Scope scope = this.previous; scope != null; scope = scope.previous())
+		for (Scope scope = this.previous; scope != null; scope = scope.getPrevious())
 			if (scope instanceof Var) {
 				//found someone that could understand me!
 				Var var = (Var) scope;

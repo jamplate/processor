@@ -15,6 +15,8 @@
  */
 package org.jamplate.scope;
 
+import org.cufy.preprocessor.AbstractScope;
+import org.cufy.preprocessor.link.Scope;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;

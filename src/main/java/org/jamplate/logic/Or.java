@@ -15,9 +15,16 @@
  */
 package org.jamplate.logic;
 
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.ParseException;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.AbstractParser;
+import org.jamplate.util.Operators;
+import org.cufy.preprocessor.Poll;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * A logic evaluates to {@code true} if ether two logics evaluates to {@code true}.
@@ -26,19 +33,24 @@ import java.util.Objects;
  * @version 0.0.6
  * @since 0.0.4 ~2020.09.22
  */
-public class Or implements Logic {
+public class Or extends AbstractOperator {
 	/**
-	 * The logic in the left.
+	 * Targets {@code or} statements.
+	 * <ul>
+	 *     <li>{@code OPERATOR} the operator detected</li>
+	 * </ul>
 	 *
-	 * @since 0.0.4 ~2020.09.22
+	 * @since 0.0.b ~2020.10.03
 	 */
-	protected final Logic left;
+	public static final Pattern PATTERN = Pattern.compile("(?<OPERATOR>[|][|]?)");
+
 	/**
-	 * The logic in the right.
+	 * Construct a new or operator with its {@link #left} and {@link #right} not initialized.
 	 *
-	 * @since 0.0.4 ~2020.09.22
+	 * @since 0.0.b ~2020.10.02
 	 */
-	protected final Logic right;
+	public Or() {
+	}
 
 	/**
 	 * Construct a new {@code or} statement.
@@ -49,43 +61,49 @@ public class Or implements Logic {
 	 * @since 0.0.4 ~2020.09.22
 	 */
 	public Or(Logic left, Logic right) {
-		Objects.requireNonNull(left, "left");
-		Objects.requireNonNull(right, "right");
-		this.left = left;
-		this.right = right;
-	}
-
-	/**
-	 * Get the {@link #left} logic of this.
-	 *
-	 * @return the {@link #left} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic left() {
-		return this.left;
-	}
-
-	/**
-	 * Get the {@link #right} logic of this.
-	 *
-	 * @return the {@link #right} logic of this.
-	 * @since 0.0.6 ~2020.09.22
-	 */
-	public final Logic right() {
-		return this.right;
+		super(left, right);
 	}
 
 	@Override
-	public String evaluate(Memory memory) {
+	public Object evaluate(Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.left.evaluateBoolean(memory) ||
-			   this.right.evaluateBoolean(memory) ?
-			   "true" :
-			   "false";
+		return this.left.evaluateBoolean(memory) |
+			   this.right.evaluateBoolean(memory);
 	}
 
 	@Override
 	public String toString() {
 		return this.left + " | " + this.right;
+	}
+
+	/**
+	 * The default parser class of the {@link Or} logic.
+	 *
+	 * @author LSafer
+	 * @version 0.0.b
+	 * @since 0.0.b ~2020.10.03
+	 */
+	public static class Parser extends AbstractParser.AbstractVote<Or> {
+		@Override
+		public boolean link(List poll) {
+			return Poll.iterate(poll, Operators.link(Or.class));
+		}
+
+		@Override
+		public boolean parse(List poll) {
+			return Poll.iterate(poll, Operators.parse(
+					Or.PATTERN,
+					operator -> {
+						switch (operator) {
+							case "|":
+								return new Or();
+							case "||":
+								throw new ParseException("Unsupported operator: " + operator);
+							default:
+								throw new InternalError("Unknown operator: " + operator);
+						}
+					}
+			));
+		}
 	}
 }

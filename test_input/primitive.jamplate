@@ -1,0 +1,55 @@
+#make primitive:"boolean", prime:"boolean", Primitive:"Boolean", \
+		Prime:"Boolean"|\
+		\
+		primitive:"byte", prime:"byte", Primitive:"Byte", \
+		Prime:"Byte"|\
+		\
+		primitive:"character", prime:"char", Primitive:"Character", \
+		Prime:"Char"|\
+		\
+		primitive:"double", prime:"double", Primitive:"Double", \
+		Prime:"Double"|\
+		\
+		primitive:"float", prime:"float", Primitive:"Float", \
+		Prime:"Float"|\
+		\
+		primitive:"integer", prime:"int", Primitive:"Integer", \
+		Prime:"Int"|\
+		\
+		primitive:"long", prime:"long", Primitive:"Long", \
+		Prime:"Long"|\
+		\
+		primitive:"short", prime:"short", Primitive:"Short", \
+		Prime:"Short"
+#with primitive:primitive, prime:prime, Primitive:Primitive, Prime:Prime
+System.out.println("primitive prime Primitive Prime");
+#ln
+#if (primitive == "short") | (primitive == "boolean")
+//I'm a short, Or a boolean!
+#endif
+#ln
+#if (primitive == "boolean") & (primitive == "short")
+//I'm an impossible case!!!
+#elif (primitive == "boolean") & (prime == "boolean")
+//I'm definitely a boolean
+#endif
+#ln
+//HI :)
+
+#var iterator
+#if primitive == "boolean"
+#var iterator 100
+#else
+#var iterator 50
+#endif
+
+#var xlit iterator + "High"
+#var ylit iterator + 100
+
+#ln
+#paste "xlit: " + xlit
+#ln
+#paste "ylit: " + ylit
+
+#ln
+//I LIKE #paste iterator# itr

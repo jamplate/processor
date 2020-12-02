@@ -15,7 +15,9 @@
  */
 package org.jamplate.memory;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.AbstractMemory;
+import org.cufy.preprocessor.invoke.Memory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,19 +30,13 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.19
  */
-public class MapMemory implements Memory {
+public class MapMemory extends AbstractMemory {
 	/**
 	 * The map backing this memory.
 	 *
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	protected final Map<String, Logic> map;
-	/**
-	 * The old memory this memory may has been made with.
-	 *
-	 * @since 0.0.1 ~2020.09.19
-	 */
-	protected final Memory memory;
 
 	/**
 	 * Construct a new memory for the given {@code map}.
@@ -51,7 +47,6 @@ public class MapMemory implements Memory {
 	 */
 	public MapMemory(Map<String, Logic> map) {
 		Objects.requireNonNull(map, "map");
-		this.memory = null;
 		this.map = new HashMap(map);
 	}
 
@@ -64,9 +59,8 @@ public class MapMemory implements Memory {
 	 * @since 0.0.1 ~2020.09.19
 	 */
 	public MapMemory(Memory memory, Map<String, Logic> map) {
-		Objects.requireNonNull(memory, "memory");
+		super(memory);
 		Objects.requireNonNull(map, "map");
-		this.memory = memory;
 		this.map = new HashMap(map);
 	}
 
@@ -75,8 +69,6 @@ public class MapMemory implements Memory {
 		Objects.requireNonNull(address, "address");
 		return this.map.containsKey(address) ?
 			   this.map.get(address) :
-			   this.memory == null ?
-			   null :
-			   this.memory.find(address);
+			   super.find(address);
 	}
 }

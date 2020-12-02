@@ -15,19 +15,20 @@
  */
 package org.jamplate;
 
-import org.jamplate.logic.Constant;
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.AbstractProcessor;
+import org.cufy.preprocessor.ParseException;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.AbstractParser;
+import org.jamplate.logic.*;
 import org.jamplate.memory.MapMemory;
-import org.jamplate.memory.Memory;
-import org.jamplate.parser.LogicParser;
 import org.jamplate.parser.ScopeParser;
-import org.jamplate.processor.ScopeProcessor;
+import org.cufy.preprocessor.Poll;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * The main entry-point to the jamplate pre-processor.
@@ -36,25 +37,40 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.20
  */
-public final class Jamplate {
+public class Jamplate extends AbstractProcessor {
 	/**
-	 * A global instance of the class {@link LogicParser}.
+	 * An instance of the jamplate processor.
 	 *
-	 * @since 0.0.1 ~2020.09.20
+	 * @since 0.0.b ~2020.10.02
 	 */
-	private static final LogicParser LOGIC_PARSER = new LogicParser();
+	public static final Jamplate INSTANCE = new Jamplate();
+
 	/**
-	 * A global instance of the class {@link ScopeParser}.
+	 * Construct a new jamplate processor.
 	 *
-	 * @since 0.0.1 ~2020.09.20
+	 * @since 0.0.b ~2020.10.02
 	 */
-	private static final ScopeParser SCOPE_PARSER = new ScopeParser(Jamplate.LOGIC_PARSER);
-	/**
-	 * A global instance of the class {@link ScopeProcessor}.
-	 *
-	 * @since 0.0.1 ~2020.09.20
-	 */
-	private static final ScopeProcessor PROCESSOR = new ScopeProcessor(Jamplate.SCOPE_PARSER);
+	public Jamplate() {
+		super(new ScopeParser(new LogicParser(
+				Arrays.asList(
+						new Parentheses.Parser(
+								new Pattern[]{Literal.PATTERN},
+								new Pattern[]{Array.PATTERN}
+						),
+						new Array.Parser(
+								new Pattern[]{Literal.PATTERN},
+								new Pattern[]{Parentheses.PATTERN}
+						),
+						new Literal.Parser(),
+						new Constant.Parser(),
+						new Reference.Parser(),
+						new Negation.Parser(),
+						new And.Parser(),
+						new Or.Parser(),
+						new Addition.ParserVote()
+				)
+		)));
+	}
 
 	/**
 	 * Process the given {@code input} file, then output the results to the given {@code output}
@@ -80,7 +96,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		Jamplate.PROCESSOR.process(input, output, memory);
+		Jamplate.INSTANCE.process(input, output, memory);
 	}
 
 	/**
@@ -104,7 +120,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		return Jamplate.PROCESSOR.process(input, output, memory);
+		return Jamplate.INSTANCE.process(input, output, memory);
 	}
 
 	/**
@@ -124,7 +140,7 @@ public final class Jamplate {
 
 		Memory memory = Jamplate.createMemory(variables);
 
-		return Jamplate.PROCESSOR.process(input, memory);
+		return Jamplate.INSTANCE.process(input, memory);
 	}
 
 	/**
@@ -139,8 +155,82 @@ public final class Jamplate {
 		Objects.requireNonNull(variables, "variables");
 		Map<String, Logic> map = new HashMap<>();
 		variables.forEach((address, logic) ->
-				map.put(address, new Constant(logic))
+				map.put(address, new Literal(logic))
 		);
 		return new MapMemory(map);
 	}
+
+	/**
+	 * The default jamplate parser that parses {@link String}s into {@link Logic}s.
+	 *
+	 * @author LSafer
+	 * @version 0.0.6
+	 * @since 0.0.1 ~2020.09.19
+	 */
+	public static class LogicParser extends AbstractParser<Logic> {
+		/**
+		 * Construct a new logic parser.
+		 *
+		 * @param votes the votes to be used by the constructed logic parser.
+		 * @since 0.0.b ~2020.10.03
+		 */
+		public LogicParser(List<Vote<? extends Logic>> votes) {
+			super(votes);
+		}
+
+		@Override
+		public Logic make(List poll) {
+			Objects.requireNonNull(poll, "poll");
+
+			if (poll.size() == 0)
+				return new Literal("");
+
+			if (poll.size() == 1) {
+				Object object = poll.get(0);
+
+				if (object instanceof Logic)
+					return (Logic) object;
+
+				throw new ParseException("Invalid logic", Objects.toString(object, ""));
+			}
+
+			throw new ParseException("Invalid statement", Poll.toString(poll));
+		}
+	}
 }
+//		/**
+//		 * A pattern that detects constants in jamplate logic statements. The pattern should be used
+//		 * after clearing:
+//		 * <ul>
+//		 *     <li>parenthesis</li>
+//		 *     <li>any wrapper syntax that could be escaped in a string literal...</li>
+//		 * </ul>
+//		 *
+//		 * @since 0.0.1 ~2020.09.19
+//		 */
+//		protected final Pattern PATTERN_CONSTANT = Pattern.compile("\"([^\"]|((?<=\\\\)\"))*\"");
+//		/**
+//		 * A pattern that detects references in jamplate logic statements. The pattern should be
+//		 * used after clearing:
+//		 * <ul>
+//		 *     <li>parenthesis</li>
+//		 *     <li>constants</li>
+//		 *     <li>any wrapper syntax...</li>
+//		 * </ul>
+//		 *
+//		 * @since 0.0.1 ~2020.09.19
+//		 */
+//		protected final Pattern PATTERN_REFERENCE = Pattern.compile("(-|\\w|\\d)+");
+//		/**
+//		 * A pattern that detects whitespaces or any places that could be a whitespace. The pattern
+//		 * should be used after clearing:
+//		 * <ul>
+//		 *     <li>parenthesis</li>
+//		 *     <li>constants</li>
+//		 *     <li>references</li>
+//		 *     <li>any syntax that could contain a whitespace...</li>
+//		 * </ul>
+//		 *
+//		 * @since 0.0.1 ~2020.09.19
+//		 */
+//		protected final Pattern PATTERN_WHITESPACES = Pattern.compile("(\\s+)|[|]|[+]|[&]|(!=)|(==)|(!(?!=))");

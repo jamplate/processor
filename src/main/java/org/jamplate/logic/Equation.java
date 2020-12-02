@@ -15,9 +15,16 @@
  */
 package org.jamplate.logic;
 
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.ParseException;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.AbstractParser;
+import org.jamplate.util.Operators;
+import org.cufy.preprocessor.Poll;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * A logic that returns 'true' or 'false' depending on the equality between other two logics.
@@ -26,19 +33,42 @@ import java.util.Objects;
  * @version 0.0.1
  * @since 0.0.1 ~2020.09.16
  */
-public class Equation implements Logic {
+public class Equation extends AbstractOperator {
 	/**
-	 * The logic at the left.
+	 * Targets {@code equals} statements.
+	 * <ul>
+	 *     <li>{@code OPERATOR} the operator detected</li>
+	 * </ul>
 	 *
-	 * @since 0.0.1 ~2020.09.16
+	 * @since 0.0.b ~2020.10.03
 	 */
-	protected final Logic left;
+	public static final Pattern PATTERN = Pattern.compile("(?<OPERATOR>[!=][=][=]?)");
+
 	/**
-	 * The logic at the right.
+	 * True, means this is a {@code not equal} logic.
 	 *
-	 * @since 0.0.1 ~2020.09.16
+	 * @since 0.0.b ~2020.10.03
 	 */
-	protected final Logic right;
+	protected final boolean negated;
+
+	/**
+	 * Construct a new equation operator with its {@link #left} and {@link #right} not initialized.
+	 *
+	 * @since 0.0.b ~2020.10.02
+	 */
+	public Equation() {
+		this.negated = false;
+	}
+
+	/**
+	 * Construct a new equation operator with its {@link #left} and {@link #right} not initialized.
+	 *
+	 * @param negated true, means the constructed equation will be a {@code not equal} logic.
+	 * @since 0.0.b ~2020.10.02
+	 */
+	public Equation(boolean negated) {
+		this.negated = negated;
+	}
 
 	/**
 	 * Construct a new logic that evaluates 'true' if the given {@code left} evaluate to a value
@@ -51,41 +81,78 @@ public class Equation implements Logic {
 	 * @since 0.0.1 ~2020.09.13
 	 */
 	public Equation(Logic left, Logic right) {
-		Objects.requireNonNull(left, "left");
-		Objects.requireNonNull(right, "right");
-		this.left = left;
-		this.right = right;
+		super(left, right);
+		this.negated = false;
 	}
 
 	/**
-	 * Get the {@link #left} logic of this.
+	 * Construct a new logic that evaluates 'true' if the given {@code left} evaluate to a value
+	 * that equals to the value evaluated from the given {@code right}. Otherwise, evaluates to
+	 * 'false'.
 	 *
-	 * @return the {@link #left} logic of this.
-	 * @since 0.0.1 ~2020.09.19
+	 * @param left    the left logic.
+	 * @param right   the right logic.
+	 * @param negated true, means the constructed equation will be a {@code not equal} logic.
+	 * @throws NullPointerException if the given {@code left} or {@code right} is null.
+	 * @since 0.0.1 ~2020.09.13
 	 */
-	public final Logic left() {
-		return this.left;
-	}
-
-	/**
-	 * Get the {@link #right} logic of this.
-	 *
-	 * @return the {@link #right} logic of this.
-	 * @since 0.0.1 ~2020.09.19
-	 */
-	public final Logic right() {
-		return this.right;
+	public Equation(Logic left, Logic right, boolean negated) {
+		super(left, right);
+		this.negated = negated;
 	}
 
 	@Override
-	public String evaluate(Memory memory) {
+	public Object evaluate(Memory memory) {
 		Objects.requireNonNull(memory, "scope");
-		boolean logic = Logic.equals(memory, this.left, this.right);
-		return logic ? "true" : "false";
+		return Logic.equals(memory, this.left, this.right) != this.negated;
 	}
 
 	@Override
 	public String toString() {
-		return this.left + " == " + this.right;
+		return this.left + (this.negated ? " != " : " == ") + this.right;
+	}
+
+	/**
+	 * Determine if this equation is negated or not.
+	 *
+	 * @return true, if this equation is negated.
+	 * @since 0.0.b ~2020.10.04
+	 */
+	public boolean isNegated() {
+		return this.negated;
+	}
+
+	/**
+	 * The default parser class of the {@link Equation} logic.
+	 *
+	 * @author LSafer
+	 * @version 0.0.b
+	 * @since 0.0.b ~2020.10.03
+	 */
+	public static class Parser extends AbstractParser.AbstractVote<Equation> {
+		@Override
+		public boolean link(List poll) {
+			return Poll.iterate(poll, Operators.link(Equation.class));
+		}
+
+		@Override
+		public boolean parse(List poll) {
+			return Poll.iterate(poll, Operators.parse(
+					Equation.PATTERN,
+					operator -> {
+						switch (operator) {
+							case "==":
+								return new Equation(false);
+							case "!=":
+								return new Equation(true);
+							case "===":
+							case "!==":
+								throw new ParseException("Unsupported operator: " + operator);
+							default:
+								throw new InternalError("Unknown operator: " + operator);
+						}
+					}
+			));
+		}
 	}
 }

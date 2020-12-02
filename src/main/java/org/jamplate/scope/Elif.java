@@ -15,7 +15,8 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.link.Scope;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;
@@ -71,9 +72,7 @@ public class Elif extends AbstractBranchScope {
 	public Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(appendable, "appendable");
 
-		boolean logic = this.condition.evaluateBoolean(memory);
-
-		if (logic) {
+		if (this.condition.evaluateBoolean(memory)) {
 			if (this.fork != null)
 				appendable = this.fork.invoke(appendable, memory);
 		} else {
@@ -90,16 +89,16 @@ public class Elif extends AbstractBranchScope {
 	}
 
 	@Override
-	public boolean tryAttachTo(Scope scope) {
+	public boolean setPrevious(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return (scope instanceof If || scope instanceof Elif) &&
-			   super.tryAttachTo(scope);
+			   super.setPrevious(scope);
 	}
 
 	@Override
-	public boolean tryBranch(Scope branch) {
+	public boolean setBranch(Scope branch) {
 		Objects.requireNonNull(branch, "branch");
 		return (branch instanceof Elif || branch instanceof Else) &&
-			   super.tryBranch(branch);
+			   super.setBranch(branch);
 	}
 }

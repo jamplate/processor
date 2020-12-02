@@ -15,9 +15,10 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.invoke.Memory;
+import org.cufy.preprocessor.link.Scope;
 import org.jamplate.memory.ConstantMemory;
-import org.jamplate.memory.Memory;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.File;
@@ -63,6 +64,7 @@ public class Make extends AbstractHeadScope {
 	@Override
 	public void invoke(File file, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(file, "file");
+		Objects.requireNonNull(memory, "memory");
 		String name = file.getName();
 		File directory = file.getParentFile();
 
@@ -75,7 +77,7 @@ public class Make extends AbstractHeadScope {
 					optionName = optionName.replace(
 							pair.getKey(),
 							//to not forget about the old definitions, use 'memory' instead of 'optionMemory'
-							pair.getValue().evaluate(optionMemory)
+							pair.getValue().evaluateString(optionMemory)
 					);
 
 				File optionFile = new File(directory, optionName);
@@ -110,8 +112,8 @@ public class Make extends AbstractHeadScope {
 	}
 
 	@Override
-	public boolean tryAttachTo(Scope scope) {
+	public boolean setPrevious(Scope scope) {
 		return scope instanceof Make &&
-			   super.tryAttachTo(scope);
+			   super.setPrevious(scope);
 	}
 }

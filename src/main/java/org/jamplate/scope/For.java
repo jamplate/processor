@@ -15,9 +15,10 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.link.Scope;
 import org.jamplate.memory.ConstantMemory;
-import org.jamplate.memory.Memory;
+import org.cufy.preprocessor.invoke.Memory;
 import org.jamplate.memory.ScopeMemory;
 
 import java.io.IOException;
@@ -93,14 +94,14 @@ public class For extends AbstractForkScope {
 	}
 
 	@Override
-	public boolean tryAttach(Scope scope) {
+	public boolean setNext(Scope scope) {
 		Objects.requireNonNull(scope, "scope");
 		return scope instanceof Endfor &&
-			   super.tryAttach(scope);
+			   super.setNext(scope);
 	}
 
 	@Override
-	public boolean tryBranch(Scope branch) {
+	public boolean setBranch(Scope branch) {
 		Objects.requireNonNull(branch, "branch");
 		return false;
 	}

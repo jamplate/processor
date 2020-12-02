@@ -15,11 +15,17 @@
  */
 package org.jamplate.scope;
 
-import org.jamplate.logic.Logic;
+import org.cufy.preprocessor.link.Logic;
+import org.cufy.preprocessor.AbstractParser;
+import org.cufy.preprocessor.link.Scope;
 import org.jamplate.memory.ScopeMemory;
+import org.cufy.preprocessor.Poll;
+import org.jamplate.util.Scopes;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * A scope that has a {@link #fork} scope that will be invoked only if a {@code logic} is evaluated
@@ -38,6 +44,13 @@ import java.util.Objects;
  * @since 0.0.1 ~2020.09.17
  */
 public class If extends AbstractForkScope {
+	/**
+	 * The pattern of an {@code if} command.
+	 *
+	 * @since 0.0.b ~2020.10.08
+	 */
+	public static final Pattern PATTERN = Pattern.compile("^#(?<NAME>IF)(?<LOGIC>.*)$", Pattern.CASE_INSENSITIVE);
+
 	/**
 	 * The logic that if it evaluated true, the {@link #fork} scope will be invoked. Otherwise the
 	 * {@link #branch} scope will be invoked.
@@ -73,9 +86,7 @@ public class If extends AbstractForkScope {
 	public Appendable invoke(Appendable appendable, ScopeMemory memory) throws IOException {
 		Objects.requireNonNull(appendable, "appendable");
 
-		boolean logic = this.condition.evaluateBoolean(memory);
-
-		if (logic) {
+		if (this.condition.evaluateBoolean(memory)) {
 			if (this.fork != null)
 				appendable = this.fork.invoke(appendable, memory);
 		} else {
@@ -87,21 +98,44 @@ public class If extends AbstractForkScope {
 	}
 
 	@Override
-	public boolean tryAttach(Scope scope) {
-		Objects.requireNonNull(scope, "scope");
-		return scope instanceof Endif &&
-			   super.tryAttach(scope);
-	}
-
-	@Override
-	public boolean tryBranch(Scope branch) {
-		Objects.requireNonNull(branch, "branch");
-		return (branch instanceof Elif || branch instanceof Else) &&
-			   super.tryBranch(branch);
-	}
-
-	@Override
 	public String toString() {
 		return "#IF " + this.condition;
+	}
+
+	@Override
+	public boolean setNext(Scope scope) {
+		Objects.requireNonNull(scope, "scope");
+		return scope instanceof Endif &&
+			   super.setNext(scope);
+	}
+
+	@Override
+	public boolean setBranch(Scope branch) {
+		Objects.requireNonNull(branch, "branch");
+		return (branch instanceof Elif || branch instanceof Else) &&
+			   super.setBranch(branch);
+	}
+
+	public static class Parser extends AbstractParser.AbstractVote<If> {
+		@Override
+		public boolean link(List poll, org.cufy.preprocessor.Parser<? super If> parser) {
+
+		}
+
+		@Override
+		public boolean parse(List poll, org.cufy.preprocessor.Parser<? super If> parser) {
+			Objects.requireNonNull(poll, "poll");
+			return Poll.iterate(poll, Scopes.parse(
+					If.PATTERN,
+					(name, logic) -> {
+						switch (name.toLowerCase()) {
+							case "if":
+								return new If();
+							default:
+								throw new InternalError("Unknown name: " + name);
+						}
+					}
+			));
+		}
 	}
 }
