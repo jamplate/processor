@@ -23,110 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03300a98-d016-47dd-9db6-ab16cb99c9db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractLogic.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractScope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Parser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Poll.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Elements.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Logic.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/RegionMatcher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Scope.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractElement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractMemory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractPosition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/Element.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/Example.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/Memory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/Position.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/Source.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/cufy/text/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Array.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Literal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Parentheses.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Placeholder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/AbstractOperatorVoteParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Groups.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Linkables.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Logics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Modifiers.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Operators.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Parsers.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Scopes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Strings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Values.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/util/package-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_input/axe.jamplate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_input/primitive.jamplate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/Jamplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/Jamplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/ParseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/ParseException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Addition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Addition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/And.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/And.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Equation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Logic.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Negation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Negation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Or.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Or.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Reference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Reference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Switch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Switch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ConstantMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ConstantMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/EmptyMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/jamplate/memory/EmptyMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/MapMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/MapMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/Memory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ScopeMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ScopeMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/LogicParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/Parser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/PollParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/ScopeParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/ScopeParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/processor/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Processor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/processor/ScopeProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/processor/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractBranchScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractForkScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractHeadScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractJoinScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/AbstractTipScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/BranchScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Define.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Define.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Elif.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Elif.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Else.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Else.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endfor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endfor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endif.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endif.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endwith.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endwith.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/For.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/For.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/ForkScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/HeadScope.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Association.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/If.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/If.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/JoinScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Line.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Make.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Make.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Paste.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Paste.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Scope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Tab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Tab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Text.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Text.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/TipScope.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Var.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Var.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/With.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/With.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/jamplate/JamplateTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/jamplate/JamplateTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/jamplate/MiscTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/jamplate/MiscTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jamplate-processor.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jamplate-processor.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,13 +69,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.1.2\plugins\maven\lib\maven3" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
@@ -188,10 +81,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../framework" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -213,17 +107,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Gradle.JamplateTest.testFile">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="JamplateTest.testFile" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -240,7 +123,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="MiscTest.A" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -259,7 +144,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="MiscTest.split" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -278,7 +165,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -320,7 +209,14 @@
       <workItem from="1605805349574" duration="1383000" />
       <workItem from="1606595610137" duration="134000" />
       <workItem from="1606595761893" duration="1479000" />
-      <workItem from="1606923950850" duration="824000" />
+      <workItem from="1606923950850" duration="1886000" />
+      <workItem from="1606933500740" duration="182000" />
+      <workItem from="1606933735712" duration="312000" />
+      <workItem from="1606934206545" duration="1302000" />
+      <workItem from="1606935768780" duration="23000" />
+      <workItem from="1606935806987" duration="973000" />
+      <workItem from="1607425275881" duration="621000" />
+      <workItem from="1608905086712" duration="366000" />
     </task>
     <servers />
   </component>
@@ -338,131 +234,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="733" y="60" key="#Auto_Import" timestamp="1601972240664">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="733" y="60" key="#Auto_Import/0.0.1920.1050@0.0.1920.1050" timestamp="1601972240664" />
-    <state x="586" y="203" width="1126" height="753" key="#Inspections" timestamp="1606596462035">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="586" y="203" width="1126" height="753" key="#Inspections/0.0.1920.1050@0.0.1920.1050" timestamp="1606596462035" />
-    <state x="765" y="231" key="#com.intellij.ide.util.MemberChooser" timestamp="1604475298140">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="765" y="231" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1604475298140" />
-    <state x="640" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1606595619331">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="640" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1606595619331" />
-    <state x="797" y="449" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1604468837295">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="797" y="449" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1604468837295" />
-    <state x="743" y="393" width="433" height="309" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1602840171612">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="743" y="393" width="433" height="309" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1050@0.0.1920.1050" timestamp="1602840171612" />
-    <state x="743" y="369" key="#com.intellij.refactoring.move.moveInner.MoveInnerDialog" timestamp="1604468837788">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="743" y="369" key="#com.intellij.refactoring.move.moveInner.MoveInnerDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1604468837788" />
-    <state x="676" y="342" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog" timestamp="1602756912161">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="676" y="342" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1602756912161" />
-    <state x="581" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1603023167709">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="581" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1603023167709" />
-    <state x="690" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602446855400">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="690" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1602446855400" />
-    <state x="132" y="282" key="#xdebugger.evaluate" timestamp="1602087383951">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="132" y="282" key="#xdebugger.evaluate/0.0.1920.1050@0.0.1920.1050" timestamp="1602087383951" />
-    <state x="740" y="279" key="FileChooserDialogImpl" timestamp="1606923975310">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="740" y="279" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1606923975310" />
-    <state width="1397" height="352" key="GridCell.Tab.0.bottom" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.0.center" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.0.left" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.0.right" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.1.bottom" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.1.center" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.1.left" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state width="1397" height="352" key="GridCell.Tab.1.right" timestamp="1602163538005">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="1397" height="352" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1602163538005" />
-    <state x="461" y="169" width="1221" height="711" key="SettingsEditor" timestamp="1605805545026">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="461" y="169" width="1221" height="711" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1605805545026" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1602195902619">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1920.1050@0.0.1920.1050" timestamp="1602195902619" />
-    <state x="739" y="369" key="cloudConfig.PluginsDialog" timestamp="1606595701337">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="739" y="369" key="cloudConfig.PluginsDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1606595701337" />
-    <state x="832" y="369" key="cloudConfig.SelfSettingsDialog" timestamp="1606595696948">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="832" y="369" key="cloudConfig.SelfSettingsDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1606595696948" />
-    <state x="614" y="135" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604473121186">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="614" y="135" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1604473121186" />
-    <state x="777" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604329287395">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="777" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1050@0.0.1920.1050" timestamp="1604329287395" />
-    <state x="690" y="285" key="extract.method.dialog" timestamp="1602068352535">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="690" y="285" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1602068352535" />
-    <state width="744" height="400" key="javadoc.popup.new" timestamp="1606596471653">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="744" height="400" key="javadoc.popup.new/0.0.1920.1050@0.0.1920.1050" timestamp="1606596471653" />
-    <state x="660" y="282" key="refactoring.ChangeSignatureDialog" timestamp="1602419235619">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="660" y="282" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1602419235619" />
-    <state x="616" y="243" width="672" height="677" key="run.anything.popup" timestamp="1604487811594">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="616" y="243" width="672" height="677" key="run.anything.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1604487811594" />
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1604498732805">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1604498732805" />
   </component>
 </project>

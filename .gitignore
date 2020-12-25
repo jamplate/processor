@@ -1,6 +1,7 @@
 /test_input
 /test_output
 .gradle
+.idea
 /build/
 
 # Ignore Gradle GUI config
