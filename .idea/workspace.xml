@@ -3,116 +3,165 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
-    <select />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="03300a98-d016-47dd-9db6-ab16cb99c9db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jamplate-processor.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jamplate-processor.iml" afterDir="false" />
+    <list default="true" id="3cacf250-5ded-4f6c-8153-11ec05a688ca" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/Visitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/impl/model/source/FileShadow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/impl/model/source/FileSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/model/sketch/Sketch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/model/sketch/package-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/model/source/Shadow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/model/source/Source.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jamplate-processor.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractLogic.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractProcessor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/AbstractScope.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/ParseException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Parser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Poll.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/Processor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Elements.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Logic.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/RegionMatcher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/Scope.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/link/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/preprocessor/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/model/source/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractElement.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractMemory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractPosition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/AbstractSource.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/Element.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/Example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/Memory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/Position.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/Source.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/cufy/text/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/Jamplate.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Addition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/And.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Array.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Association.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Constant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Equation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Literal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Negation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Or.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Parentheses.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Placeholder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Reference.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/Switch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/logic/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/impl/model/sketch/AbstractSketch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ConstantMemory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/MapMemory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/ScopeMemory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/memory/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/Node.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/AbstractOperatorVoteParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/ScopeParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/parser/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jamplate/impl/model/source/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Define.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Elif.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Else.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endfor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endif.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Endwith.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/For.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/If.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Line.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Make.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Paste.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Tab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Text.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/Var.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/scope/With.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Groups.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Linkables.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Logics.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Modifiers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Operators.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Parsers.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Scopes.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Strings.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/Values.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jamplate/util/package-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/jamplate/JamplateTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/jamplate/MiscTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/jamplate/memory/EmptyMemory.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodeInsightWorkspaceSettings">
-    <option name="optimizeImportsOnTheFly" value="true" />
-  </component>
-  <component name="CodeStyleSettingsInfer">
-    <option name="done" value="true" />
-  </component>
-  <component name="ComposerSettings">
-    <execution />
-  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
-        <projects_view />
-      </state>
-    </system>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="package-info" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectCodeStyleSettingsMigration">
-    <option name="version" value="1" />
-  </component>
-  <component name="ProjectId" id="1iOAW9GM1BeWrh42uu7mEK8n3Mv" />
+  <component name="ProjectId" id="1mHZ59iGfhQXuAlcB2J5ann0LGF" />
   <component name="ProjectViewState">
     <option name="flattenModules" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="showModules" value="false" />
+    <option name="showVisibilityIcons" value="true" />
     <option name="sortByType" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
-    <property name="show.unlinked.gradle.project.popup" value="true" />
+    <property name="settings.editor.selected.configurable" value="inlay.hints.JAVA" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveMembersDialog.RECENTS_KEY">
-      <recent name="org.cufy.preprocessor.AbstractLinkable" />
-      <recent name="org.jamplate.util.Groups" />
-      <recent name="org.jamplate.util.Operators" />
-      <recent name="org.jamplate.logic.Reference" />
-      <recent name="org.jamplate.logic.Or" />
-    </key>
-    <key name="MoveInnerDialog.RECENTS_KEY">
-      <recent name="org.cufy.text" />
-      <recent name="org.cufy.preprocessor.logic" />
+    <key name="IntroduceConstantDialog.RECENTS_KEY">
+      <recent name="org.jamplate.util.Shadow" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.JamplateTest.testFile">
-    <configuration name="JamplateTest.testFile" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.LongCharSequenceTest.unsafe">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileShadowTest.read" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;org.jamplate.JamplateTest.testFile&quot;" />
+        <option name="scriptParameters" value="--tests &quot;org.jamplate.impl.model.source.FileShadowTest.read&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -128,12 +177,12 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="MiscTest.A" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="LongCharSequenceTest.main" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;org.jamplate.MiscTest.A&quot;" />
+        <option name="scriptParameters" value="--tests &quot;org.jamplate.util.LongCharSequenceTest.main&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -149,12 +198,12 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="MiscTest.split" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="LongCharSequenceTest.unsafe" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;org.jamplate.MiscTest.split&quot;" />
+        <option name="scriptParameters" value="--tests &quot;org.jamplate.util.LongCharSequenceTest.unsafe&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -172,51 +221,24 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.MiscTest.split" />
-        <item itemvalue="Gradle.MiscTest.A" />
-        <item itemvalue="Gradle.JamplateTest.testFile" />
+        <item itemvalue="Gradle.LongCharSequenceTest.unsafe" />
+        <item itemvalue="Gradle.LongCharSequenceTest.main" />
+        <item itemvalue="Gradle.FileShadowTest.read" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="03300a98-d016-47dd-9db6-ab16cb99c9db" name="Default Changelist" comment="" />
-      <created>1601768297989</created>
+      <changelist id="3cacf250-5ded-4f6c-8153-11ec05a688ca" name="Default Changelist" comment="" />
+      <created>1609152296309</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1601768297989</updated>
-      <workItem from="1601768300866" duration="60777000" />
-      <workItem from="1602051043096" duration="16546000" />
-      <workItem from="1602076665906" duration="20497000" />
-      <workItem from="1602163588124" duration="65623000" />
-      <workItem from="1602525529875" duration="1239000" />
-      <workItem from="1602574462142" duration="593000" />
-      <workItem from="1602741280048" duration="33064000" />
-      <workItem from="1602941298528" duration="16473000" />
-      <workItem from="1603199909612" duration="10475000" />
-      <workItem from="1603864546443" duration="5756000" />
-      <workItem from="1603954522190" duration="1051000" />
-      <workItem from="1603957774104" duration="11634000" />
-      <workItem from="1604224842958" duration="5718000" />
-      <workItem from="1604328564344" duration="21924000" />
-      <workItem from="1604484128287" duration="6501000" />
-      <workItem from="1604849757169" duration="646000" />
-      <workItem from="1605528462693" duration="7000" />
-      <workItem from="1605679987126" duration="22000" />
-      <workItem from="1605680034313" duration="594000" />
-      <workItem from="1605781026985" duration="1329000" />
-      <workItem from="1605805349574" duration="1383000" />
-      <workItem from="1606595610137" duration="134000" />
-      <workItem from="1606595761893" duration="1479000" />
-      <workItem from="1606923950850" duration="1886000" />
-      <workItem from="1606933500740" duration="182000" />
-      <workItem from="1606933735712" duration="312000" />
-      <workItem from="1606934206545" duration="1302000" />
-      <workItem from="1606935768780" duration="23000" />
-      <workItem from="1606935806987" duration="973000" />
-      <workItem from="1607425275881" duration="621000" />
-      <workItem from="1608905086712" duration="366000" />
+      <updated>1609152296309</updated>
+      <workItem from="1609152300383" duration="2808000" />
+      <workItem from="1609250926394" duration="1781000" />
+      <workItem from="1609678467161" duration="2082000" />
+      <workItem from="1609959780783" duration="50599000" />
     </task>
     <servers />
   </component>
@@ -234,5 +256,12 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="org.jamplate.impl.model.source.FileShadow" memberName="buffer" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>
