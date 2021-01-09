@@ -12,9 +12,12 @@
  *	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
- *//**
+ */
+/**
+ * A package specialized to manage initial thoughts about the elements.
+ *
  * @author LSafer
- * @version 0.0.0
- * @since 0.0.0 ~2021.01.06
+ * @version 0.0.2
+ * @since 0.0.2 ~2021.01.06
  */
 package org.jamplate.model.sketch;

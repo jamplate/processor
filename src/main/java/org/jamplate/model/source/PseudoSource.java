@@ -17,8 +17,8 @@ package org.jamplate.model.source;
 
 /**
  * @author LSafer
- * @version 0.0.0
- * @since 0.0.0 ~2021.01.09
+ * @version 0.0.2
+ * @since 0.0.2 ~2021.01.09
  */
 public class PseudoSource<D extends Comparable> extends AbstractSource<D> {
 	/**

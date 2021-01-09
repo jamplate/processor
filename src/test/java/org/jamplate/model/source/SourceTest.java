@@ -13,21 +13,13 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.model.source;
+package org.jamplate.model.source;
 
-import org.jamplate.model.source.PseudoSource;
-import org.jamplate.model.source.Source;
-import org.jamplate.model.source.SourceRelation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-/**
- * @author LSafer
- * @version 0.0.0
- * @since 0.0.0 ~2021.01.09
- */
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
 public class SourceTest {
 	static void assertRelation(Source<?> source, Source<?> other, SourceRelation relation) {

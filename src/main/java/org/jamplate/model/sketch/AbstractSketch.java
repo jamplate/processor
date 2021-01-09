@@ -16,7 +16,6 @@
 package org.jamplate.model.sketch;
 
 import org.jamplate.Visitor;
-import org.jamplate.model.sketch.Sketch;
 import org.jamplate.model.source.Source;
 
 import java.util.Objects;
