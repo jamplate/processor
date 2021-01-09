@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.cufy'
-version 'alpha'
+version '0.0.2'
 
 repositories {
 	mavenCentral()
