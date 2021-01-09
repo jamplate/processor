@@ -44,34 +44,33 @@ public interface Sketch extends Node<Sketch> {
 	 * @since 0.0.2 ~2021.01.9
 	 */
 	boolean available();
-
-	/**
-	 * Check if the given {@code sketch} can be sub sketch of this.
-	 * <br>
-	 * Reasons for a sketch to reject another sub sketch:
-	 * <ul>
-	 *     <li>The parent sketch's source does not {@link Source#contains(Source)} the child's source.</li>
-	 *     <li>The parent sketch has a sub-source that {@link Source#clashWith(Source)} with the child's source.</li>
-	 * </ul>
-	 *
-	 * @param sketch the sketch to be checked.
-	 * @return true, if the given {@code sketch} can be {@link #put(Sketch)} to this sketch.
-	 * @throws NullPointerException if the given {@code sketch} is null.
-	 * @since 0.0.2 ~2021.01.9
-	 */
-	boolean check(Sketch sketch);
+//
+//	/**
+//	 * Check if the given {@code sketch} can be sub sketch of this.
+//	 * <br>
+//	 * Reasons for a sketch to reject another sub sketch:
+//	 * <ul>
+//	 *     <li>The parent sketch's source does not {@link Source#contains(Source)} the child's source.</li>
+//	 *     <li>The parent sketch has a sub-source that {@link Source#clashWith(Source)} with the child's source.</li>
+//	 * </ul>
+//	 *
+//	 * @param sketch the sketch to be checked.
+//	 * @return true, if the given {@code sketch} can be {@link #put(Sketch)} to this sketch.
+//	 * @throws NullPointerException if the given {@code sketch} is null.
+//	 * @since 0.0.2 ~2021.01.9
+//	 */
+//	boolean check(Sketch sketch);
 
 	/**
 	 * Put the given sketch in this sketch.
 	 *
 	 * @param sketch the sketch to be put.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
-	 * @throws IllegalArgumentException if {@link #check(Sketch) this.check(sketch)} returned false.
 	 * @since 0.0.2 ~2021.01.7
 	 */
 	void put(Sketch sketch);
 
-	void remove(Sketch sketch);
+//	void remove(Sketch sketch);
 
 	/**
 	 * Get the source of this sketch.
@@ -81,15 +80,15 @@ public interface Sketch extends Node<Sketch> {
 	 */
 	Source source();
 
-	/**
-	 * Transfer the given {@code child} sketch to the given {@code parent} sketch. The given {@code child} sketch MUST be a sketch that this sketch
-	 * contain. The {@code parent} sketch must be able to {@link #put(Sketch)} the given {@code child} sketch in it.
-	 *
-	 * @param parent the sketch to be the new parent for the given {@code child} sketch.
-	 * @param child
-	 * @throws IllegalArgumentException if {@link Source#contains(Source) parent.source().contains(child.source())} returned false.
-	 * @throws NullPointerException     if the given {@code parent} or {@code child} is null.
-	 * @since 0.0.2 ~2021.01.9
-	 */
-	void transfer(Sketch parent, Sketch child);
+//	/**
+//	 * Transfer the given {@code child} sketch to the given {@code parent} sketch. The given {@code child} sketch MUST be a sketch that this sketch
+//	 * contain. The {@code parent} sketch must be able to {@link #put(Sketch)} the given {@code child} sketch in it.
+//	 *
+//	 * @param parent the sketch to be the new parent for the given {@code child} sketch.
+//	 * @param child
+//	 * @throws IllegalArgumentException if {@link Source#contains(Source) parent.source().contains(child.source())} returned false.
+//	 * @throws NullPointerException     if the given {@code parent} or {@code child} is null.
+//	 * @since 0.0.2 ~2021.01.9
+//	 */
+//	void transfer(Sketch parent, Sketch child);
 }
