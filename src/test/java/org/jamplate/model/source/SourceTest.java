@@ -15,6 +15,7 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.model.source.Source.Relation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -22,14 +23,33 @@ import static org.junit.Assert.assertSame;
 
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
 public class SourceTest {
-	static void assertRelation(Source<?> source, Source<?> other, SourceRelation relation) {
-		assertSame("Relation of " + other + " to " + source, relation, source.relationOf(other));
-		assertSame("Relation of " + source + " to " + other, relation.opposite(), other.relationOf(source));
+	static void assertRelation(Source<?> source, Source<?> other, Relation relation) {
+		assertSame(
+				"Relation of " + other + " to " + source,
+				relation,
+				Source.relation(source, other)
+		);
+		assertSame(
+				"Relation of " + source + " to " +
+				other,
+				relation.opposite(),
+				Source.relation(other, source)
+		);
+		assertSame(
+				"Dominance of " + other + " over " + source,
+				relation.dominance(),
+				Source.dominance(source, other)
+		);
+		assertSame(
+				"Dominance of " + source + " over " + other,
+				relation.dominance().opposite(),
+				Source.dominance(other, source)
+		);
 	}
 
 	@Test
 	public void relations() {
-		Source<?> source = new PseudoSource<>(0, "ABC0123", 0);
+		Source<?> source = new PseudoSource<>("pseudo", "ABC0123", 0);
 		Source<?> letters = source.slice(0, 3);
 		Source<?> numbers = source.slice(3, 4);
 		Source<?> b = source.slice(1, 1);
@@ -42,31 +62,31 @@ public class SourceTest {
 		assertEquals("Wrong Slice", "BC", bc.content());
 		assertEquals("Wrong Slice", "C0", c0.content());
 
-		assertRelation(source, source, SourceRelation.SAME);
-		assertRelation(source, letters, SourceRelation.START);
-		assertRelation(source, numbers, SourceRelation.END);
-		assertRelation(source, b, SourceRelation.FRAGMENT);
-		assertRelation(source, bc, SourceRelation.FRAGMENT);
-		assertRelation(source, c0, SourceRelation.FRAGMENT);
+		assertRelation(source, source, Relation.SAME);
+		assertRelation(source, letters, Relation.START);
+		assertRelation(source, numbers, Relation.END);
+		assertRelation(source, b, Relation.FRAGMENT);
+		assertRelation(source, bc, Relation.FRAGMENT);
+		assertRelation(source, c0, Relation.FRAGMENT);
 
-		assertRelation(letters, letters, SourceRelation.SAME);
-		assertRelation(letters, numbers, SourceRelation.NEXT);
-		assertRelation(letters, b, SourceRelation.FRAGMENT);
-		assertRelation(letters, bc, SourceRelation.END);
-		assertRelation(letters, c0, SourceRelation.OVERFLOW);
+		assertRelation(letters, letters, Relation.SAME);
+		assertRelation(letters, numbers, Relation.NEXT);
+		assertRelation(letters, b, Relation.FRAGMENT);
+		assertRelation(letters, bc, Relation.END);
+		assertRelation(letters, c0, Relation.OVERFLOW);
 
-		assertRelation(numbers, numbers, SourceRelation.SAME);
-		assertRelation(numbers, b, SourceRelation.BEFORE);
-		assertRelation(numbers, bc, SourceRelation.PREVIOUS);
-		assertRelation(numbers, c0, SourceRelation.UNDERFLOW);
+		assertRelation(numbers, numbers, Relation.SAME);
+		assertRelation(numbers, b, Relation.BEFORE);
+		assertRelation(numbers, bc, Relation.PREVIOUS);
+		assertRelation(numbers, c0, Relation.UNDERFLOW);
 
-		assertRelation(b, b, SourceRelation.SAME);
-		assertRelation(b, bc, SourceRelation.AHEAD);
-		assertRelation(b, c0, SourceRelation.NEXT);
+		assertRelation(b, b, Relation.SAME);
+		assertRelation(b, bc, Relation.AHEAD);
+		assertRelation(b, c0, Relation.NEXT);
 
-		assertRelation(bc, bc, SourceRelation.SAME);
-		assertRelation(bc, c0, SourceRelation.OVERFLOW);
+		assertRelation(bc, bc, Relation.SAME);
+		assertRelation(bc, c0, Relation.OVERFLOW);
 
-		assertRelation(c0, c0, SourceRelation.SAME);
+		assertRelation(c0, c0, Relation.SAME);
 	}
 }
