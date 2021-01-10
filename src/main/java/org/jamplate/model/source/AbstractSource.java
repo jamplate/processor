@@ -129,7 +129,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 			Source source = (Source) other;
 			return Objects.equals(this.document, source.document()) &&
 				   this.position == ((Source) other).position() &&
-				   this.content.length() == ((Source) other).content().length();
+				   this.content.length() == ((Source) other).length();
 		}
 
 		return false;
@@ -138,6 +138,11 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	@Override
 	public int hashCode() {
 		return this.document.hashCode() * this.content.length() + this.position;
+	}
+
+	@Override
+	public int length() {
+		return this.content.length();
 	}
 
 	@Override
