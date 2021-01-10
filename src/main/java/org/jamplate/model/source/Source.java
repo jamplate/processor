@@ -20,7 +20,8 @@ import java.util.Comparator;
 /**
  * A source is a component that points to a {@code D} source or a fragment of it.
  * <br>
- * Note: sources are built from top to bottom. So, a typical source will store its parent source but never store any sub-source of it.
+ * Note: sources are built from top to bottom. So, a typical source will store its parent
+ * source but never store any sub-source of it.
  *
  * @param <D> the type of the actual source of this source.
  * @author LSafer
@@ -35,7 +36,7 @@ public interface Source<D extends Comparable> {
 	 */
 	Comparator<Source> COMPARATOR = Comparator.<Source, Comparable>comparing(Source::document)
 			.thenComparingInt(Source::position)
-			.thenComparingInt(s -> s.content().length());
+			.thenComparingInt(Source::length);
 
 	/**
 	 * A shortcut for invoking {@link #content()}{@link CharSequence#length() .length()}.
@@ -79,9 +80,10 @@ public interface Source<D extends Comparable> {
 	int hashCode();
 
 	/**
-	 * Returns a string representation of this source. The source shall follow the below template:
+	 * Returns a string representation of this source. The source shall follow the below
+	 * template:
 	 * <pre>
-	 *     &lt;{@link #document()}&gt; [&lt;{@link #position()}&gt;, &lt;{@link #content()}{@link String#length() .length()}&gt;]
+	 *     {@link #document() &lt;document()&gt;} [{@link #position() &lt;position()&gt;}, {@link #content() &lt;content()}{@link String#length() .length()&gt;}]
 	 * </pre>
 	 *
 	 * @return a string representation of this source.
@@ -91,7 +93,8 @@ public interface Source<D extends Comparable> {
 	String toString();
 
 	/**
-	 * Return the content of this source as a string. Once a source got constructed, it will capture its content and never change it.
+	 * Return the content of this source as a string. Once a source got constructed, it
+	 * will capture its content and never change it.
 	 *
 	 * @return the content of this source.
 	 * @since 0.0.2 ~2021.01.8
@@ -126,10 +129,12 @@ public interface Source<D extends Comparable> {
 	 * The root source of this source, the source that points to the whole file of this
 	 * source.
 	 * <br>
-	 * Note: it is better to get the root source than to create a new one. The reason is that the root source of this source will have its {@link
-	 * #content()} haven't changed since its construction.
+	 * Note: it is better to get the root source than to create a new one. The reason is
+	 * that the root source of this source will have its {@link #content()} haven't
+	 * changed since its construction.
 	 *
-	 * @return the root source of this source. Or this source if this source is a root source.
+	 * @return the root source of this source. Or this source if this source is a root
+	 * 		source.
 	 * @since 0.0.2 ~2021.01.8
 	 */
 	Source<? extends D> root();
@@ -146,12 +151,15 @@ public interface Source<D extends Comparable> {
 	Source<? extends D> slice(int pos);
 
 	/**
-	 * Slice this source from the given {@code pos} and limit it with the given {@code len}.
+	 * Slice this source from the given {@code pos} and limit it with the given {@code
+	 * len}.
 	 *
 	 * @param pos the pos where the new slice source will have.
 	 * @param len the len of the new slice source.
-	 * @return a slice of this source that starts from the given {@code pos} and have the given {@code len}.
-	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is negative.
+	 * @return a slice of this source that starts from the given {@code pos} and have the
+	 * 		given {@code len}.
+	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is
+	 *                                   negative.
 	 * @throws IndexOutOfBoundsException if {@code pos + len > this.len()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
