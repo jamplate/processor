@@ -68,7 +68,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	SAME("SAME", false, true),
+	SAME("SAME", Dominance.EXACT),
 
 	/**
 	 * <b>Fragment Source</b> {@link #CONTAINER (opposite)} {@code (i < s <= e < j)}
@@ -82,7 +82,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	FRAGMENT("CONTAINER", false, false),
+	FRAGMENT("CONTAINER", Dominance.PART),
 	/**
 	 * <b>Containing Source</b> {@link #FRAGMENT (opposite)} {@code (s < i <= j < e)}
 	 * <br>
@@ -95,7 +95,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	CONTAINER("FRAGMENT", true, false),
+	CONTAINER("FRAGMENT", Dominance.CONTAIN),
 
 	/**
 	 * <b>At The Start</b> {@link #AHEAD (opposite)} {@code (i == s <= e < j)}
@@ -108,7 +108,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	START("AHEAD", false, false),
+	START("AHEAD", Dominance.PART),
 	/**
 	 * <b>This And Ahead</b> {@link #START (opposite)} {@code (s == i <= j < e)}
 	 * <br>
@@ -120,7 +120,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	AHEAD("START", true, false),
+	AHEAD("START", Dominance.CONTAIN),
 
 	/**
 	 * <b>At The End</b> {@link #BEHIND (opposite)} {@code (i < s <= e == j)}
@@ -133,7 +133,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	END("BEHIND", false, false),
+	END("BEHIND", Dominance.PART),
 	/**
 	 * <b>This And Behind</b> {@link #END (opposite)} {@code (s < i <= j == e)}
 	 * <br>
@@ -145,7 +145,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	BEHIND("END", true, false),
+	BEHIND("END", Dominance.CONTAIN),
 
 	/**
 	 * <b>Overflowed Slice</b> {@link #UNDERFLOW (opposite)} {@code (i < s < j < e)}
@@ -159,7 +159,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	OVERFLOW("UNDERFLOW", false, true),
+	OVERFLOW("UNDERFLOW", Dominance.SHARE),
 	/**
 	 * <b>Underflowed Slice</b> {@link #OVERFLOW (opposite)} {@code (s < i < e < j)}
 	 * <br>
@@ -172,7 +172,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	UNDERFLOW("OVERFLOW", true, true),
+	UNDERFLOW("OVERFLOW", Dominance.SHARE),
 
 	/**
 	 * <b>Next Source</b> {@link #PREVIOUS (opposite)} {@code (i < j == s < e)}
@@ -185,7 +185,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	NEXT("PREVIOUS", false, false),
+	NEXT("PREVIOUS", Dominance.NONE),
 	/**
 	 * <b>Previous Source</b> {@link #NEXT (opposite)} {@code (s < e == i < j)}
 	 * <br>
@@ -197,7 +197,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	PREVIOUS("NEXT", false, false),
+	PREVIOUS("NEXT", Dominance.NONE),
 
 	/**
 	 * <b>After The Source</b> {@link #BEFORE opposite} {@code (i <= j < s <= e)}
@@ -210,7 +210,7 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	AFTER("BEFORE", false, false),
+	AFTER("BEFORE", Dominance.NONE),
 	/**
 	 * <b>Before The Source</b> {@link #AFTER opposite} {@code (s <= e < i <= j)}
 	 * <br>
@@ -222,21 +222,15 @@ public enum SourceRelation {
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	BEFORE("AFTER", false, false),
+	BEFORE("AFTER", Dominance.NONE),
 	;
 
 	/**
-	 * If this relation clashes with its {@link #opposite} relation.
+	 * How dominant this relation over the opposite relation.
 	 *
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	private final boolean clash;
-	/**
-	 * If this relation is a dominant relation over its {@link #opposite} relation.
-	 *
-	 * @since 0.0.2 ~2021.01.10
-	 */
-	private final boolean dominant;
+	private final Dominance dominance;
 	/**
 	 * The name of the opposite enum.
 	 *
@@ -248,18 +242,16 @@ public enum SourceRelation {
 	 * Construct a new enum with the given {@code opposite} as the name of the opposite
 	 * enum of it.
 	 *
-	 * @param opposite the name of the opposite enum.
-	 * @param dominant if the constructed relation is dominant over its opposite
-	 *                 relation.
-	 * @param clash    if the constructed relation clashes with its opposite relation.
+	 * @param opposite  the name of the opposite enum.
+	 * @param dominance how dominant the constructed relation over its opposite relation.
 	 * @throws NullPointerException if the given {@code opposite} is null.
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	SourceRelation(String opposite, boolean dominant, boolean clash) {
+	SourceRelation(String opposite, Dominance dominance) {
 		Objects.requireNonNull(opposite, "opposite");
+		Objects.requireNonNull(dominance, "dominance");
 		this.opposite = opposite;
-		this.dominant = dominant;
-		this.clash = clash;
+		this.dominance = dominance;
 	}
 
 	/**
@@ -329,23 +321,13 @@ public enum SourceRelation {
 	}
 
 	/**
-	 * Return true, if this relation clashes with its {@link #opposite()} relation.
+	 * Returns how dominance this relation over its opposite relation.
 	 *
-	 * @return true, if this relation clashes with its opposite relation.
+	 * @return how dominance this relation.
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	public boolean clash() {
-		return this.clash;
-	}
-
-	/**
-	 * Returns true, if this relation is dominant over its {@link #opposite()} relation.
-	 *
-	 * @return true, if this relation is dominant over its opposite relation.
-	 * @since 0.0.2 ~2021.01.10
-	 */
-	public boolean dominant() {
-		return this.dominant;
+	public Dominance dominance() {
+		return this.dominance;
 	}
 
 	/**
@@ -356,5 +338,51 @@ public enum SourceRelation {
 	 */
 	public SourceRelation opposite() {
 		return SourceRelation.valueOf(this.opposite);
+	}
+
+	/**
+	 * An enumeration of how dominant a relation is over another relation.
+	 *
+	 * @author LSafer
+	 * @version 0.0.2
+	 * @since 0.0.2 ~2021.01.10
+	 */
+	public enum Dominance {
+		/**
+		 * Defines that a source that have the relation contains the other source in it
+		 * (but not exact).
+		 *
+		 * @see #PART
+		 * @since 0.0.2 ~2021.01.10
+		 */
+		CONTAIN,
+		/**
+		 * Defines that a source that have the relation has the same relation as the other
+		 * source.
+		 *
+		 * @since 0.0.2 ~2021.01.10
+		 */
+		EXACT,
+		/**
+		 * Defines that a source that have the relation shares some (but not all) of the
+		 * other source and vice versa.
+		 *
+		 * @since 0.0.2 ~2021.01.10
+		 */
+		SHARE,
+		/**
+		 * Defines that a source that have the relation shares some (but not all) of the
+		 * other source. (one but not both)
+		 *
+		 * @see #CONTAIN
+		 * @since 0.0.2 ~2021.01.10
+		 */
+		PART,
+		/**
+		 * Defines that a source that have the relation shares none of the other source.
+		 *
+		 * @since 0.0.2 ~2021.01.10
+		 */
+		NONE,
 	}
 }
