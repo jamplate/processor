@@ -447,7 +447,8 @@ public interface Source<D extends Comparable> {
 		 * @see Relation#BEFORE
 		 * @since 0.0.2 ~2021.01.10
 		 */
-		NONE("NONE");
+		NONE("NONE"),
+		;
 
 		/**
 		 * The opposite dominance type of this.
@@ -829,6 +830,5 @@ public interface Source<D extends Comparable> {
 		public Relation opposite() {
 			return Relation.valueOf(this.opposite);
 		}
-
 	}
 }
