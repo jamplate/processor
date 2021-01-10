@@ -104,17 +104,8 @@ public interface Source<D extends Comparable> {
 	int position();
 
 	/**
-	 * Return the relation of the given {@code source} to this source.
-	 *
-	 * @param source the other source.
-	 * @return the relation of the given {@code source} to this source.
-	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.0.2 ~2021.01.9
-	 */
-	SourceRelation relationOf(Source source);
-
-	/**
-	 * The root source of this source, the source that points to the whole file of this source.
+	 * The root source of this source, the source that points to the whole file of this
+	 * source.
 	 * <br>
 	 * Note: it is better to get the root source than to create a new one. The reason is that the root source of this source will have its {@link
 	 * #content()} haven't changed since its construction.

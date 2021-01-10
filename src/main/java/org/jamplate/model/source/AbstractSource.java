@@ -150,60 +150,6 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 		return this.position;
 	}
 
-	@SuppressWarnings("OverlyComplexMethod")
-	@Override
-	public SourceRelation relationOf(Source source) {
-		Objects.requireNonNull(source, "source");
-
-		int i = this.position;
-		int s = source.position();
-		int j = i + this.content.length();
-		int e = s + source.content().length();
-
-		if (j < s)
-			//	i [<=] j < s [<=] e
-			return SourceRelation.AFTER;
-		if (e < i)
-			//	s [<=] e < i [<=] j
-			return SourceRelation.BEFORE;
-		if (i == s)
-			if (j < e)
-				//	s == i [<=] j < e
-				return SourceRelation.AHEAD;
-			else if (e < j)
-				//	i == s [<=] e < j
-				return SourceRelation.START;
-			else
-				//	i == s {<=} j == e
-				return SourceRelation.SAME;
-		if (j == e)
-			if (s < i)
-				//	s < i [<=] j == e
-				return SourceRelation.BEHIND;
-			else
-				//	i {<} s [<=] e == j
-				return SourceRelation.END;
-		if (j == s)
-			//	i {<} j == s {<} e
-			return SourceRelation.NEXT;
-		if (e == i)
-			//	s {<} e == i {<} j
-			return SourceRelation.PREVIOUS;
-		if (i < s)
-			if (e < j)
-				//	i < s [<=] e < j
-				return SourceRelation.FRAGMENT;
-			else
-				//	i < s {<} j < e
-				return SourceRelation.OVERFLOW;
-		else if (j < e)
-			//	s < i [<=] j < e
-			return SourceRelation.CONTAINER;
-		else
-			//	s < i {<} e < j
-			return SourceRelation.UNDERFLOW;
-	}
-
 	@Override
 	public Source<? extends D> root() {
 		return this.root;
