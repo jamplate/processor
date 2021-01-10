@@ -43,7 +43,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected final Source parent;
+	protected final Source<? extends D> parent;
 	/**
 	 * The position where the content of this source starts at its {@link #document}.
 	 *
@@ -55,17 +55,18 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected final Source root;
+	protected final Source<? extends D> root;
 
 	/**
 	 * Construct a new source that takes the given {@code document} as its actual source.
 	 * <br>
-	 * This constructor just trusts the caller that the given {@code content} is taken from the given {@code document} starting from the given {@code
-	 * position}.
+	 * This constructor just trusts the caller that the given {@code content} is taken
+	 * from the given {@code document} starting from the given {@code position}.
 	 *
 	 * @param document the document of the constructed source.
 	 * @param content  the content from the given {@code document}.
-	 * @param position the position the given {@code content} started from the given {@code document}.
+	 * @param position the position the given {@code content} started from the given
+	 *                 {@code document}.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @since 0.0.2 ~2021.01.8
 	 */
@@ -80,23 +81,30 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	/**
-	 * Construct a new sub-source from the given {@code parent} source. The constructed source will have the same {@link #root()} and {@link
-	 * #document()} as the given {@code parent} source. But, it will have its {@link #content()} equals to the {@link String#substring(int, int)} of
-	 * the {@link #content()} of the given {@code parent} source. Also, the constructed source will have its {@link #position()} equals to the sum of
-	 * the given {@code pos} and the {@link #position()} of the given {@code parent} source. Finally, its obvious that the constructed source will
-	 * have the given {@code parent} source as its {@link #parent()}.
+	 * Construct a new sub-source from the given {@code parent} source. The constructed
+	 * source will have the same {@link #root()} and {@link #document()} as the given
+	 * {@code parent} source. But, it will have its {@link #content()} equals to the
+	 * {@link String#substring(int, int)} of the {@link #content()} of the given {@code
+	 * parent} source. Also, the constructed source will have its {@link #position()}
+	 * equals to the sum of the given {@code pos} and the {@link #position()} of the given
+	 * {@code parent} source. Finally, its obvious that the constructed source will have
+	 * the given {@code parent} source as its {@link #parent()}.
 	 * <br>
-	 * Note: this constructor was built on trust. It trusts the implementation of the given {@code parent} source.
+	 * Note: this constructor was built on trust. It trusts the implementation of the
+	 * given {@code parent} source.
 	 * <br>
-	 * Also Note: it is possible that the given {@code parent} returns an object that does not fit into the {@code D} type parameter when invoking its
-	 * {@link Source#document()} method.
+	 * Also Note: it is possible that the given {@code parent} returns an object that does
+	 * not fit into the {@code D} type parameter when invoking its {@link
+	 * Source#document()} method.
 	 *
 	 * @param parent the parent source.
 	 * @param pos    the sub-position to get from the given {@code parent} source.
 	 * @param len    the length to get from the given {@code parent} source.
 	 * @throws NullPointerException      if the given {@code parent} is null.
-	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is negative.
-	 * @throws IndexOutOfBoundsException if {@code parent.content().substring(pos, len)} throws it.
+	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is
+	 *                                   negative.
+	 * @throws IndexOutOfBoundsException if {@code parent.content().substring(pos, len)}
+	 *                                   throws it.
 	 * @since 0.0.2 ~2021.01.8
 	 */
 	protected AbstractSource(Source<? extends D> parent, int pos, int len) {
