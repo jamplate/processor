@@ -38,8 +38,27 @@ public interface Source<D extends Comparable> {
 			.thenComparingInt(s -> s.content().length());
 
 	/**
-	 * A source equals another object, if that object is a source and has the same {@link #document()}, {@link #position()} and {@link
-	 * #content()}{@link String#length() .length()} of this source.
+	 * A shortcut for invoking {@link #content()}{@link CharSequence#length() .length()}.
+	 * It is encouraged to use this shortcut when the caller only cares about the length
+	 * of the content.
+	 * <br>
+	 * <br>
+	 * Invoking this method SHOULD be the same as invoking:
+	 * <pre>
+	 *     {@link #content()}{@link CharSequence#length() .length()}
+	 * </pre>
+	 *
+	 * @return the length of the content of this source.
+	 * @since 0.0.2 ~2021.01.10
+	 */
+	default int length() {
+		return this.content().length();
+	}
+
+	/**
+	 * A source equals another object, if that object is a source and has the same {@link
+	 * #document()}, {@link #position()} and {@link #content()}{@link String#length()
+	 * .length()} of this source.
 	 *
 	 * @return if the given object is a source and equals this source.
 	 * @since 0.0.2 ~2021.01.7
