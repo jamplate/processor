@@ -47,7 +47,7 @@ public interface Source<D extends Comparable> {
 	 * @param s the first index of the second area.
 	 * @param e one past the last index of the second area.
 	 * @return how much dominant the second area over the first area.
-	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
+	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j)} or
 	 *                                  if {@code s} is not in the range {@code [0, e]}.
 	 * @since 0.0.2 ~2021.01.10
 	 */
@@ -65,6 +65,25 @@ public interface Source<D extends Comparable> {
 			   Dominance.CONTAIN :
 			   //i < s && s < j && j < e || s < i && i < e && e < j ?
 			   Dominance.SHARE;
+	}
+
+	/**
+	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
+	 * source}.
+	 *
+	 * @param source the source (first area).
+	 * @param s      the first index of the second area.
+	 * @param e      one past the last index of the second area.
+	 * @return how much dominant the second area over the given {@code source}.
+	 * @throws NullPointerException     if the given {@code source} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.0.2 ~2021.01.11
+	 */
+	static Dominance dominance(Source<?> source, int s, int e) {
+		Objects.requireNonNull(source, "source");
+		int i = source.position();
+		int j = i + source.length();
+		return Source.dominance(i, j, s, e);
 	}
 
 	/**
@@ -138,6 +157,33 @@ public interface Source<D extends Comparable> {
 			   Relation.OVERFLOW :
 			   //s < i && i < e && e < j ?
 			   Relation.UNDERFLOW;
+	}
+
+	/**
+	 * Calculate what is the relation between the given {@code source} and the given area
+	 * {@code [s, e)}.
+	 * <br>
+	 * The given {@code source} is the source to compare the second area with. The
+	 * returned relation will be the relation describing the feelings of the source about
+	 * the second area.
+	 * <br>
+	 * For example: if the second area is contained in the middle of the source, then the
+	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
+	 *
+	 * @param source the source (first area).
+	 * @param s      the first index of the second area.
+	 * @param e      one past the last index of the second area.
+	 * @return the relation constant describing the relation of the second area to the
+	 * 		source.
+	 * @throws NullPointerException     if the given {@code source} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.0.2 ~2021.01.10
+	 */
+	static Relation relation(Source<?> source, int s, int e) {
+		Objects.requireNonNull(source, "source");
+		int i = source.position();
+		int j = i + source.length();
+		return Source.relation(i, j, s, e);
 	}
 
 	/**
