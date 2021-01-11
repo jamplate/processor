@@ -15,7 +15,6 @@
  */
 package org.jamplate.model.source;
 
-import org.jamplate.model.source.Source.Relation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
