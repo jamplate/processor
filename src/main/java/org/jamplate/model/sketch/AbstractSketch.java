@@ -50,63 +50,70 @@ public abstract class AbstractSketch implements Sketch {
 	public boolean accept(SketchVisitor visitor) {
 		Objects.requireNonNull(visitor, "visitor");
 
+		//Visit this
 		if (visitor.visitSketch(this))
 			return true;
 
 		Iterator<Sketch> iterator = this.sketches.iterator();
 
+		//Check if this sketch has elements (if so, visit them)
 		if (iterator.hasNext()) {
 			Sketch last = iterator.next();
 
+			//Check if there is a source before the first sketch (if so, visit it)
 			if (Sketch.relation(this, last) != Relation.START)
-				//There is a gap between the start and the first sketch
 				if (visitor.visitSource(this, Source.cutStartStart(
 						this.source,
 						last.source()
 				)))
 					return true;
 
+			//Visit the first sketch
 			if (last.accept(visitor))
 				return true;
 
+			//Loop over the sketches after the first sketch
 			while (iterator.hasNext()) {
 				Sketch next = iterator.next();
 
+				//Check if there is a source between the 'last' sketch and the 'next' sketch (if so, visit it)
 				if (Sketch.relation(last, next) != Relation.NEXT)
-					//There is a gap between the two sketches
 					if (visitor.visitSource(this, Source.cutEndStart(
 							last.source(),
 							next.source()
 					)))
 						return true;
 
+				//Visit the 'next' sketch
 				if (next.accept(visitor))
 					return true;
 
 				last = next;
 			}
 
+			//Check if there is a source after the last sketch (if so, visit it)
 			if (Sketch.relation(this, last) != Relation.END)
-				//There is a gap between the last sketch and the end
 				return visitor.visitSource(this, Source.cutEndEnd(
 						last.source(),
 						this.source
 				));
 
+			//do not stop
 			return false;
 		}
 
-		//The whole source is available
+		//Visit the source of this (only if this sketch has no inner sketches)
 		return visitor.visitSource(this, this.source);
 	}
 
 	@Override
 	public void put(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
+		//case not Dominance.PART with this sketch
 		if (Sketch.dominance(this, sketch) != Dominance.PART)
 			throw new IllegalArgumentException("Cannot put a sketch with a dominance other than PART");
 
-		//clash check...
+		//case Dominance.SHARE or Dominance.EXACT with another sketch
 		for (Sketch next : this.sketches) {
 			Dominance dominance = Sketch.dominance(next, sketch);
 
@@ -114,7 +121,7 @@ public abstract class AbstractSketch implements Sketch {
 				throw new IllegalStateException("Sketch Clash");
 		}
 
-		//part/contain check...
+		//case Dominance.CONTAIN or Dominance.PART with another sketch
 		Iterator<Sketch> iterator = this.sketches.iterator();
 		while (iterator.hasNext()) {
 			Sketch next = iterator.next();
@@ -131,7 +138,7 @@ public abstract class AbstractSketch implements Sketch {
 			}
 		}
 
-		//NONE
+		//case Dominance.NONE with all other sketches
 		this.sketches.add(sketch);
 	}
 
