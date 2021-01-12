@@ -216,6 +216,22 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
+	public Matcher matcher(String regex) {
+		Objects.requireNonNull(regex, "regex");
+		return this.matcher(Pattern.compile(regex));
+	}
+
+	@Override
+	public Matcher matcher(Pattern pattern) {
+		Objects.requireNonNull(pattern, "pattern");
+		Matcher matcher = pattern.matcher(this.root.content());
+		matcher.region(this.position, this.position + this.length());
+		matcher.useTransparentBounds(true);
+		matcher.useAnchoringBounds(true);
+		return matcher;
+	}
+
+	@Override
 	public Source<D> parent() {
 		return this.parent;
 	}

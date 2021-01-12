@@ -18,6 +18,7 @@ package org.jamplate.model.source;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -397,6 +398,35 @@ public interface Source<D extends Comparable> {
 	 * @since 0.0.2 ~2021.01.10
 	 */
 	int length();
+
+	/**
+	 * Construct a ready-to-use matcher from this source. The returned matcher has an
+	 * input sequence from the {@link #root()} of this source. But, it is limited to the
+	 * region of this source (using {@link Matcher#region(int, int)}). The returned
+	 * matcher also has {@link Matcher#hasTransparentBounds()} and {@link
+	 * Matcher#useAnchoringBounds(boolean)} both enabled.
+	 *
+	 * @param regex the regex to match.
+	 * @return a matcher over the content of this source.
+	 * @throws NullPointerException   if the given {@code regex} is null.
+	 * @throws PatternSyntaxException if the given {@code regex} has a syntax error.
+	 * @since 0.0.2 ~2021.01.13
+	 */
+	Matcher matcher(String regex);
+
+	/**
+	 * Construct a ready-to-use matcher from this source. The returned matcher has an
+	 * input sequence from the {@link #root()} of this source. But, it is limited to the
+	 * region of this source (using {@link Matcher#region(int, int)}). The returned
+	 * matcher also has {@link Matcher#hasTransparentBounds()} and {@link
+	 * Matcher#useAnchoringBounds(boolean)} both enabled.
+	 *
+	 * @param pattern the pattern to match.
+	 * @return a matcher over the content of this source.
+	 * @throws NullPointerException if the given {@code pattern} is null.
+	 * @since 0.0.2 ~2021.01.13
+	 */
+	Matcher matcher(Pattern pattern);
 
 	/**
 	 * The parent source of this source.
