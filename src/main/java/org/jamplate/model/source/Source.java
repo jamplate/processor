@@ -333,6 +333,7 @@ public interface Source<D extends Comparable> {
 	 * @throws PatternSyntaxException if hte given {@code regex} has regex syntax errors.
 	 * @since 0.0.2 ~2021.01.11
 	 */
+	@Deprecated
 	List<Source<D>> find(String regex);
 
 	/**
@@ -344,6 +345,7 @@ public interface Source<D extends Comparable> {
 	 * @throws NullPointerException if the given {@code pattern} is null.
 	 * @since 0.0.2 ~2021.01.11
 	 */
+	@Deprecated
 	List<Source<D>> find(Pattern pattern);
 
 	/**
@@ -361,6 +363,7 @@ public interface Source<D extends Comparable> {
 	 *                                has regex syntax errors.
 	 * @since 0.0.2 ~2021.01.11
 	 */
+	@Deprecated
 	List<Source<D>> find(String startRegex, String endRegex);
 
 	/**
@@ -376,6 +379,7 @@ public interface Source<D extends Comparable> {
 	 *                              endPattern} is null.
 	 * @since 0.0.2 ~2021.01.11
 	 */
+	@Deprecated
 	List<Source<D>> find(Pattern startPattern, Pattern endPattern);
 
 	/**
