@@ -53,7 +53,6 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param source the first source.
 	 * @param other  the second source.
-	 * @param <D>    the type of the document.
 	 * @return a source that has the range {@code [source.position + source.length,
 	 * 		other.position + other.length)}.
 	 * @throws NullPointerException     if the given {@code source} or {@code other} is
@@ -63,7 +62,7 @@ public interface Source<D extends Comparable> {
 	 *                                  the given source are from different documents.
 	 * @since 0.0.2 ~2021.01.12
 	 */
-	static <D extends Comparable> Source<D> cutEndEnd(Source<D> source, Source<D> other) {
+	static Source<?> cutEndEnd(Source<?> source, Source<?> other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		if (!Objects.equals(source.document(), other.document()))
@@ -86,7 +85,6 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param source the first source.
 	 * @param other  the second source.
-	 * @param <D>    the type of the document.
 	 * @return a source that has the range {@code [source.position + source.length,
 	 * 		other.position)}.
 	 * @throws NullPointerException     if the given {@code source} or {@code other} is
@@ -96,7 +94,7 @@ public interface Source<D extends Comparable> {
 	 *                                  source are from different documents.
 	 * @since 0.0.2 ~2021.01.12
 	 */
-	static <D extends Comparable> Source<D> cutEndStart(Source<D> source, Source<D> other) {
+	static Source<?> cutEndStart(Source<?> source, Source<?> other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		if (!Objects.equals(source.document(), other.document()))
@@ -119,7 +117,6 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param source the first source.
 	 * @param other  the second source.
-	 * @param <D>    the type of the document.
 	 * @return a source that has the range {@code [source.position, other.position +
 	 * 		other.length)}.
 	 * @throws NullPointerException     if the given {@code source} or {@code other} is
@@ -129,7 +126,7 @@ public interface Source<D extends Comparable> {
 	 *                                  source are from different documents.
 	 * @since 0.0.2 ~2021.01.12
 	 */
-	static <D extends Comparable> Source<D> cutStartEnd(Source<D> source, Source<D> other) {
+	static Source<?> cutStartEnd(Source<?> source, Source<?> other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		if (!Objects.equals(source.document(), other.document()))
@@ -152,7 +149,6 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param source the first source.
 	 * @param other  the second source.
-	 * @param <D>    the type of the document.
 	 * @return a source that has the range {@code [source.position, other.position)}.
 	 * @throws NullPointerException     if the given {@code source} or {@code other} is
 	 *                                  null.
@@ -161,7 +157,7 @@ public interface Source<D extends Comparable> {
 	 *                                  different documents.
 	 * @since 0.0.2 ~2021.01.12
 	 */
-	static <D extends Comparable> Source<D> cutStartStart(Source<D> source, Source<D> other) {
+	static Source<?> cutStartStart(Source<?> source, Source<?> other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		if (!Objects.equals(source.document(), other.document()))
