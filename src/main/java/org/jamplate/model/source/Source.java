@@ -16,8 +16,8 @@
 package org.jamplate.model.source;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -327,22 +327,24 @@ public interface Source<D extends Comparable> {
 	 * {@link Pattern#compile(String)} with the given {@code regex}.
 	 *
 	 * @param regex the regex to be applied.
-	 * @return a set of sub-sources of this source that matches the given {@code regex}.
+	 * @return a list of sub-sources of this source that matches the given {@code regex}.
+	 * 		(ordered from first to last)
 	 * @throws NullPointerException   if the given {@code regex} is null.
 	 * @throws PatternSyntaxException if hte given {@code regex} has regex syntax errors.
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	Set<Source<D>> find(String regex);
+	List<Source<D>> find(String regex);
 
 	/**
 	 * Find every source that matches the given {@code pattern} in this source.
 	 *
 	 * @param pattern the pattern to be applied.
-	 * @return a set of sub-sources of this source that matches the given {@code pattern}.
+	 * @return a list of sub-sources of this source that matches the given {@code
+	 * 		pattern}.
 	 * @throws NullPointerException if the given {@code pattern} is null.
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	Set<Source<D>> find(Pattern pattern);
+	List<Source<D>> find(Pattern pattern);
 
 	/**
 	 * Find every source that is between a {@code startRegex} match and {@code endRegex}
@@ -350,15 +352,16 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param startRegex the regex to match the start sequence.
 	 * @param endRegex   the regex to match the end sequence.
-	 * @return a set of sources that have a starting pattern matching the given {@code
-	 * 		startRegex} and an ending pattering matching the given {@code endRegex}.
+	 * @return a list of sources that have a starting pattern matching the given {@code
+	 * 		startRegex} and an ending pattering matching the given {@code endRegex}. (ordered
+	 * 		from first to last)
 	 * @throws NullPointerException   if the given {@code startRegex} or {@code endRegex}
 	 *                                is null.
 	 * @throws PatternSyntaxException if the given {@code startRegex} or {@code endRegex}
 	 *                                has regex syntax errors.
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	Set<Source<D>> find(String startRegex, String endRegex);
+	List<Source<D>> find(String startRegex, String endRegex);
 
 	/**
 	 * Find every source that is between a {@code startPattern} match and {@code
@@ -366,13 +369,14 @@ public interface Source<D extends Comparable> {
 	 *
 	 * @param startPattern the pattern to match the start sequence.
 	 * @param endPattern   the pattern to match the end sequence.
-	 * @return a set of sources that have a starting pattern matching the given {@code
+	 * @return a list of sources that have a starting pattern matching the given {@code
 	 * 		startPattern} and an ending pattering matching the given {@code endPattern}.
+	 * 		(ordered from first to last)
 	 * @throws NullPointerException if the given {@code startPattern} or {@code
 	 *                              endPattern} is null.
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	Set<Source<D>> find(Pattern startPattern, Pattern endPattern);
+	List<Source<D>> find(Pattern startPattern, Pattern endPattern);
 
 	/**
 	 * A shortcut for invoking {@link #content()}{@link CharSequence#length() .length()}.

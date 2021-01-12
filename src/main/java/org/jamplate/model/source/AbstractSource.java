@@ -15,9 +15,9 @@
  */
 package org.jamplate.model.source;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -148,15 +148,15 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
-	public Set<Source<D>> find(String regex) {
+	public List<Source<D>> find(String regex) {
 		Objects.requireNonNull(regex, "regex");
 		return this.find(Pattern.compile(regex));
 	}
 
 	@Override
-	public Set<Source<D>> find(Pattern pattern) {
+	public List<Source<D>> find(Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		Set<Source<D>> sources = new HashSet<>();
+		List<Source<D>> sources = new ArrayList<>();
 
 		Matcher matcher = pattern.matcher(this.content);
 		while (matcher.find()) {
@@ -173,17 +173,17 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
-	public Set<Source<D>> find(String startRegex, String endRegex) {
+	public List<Source<D>> find(String startRegex, String endRegex) {
 		Objects.requireNonNull(startRegex, "startRegex");
 		Objects.requireNonNull(endRegex, "endRegex");
 		return this.find(Pattern.compile(startRegex), Pattern.compile(endRegex));
 	}
 
 	@Override
-	public Set<Source<D>> find(Pattern startPattern, Pattern endPattern) {
+	public List<Source<D>> find(Pattern startPattern, Pattern endPattern) {
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
-		Set<Source<D>> sources = new HashSet<>();
+		List<Source<D>> sources = new ArrayList<>();
 
 		Matcher startMatcher = startPattern.matcher(this.content);
 		Matcher endMatcher = endPattern.matcher(this.content);
