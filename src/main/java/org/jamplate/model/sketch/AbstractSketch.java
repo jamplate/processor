@@ -50,7 +50,7 @@ public abstract class AbstractSketch implements Sketch {
 	protected final Source source;
 
 	/**
-	 * Construct a new sketch for hte given {@code source}. The given source is the source
+	 * Construct a new sketch for the given {@code source}. The given source is the source
 	 * the constructed sketch will reserve.
 	 *
 	 * @param source the source of the constructed sketch.
