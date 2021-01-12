@@ -15,7 +15,11 @@
  */
 package org.jamplate.model.source;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An implementation for the basic functionality of a source.
@@ -43,7 +47,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected final Source<? extends D> parent;
+	protected final Source<D> parent;
 	/**
 	 * The position where the content of this source starts at its {@link #document}.
 	 *
@@ -55,7 +59,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected final Source<? extends D> root;
+	protected final Source<D> root;
 
 	/**
 	 * Construct a new source that takes the given {@code document} as its actual source.
@@ -107,7 +111,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	 *                                   throws it.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected AbstractSource(Source<? extends D> parent, int pos, int len) {
+	protected AbstractSource(Source<D> parent, int pos, int len) {
 		Objects.requireNonNull(parent, "parent");
 		if (pos < 0)
 			throw new IllegalArgumentException("negative position");
@@ -144,6 +148,64 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
+	public Set<Source<D>> find(String regex) {
+		Objects.requireNonNull(regex, "regex");
+		return this.find(Pattern.compile(regex));
+	}
+
+	@Override
+	public Set<Source<D>> find(Pattern pattern) {
+		Objects.requireNonNull(pattern, "pattern");
+		Set<Source<D>> sources = new HashSet<>();
+
+		Matcher matcher = pattern.matcher(this.content);
+		while (matcher.find()) {
+			int start = matcher.start();
+			int end = matcher.end();
+
+			sources.add(this.slice(
+					start,
+					end - start
+			));
+		}
+
+		return sources;
+	}
+
+	@Override
+	public Set<Source<D>> find(String startRegex, String endRegex) {
+		Objects.requireNonNull(startRegex, "startRegex");
+		Objects.requireNonNull(endRegex, "endRegex");
+		return this.find(Pattern.compile(startRegex), Pattern.compile(endRegex));
+	}
+
+	@Override
+	public Set<Source<D>> find(Pattern startPattern, Pattern endPattern) {
+		Objects.requireNonNull(startPattern, "startPattern");
+		Objects.requireNonNull(endPattern, "endPattern");
+		Set<Source<D>> sources = new HashSet<>();
+
+		Matcher startMatcher = startPattern.matcher(this.content);
+		Matcher endMatcher = endPattern.matcher(this.content);
+		while (startMatcher.find()) {
+			int start = startMatcher.start();
+			int s = startMatcher.end();
+
+			if (endMatcher.find(s)) {
+				int e = endMatcher.start();
+				int end = endMatcher.end();
+
+				sources.add(this.slice(
+						start,
+						end - start
+				));
+			}
+		}
+
+		return sources;
+	}
+
+	@Override
 	public int hashCode() {
 		return this.document.hashCode() * this.content.length() + this.position;
 	}
@@ -154,7 +216,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
-	public Source<? extends D> parent() {
+	public Source<D> parent() {
 		return this.parent;
 	}
 
@@ -164,7 +226,7 @@ public abstract class AbstractSource<D extends Comparable> implements Source<D> 
 	}
 
 	@Override
-	public Source<? extends D> root() {
+	public Source<D> root() {
 		return this.root;
 	}
 
