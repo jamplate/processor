@@ -144,13 +144,15 @@ public interface Sketch {
 	 * sketch}. (unless a clash happened, then an exception thrown and nothing happens)
 	 *
 	 * @param sketch the sketch to be put.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
-	 * @throws IllegalStateException    if the given {@code sketch} is clashing with a
-	 *                                  previously reserved area (has a dominance of
-	 *                                  either {@link Dominance#SHARE} or {@link
-	 *                                  Dominance#EXACT}).
-	 * @throws IllegalArgumentException if the given {@code sketch} has a dominance other
-	 *                                  than {@link Dominance#PART} with this sketch.
+	 * @throws NullPointerException          if the given {@code sketch} is null.
+	 * @throws IllegalStateException         if the given {@code sketch} is clashing with
+	 *                                       a previously reserved area (has a dominance
+	 *                                       of either {@link Dominance#SHARE} or {@link
+	 *                                       Dominance#EXACT}).
+	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
+	 *                                       other than {@link Dominance#PART} with this
+	 *                                       sketch.
+	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
 	 * @since 0.0.2 ~2021.01.12
 	 */
 	void put(Sketch sketch);
