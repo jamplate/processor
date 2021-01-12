@@ -77,7 +77,6 @@ public enum Relation {
 	 * @since 0.0.2 ~2021.01.9
 	 */
 	CONTAINER("FRAGMENT", Dominance.CONTAIN),
-
 	/**
 	 * <b>This And Ahead</b> {@link #START (opposite)}
 	 * <br>
@@ -198,7 +197,6 @@ public enum Relation {
 	 * @since 0.0.2 ~2021.01.9
 	 */
 	FRAGMENT("CONTAINER", Dominance.PART),
-
 	/**
 	 * <b>At The Start</b> {@link #AHEAD (opposite)}
 	 * <br>
@@ -276,7 +274,6 @@ public enum Relation {
 	 * @since 0.0.2 ~2021.01.9
 	 */
 	PREVIOUS("NEXT", Dominance.NONE),
-
 	/**
 	 * <b>After The Source</b> {@link #BEFORE opposite}
 	 * <br>
