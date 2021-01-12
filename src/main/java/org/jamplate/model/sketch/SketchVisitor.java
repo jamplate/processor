@@ -18,9 +18,12 @@ package org.jamplate.model.sketch;
 import org.jamplate.model.source.Source;
 
 /**
+ * A callback that can be passed to a sketch for that sketch to invoke this sketch with
+ * every element in it. (recursively)
+ *
  * @author LSafer
- * @version 0.0.0
- * @since 0.0.0 ~2021.01.11
+ * @version 0.0.2
+ * @since 0.0.2 ~2021.01.11
  */
 public interface SketchVisitor {
 	/**
