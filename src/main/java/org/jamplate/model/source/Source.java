@@ -17,6 +17,9 @@ package org.jamplate.model.source;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * A source is a component that points to a {@code D} source or a fragment of it.
@@ -49,6 +52,7 @@ public interface Source<D extends Comparable> {
 	 * @return how much dominant the second area over the given {@code source}.
 	 * @throws NullPointerException     if the given {@code source} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.11
 	 */
 	static Dominance dominance(Source<?> source, int s, int e) {
@@ -66,6 +70,7 @@ public interface Source<D extends Comparable> {
 	 * @param other  the second source.
 	 * @return how much dominant the second source over the first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
+	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
 	static Dominance dominance(Source<?> source, Source<?> other) {
@@ -96,6 +101,7 @@ public interface Source<D extends Comparable> {
 	 * 		source.
 	 * @throws NullPointerException     if the given {@code source} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
 	static Relation relation(Source<?> source, int s, int e) {
@@ -121,6 +127,7 @@ public interface Source<D extends Comparable> {
 	 * @return the relation constant describing the relation of the second source to the
 	 * 		first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
 	static Relation relation(Source<?> source, Source<?> other) {
@@ -208,7 +215,7 @@ public interface Source<D extends Comparable> {
 	 * @return the parent source of this source. Or null if this source is a root source.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	Source<? extends D> parent();
+	Source<D> parent();
 
 	/**
 	 * Return where this source starts at its {@link #document()} file}.
@@ -230,7 +237,7 @@ public interface Source<D extends Comparable> {
 	 * 		source.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	Source<? extends D> root();
+	Source<D> root();
 
 	/**
 	 * Slice this source from the given {@code pos} to the end of this {@code source}.
@@ -241,7 +248,7 @@ public interface Source<D extends Comparable> {
 	 * @throws IndexOutOfBoundsException if {@code pos > this.length()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
-	Source<? extends D> slice(int pos);
+	Source<D> slice(int pos);
 
 	/**
 	 * Slice this source from the given {@code pos} and limit it with the given {@code
@@ -256,5 +263,5 @@ public interface Source<D extends Comparable> {
 	 * @throws IndexOutOfBoundsException if {@code pos + len > this.len()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
-	Source<? extends D> slice(int pos, int len);
+	Source<D> slice(int pos, int len);
 }
