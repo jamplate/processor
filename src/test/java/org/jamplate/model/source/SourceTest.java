@@ -15,6 +15,9 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.model.sketch.AbstractSketch;
+import org.jamplate.model.sketch.Sketch;
+import org.jamplate.model.sketch.SketchVisitor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -87,5 +90,52 @@ public class SourceTest {
 		assertRelation(bc, c0, Relation.OVERFLOW);
 
 		assertRelation(c0, c0, Relation.SAME);
+	}
+
+	@Test
+	public void visit() {
+		//		Set<Source> sub = source.find(pattern);
+		//		Set<Set<Source>> subsub = sub.stream()
+		//				.map(s -> (Set<Source>) s.find(pattern))
+		//				.collect(Collectors.toSet());
+		//		sub.forEach(s -> System.out.println(s.content()));
+		//		subsub.forEach(set -> set.forEach(s -> System.out.println(s.content())));
+		//
+		//		Set<Source> sub = source.find(Pattern.compile("[(]"), Pattern.compile("[)]"));
+		//		sub.forEach(s -> System.out.println(s.content()));
+		//		Pattern pattern = Pattern.compile("[(].*[)]");
+		Source source = new PseudoSource<>("pseudo", "((A), (B), (C))", 0);
+		SketchImpl sketch = new SketchImpl(source);
+		sketch.put(new SketchImpl(source.slice(1, 3)));
+		sketch.put(new SketchImpl(source.slice(6, 3)));
+		sketch.put(new SketchImpl(source.slice(11, 3)));
+
+		sketch.put(new SketchImpl(source.slice(7, 1)));
+		sketch.put(new SketchImpl(source.slice(2, 1)));
+		sketch.put(new SketchImpl(source.slice(12, 1)));
+
+		sketch.accept(new SketchVisitor() {
+			@Override
+			public boolean visitSketch(Sketch sketch) {
+				System.out.println(sketch + " ~ " + sketch.source().content());
+				return false;
+			}
+
+			@Override
+			public boolean visitSource(Sketch sketch, Source source) {
+				System.out.println(sketch + " found " + source + " ~ " + source.content());
+				return source.content().equals("C");
+			}
+		});
+	}
+
+	public static class SketchImpl extends AbstractSketch {
+		public SketchImpl(Source source) {
+			super(source);
+		}
+
+		public void add(int pos, int len) {
+			this.sketches.add(new SketchImpl(this.source.slice(pos, len)));
+		}
 	}
 }
