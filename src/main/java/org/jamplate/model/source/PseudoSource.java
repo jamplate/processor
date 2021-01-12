@@ -64,7 +64,7 @@ public class PseudoSource<D extends Comparable> extends AbstractSource<D> {
 	 *                                   throws it.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	public PseudoSource(Source<? extends D> parent, int pos, int len) {
+	public PseudoSource(Source<D> parent, int pos, int len) {
 		super(
 				parent,
 				pos,
@@ -73,7 +73,7 @@ public class PseudoSource<D extends Comparable> extends AbstractSource<D> {
 	}
 
 	@Override
-	public Source<? extends D> slice(int pos) {
+	public Source<D> slice(int pos) {
 		return new PseudoSource<>(
 				this,
 				pos,
@@ -82,7 +82,7 @@ public class PseudoSource<D extends Comparable> extends AbstractSource<D> {
 	}
 
 	@Override
-	public Source<? extends D> slice(int pos, int len) {
+	public Source<D> slice(int pos, int len) {
 		return new PseudoSource<>(
 				this,
 				pos,
