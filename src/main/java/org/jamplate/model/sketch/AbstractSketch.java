@@ -34,13 +34,30 @@ import java.util.TreeSet;
  */
 public abstract class AbstractSketch implements Sketch {
 	/**
+	 * The inner sketches of this sketch.
 	 * <br>
-	 * The elements of this set must all have a dominance of {@link Dominance#PART} with
-	 * this sketch.
+	 * The elements of this set. Must all have a dominance of {@link Dominance#PART} with
+	 * this sketch and a dominance of {@link Dominance#NONE} with each other.
+	 *
+	 * @since 0.0.2 ~2021.01.12
+	 */
+	protected final SortedSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
+	/**
+	 * The source of this sketch. The source this sketch is reserving.
+	 *
+	 * @since 0.0.2 ~2021.01.12
 	 */
 	protected final Source source;
 
-	public AbstractSketch(Source source) {
+	/**
+	 * Construct a new sketch for hte given {@code source}. The given source is the source
+	 * the constructed sketch will reserve.
+	 *
+	 * @param source the source of the constructed sketch.
+	 * @throws NullPointerException if the given {@code source} is null.
+	 * @since 0.0.2 ~2021.01.12
+	 */
+	protected AbstractSketch(Source source) {
 		Objects.requireNonNull(source, "source");
 		this.source = source;
 	}
