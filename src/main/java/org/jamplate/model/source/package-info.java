@@ -15,6 +15,18 @@
  */
 /**
  * A package specialized to organize source flow.
+ * <br>
+ * Common Syntax:
+ * <pre>
+ *     source: a name for a source representing the first area.
+ *     i: the first index of the first area.
+ *     j: one past the last index of the first area.
+ *     m: the length of the first area.
+ *     other: a name for a source representing the second area.
+ *     s: the first index of the second area.
+ *     e: one past the last index of the second area.
+ *     n: the length of the second area.
+ * </pre>
  *
  * @author LSafer
  * @version 0.0.2
