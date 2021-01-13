@@ -16,11 +16,9 @@
 package org.jamplate.model.source;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * A source is a component that points to a {@code D} source or a fragment of it.
@@ -28,147 +26,19 @@ import java.util.regex.PatternSyntaxException;
  * Note: sources are built from top to bottom. So, a typical source will store its parent
  * source but never store any sub-source of it.
  *
- * @param <D> the type of the actual source of this source.
  * @author LSafer
  * @version 0.0.2
  * @since 0.0.2 ~2020.12.25
  */
-public interface Source<D extends Comparable> {
+public interface Source {
 	/**
 	 * The standard source comparator.
 	 *
 	 * @since 0.0.2 ~2021.01.9
 	 */
-	Comparator<Source> COMPARATOR = Comparator.<Source, Comparable>comparing(Source::document)
+	Comparator<Source> COMPARATOR = Comparator.comparing(Source::document, Document.COMPARATOR)
 			.thenComparingInt(Source::position)
 			.thenComparingInt(Source::length);
-
-	/**
-	 * Return a source that has the range {@code [j, e)}.
-	 * <br>
-	 * Note that the resultant source is always taken from the first given source as
-	 * follows:
-	 * <pre>
-	 *     source.root().slice(j, e - j)
-	 * </pre>
-	 *
-	 * @param source the first source.
-	 * @param other  the second source.
-	 * @return a source that has the range {@code [source.position + source.length,
-	 * 		other.position + other.length)}.
-	 * @throws NullPointerException     if the given {@code source} or {@code other} is
-	 *                                  null.
-	 * @throws IllegalArgumentException if {@code source.position + source.length} is more
-	 *                                  than {@code other.position + other.length}. Or if
-	 *                                  the given source are from different documents.
-	 * @since 0.0.2 ~2021.01.12
-	 */
-	static Source<?> cutEndEnd(Source<?> source, Source<?> other) {
-		Objects.requireNonNull(source, "source");
-		Objects.requireNonNull(other, "other");
-		if (!Objects.equals(source.document(), other.document()))
-			throw new IllegalArgumentException("Different Document");
-		int j = source.position() + source.length();
-		int e = other.position() + other.length();
-		if (j > e)
-			throw new IllegalArgumentException("Reverse Cut");
-		return source.root().slice(j, e - j);
-	}
-
-	/**
-	 * Return a source that has the range {@code [j, s)}.
-	 * <br>
-	 * Note that the resultant source is always taken from the first given source as
-	 * follows:
-	 * <pre>
-	 *     source.root().slice(j, s - j)
-	 * </pre>
-	 *
-	 * @param source the first source.
-	 * @param other  the second source.
-	 * @return a source that has the range {@code [source.position + source.length,
-	 * 		other.position)}.
-	 * @throws NullPointerException     if the given {@code source} or {@code other} is
-	 *                                  null.
-	 * @throws IllegalArgumentException if {@code source.position + source.length} is more
-	 *                                  than {@code other.position}. Or if the given
-	 *                                  source are from different documents.
-	 * @since 0.0.2 ~2021.01.12
-	 */
-	static Source<?> cutEndStart(Source<?> source, Source<?> other) {
-		Objects.requireNonNull(source, "source");
-		Objects.requireNonNull(other, "other");
-		if (!Objects.equals(source.document(), other.document()))
-			throw new IllegalArgumentException("Different Document");
-		int j = source.position() + source.length();
-		int s = other.position();
-		if (j > s)
-			throw new IllegalArgumentException("Reverse Cut");
-		return source.root().slice(j, s - j);
-	}
-
-	/**
-	 * Return a source that has the range {@code [i, e)}.
-	 * <br>
-	 * Note that the resultant source is always taken from the first given source as
-	 * follows:
-	 * <pre>
-	 *     source.root().slice(i, e - i)
-	 * </pre>
-	 *
-	 * @param source the first source.
-	 * @param other  the second source.
-	 * @return a source that has the range {@code [source.position, other.position +
-	 * 		other.length)}.
-	 * @throws NullPointerException     if the given {@code source} or {@code other} is
-	 *                                  null.
-	 * @throws IllegalArgumentException if {@code source.position} is more than {@code
-	 *                                  other.position + other.length}. Or if the given
-	 *                                  source are from different documents.
-	 * @since 0.0.2 ~2021.01.12
-	 */
-	static Source<?> cutStartEnd(Source<?> source, Source<?> other) {
-		Objects.requireNonNull(source, "source");
-		Objects.requireNonNull(other, "other");
-		if (!Objects.equals(source.document(), other.document()))
-			throw new IllegalArgumentException("Different Document");
-		int i = source.position();
-		int e = other.position() + other.length();
-		if (i > e)
-			throw new IllegalArgumentException("Reverse Cut");
-		return source.root().slice(i, e - i);
-	}
-
-	/**
-	 * Return a source that has the range {@code [i, s)}.
-	 * <br>
-	 * Note that the resultant source is always taken from the first given source as
-	 * follows:
-	 * <pre>
-	 *     source.root().slice(i, s - i)
-	 * </pre>
-	 *
-	 * @param source the first source.
-	 * @param other  the second source.
-	 * @return a source that has the range {@code [source.position, other.position)}.
-	 * @throws NullPointerException     if the given {@code source} or {@code other} is
-	 *                                  null.
-	 * @throws IllegalArgumentException if {@code source.position} is more than {@code
-	 *                                  other.position}. Or if the given source are from
-	 *                                  different documents.
-	 * @since 0.0.2 ~2021.01.12
-	 */
-	static Source<?> cutStartStart(Source<?> source, Source<?> other) {
-		Objects.requireNonNull(source, "source");
-		Objects.requireNonNull(other, "other");
-		if (!Objects.equals(source.document(), other.document()))
-			throw new IllegalArgumentException("Different document");
-		int i = source.position();
-		int s = other.position();
-		if (i > s)
-			throw new IllegalArgumentException("Reverse Cut");
-		return source.root().slice(i, s - i);
-	}
 
 	/**
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
@@ -183,7 +53,7 @@ public interface Source<D extends Comparable> {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	static Dominance dominance(Source<?> source, int s, int e) {
+	static Dominance dominance(Source source, int s, int e) {
 		Objects.requireNonNull(source, "source");
 		int i = source.position();
 		int j = i + source.length();
@@ -201,7 +71,7 @@ public interface Source<D extends Comparable> {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	static Dominance dominance(Source<?> source, Source<?> other) {
+	static Dominance dominance(Source source, Source other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		int i = source.position();
@@ -232,7 +102,7 @@ public interface Source<D extends Comparable> {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	static Relation relation(Source<?> source, int s, int e) {
+	static Relation relation(Source source, int s, int e) {
 		Objects.requireNonNull(source, "source");
 		int i = source.position();
 		int j = i + source.length();
@@ -258,7 +128,7 @@ public interface Source<D extends Comparable> {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.0.2 ~2021.01.10
 	 */
-	static Relation relation(Source<?> source, Source<?> other) {
+	static Relation relation(Source source, Source other) {
 		Objects.requireNonNull(source, "source");
 		Objects.requireNonNull(other, "other");
 		int i = source.position();
@@ -319,69 +189,7 @@ public interface Source<D extends Comparable> {
 	 * @return the document of this source.
 	 * @since 0.0.2 ~2021.01.7
 	 */
-	D document();
-
-	/**
-	 * Find every source that matches the given {@code regex} in this source.
-	 * <br>
-	 * This method is relevant to invoking {@link #find(Pattern)} with the results of
-	 * {@link Pattern#compile(String)} with the given {@code regex}.
-	 *
-	 * @param regex the regex to be applied.
-	 * @return a list of sub-sources of this source that matches the given {@code regex}.
-	 * 		(ordered from first to last)
-	 * @throws NullPointerException   if the given {@code regex} is null.
-	 * @throws PatternSyntaxException if hte given {@code regex} has regex syntax errors.
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	@Deprecated
-	List<Source<D>> find(String regex);
-
-	/**
-	 * Find every source that matches the given {@code pattern} in this source.
-	 *
-	 * @param pattern the pattern to be applied.
-	 * @return a list of sub-sources of this source that matches the given {@code
-	 * 		pattern}.
-	 * @throws NullPointerException if the given {@code pattern} is null.
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	@Deprecated
-	List<Source<D>> find(Pattern pattern);
-
-	/**
-	 * Find every source that is between a {@code startRegex} match and {@code endRegex}
-	 * end.
-	 *
-	 * @param startRegex the regex to match the start sequence.
-	 * @param endRegex   the regex to match the end sequence.
-	 * @return a list of sources that have a starting pattern matching the given {@code
-	 * 		startRegex} and an ending pattering matching the given {@code endRegex}. (ordered
-	 * 		from first to last)
-	 * @throws NullPointerException   if the given {@code startRegex} or {@code endRegex}
-	 *                                is null.
-	 * @throws PatternSyntaxException if the given {@code startRegex} or {@code endRegex}
-	 *                                has regex syntax errors.
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	@Deprecated
-	List<Source<D>> find(String startRegex, String endRegex);
-
-	/**
-	 * Find every source that is between a {@code startPattern} match and {@code
-	 * endPattern} end.
-	 *
-	 * @param startPattern the pattern to match the start sequence.
-	 * @param endPattern   the pattern to match the end sequence.
-	 * @return a list of sources that have a starting pattern matching the given {@code
-	 * 		startPattern} and an ending pattering matching the given {@code endPattern}.
-	 * 		(ordered from first to last)
-	 * @throws NullPointerException if the given {@code startPattern} or {@code
-	 *                              endPattern} is null.
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	@Deprecated
-	List<Source<D>> find(Pattern startPattern, Pattern endPattern);
+	Document document();
 
 	/**
 	 * A shortcut for invoking {@link #content()}{@link CharSequence#length() .length()}.
@@ -406,21 +214,6 @@ public interface Source<D extends Comparable> {
 	 * matcher also has {@link Matcher#hasTransparentBounds()} and {@link
 	 * Matcher#useAnchoringBounds(boolean)} both enabled.
 	 *
-	 * @param regex the regex to match.
-	 * @return a matcher over the content of this source.
-	 * @throws NullPointerException   if the given {@code regex} is null.
-	 * @throws PatternSyntaxException if the given {@code regex} has a syntax error.
-	 * @since 0.0.2 ~2021.01.13
-	 */
-	Matcher matcher(String regex);
-
-	/**
-	 * Construct a ready-to-use matcher from this source. The returned matcher has an
-	 * input sequence from the {@link #root()} of this source. But, it is limited to the
-	 * region of this source (using {@link Matcher#region(int, int)}). The returned
-	 * matcher also has {@link Matcher#hasTransparentBounds()} and {@link
-	 * Matcher#useAnchoringBounds(boolean)} both enabled.
-	 *
 	 * @param pattern the pattern to match.
 	 * @return a matcher over the content of this source.
 	 * @throws NullPointerException if the given {@code pattern} is null.
@@ -434,7 +227,7 @@ public interface Source<D extends Comparable> {
 	 * @return the parent source of this source. Or null if this source is a root source.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	Source<D> parent();
+	Source parent();
 
 	/**
 	 * Return where this source starts at its {@link #document()} file}.
@@ -456,7 +249,7 @@ public interface Source<D extends Comparable> {
 	 * 		source.
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	Source<D> root();
+	Source root();
 
 	/**
 	 * Slice this source from the given {@code pos} to the end of this {@code source}.
@@ -467,7 +260,7 @@ public interface Source<D extends Comparable> {
 	 * @throws IndexOutOfBoundsException if {@code pos > this.length()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
-	Source<D> slice(int pos);
+	Source slice(int pos);
 
 	/**
 	 * Slice this source from the given {@code pos} and limit it with the given {@code
