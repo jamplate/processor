@@ -164,4 +164,126 @@ public interface Sketch {
 	 * @since 0.0.2 ~2021.01.7
 	 */
 	Source source();
+
+	/**
+	 * A callback that can be passed to a sketch for that sketch to invoke this sketch
+	 * with every element in it. (recursively)
+	 * <br>
+	 * Note: any new method added will always have the modifier {@code default} making
+	 * this remain a {@link FunctionalInterface}.
+	 *
+	 * @author LSafer
+	 * @version 0.0.2
+	 * @since 0.0.2 ~2021.01.11
+	 */
+	@FunctionalInterface
+	interface Visitor {
+		/**
+		 * Invoked for any sketch met down in the tree.
+		 *
+		 * @param sketch the sketch met.
+		 * @return true, if this visitor wishes to stop the loop.
+		 * @throws NullPointerException if the given {@code sketch} is null.
+		 * @since 0.0.2 ~2021.01.11
+		 */
+		boolean visit(Sketch sketch);
+	}
 }
+//
+//	/**
+//	 * Calculate how dominant the given area {@code [s, e)} over the given {@code
+//	 * sketch}.
+//	 *
+//	 * @param sketch the sketch. (the first area)
+//	 * @param s      the first index of the second area.
+//	 * @param e      one past the last index of the second area.
+//	 * @return how dominant the second area over the given sketch.
+//	 * @throws NullPointerException     if the given {@code sketch} is null.
+//	 * @throws IllegalArgumentException if the given {@code s} is not in the range {@code
+//	 *                                  [0, e]}.
+//	 * @see Dominance#compute(int, int, int, int)
+//	 * @since 0.0.2 ~2021.01.11
+//	 */
+//	static Dominance dominance(Sketch sketch, int s, int e) {
+//		return Source.dominance(sketch.source(), s, e);
+//	}
+//
+//	/**
+//	 * Calculate how dominant the given {@code other} sketch over the given {@code
+//	 * sketch}.
+//	 *
+//	 * @param sketch the sketch. (the first area)
+//	 * @param other  the other sketch. (the second area)
+//	 * @return how dominant the second sketch over the first sketch.
+//	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+//	 * @see Dominance#compute(int, int, int, int)
+//	 * @since 0.0.2 ~2021.01.11
+//	 */
+//	static Dominance dominance(Sketch sketch, Sketch other) {
+//		return Source.dominance(sketch.source(), other.source());
+//	}
+//
+//	/**
+//	 * Calculate the relation between the given {@code sketch} and the area {@code [s,
+//	 * e)}.
+//	 *
+//	 * @param sketch the sketch. (the first area)
+//	 * @param s      the first index of the second area.
+//	 * @param e      one past the last index of the second area.
+//	 * @return the relation between the given sketch and the given area.
+//	 * @throws NullPointerException     if the given {@code sketch} is null.
+//	 * @throws IllegalArgumentException if the given {@code s} is not in the range {@code
+//	 *                                  [s, e]}.
+//	 * @see Relation#compute(int, int, int, int)
+//	 * @since 0.0.2 ~2021.01.11
+//	 */
+//	static Relation relation(Sketch sketch, int s, int e) {
+//		return Source.relation(sketch.source(), s, e);
+//	}
+//
+//	/**
+//	 * Calculate the relation between the given {@code sketch} and the {@code other}
+//	 * sketch.
+//	 *
+//	 * @param sketch the sketch. (the first area)
+//	 * @param other  the other sketch. (the second area)
+//	 * @return the relation between the given sketch and the given other sketch.
+//	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+//	 * @see Relation#compute(int, int, int, int)
+//	 * @since 0.0.2 ~2021.01.11
+//	 */
+//	static Relation relation(Sketch sketch, Sketch other) {
+//		return Source.relation(sketch.source(), other.source());
+//	}
+
+//	/**
+//	 * Find a source that matches the given {@code regex} while not clashing with any of
+//	 * the sketches in this (clashing means {@link Dominance#SHARE} or {@link
+//	 * Dominance#EXACT}).
+//	 *
+//	 * @param regex the regex to be matched.
+//	 * @return a source that matches the given {@code regex} while not clashing with any
+//	 * 		sketches in this.
+//	 * @throws NullPointerException   if the given {@code regex} is null.
+//	 * @throws PatternSyntaxException if the given {@code regex} has a syntax error.
+//	 * @since 0.0.2 ~2021.01.13
+//	 */
+//	Source<?> find(String regex);
+
+//
+//	/**
+//	 * Find a source that starts with the given {@code startRegex} and ends with the given
+//	 * {@code endRegex} while not clashing with any of the sketches in this (clashing
+//	 * means {@link Dominance#SHARE} or {@link Dominance#EXACT}).
+//	 *
+//	 * @param startRegex the regex to be matched with the starting sequence.
+//	 * @param endRegex   the regex to be matched with the ending sequence.
+//	 * @return a source that its start matches the given {@code startRegex} and its end
+//	 * 		matches the given {@code endRegex} while not clashing with any sketches in this.
+//	 * @throws NullPointerException   if the given {@code startRegex} or {@code endRegex}
+//	 *                                is null.
+//	 * @throws PatternSyntaxException if the given {@code startRegex} or {@code endRegex}
+//	 *                                has a syntax error.
+//	 * @since 0.0.2 ~2021.01.13
+//	 */
+//	Source<?> find(String startRegex, String endRegex);
