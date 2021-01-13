@@ -27,6 +27,16 @@
  *     e: one past the last index of the second area.
  *     n: the length of the second area.
  * </pre>
+ * <br>
+ * Document reading is as follows:
+ * <ul>
+ *     <li>First, the source is converted into a {@link org.jamplate.model.source.Document}</li>
+ *     <li>Second, the document is converted into a {@link org.jamplate.model.source.Source}</li>
+ *     <li>Third, the source is converted into a {@link org.jamplate.model.source.Sketch}</li>
+ *     <li>Forth, the sketch is solved via a {@link org.jamplate.model.source.Sketch.Visitor}</li>
+ *     <li>Fifth, the sketch is converted into an element via a {@link org.jamplate.model.source.Sketch.Visitor}</li>
+ *     <li>Sixth, the elements are used</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.0.2
