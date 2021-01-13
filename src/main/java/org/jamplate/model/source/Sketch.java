@@ -13,13 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.sketch;
-
-import org.jamplate.model.source.Dominance;
-import org.jamplate.model.source.Relation;
-import org.jamplate.model.source.Source;
+package org.jamplate.model.source;
 
 import java.util.Comparator;
+import java.util.regex.Pattern;
 
 /**
  * A temporary sketch containing initial thoughts about an element.
@@ -40,71 +37,11 @@ public interface Sketch {
 	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Source.COMPARATOR);
 
 	/**
-	 * Calculate how dominant the given area {@code [s, e)} over the given {@code
-	 * sketch}.
+	 * Calculate the hashcode of this sketch.
 	 *
-	 * @param sketch the sketch. (the first area)
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
-	 * @return how dominant the second area over the given sketch.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
-	 * @throws IllegalArgumentException if the given {@code s} is not in the range {@code
-	 *                                  [0, e]}.
-	 * @see Dominance#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.11
+	 * @return the hashCode of this sketch.
+	 * @since 0.0.2 ~2021.01.13
 	 */
-	static Dominance dominance(Sketch sketch, int s, int e) {
-		return Source.dominance(sketch.source(), s, e);
-	}
-
-	/**
-	 * Calculate how dominant the given {@code other} sketch over the given {@code
-	 * sketch}.
-	 *
-	 * @param sketch the sketch. (the first area)
-	 * @param other  the other sketch. (the second area)
-	 * @return how dominant the second sketch over the first sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Dominance#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	static Dominance dominance(Sketch sketch, Sketch other) {
-		return Source.dominance(sketch.source(), other.source());
-	}
-
-	/**
-	 * Calculate the relation between the given {@code sketch} and the area {@code [s,
-	 * e)}.
-	 *
-	 * @param sketch the sketch. (the first area)
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
-	 * @return the relation between the given sketch and the given area.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
-	 * @throws IllegalArgumentException if the given {@code s} is not in the range {@code
-	 *                                  [s, e]}.
-	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	static Relation relation(Sketch sketch, int s, int e) {
-		return Source.relation(sketch.source(), s, e);
-	}
-
-	/**
-	 * Calculate the relation between the given {@code sketch} and the {@code other}
-	 * sketch.
-	 *
-	 * @param sketch the sketch. (the first area)
-	 * @param other  the other sketch. (the second area)
-	 * @return the relation between the given sketch and the given other sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.11
-	 */
-	static Relation relation(Sketch sketch, Sketch other) {
-		return Source.relation(sketch.source(), other.source());
-	}
-
 	@Override
 	int hashCode();
 
@@ -132,25 +69,56 @@ public interface Sketch {
 	 * @throws NullPointerException if the given {@code visitor} is null.
 	 * @since 0.0.2 ~2021.01.11
 	 */
-	boolean accept(SketchVisitor visitor);
+	boolean accept(Visitor visitor);
+
+	/**
+	 * Find a source that matches the given {@code pattern} while not clashing with any of
+	 * the sketches in this (clashing means {@link Source.Dominance#SHARE} or {@link
+	 * Source.Dominance#EXACT}).
+	 *
+	 * @param pattern the pattern to be matched.
+	 * @return a source that matches the given {@code pattern} while not clashing with any
+	 * 		sketches in this.
+	 * @throws NullPointerException if the given {@code pattern} is null.
+	 * @since 0.0.2 ~2021.01.13
+	 */
+	Source find(Pattern pattern);
+
+	/**
+	 * Find a source that starts with the given {@code startPattern} and ends with the
+	 * given {@code endPattern} while not clashing with any of the sketches in this
+	 * (clashing means {@link Source.Dominance#SHARE} or {@link Source.Dominance#EXACT}).
+	 *
+	 * @param startPattern the pattern to be matched with the starting sequence.
+	 * @param endPattern   the pattern to be matched with the ending sequence.
+	 * @return a source that its start matches the given {@code startPattern} and its end
+	 * 		matches the given {@code endPattern} while not clashing with any sketches in
+	 * 		this.
+	 * @throws NullPointerException if the given {@code startPattern} or {@code
+	 *                              endPattern} is null.
+	 * @since 0.0.2 ~2021.01.13
+	 */
+	Source find(Pattern startPattern, Pattern endPattern);
 
 	/**
 	 * Put the given {@code sketch} to this sketch. Putting a sketch into another sketch
 	 * is like telling that other sketch to mark its place as reserved. If the given
-	 * sketch is a {@link Dominance#PART} with a sketch in this sketch. Then the given
-	 * {@code sketch} should be put into that sketch instead. On the other hand, if a
-	 * sketch in this sketch has a dominance of {@link Dominance#PART} with the given
-	 * {@code sketch}. Then this sketch will transfer than sketch to the given {@code
-	 * sketch}. (unless a clash happened, then an exception thrown and nothing happens)
+	 * sketch is a {@link Source.Dominance#PART} with a sketch in this sketch. Then the
+	 * given {@code sketch} should be put into that sketch instead. On the other hand, if
+	 * a sketch in this sketch has a dominance of {@link Source.Dominance#PART} with the
+	 * given {@code sketch}. Then this sketch will transfer than sketch to the given
+	 * {@code sketch}. (unless a clash happened, then an exception thrown and nothing
+	 * happens)
 	 *
 	 * @param sketch the sketch to be put.
 	 * @throws NullPointerException          if the given {@code sketch} is null.
 	 * @throws IllegalStateException         if the given {@code sketch} is clashing with
 	 *                                       a previously reserved area (has a dominance
-	 *                                       of either {@link Dominance#SHARE} or {@link
-	 *                                       Dominance#EXACT}).
+	 *                                       of either {@link Source.Dominance#SHARE} or
+	 *                                       {@link Source.Dominance#EXACT}).
 	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
-	 *                                       other than {@link Dominance#PART} with this
+	 *                                       other than {@link Source.Dominance#PART} or
+	 *                                       {@link Source.Dominance#EXACT} with this
 	 *                                       sketch.
 	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
 	 * @since 0.0.2 ~2021.01.12
