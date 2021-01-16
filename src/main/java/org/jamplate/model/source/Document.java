@@ -105,7 +105,8 @@ public interface Document {
 	String qualifiedName();
 
 	/**
-	 * Read the content of this document.
+	 * Read the content of this document. Once the content read, it should be cached. So,
+	 * invoking this method multiple times must be easy to perform.
 	 *
 	 * @return the content of this document.
 	 * @throws IOException if any I/O exception occurs. (optional)
