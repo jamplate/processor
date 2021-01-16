@@ -32,6 +32,12 @@ public class FileDocument implements Document {
 	 * @since 0.0.2 ~2021.01.13
 	 */
 	protected final File file;
+	/**
+	 * The content of this document cached.
+	 *
+	 * @since 0.0.2 ~2021.01.16
+	 */
+	protected String content;
 
 	/**
 	 * Construct a new document for the given {@code file}.
@@ -43,6 +49,17 @@ public class FileDocument implements Document {
 	public FileDocument(File file) {
 		Objects.requireNonNull(file, "file");
 		this.file = file;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		return object instanceof Document &&
+			   Objects.equals(((Document) object).qualifiedName(), this.qualifiedName());
+	}
+
+	@Override
+	public int hashCode() {
+		return this.qualifiedName().hashCode();
 	}
 
 	@Override
@@ -67,19 +84,24 @@ public class FileDocument implements Document {
 
 	@Override
 	public String readContent() throws IOException {
-		try (Reader reader = new FileReader(this.file)) {
-			StringBuilder builder = new StringBuilder();
-			char[] buffer = new char[1024];
+		if (this.content == null)
+			try (Reader reader = new FileReader(this.file)) {
+				StringBuilder builder = new StringBuilder();
+				char[] buffer = new char[1024];
 
-			while (true) {
-				int l = reader.read(buffer);
+				while (true) {
+					int l = reader.read(buffer);
 
-				if (l < 0)
-					return builder.toString();
-				if (l > 0)
-					builder.append(buffer, 0, l);
+					if (l < 0)
+						break;
+					if (l > 0)
+						builder.append(buffer, 0, l);
+				}
+
+				this.content = builder.toString();
 			}
-		}
+
+		return this.content;
 	}
 
 	@Override
@@ -90,7 +112,7 @@ public class FileDocument implements Document {
 
 	@Override
 	public String toString() {
-		return this.file.toString();
+		return this.qualifiedName();
 	}
 
 	/**
