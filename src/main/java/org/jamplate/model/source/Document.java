@@ -118,11 +118,11 @@ public interface Document {
 	 * Read the content of this document. Once the content read, it should be cached. So,
 	 * invoking this method multiple times must be easy to perform.
 	 *
-	 * @return the content of this document.
+	 * @return the content of this document. (unmodifiable view)
 	 * @throws IOError if any I/O exception occurs. (optional)
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	String readContent();
+	CharSequence readContent();
 
 	/**
 	 * Return the simple name of this document. The simple name usually refers to the name
