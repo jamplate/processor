@@ -39,7 +39,7 @@ public class DocumentSource extends AbstractSource {
 	}
 
 	@Override
-	public Source slice(int position) {
+	public Source subSource(int position) {
 		return new SubSource(
 				this,
 				position,
@@ -48,7 +48,7 @@ public class DocumentSource extends AbstractSource {
 	}
 
 	@Override
-	public Source slice(int position, int length) {
+	public Source subSource(int position, int length) {
 		return new SubSource(
 				this,
 				position,

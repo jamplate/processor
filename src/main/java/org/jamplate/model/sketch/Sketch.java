@@ -68,7 +68,7 @@ public interface Sketch {
 			//validate match
 			if (sketch.check(i, j))
 				//bingo!
-				return source.slice(
+				return source.subSource(
 						i,
 						j - i
 				);
@@ -135,7 +135,7 @@ public interface Sketch {
 						}
 
 						//bingo!
-						return source.slice(
+						return source.subSource(
 								start,
 								end - start
 						);

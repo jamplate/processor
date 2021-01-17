@@ -241,7 +241,7 @@ public interface Source {
 	 * @throws IndexOutOfBoundsException if {@code position > this.length()}.
 	 * @since 0.2.0 ~2021.01.6
 	 */
-	Source slice(int position);
+	Source subSource(int position);
 
 	/**
 	 * Slice this source from the given {@code position} and limit it with the given
@@ -256,7 +256,7 @@ public interface Source {
 	 * @throws IndexOutOfBoundsException if {@code position + length > this.length()}.
 	 * @since 0.2.0 ~2021.01.6
 	 */
-	Source slice(int position, int length);
+	Source subSource(int position, int length);
 
 	/**
 	 * An enumeration of how dominant a relation is over another relation.

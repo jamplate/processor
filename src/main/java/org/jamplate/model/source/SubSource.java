@@ -59,7 +59,7 @@ public class SubSource extends AbstractSource {
 	}
 
 	@Override
-	public Source slice(int position) {
+	public Source subSource(int position) {
 		//checked in the constructor
 		return new SubSource(
 				this,
@@ -69,7 +69,7 @@ public class SubSource extends AbstractSource {
 	}
 
 	@Override
-	public Source slice(int position, int length) {
+	public Source subSource(int position, int length) {
 		//checked in the constructor
 		return new SubSource(
 				this,
