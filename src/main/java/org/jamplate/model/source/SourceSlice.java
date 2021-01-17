@@ -22,7 +22,7 @@ package org.jamplate.model.source;
  * @version 0.0.2
  * @since 0.0.2 ~2021.01.13
  */
-public class SourceImpl extends AbstractSource {
+public class SourceSlice extends AbstractSource {
 	/**
 	 * Construct a new source standard implementation instance for the given {@code
 	 * document}.
@@ -32,7 +32,7 @@ public class SourceImpl extends AbstractSource {
 	 * @see AbstractSource#AbstractSource(Document)
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	public SourceImpl(Document document) {
+	public SourceSlice(Document document) {
 		super(document);
 	}
 
@@ -61,7 +61,7 @@ public class SourceImpl extends AbstractSource {
 	 * @see AbstractSource#AbstractSource(Source, int, int)
 	 * @since 0.0.2 ~2021.01.17
 	 */
-	protected SourceImpl(Source parent, int position, int length) {
+	protected SourceSlice(Source parent, int position, int length) {
 		super(
 				parent,
 				position,
@@ -72,7 +72,7 @@ public class SourceImpl extends AbstractSource {
 	@Override
 	public Source slice(int position) {
 		//checked in the constructor
-		return new SourceImpl(
+		return new SourceSlice(
 				this,
 				position,
 				this.length() - position
@@ -82,7 +82,7 @@ public class SourceImpl extends AbstractSource {
 	@Override
 	public Source slice(int position, int length) {
 		//checked in the constructor
-		return new SourceImpl(
+		return new SourceSlice(
 				this,
 				position,
 				length
