@@ -15,6 +15,7 @@
  */
 package org.jamplate.model.source;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -70,6 +71,15 @@ public interface Document {
 	String toString();
 
 	/**
+	 * Returns the length of this document. This method must always return the same value
+	 * on the same instance.
+	 *
+	 * @return the length of this document.
+	 * @since 0.0.2 ~2021.01.17
+	 */
+	int length();
+
+	/**
 	 * Return the name of this document.
 	 *
 	 * @return the name of this document.
@@ -109,10 +119,10 @@ public interface Document {
 	 * invoking this method multiple times must be easy to perform.
 	 *
 	 * @return the content of this document.
-	 * @throws IOException if any I/O exception occurs. (optional)
+	 * @throws IOError if any I/O exception occurs. (optional)
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	String readContent() throws IOException;
+	String readContent();
 
 	/**
 	 * Return the simple name of this document. The simple name usually refers to the name
