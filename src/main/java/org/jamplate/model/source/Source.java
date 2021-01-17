@@ -140,8 +140,7 @@ public interface Source {
 
 	/**
 	 * A source equals another object, if that object is a source and has the same {@link
-	 * #document()}, {@link #position()} and {@link #content()}{@link String#length()
-	 * .length()} of this source.
+	 * #document()}, {@link #position()} and {@link #length()} of this source.
 	 *
 	 * @return if the given object is a source and equals this source.
 	 * @since 0.0.2 ~2021.01.7
@@ -152,7 +151,7 @@ public interface Source {
 	/**
 	 * The hashcode of a source is calculated as follows.
 	 * <pre>
-	 *     hashCode = {@link #document()}.hashCode() * {@link #content()}{@link String#length() .length()} + {@link #position()}
+	 *     hashCode = {@link #document()}.hashCode() * {@link #length()} + {@link #position()}
 	 * </pre>
 	 *
 	 * @return the hashCode of this source.
@@ -165,7 +164,7 @@ public interface Source {
 	 * Returns a string representation of this source. The source shall follow the below
 	 * template:
 	 * <pre>
-	 *     {@link #document() &lt;document()&gt;} [{@link #position() &lt;position()&gt;}, {@link #content() &lt;content()}{@link String#length() .length()&gt;}]
+	 *     {@link #document() &lt;document()&gt;} [{@link #position() &lt;position()&gt;}, {@link #length() &lt;length()&gt;}]
 	 * </pre>
 	 *
 	 * @return a string representation of this source.
@@ -175,10 +174,10 @@ public interface Source {
 	String toString();
 
 	/**
-	 * Return the content of this source as a string. Once a source got constructed, it
-	 * will capture its content and never change it.
+	 * Return the content of this source as a string. This method should always return the
+	 * same value.
 	 *
-	 * @return the content of this source.
+	 * @return the content of this source. (unmodifiable view)
 	 * @since 0.0.2 ~2021.01.8
 	 */
 	CharSequence content();
@@ -192,15 +191,8 @@ public interface Source {
 	Document document();
 
 	/**
-	 * A shortcut for invoking {@link #content()}{@link CharSequence#length() .length()}.
-	 * It is encouraged to use this shortcut when the caller only cares about the length
-	 * of the content.
-	 * <br>
-	 * <br>
-	 * Invoking this method SHOULD be the same as invoking:
-	 * <pre>
-	 *     {@link #content()}{@link CharSequence#length() .length()}
-	 * </pre>
+	 * The length of this source. Must always return the same value. Must always be the
+	 * same as the length of the content of this source.
 	 *
 	 * @return the length of the content of this source.
 	 * @since 0.0.2 ~2021.01.10
@@ -208,11 +200,11 @@ public interface Source {
 	int length();
 
 	/**
-	 * Construct a ready-to-use matcher from this source. The returned matcher has an
-	 * input sequence from the {@link #root()} of this source. But, it is limited to the
-	 * region of this source (using {@link Matcher#region(int, int)}). The returned
-	 * matcher also has {@link Matcher#hasTransparentBounds()} and {@link
-	 * Matcher#useAnchoringBounds(boolean)} both enabled.
+	 * Construct a ready-to-use matcher from this source. The returned matcher has the
+	 * whole content of the document of this source. But, it is limited to the region of
+	 * this source (using {@link Matcher#region(int, int)}). The returned matcher also has
+	 * {@link Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
+	 * both enabled.
 	 *
 	 * @param pattern the pattern to match.
 	 * @return a matcher over the content of this source.
@@ -224,13 +216,13 @@ public interface Source {
 	/**
 	 * The parent source of this source.
 	 *
-	 * @return the parent source of this source. Or null if this source is a root source.
+	 * @return the parent source of this source. Or null if this source has no parent.
 	 * @since 0.0.2 ~2021.01.8
 	 */
 	Source parent();
 
 	/**
-	 * Return where this source starts at its {@link #document()} file}.
+	 * Return where this source starts at its {@link #document()}.
 	 *
 	 * @return the position of this source.
 	 * @since 0.0.2 ~2021.01.4
@@ -238,44 +230,31 @@ public interface Source {
 	int position();
 
 	/**
-	 * The root source of this source, the source that points to the whole file of this
-	 * source.
-	 * <br>
-	 * Note: it is better to get the root source than to create a new one. The reason is
-	 * that the root source of this source will have its {@link #content()} haven't
-	 * changed since its construction.
+	 * Slice this source from the given {@code position} to the end of this {@code
+	 * source}.
 	 *
-	 * @return the root source of this source. Or this source if this source is a root
-	 * 		source.
-	 * @since 0.0.2 ~2021.01.8
-	 */
-	Source root();
-
-	/**
-	 * Slice this source from the given {@code pos} to the end of this {@code source}.
-	 *
-	 * @param pos the pos where the new slice source will have.
-	 * @return a slice of this source that starts from the given {@code pos}.
-	 * @throws IllegalArgumentException  if the given {@code pos} is negative.
-	 * @throws IndexOutOfBoundsException if {@code pos > this.length()}.
+	 * @param position the position where the new slice source will have.
+	 * @return a slice of this source that starts from the given {@code position}.
+	 * @throws IllegalArgumentException  if the given {@code position} is negative.
+	 * @throws IndexOutOfBoundsException if {@code position > this.length()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
-	Source slice(int pos);
+	Source slice(int position);
 
 	/**
-	 * Slice this source from the given {@code pos} and limit it with the given {@code
-	 * len}.
+	 * Slice this source from the given {@code position} and limit it with the given
+	 * {@code length}.
 	 *
-	 * @param pos the pos where the new slice source will have.
-	 * @param len the len of the new slice source.
-	 * @return a slice of this source that starts from the given {@code pos} and have the
-	 * 		given {@code len}.
-	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is
-	 *                                   negative.
-	 * @throws IndexOutOfBoundsException if {@code pos + len > this.len()}.
+	 * @param position the position where the new slice source will have.
+	 * @param length   the length of the new slice source.
+	 * @return a slice of this source that starts from the given {@code position} and have
+	 * 		the given {@code length}.
+	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
+	 *                                   is negative.
+	 * @throws IndexOutOfBoundsException if {@code position + length > this.length()}.
 	 * @since 0.0.2 ~2021.01.6
 	 */
-	Source slice(int pos, int len);
+	Source slice(int position, int length);
 
 	/**
 	 * An enumeration of how dominant a relation is over another relation.
