@@ -178,7 +178,7 @@ public interface Sketch extends Serializable {
 	/**
 	 * Returns a string representation of this sketch.
 	 * <pre>
-	 *     {@code <ClassSimpleName>} ({@link #reference() &lt;source()&gt;})
+	 *     {@code <ClassSimpleName>} ({@link #reference() &lt;reference()&gt;})
 	 * </pre>
 	 *
 	 * @return a string representation of this sketch.
