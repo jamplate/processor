@@ -17,6 +17,7 @@ package org.jamplate.model.source;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -36,6 +37,137 @@ public interface Sketch {
 	 * @since 0.2.0 ~2021.01.9
 	 */
 	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Source.COMPARATOR);
+
+	/**
+	 * Find an available source in the given {@code sketch} that matches the given {@code
+	 * pattern}.
+	 *
+	 * @param sketch  the sketch to find a source from.
+	 * @param pattern the pattern to match the required source with.
+	 * @return an available source in the given {@code sketch} that matches the given
+	 *        {@code pattern} or null if no such source found.
+	 * @throws NullPointerException if the given {@code sketch} or {@code pattern} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	static Source find(Sketch sketch, Pattern pattern) {
+		Objects.requireNonNull(pattern, "pattern");
+		Objects.requireNonNull(pattern, "pattern");
+
+		Source source = sketch.source();
+
+		Matcher matcher = source.matcher(pattern);
+
+		//search for a valid match
+		while (matcher.find()) {
+			int i = matcher.start();
+			int j = matcher.end();
+
+			//validate match
+			if (sketch.check(i, j))
+				//bingo!
+				return source.slice(
+						i,
+						j - i
+				);
+		}
+
+		//no valid matches
+		return null;
+	}
+
+	/**
+	 * Find an available source that starts with the given {@code startPatter} and ends
+	 * with the given {@code endPatter}. The two patterns each has a dominance of {@link
+	 * Source.Dominance#NONE} with every inner sketch in the given {@code sketch}. The
+	 * returned source will have no AVAILABLE sequence that matches the given {@code
+	 * startPattern} in between.
+	 *
+	 * @param sketch       the sketch to find in.
+	 * @param startPattern the pattern of the start.
+	 * @param endPattern   the pattern of the end.
+	 * @return a source that starts with the given {@code startPattern} and ends with
+	 *        {@code endPattern} in the given {@code sketch}.
+	 * @throws NullPointerException if the given {@code sketch} or {@code startPattern} or
+	 *                              {@code endPattern} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	static Source find(Sketch sketch, Pattern startPattern, Pattern endPattern) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(startPattern, "startPattern");
+		Objects.requireNonNull(endPattern, "endPattern");
+
+		Source source = sketch.source();
+
+		Matcher startMatcher = source.matcher(startPattern);
+		Matcher endMatcher = source.matcher(endPattern);
+
+		//search for `startPattern`
+		//		while (startMatcher.find()) {
+		//			int i = startMatcher.start();
+		//			int j = startMatcher.end();
+		//
+		//			//validate found start
+		//			if (sketch.check(i, j))
+		//				//search for `endPattern`
+		//				while (endMatcher.find()) {
+		//					int s = endMatcher.start();
+		//					int e = endMatcher.end();
+		//
+		//					if (s < i)
+		//						continue;
+		//
+		//					//validate found end
+		//					if (sketch.check(s, e))
+		//						return source.slice(
+		//								i,
+		//								e - i
+		//						);
+		//				}
+		//		}
+
+		//search for a valid start
+		while (startMatcher.find()) {
+			int i = startMatcher.start();
+			int j = startMatcher.end();
+
+			//validate start
+			if (sketch.check(i, j))
+				//search for a valid end
+				while (endMatcher.find()) {
+					int s = endMatcher.start();
+					int e = endMatcher.end();
+
+					//validate end
+					if (sketch.check(s, e)) {
+						int start = i;
+						int end = e;
+
+						//search for a shorter start
+						while (startMatcher.find()) {
+							int ii = startMatcher.start();
+							int jj = startMatcher.end();
+
+							//break?
+							if (ii > s)
+								break;
+							//validate shorter start
+							if (sketch.check(ii, jj))
+								start = ii;
+						}
+
+						//bingo!
+						return source.slice(
+								start,
+								end - start
+						);
+					}
+				}
+		}
+
+		//no valid matches
+		return null;
+	}
 
 	/**
 	 * A sketch is equals to another sketch if they are the same instance.
@@ -100,42 +232,6 @@ public interface Sketch {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	boolean check(int start, int end);
-
-	/**
-	 * Find a source that matches the given {@code pattern} while not interacting with any
-	 * of the sketches in this (not interacting means {@link Source.Dominance#NONE}).
-	 * <br>
-	 * Important Note: the implementation might want to reserve its area to itself. So, it
-	 * might always return null.
-	 *
-	 * @param pattern the pattern to be matched.
-	 * @return a source that matches the given {@code pattern} while not interacting with
-	 * 		any sketches in this.
-	 * @throws NullPointerException if the given {@code pattern} is null.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	@Deprecated
-	Source find(Pattern pattern);
-
-	/**
-	 * Find a source that starts with the given {@code startPattern} and ends with the
-	 * given {@code endPattern} while not interacting with any of the sketches in this
-	 * (not interacting means {@link Source.Dominance#NONE}).
-	 * <br>
-	 * Important Note: the implementation might want to reserve its area to itself. So, it
-	 * might always return null.
-	 *
-	 * @param startPattern the pattern to be matched with the starting sequence.
-	 * @param endPattern   the pattern to be matched with the ending sequence.
-	 * @return a source that its start matches the given {@code startPattern} and its end
-	 * 		matches the given {@code endPattern} while not interacting with any sketches in
-	 * 		this.
-	 * @throws NullPointerException if the given {@code startPattern} or {@code
-	 *                              endPattern} is null.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	@Deprecated
-	Source find(Pattern startPattern, Pattern endPattern);
 
 	/**
 	 * Put the given {@code sketch} to this sketch. Putting a sketch into another sketch

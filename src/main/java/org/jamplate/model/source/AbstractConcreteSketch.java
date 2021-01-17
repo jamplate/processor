@@ -15,8 +15,6 @@
  */
 package org.jamplate.model.source;
 
-import java.util.regex.Pattern;
-
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
  * a concrete sketch. (a concrete sketch is a sketch that cannot have inner sketches)
@@ -44,13 +42,8 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	}
 
 	@Override
-	public Source find(Pattern pattern) {
-		return null;
-	}
-
-	@Override
-	public Source find(Pattern startPattern, Pattern endPattern) {
-		return null;
+	public boolean check(int start, int end) {
+		return false;
 	}
 
 	@Override

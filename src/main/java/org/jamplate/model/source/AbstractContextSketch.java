@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -64,67 +62,17 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	}
 
 	@Override
-	public Source find(Pattern pattern) {
-		Objects.requireNonNull(pattern, "pattern");
-
-		Matcher matcher = this.source.matcher(pattern);
-
-		//search for `pattern`
-		while (matcher.find()) {
-			int i = matcher.start();
-			int j = matcher.end();
-
-			if (this.sketches.stream().allMatch(sketch ->
-					Source.dominance(sketch.source(), i, j) == Source.Dominance.NONE
-			))
-				return this.source.slice(
-						i,
-						j - i
-				);
-		}
-
-		return null;
-	}
-
-	@Override
-	public Source find(Pattern startPattern, Pattern endPattern) {
-		Objects.requireNonNull(startPattern, "startPattern");
-		Objects.requireNonNull(endPattern, "endPattern");
-
-		Matcher startMatcher = this.source.matcher(startPattern);
-		Matcher endMatcher = this.source.matcher(endPattern);
-
-		//search for `startPattern`
-		while (startMatcher.find()) {
-			int i = startMatcher.start();
-			int j = startMatcher.end();
-
-			//validate found start
-			if (this.sketches.stream().allMatch(sketch ->
-					Source.dominance(sketch.source(), i, j) ==
-					Source.Dominance.NONE
-			))
-				//search for `endPattern`
-				while (endMatcher.find()) {
-					int s = endMatcher.start();
-					int e = endMatcher.end();
-
-					if (s < i)
-						continue;
-
-					//validate found end
-					if (this.sketches.stream().allMatch(sketch ->
-							Source.dominance(sketch.source(), s, e) ==
-							Source.Dominance.NONE
-					))
-						return this.source.slice(
-								i,
-								e - i
-						);
-				}
-		}
-
-		return null;
+	public boolean check(int start, int end) {
+		if (start < 0 || start > end)
+			return false;
+		Source.Dominance dominance = Source.dominance(this.source, start, end);
+		return (dominance == Source.Dominance.PART ||
+				dominance == Source.Dominance.EXACT) &&
+			   this.sketches.stream()
+					   .allMatch(sketch ->
+							   Source.dominance(sketch.source(), start, end) ==
+							   Source.Dominance.NONE
+					   );
 	}
 
 	@Override
