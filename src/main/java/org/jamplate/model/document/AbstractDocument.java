@@ -48,6 +48,15 @@ public abstract class AbstractDocument implements Document {
 	protected final String simpleName;
 
 	/**
+	 * True, if this document have been constructed using its constructor. (in other words
+	 * 'not deserialized')
+	 *
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient boolean constructed;
+
+	/**
 	 * Construct a new document that have the given {@code qualifiedName}, {@code name}
 	 * and {@code simpleName}.
 	 *
@@ -65,6 +74,7 @@ public abstract class AbstractDocument implements Document {
 		this.qualifiedName = qualifiedName;
 		this.name = name;
 		this.simpleName = simpleName;
+		this.constructed = true;
 	}
 
 	@Override

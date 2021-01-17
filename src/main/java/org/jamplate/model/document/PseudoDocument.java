@@ -133,28 +133,28 @@ public class PseudoDocument extends AbstractDocument {
 
 	@Override
 	public int length() {
-		if (this.content == null)
+		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
 		return this.content.length();
 	}
 
 	@Override
 	public InputStream openInputStream() {
-		if (this.content == null)
+		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
 		return new ByteArrayInputStream(this.content.toString().getBytes());
 	}
 
 	@Override
 	public Reader openReader() {
-		if (this.content == null)
+		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
 		return new StringReader(this.content.toString());
 	}
 
 	@Override
 	public CharSequence readContent() {
-		if (this.content == null)
+		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
 		return this.content;
 	}
