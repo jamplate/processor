@@ -113,9 +113,9 @@ public class ReferenceTest {
 		assertCount(px, 12);
 		assertCount(pxo, 1);
 		assertCount(pxc, 1);
-		assertDimensions(px.source(), 0, 8);
-		assertDimensions(pxo.source(), 0, 1);
-		assertDimensions(pxc.source(), 7, 1);
+		assertDimensions(px.reference(), 0, 8);
+		assertDimensions(pxo.reference(), 0, 1);
+		assertDimensions(pxc.reference(), 7, 1);
 		//first group
 		Sketch p1 = getSketchAt(px, 1);
 		Sketch p1o = getSketchAt(p1, 0);
@@ -123,9 +123,9 @@ public class ReferenceTest {
 		assertCount(p1, 3);
 		assertCount(p1o, 1);
 		assertCount(p1c, 1);
-		assertDimensions(p1.source(), 1, 2);
-		assertDimensions(p1o.source(), 1, 1);
-		assertDimensions(p1c.source(), 2, 1);
+		assertDimensions(p1.reference(), 1, 2);
+		assertDimensions(p1o.reference(), 1, 1);
+		assertDimensions(p1c.reference(), 2, 1);
 		//second group
 		Sketch p2 = getSketchAt(px, 2);
 		Sketch p2o = getSketchAt(p2, 0);
@@ -133,9 +133,9 @@ public class ReferenceTest {
 		assertCount(p2, 3);
 		assertCount(p2o, 1);
 		assertCount(p2c, 1);
-		assertDimensions(p2.source(), 3, 2);
-		assertDimensions(p2o.source(), 3, 1);
-		assertDimensions(p2c.source(), 4, 1);
+		assertDimensions(p2.reference(), 3, 2);
+		assertDimensions(p2o.reference(), 3, 1);
+		assertDimensions(p2c.reference(), 4, 1);
 		//third group
 		Sketch p3 = getSketchAt(px, 3);
 		Sketch p3o = getSketchAt(p3, 0);
@@ -143,9 +143,9 @@ public class ReferenceTest {
 		assertCount(p3, 3);
 		assertCount(p3o, 1);
 		assertCount(p3c, 1);
-		assertDimensions(p3.source(), 5, 2);
-		assertDimensions(p3o.source(), 5, 1);
-		assertDimensions(p3c.source(), 6, 1);
+		assertDimensions(p3.reference(), 5, 2);
+		assertDimensions(p3o.reference(), 5, 1);
+		assertDimensions(p3c.reference(), 6, 1);
 	}
 
 	@Test

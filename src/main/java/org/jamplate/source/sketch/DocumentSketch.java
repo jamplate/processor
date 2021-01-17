@@ -72,13 +72,13 @@ public class DocumentSketch extends AbstractContextSketch {
 	}
 
 	/**
-	 * Construct a new sketch for the given document {@code source}.
+	 * Construct a new sketch for the given document {@code reference}.
 	 *
-	 * @param source the document source the constructed sketch will be for.
-	 * @throws NullPointerException if the given {@code source} is null.
+	 * @param reference the document reference the constructed sketch will be for.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public DocumentSketch(DocumentReference source) {
-		super(source);
+	public DocumentSketch(DocumentReference reference) {
+		super(reference);
 	}
 }

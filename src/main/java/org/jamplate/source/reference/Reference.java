@@ -65,7 +65,7 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.11
 	 */
 	static Dominance dominance(Reference reference, int s, int e) {
-		Objects.requireNonNull(reference, "source");
+		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
 		return Dominance.compute(i, j, s, e);
@@ -83,7 +83,7 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Dominance dominance(Reference reference, Reference other) {
-		Objects.requireNonNull(reference, "source");
+		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
 		int i = reference.position();
 		int j = i + reference.length();
@@ -114,7 +114,7 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Relation relation(Reference reference, int s, int e) {
-		Objects.requireNonNull(reference, "source");
+		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
 		return Relation.compute(i, j, s, e);
@@ -140,7 +140,7 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Relation relation(Reference reference, Reference other) {
-		Objects.requireNonNull(reference, "source");
+		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
 		int i = reference.position();
 		int j = i + reference.length();

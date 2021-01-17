@@ -56,7 +56,7 @@ public abstract class AbstractSketch implements Sketch {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractSketch(Reference reference) {
-		Objects.requireNonNull(reference, "source");
+		Objects.requireNonNull(reference, "reference");
 		this.reference = reference;
 		this.constructed = true;
 	}
@@ -72,7 +72,7 @@ public abstract class AbstractSketch implements Sketch {
 	}
 
 	@Override
-	public Reference source() {
+	public Reference reference() {
 		return this.reference;
 	}
 

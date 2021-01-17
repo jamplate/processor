@@ -74,7 +74,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 				dominance == Reference.Dominance.EXACT) &&
 			   this.sketches.stream()
 					   .allMatch(sketch ->
-							   Reference.dominance(sketch.source(), start, end) ==
+							   Reference.dominance(sketch.reference(), start, end) ==
 							   Reference.Dominance.NONE
 					   );
 	}
@@ -86,7 +86,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
-		switch (Reference.dominance(this.reference, sketch.source())) {
+		switch (Reference.dominance(this.reference, sketch.reference())) {
 			case PART:
 			case EXACT:
 				break;
@@ -96,7 +96,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		//case Dominance.SHARE or Dominance.EXACT with another sketch
 		for (Sketch next : this.sketches)
-			switch (Reference.dominance(next.source(), sketch.source())) {
+			switch (Reference.dominance(next.reference(), sketch.reference())) {
 				case SHARE:
 				case EXACT:
 					throw new IllegalStateException("Sketch Clash");
@@ -107,7 +107,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		while (iterator.hasNext()) {
 			Sketch next = iterator.next();
 
-			switch (Reference.dominance(sketch.source(), next.source())) {
+			switch (Reference.dominance(sketch.reference(), next.reference())) {
 				case CONTAIN:
 					next.put(sketch);
 					return;

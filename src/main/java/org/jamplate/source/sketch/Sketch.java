@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
  * Note: sketches are built from bottom to top. So, a typical sketch will store its
  * sub-sketches but never its parent sketch.
  * <br>
- * A sketch should serialize its {@link #source()} and inner sketches. It is encouraged to
- * serialize additional data.
+ * A sketch should serialize its {@link #reference()} and inner sketches. It is encouraged
+ * to serialize additional data.
  * <br>
  * If a sketch is a deserialized sketch then the method {@link #put(Sketch)} will throw an
  * {@link IllegalStateException}.
@@ -45,7 +45,7 @@ public interface Sketch extends Serializable {
 	 *
 	 * @since 0.2.0 ~2021.01.9
 	 */
-	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Reference.COMPARATOR);
+	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::reference, Reference.COMPARATOR);
 
 	/**
 	 * Find an available source in the given {@code sketch} that matches the given {@code
@@ -63,7 +63,7 @@ public interface Sketch extends Serializable {
 		Objects.requireNonNull(pattern, "pattern");
 		Objects.requireNonNull(pattern, "pattern");
 
-		Reference reference = sketch.source();
+		Reference reference = sketch.reference();
 
 		Matcher matcher = reference.matcher(pattern);
 
@@ -106,7 +106,7 @@ public interface Sketch extends Serializable {
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
 
-		Reference reference = sketch.source();
+		Reference reference = sketch.reference();
 
 		Matcher startMatcher = reference.matcher(startPattern);
 		Matcher endMatcher = reference.matcher(endPattern);
@@ -166,7 +166,7 @@ public interface Sketch extends Serializable {
 	/**
 	 * Calculate the hashcode of this sketch.
 	 * <pre>
-	 *     hashCode = {@link #source()}.hashCode() + {@code <ClassHashCode>}
+	 *     hashCode = {@link #reference()}.hashCode() + {@code <ClassHashCode>}
 	 * </pre>
 	 *
 	 * @return the hashCode of this sketch.
@@ -178,7 +178,7 @@ public interface Sketch extends Serializable {
 	/**
 	 * Returns a string representation of this sketch.
 	 * <pre>
-	 *     {@code <ClassSimpleName>} ({@link #source() &lt;source()&gt;})
+	 *     {@code <ClassSimpleName>} ({@link #reference() &lt;source()&gt;})
 	 * </pre>
 	 *
 	 * @return a string representation of this sketch.
@@ -204,9 +204,9 @@ public interface Sketch extends Serializable {
 	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An
 	 * area get rejected when the area has a dominance other than {@link
-	 * Reference.Dominance#PART} nor {@link Reference.Dominance#EXACT} with this sketch or has a
-	 * dominance other than {@link Reference.Dominance#NONE} with any of the sketches
-	 * contained currently in this sketch.
+	 * Reference.Dominance#PART} nor {@link Reference.Dominance#EXACT} with this sketch or
+	 * has a dominance other than {@link Reference.Dominance#NONE} with any of the
+	 * sketches contained currently in this sketch.
 	 * <br>
 	 * Note: this is a checking method. Thus, it will simply return {@code false} if the
 	 * given arguments are invalid.
@@ -223,8 +223,8 @@ public interface Sketch extends Serializable {
 	 * is like telling that other sketch to mark its place as reserved. If the given
 	 * sketch is a {@link Reference.Dominance#PART} with a sketch in this sketch. Then the
 	 * given {@code sketch} should be put into that sketch instead. On the other hand, if
-	 * a sketch in this sketch has a dominance of {@link Reference.Dominance#PART} with the
-	 * given {@code sketch}. Then this sketch will transfer that sketch to the given
+	 * a sketch in this sketch has a dominance of {@link Reference.Dominance#PART} with
+	 * the given {@code sketch}. Then this sketch will transfer that sketch to the given
 	 * {@code sketch}. (unless a clash happened, then an exception thrown and nothing
 	 * happens)
 	 *
@@ -236,9 +236,9 @@ public interface Sketch extends Serializable {
 	 *                                       {@link Reference.Dominance#SHARE} or {@link
 	 *                                       Reference.Dominance#EXACT}).
 	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
-	 *                                       other than {@link Reference.Dominance#PART} or
-	 *                                       {@link Reference.Dominance#EXACT} with this
-	 *                                       sketch.
+	 *                                       other than {@link Reference.Dominance#PART}
+	 *                                       or {@link Reference.Dominance#EXACT} with
+	 *                                       this sketch.
 	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
 	 * @since 0.2.0 ~2021.01.12
 	 */
@@ -250,7 +250,7 @@ public interface Sketch extends Serializable {
 	 * @return the source of this sketch.
 	 * @since 0.2.0 ~2021.01.7
 	 */
-	Reference source();
+	Reference reference();
 
 	/**
 	 * A callback that can be passed to a sketch for that sketch to invoke this visitor
