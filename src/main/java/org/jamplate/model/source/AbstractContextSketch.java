@@ -24,13 +24,13 @@ import java.util.regex.Pattern;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
- * a sketch.
+ * a context sketch. (a context sketch is a sketch that can have inner sketches)
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.07
  */
-public abstract class AbstractSketch implements Sketch {
+public abstract class AbstractContextSketch implements Sketch {
 	/**
 	 * The inner sketches of this sketch.
 	 * <br>
@@ -56,7 +56,7 @@ public abstract class AbstractSketch implements Sketch {
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	protected AbstractSketch(Source source) {
+	protected AbstractContextSketch(Source source) {
 		Objects.requireNonNull(source, "source");
 		this.source = source;
 	}
