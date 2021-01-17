@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.model.document.Document;
+
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;

@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.model.document.Document;
+
 /**
  * An implementation of the interface {@link Source} that is a slice of another source.
  *
