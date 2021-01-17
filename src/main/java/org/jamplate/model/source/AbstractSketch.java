@@ -15,9 +15,6 @@
  */
 package org.jamplate.model.source;
 
-import org.jamplate.model.source.Sketch;
-import org.jamplate.model.source.Source;
-
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.SortedSet;
@@ -74,12 +71,17 @@ public abstract class AbstractSketch implements Sketch {
 	}
 
 	@Override
+	public boolean equals(Object object) {
+		return object == this;
+	}
+
+	@Override
 	public Source find(Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
 
 		Matcher matcher = this.source.matcher(pattern);
 
-		//search for `regex`
+		//search for `pattern`
 		while (matcher.find()) {
 			int i = matcher.start();
 			int j = matcher.end();
@@ -104,16 +106,17 @@ public abstract class AbstractSketch implements Sketch {
 		Matcher startMatcher = this.source.matcher(startPattern);
 		Matcher endMatcher = this.source.matcher(endPattern);
 
-		//search for `startRegex`
+		//search for `startPattern`
 		while (startMatcher.find()) {
 			int i = startMatcher.start();
 			int j = startMatcher.end();
 
 			//validate found start
 			if (this.sketches.stream().allMatch(sketch ->
-					Source.dominance(sketch.source(), i, j) == Source.Dominance.NONE
-			)) {
-				//search for `endRegex`
+					Source.dominance(sketch.source(), i, j) ==
+					Source.Dominance.NONE
+			))
+				//search for `endPattern`
 				while (endMatcher.find()) {
 					int s = endMatcher.start();
 					int e = endMatcher.end();
@@ -121,20 +124,24 @@ public abstract class AbstractSketch implements Sketch {
 					if (s < i)
 						continue;
 
-					//validate found regex
-					if (this.sketches.stream().allMatch(
-							sketch -> Source.dominance(sketch.source(), s, e) ==
-									  Source.Dominance.NONE
+					//validate found end
+					if (this.sketches.stream().allMatch(sketch ->
+							Source.dominance(sketch.source(), s, e) ==
+							Source.Dominance.NONE
 					))
 						return this.source.slice(
 								i,
 								e - i
 						);
 				}
-			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode() + this.getClass().hashCode();
 	}
 
 	@Override
@@ -187,15 +194,3 @@ public abstract class AbstractSketch implements Sketch {
 		return this.getClass().getSimpleName() + " (" + this.source + ")";
 	}
 }
-//	@Override
-//	public Source find(String regex) {
-//		Objects.requireNonNull(regex, "regex");
-//		return this.find(Pattern.compile(regex));
-//	}
-
-//	@Override
-//	public Source find(String startRegex, String endRegex) {
-//		Objects.requireNonNull(startRegex, "startRegex");
-//		Objects.requireNonNull(endRegex, "endRegex");
-//		return this.find(Pattern.compile(startRegex), Pattern.compile(endRegex));
-//	}
