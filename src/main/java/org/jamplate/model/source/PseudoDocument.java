@@ -125,6 +125,11 @@ public class PseudoDocument implements Document {
 	}
 
 	@Override
+	public int length() {
+		return this.content.length();
+	}
+
+	@Override
 	public String name() {
 		return this.name;
 	}

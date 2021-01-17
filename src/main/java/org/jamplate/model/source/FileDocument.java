@@ -63,6 +63,12 @@ public class FileDocument implements Document {
 	}
 
 	@Override
+	public int length() {
+		//we should call it either way
+		return this.readContent().length();
+	}
+
+	@Override
 	public String name() {
 		return this.file.getName();
 	}
@@ -83,7 +89,7 @@ public class FileDocument implements Document {
 	}
 
 	@Override
-	public String readContent() throws IOException {
+	public String readContent() {
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {
 				StringBuilder builder = new StringBuilder();
@@ -99,6 +105,8 @@ public class FileDocument implements Document {
 				}
 
 				this.content = builder.toString();
+			} catch (IOException e) {
+				throw new IOError(e);
 			}
 
 		return this.content;
@@ -113,15 +121,5 @@ public class FileDocument implements Document {
 	@Override
 	public String toString() {
 		return this.qualifiedName();
-	}
-
-	/**
-	 * Get the file this document is delegating to.
-	 *
-	 * @return the file of this.
-	 * @since 0.0.2 ~2021.01.13
-	 */
-	public File file() {
-		return this.file;
 	}
 }
