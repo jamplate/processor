@@ -83,6 +83,7 @@ public class SourceTest {
 		TestSketch sketch = new TestSketch(new SourceSlice(new PseudoDocument("(()()())")));
 
 		//These 2 loops shall be interchangeable, mergable and independent
+		//But, they are not. Why? Since we need to collect matching parentheses first then the wrapping ones
 		while (sketch.accept(s -> {
 			Source source = s.find(Pattern.compile("[(][^()]*[)]"));
 
