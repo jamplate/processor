@@ -16,26 +16,13 @@
 package org.jamplate.model.source;
 
 /**
- * The default implementation of the interface {@link Source}.
+ * An implementation of the interface {@link Source} that is a slice of another source.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
 public class SourceSlice extends AbstractSource {
-	/**
-	 * Construct a new source standard implementation instance for the given {@code
-	 * document}.
-	 *
-	 * @param document the document.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @see AbstractSource#AbstractSource(Document)
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	public SourceSlice(Document document) {
-		super(document);
-	}
-
 	/**
 	 * Construct a new sub-source from the given {@code parent} source. The constructed
 	 * source will have the same {@link #document()} as the given {@code parent} source.
@@ -61,7 +48,7 @@ public class SourceSlice extends AbstractSource {
 	 * @see AbstractSource#AbstractSource(Source, int, int)
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected SourceSlice(Source parent, int position, int length) {
+	public SourceSlice(Source parent, int position, int length) {
 		super(
 				parent,
 				position,
