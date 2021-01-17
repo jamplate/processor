@@ -13,13 +13,13 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.source.reference;
 
 import org.jamplate.impl.Parentheses;
-import org.jamplate.model.sketch.AbstractContextSketch;
-import org.jamplate.model.sketch.DocumentSketch;
-import org.jamplate.model.sketch.Sketch;
-import org.jamplate.model.source.Source.Relation;
+import org.jamplate.source.sketch.AbstractContextSketch;
+import org.jamplate.source.sketch.DocumentSketch;
+import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.reference.Reference.Relation;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
-public class SourceTest {
+public class ReferenceTest {
 	static void assertCount(Sketch sketch, int count) {
 		Objects.requireNonNull(sketch, "sketch");
 		int[] sCount = {0};
@@ -45,40 +45,40 @@ public class SourceTest {
 		);
 	}
 
-	static void assertDimensions(Source source, int position, int length) {
-		Objects.requireNonNull(source, "source");
+	static void assertDimensions(Reference reference, int position, int length) {
+		Objects.requireNonNull(reference, "source");
 		assertSame(
-				source + " has an unexpected position ",
+				reference + " has an unexpected position ",
 				position,
-				source.position()
+				reference.position()
 		);
 		assertSame(
-				source + " has an unexpected length ",
+				reference + " has an unexpected length ",
 				length,
-				source.length()
+				reference.length()
 		);
 	}
 
-	static void assertRelation(Source source, Source other, Relation relation) {
+	static void assertRelation(Reference reference, Reference other, Relation relation) {
 		assertSame(
-				"Relation of " + other + " to " + source,
+				"Relation of " + other + " to " + reference,
 				relation,
-				Source.relation(source, other)
+				Reference.relation(reference, other)
 		);
 		assertSame(
-				"Relation of " + source + " to " + other,
+				"Relation of " + reference + " to " + other,
 				relation.opposite(),
-				Source.relation(other, source)
+				Reference.relation(other, reference)
 		);
 		assertSame(
-				"Dominance of " + other + " over " + source,
+				"Dominance of " + other + " over " + reference,
 				relation.dominance(),
-				Source.dominance(source, other)
+				Reference.dominance(reference, other)
 		);
 		assertSame(
-				"Dominance of " + source + " over " + other,
+				"Dominance of " + reference + " over " + other,
 				relation.dominance().opposite(),
-				Source.dominance(other, source)
+				Reference.dominance(other, reference)
 		);
 	}
 
@@ -150,12 +150,12 @@ public class SourceTest {
 
 	@Test
 	public void relations() {
-		Source source = new DocumentSource("ABC0123");
-		Source letters = source.subSource(0, 3);
-		Source numbers = source.subSource(3, 4);
-		Source b = source.subSource(1, 1);
-		Source bc = letters.subSource(1, 2);
-		Source c0 = source.subSource(2, 2);
+		Reference reference = new DocumentReference("ABC0123");
+		Reference letters = reference.subReference(0, 3);
+		Reference numbers = reference.subReference(3, 4);
+		Reference b = reference.subReference(1, 1);
+		Reference bc = letters.subReference(1, 2);
+		Reference c0 = reference.subReference(2, 2);
 
 		assertEquals("Wrong Slice", "ABC", letters.content());
 		assertEquals("Wrong Slice", "0123", numbers.content());
@@ -163,12 +163,12 @@ public class SourceTest {
 		assertEquals("Wrong Slice", "BC", bc.content());
 		assertEquals("Wrong Slice", "C0", c0.content());
 
-		assertRelation(source, source, Relation.SAME);
-		assertRelation(source, letters, Relation.START);
-		assertRelation(source, numbers, Relation.END);
-		assertRelation(source, b, Relation.FRAGMENT);
-		assertRelation(source, bc, Relation.FRAGMENT);
-		assertRelation(source, c0, Relation.FRAGMENT);
+		assertRelation(reference, reference, Relation.SAME);
+		assertRelation(reference, letters, Relation.START);
+		assertRelation(reference, numbers, Relation.END);
+		assertRelation(reference, b, Relation.FRAGMENT);
+		assertRelation(reference, bc, Relation.FRAGMENT);
+		assertRelation(reference, c0, Relation.FRAGMENT);
 
 		assertRelation(letters, letters, Relation.SAME);
 		assertRelation(letters, numbers, Relation.NEXT);

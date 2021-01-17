@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.source.reference;
 
-import org.jamplate.model.document.Document;
+import org.jamplate.source.document.Document;
 
 import java.io.IOError;
 import java.util.Objects;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.09
  */
-public abstract class AbstractSource implements Source {
+public abstract class AbstractReference implements Reference {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1099496699050172132L;
 
@@ -66,7 +66,7 @@ public abstract class AbstractSource implements Source {
 	 * @since 0.2.0 ~2021.01.8
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
-	protected final transient Source parent;
+	protected final transient Reference parent;
 
 	/**
 	 * The content of this source. (lazily initialized)
@@ -84,7 +84,7 @@ public abstract class AbstractSource implements Source {
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractSource(Document document) {
+	protected AbstractReference(Document document) {
 		Objects.requireNonNull(document, "document");
 		this.document = document;
 		this.parent = null;
@@ -117,7 +117,7 @@ public abstract class AbstractSource implements Source {
 	 *                                   length of the given {@code parent}.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractSource(Source parent, int position, int length) {
+	protected AbstractReference(Reference parent, int position, int length) {
 		Objects.requireNonNull(parent, "parent");
 		if (position < 0)
 			throw new IllegalArgumentException("negative position");
@@ -153,10 +153,10 @@ public abstract class AbstractSource implements Source {
 
 	@Override
 	public boolean equals(Object other) {
-		return other instanceof Source &&
-			   Objects.equals(this.document, ((Source) other).document()) &&
-			   this.position == ((Source) other).position() &&
-			   this.length == ((Source) other).length();
+		return other instanceof Reference &&
+			   Objects.equals(this.document, ((Reference) other).document()) &&
+			   this.position == ((Reference) other).position() &&
+			   this.length == ((Reference) other).length();
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public abstract class AbstractSource implements Source {
 	}
 
 	@Override
-	public Source parent() {
+	public Reference parent() {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Source");
 		return this.parent;

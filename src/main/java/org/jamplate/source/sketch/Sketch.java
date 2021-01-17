@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.sketch;
+package org.jamplate.source.sketch;
 
-import org.jamplate.model.source.Source;
+import org.jamplate.source.reference.Reference;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -45,7 +45,7 @@ public interface Sketch extends Serializable {
 	 *
 	 * @since 0.2.0 ~2021.01.9
 	 */
-	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Source.COMPARATOR);
+	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Reference.COMPARATOR);
 
 	/**
 	 * Find an available source in the given {@code sketch} that matches the given {@code
@@ -59,13 +59,13 @@ public interface Sketch extends Serializable {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	static Source find(Sketch sketch, Pattern pattern) {
+	static Reference find(Sketch sketch, Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
 		Objects.requireNonNull(pattern, "pattern");
 
-		Source source = sketch.source();
+		Reference reference = sketch.source();
 
-		Matcher matcher = source.matcher(pattern);
+		Matcher matcher = reference.matcher(pattern);
 
 		//search for a valid match
 		while (matcher.find()) {
@@ -75,7 +75,7 @@ public interface Sketch extends Serializable {
 			//validate match
 			if (sketch.check(i, j))
 				//bingo!
-				return source.subSource(
+				return reference.subReference(
 						i,
 						j - i
 				);
@@ -88,7 +88,7 @@ public interface Sketch extends Serializable {
 	/**
 	 * Find an available source that starts with the given {@code startPatter} and ends
 	 * with the given {@code endPatter}. The two patterns each has a dominance of {@link
-	 * Source.Dominance#NONE} with every inner sketch in the given {@code sketch}. The
+	 * Reference.Dominance#NONE} with every inner sketch in the given {@code sketch}. The
 	 * returned source will have no AVAILABLE sequence that matches the given {@code
 	 * startPattern} in between.
 	 *
@@ -101,15 +101,15 @@ public interface Sketch extends Serializable {
 	 *                              {@code endPattern} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	static Source find(Sketch sketch, Pattern startPattern, Pattern endPattern) {
+	static Reference find(Sketch sketch, Pattern startPattern, Pattern endPattern) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
 
-		Source source = sketch.source();
+		Reference reference = sketch.source();
 
-		Matcher startMatcher = source.matcher(startPattern);
-		Matcher endMatcher = source.matcher(endPattern);
+		Matcher startMatcher = reference.matcher(startPattern);
+		Matcher endMatcher = reference.matcher(endPattern);
 
 		//search for a valid start
 		while (startMatcher.find()) {
@@ -142,7 +142,7 @@ public interface Sketch extends Serializable {
 						}
 
 						//bingo!
-						return source.subSource(
+						return reference.subReference(
 								start,
 								end - start
 						);
@@ -204,8 +204,8 @@ public interface Sketch extends Serializable {
 	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An
 	 * area get rejected when the area has a dominance other than {@link
-	 * Source.Dominance#PART} nor {@link Source.Dominance#EXACT} with this sketch or has a
-	 * dominance other than {@link Source.Dominance#NONE} with any of the sketches
+	 * Reference.Dominance#PART} nor {@link Reference.Dominance#EXACT} with this sketch or has a
+	 * dominance other than {@link Reference.Dominance#NONE} with any of the sketches
 	 * contained currently in this sketch.
 	 * <br>
 	 * Note: this is a checking method. Thus, it will simply return {@code false} if the
@@ -221,9 +221,9 @@ public interface Sketch extends Serializable {
 	/**
 	 * Put the given {@code sketch} to this sketch. Putting a sketch into another sketch
 	 * is like telling that other sketch to mark its place as reserved. If the given
-	 * sketch is a {@link Source.Dominance#PART} with a sketch in this sketch. Then the
+	 * sketch is a {@link Reference.Dominance#PART} with a sketch in this sketch. Then the
 	 * given {@code sketch} should be put into that sketch instead. On the other hand, if
-	 * a sketch in this sketch has a dominance of {@link Source.Dominance#PART} with the
+	 * a sketch in this sketch has a dominance of {@link Reference.Dominance#PART} with the
 	 * given {@code sketch}. Then this sketch will transfer that sketch to the given
 	 * {@code sketch}. (unless a clash happened, then an exception thrown and nothing
 	 * happens)
@@ -233,11 +233,11 @@ public interface Sketch extends Serializable {
 	 * @throws IllegalStateException         if this sketch is deserialized; if the given
 	 *                                       {@code sketch} is clashing with a previously
 	 *                                       reserved area (has a dominance of either
-	 *                                       {@link Source.Dominance#SHARE} or {@link
-	 *                                       Source.Dominance#EXACT}).
+	 *                                       {@link Reference.Dominance#SHARE} or {@link
+	 *                                       Reference.Dominance#EXACT}).
 	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
-	 *                                       other than {@link Source.Dominance#PART} or
-	 *                                       {@link Source.Dominance#EXACT} with this
+	 *                                       other than {@link Reference.Dominance#PART} or
+	 *                                       {@link Reference.Dominance#EXACT} with this
 	 *                                       sketch.
 	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
 	 * @since 0.2.0 ~2021.01.12
@@ -250,7 +250,7 @@ public interface Sketch extends Serializable {
 	 * @return the source of this sketch.
 	 * @since 0.2.0 ~2021.01.7
 	 */
-	Source source();
+	Reference source();
 
 	/**
 	 * A callback that can be passed to a sketch for that sketch to invoke this visitor

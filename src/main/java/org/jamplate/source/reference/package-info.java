@@ -14,11 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package that specifies that primary components of a processor that uses the
- * jamplate-style processing.
+ * A package for the interface {@link org.jamplate.source.reference.Reference}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.17
+ * @since 0.2.0 ~2021.01.06
  */
-package org.jamplate.model;
+package org.jamplate.source.reference;

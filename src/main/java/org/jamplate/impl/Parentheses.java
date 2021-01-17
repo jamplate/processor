@@ -15,10 +15,10 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.model.sketch.AbstractContextSketch;
-import org.jamplate.model.sketch.Sketch;
-import org.jamplate.model.source.Source;
+import org.jamplate.source.sketch.AbstractConcreteSketch;
+import org.jamplate.source.sketch.AbstractContextSketch;
+import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.reference.Reference;
 
 import java.util.regex.Pattern;
 
@@ -52,17 +52,18 @@ public final class Parentheses {
 	 */
 	@SuppressWarnings("OverlyLongLambda")
 	public static final Sketch.Visitor SKETCHER = sketch -> {
-		Source source = Sketch.find(
+		Reference reference = Sketch.find(
 				sketch,
 				Parentheses.PATTERN_START,
 				Parentheses.PATTERN_END
 		);
 
-		if (source != null) {
+		if (reference != null) {
 			//All can just be sketch.put(). But, it is better like this. (performance-wise)
-			Sketch parentheses = new ParenthesesSketch(source);
-			parentheses.put(new ParenthesisSketch(source.subSource(0, 1)));
-			parentheses.put(new ParenthesisSketch(source.subSource(source.length() - 1, 1)));
+			Sketch parentheses = new ParenthesesSketch(reference);
+			parentheses.put(new ParenthesisSketch(reference.subReference(0, 1)));
+			parentheses.put(new ParenthesisSketch(reference.subReference(
+					reference.length() - 1, 1)));
 			sketch.put(parentheses);
 			return true;
 		}
@@ -82,12 +83,12 @@ public final class Parentheses {
 		 * Construct a new sketch for the given {@code source}. The given source is the
 		 * source the constructed sketch will reserve.
 		 *
-		 * @param source the source of the constructed sketch.
+		 * @param reference the source of the constructed sketch.
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.17
 		 */
-		public ParenthesesSketch(Source source) {
-			super(source);
+		public ParenthesesSketch(Reference reference) {
+			super(reference);
 		}
 	}
 
@@ -103,12 +104,12 @@ public final class Parentheses {
 		 * Construct a new sketch for the given {@code source}. The given source is the
 		 * source the constructed sketch will reserve.
 		 *
-		 * @param source the source of the constructed sketch.
+		 * @param reference the source of the constructed sketch.
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.17
 		 */
-		protected ParenthesisSketch(Source source) {
-			super(source);
+		protected ParenthesisSketch(Reference reference) {
+			super(reference);
 		}
 	}
 }

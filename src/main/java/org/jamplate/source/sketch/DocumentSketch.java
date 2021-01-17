@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.sketch;
+package org.jamplate.source.sketch;
 
-import org.jamplate.model.document.Document;
-import org.jamplate.model.document.FileDocument;
-import org.jamplate.model.document.PseudoDocument;
-import org.jamplate.model.source.DocumentSource;
+import org.jamplate.source.document.Document;
+import org.jamplate.source.document.FileDocument;
+import org.jamplate.source.document.PseudoDocument;
+import org.jamplate.source.reference.DocumentReference;
 
 import java.io.File;
 import java.io.IOError;
@@ -43,7 +43,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public DocumentSketch(CharSequence content) {
-		super(new DocumentSource(content));
+		super(new DocumentReference(content));
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public DocumentSketch(File file) {
-		super(new DocumentSource(file));
+		super(new DocumentReference(file));
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	public DocumentSketch(Document document) {
-		super(new DocumentSource(document));
+		super(new DocumentReference(document));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public DocumentSketch(DocumentSource source) {
+	public DocumentSketch(DocumentReference source) {
 		super(source);
 	}
 }

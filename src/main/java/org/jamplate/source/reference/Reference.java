@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.source.reference;
 
-import org.jamplate.model.document.Document;
+import org.jamplate.source.document.Document;
 
 import java.io.IOError;
 import java.io.Serializable;
@@ -34,28 +34,28 @@ import java.util.regex.Pattern;
  * #length()}. It is encouraged to serialize additional data.
  * <br>
  * If a source is a deserialized source then the methods {@link #content()}, {@link
- * #matcher(Pattern)}, {@link #parent()}, {@link #subSource(int)} and {@link
- * #subSource(int, int)} will throw an {@link IllegalStateException}.
+ * #matcher(Pattern)}, {@link #parent()}, {@link #subReference(int)} and {@link
+ * #subReference(int, int)} will throw an {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2020.12.25
  */
-public interface Source extends Serializable {
+public interface Reference extends Serializable {
 	/**
 	 * The standard source comparator.
 	 *
 	 * @since 0.2.0 ~2021.01.9
 	 */
-	Comparator<Source> COMPARATOR = Comparator.comparing(Source::document, Document.COMPARATOR)
-			.thenComparingInt(Source::position)
-			.thenComparingInt(Source::length);
+	Comparator<Reference> COMPARATOR = Comparator.comparing(Reference::document, Document.COMPARATOR)
+			.thenComparingInt(Reference::position)
+			.thenComparingInt(Reference::length);
 
 	/**
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
 	 * source}.
 	 *
-	 * @param source the source (first area).
+	 * @param reference the source (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
 	 * @return how much dominant the second area over the given {@code source}.
@@ -64,10 +64,10 @@ public interface Source extends Serializable {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	static Dominance dominance(Source source, int s, int e) {
-		Objects.requireNonNull(source, "source");
-		int i = source.position();
-		int j = i + source.length();
+	static Dominance dominance(Reference reference, int s, int e) {
+		Objects.requireNonNull(reference, "source");
+		int i = reference.position();
+		int j = i + reference.length();
 		return Dominance.compute(i, j, s, e);
 	}
 
@@ -75,18 +75,18 @@ public interface Source extends Serializable {
 	 * Calculate how much dominant the {@code other} source over the given {@code
 	 * source}.
 	 *
-	 * @param source the first source.
+	 * @param reference the first source.
 	 * @param other  the second source.
 	 * @return how much dominant the second source over the first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	static Dominance dominance(Source source, Source other) {
-		Objects.requireNonNull(source, "source");
+	static Dominance dominance(Reference reference, Reference other) {
+		Objects.requireNonNull(reference, "source");
 		Objects.requireNonNull(other, "other");
-		int i = source.position();
-		int j = i + source.length();
+		int i = reference.position();
+		int j = i + reference.length();
 		int s = other.position();
 		int e = s + other.length();
 		return Dominance.compute(i, j, s, e);
@@ -103,7 +103,7 @@ public interface Source extends Serializable {
 	 * For example: if the second area is contained in the middle of the source, then the
 	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
 	 *
-	 * @param source the source (first area).
+	 * @param reference the source (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
 	 * @return the relation constant describing the relation of the second area to the
@@ -113,10 +113,10 @@ public interface Source extends Serializable {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	static Relation relation(Source source, int s, int e) {
-		Objects.requireNonNull(source, "source");
-		int i = source.position();
-		int j = i + source.length();
+	static Relation relation(Reference reference, int s, int e) {
+		Objects.requireNonNull(reference, "source");
+		int i = reference.position();
+		int j = i + reference.length();
 		return Relation.compute(i, j, s, e);
 	}
 
@@ -131,7 +131,7 @@ public interface Source extends Serializable {
 	 * For example: if the second source is contained in the middle of first source, then
 	 * the retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
 	 *
-	 * @param source the first source.
+	 * @param reference the first source.
 	 * @param other  the second source.
 	 * @return the relation constant describing the relation of the second source to the
 	 * 		first source.
@@ -139,11 +139,11 @@ public interface Source extends Serializable {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	static Relation relation(Source source, Source other) {
-		Objects.requireNonNull(source, "source");
+	static Relation relation(Reference reference, Reference other) {
+		Objects.requireNonNull(reference, "source");
 		Objects.requireNonNull(other, "other");
-		int i = source.position();
-		int j = i + source.length();
+		int i = reference.position();
+		int j = i + reference.length();
 		int s = other.position();
 		int e = s + other.length();
 		return Relation.compute(i, j, s, e);
@@ -234,7 +234,7 @@ public interface Source extends Serializable {
 	 * @throws IllegalStateException if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.8
 	 */
-	Source parent();
+	Reference parent();
 
 	/**
 	 * Return where this source starts at its {@link #document()}.
@@ -255,7 +255,7 @@ public interface Source extends Serializable {
 	 * @throws IllegalStateException     if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.6
 	 */
-	Source subSource(int position);
+	Reference subReference(int position);
 
 	/**
 	 * Slice this source from the given {@code position} and limit it with the given
@@ -271,7 +271,7 @@ public interface Source extends Serializable {
 	 * @throws IllegalStateException     if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.6
 	 */
-	Source subSource(int position, int length);
+	Reference subReference(int position, int length);
 
 	/**
 	 * An enumeration of how dominant a relation is over another relation.

@@ -13,18 +13,18 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.source.reference;
 
-import org.jamplate.model.document.Document;
+import org.jamplate.source.document.Document;
 
 /**
- * An implementation of the interface {@link Source} that is a slice of another source.
+ * An implementation of the interface {@link Reference} that is a slice of another source.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class SubSource extends AbstractSource {
+public class SubReference extends AbstractReference {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8737902111302332073L;
 
@@ -50,10 +50,10 @@ public class SubSource extends AbstractSource {
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
-	 * @see AbstractSource#AbstractSource(Source, int, int)
+	 * @see AbstractReference#AbstractReference(Reference, int, int)
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public SubSource(Source parent, int position, int length) {
+	public SubReference(Reference parent, int position, int length) {
 		super(
 				parent,
 				position,
@@ -62,10 +62,10 @@ public class SubSource extends AbstractSource {
 	}
 
 	@Override
-	public Source subSource(int position) {
+	public Reference subReference(int position) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Source");
-		return new SubSource(
+		return new SubReference(
 				this,
 				position,
 				this.length() - position
@@ -73,10 +73,10 @@ public class SubSource extends AbstractSource {
 	}
 
 	@Override
-	public Source subSource(int position, int length) {
+	public Reference subReference(int position, int length) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Source");
-		return new SubSource(
+		return new SubReference(
 				this,
 				position,
 				length

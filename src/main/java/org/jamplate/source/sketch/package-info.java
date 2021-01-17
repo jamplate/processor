@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package for the interface {@link org.jamplate.model.sketch.Sketch}.
+ * A package for the interface {@link org.jamplate.source.sketch.Sketch}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-package org.jamplate.model.sketch;
+package org.jamplate.source.sketch;

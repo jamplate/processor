@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package for the interface {@link org.jamplate.model.document.Document}.
+ * A package for the interface {@link org.jamplate.source.document.Document}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-package org.jamplate.model.document;
+package org.jamplate.source.document;

@@ -13,23 +13,23 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.source.reference;
 
-import org.jamplate.model.document.Document;
-import org.jamplate.model.document.FileDocument;
-import org.jamplate.model.document.PseudoDocument;
+import org.jamplate.source.document.Document;
+import org.jamplate.source.document.FileDocument;
+import org.jamplate.source.document.PseudoDocument;
 
 import java.io.File;
 import java.io.IOError;
 
 /**
- * An implementation of the interface {@link Source} that takes a whole {@link Document}.
+ * An implementation of the interface {@link Reference} that takes a whole {@link Document}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public class DocumentSource extends AbstractSource {
+public class DocumentReference extends AbstractReference {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3080162447729968421L;
 
@@ -41,7 +41,7 @@ public class DocumentSource extends AbstractSource {
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public DocumentSource(CharSequence content) {
+	public DocumentReference(CharSequence content) {
 		super(new PseudoDocument(content));
 	}
 
@@ -54,7 +54,7 @@ public class DocumentSource extends AbstractSource {
 	 * @throws IOError              if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public DocumentSource(File file) {
+	public DocumentReference(File file) {
 		super(new FileDocument(file));
 	}
 
@@ -65,18 +65,18 @@ public class DocumentSource extends AbstractSource {
 	 * @param document the document.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @throws IOError              if any I/O exception occurs.
-	 * @see AbstractSource#AbstractSource(Document)
+	 * @see AbstractReference#AbstractReference(Document)
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public DocumentSource(Document document) {
+	public DocumentReference(Document document) {
 		super(document);
 	}
 
 	@Override
-	public Source subSource(int position) {
+	public Reference subReference(int position) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Source");
-		return new SubSource(
+		return new SubReference(
 				this,
 				position,
 				this.length() - position
@@ -84,10 +84,10 @@ public class DocumentSource extends AbstractSource {
 	}
 
 	@Override
-	public Source subSource(int position, int length) {
+	public Reference subReference(int position, int length) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Source");
-		return new SubSource(
+		return new SubReference(
 				this,
 				position,
 				length

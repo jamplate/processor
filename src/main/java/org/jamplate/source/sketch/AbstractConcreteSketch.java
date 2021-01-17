@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.sketch;
+package org.jamplate.source.sketch;
 
-import org.jamplate.model.source.Source;
+import org.jamplate.source.reference.Reference;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -33,12 +33,12 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	 * Construct a new sketch for the given {@code source}. The given source is the source
 	 * the constructed sketch will reserve.
 	 *
-	 * @param source the source of the constructed sketch.
+	 * @param reference the source of the constructed sketch.
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractConcreteSketch(Source source) {
-		super(source);
+	protected AbstractConcreteSketch(Reference reference) {
+		super(reference);
 	}
 
 	@Override

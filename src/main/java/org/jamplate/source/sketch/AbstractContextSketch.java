@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.sketch;
+package org.jamplate.source.sketch;
 
-import org.jamplate.model.source.Source;
+import org.jamplate.source.reference.Reference;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -37,8 +37,8 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	 * The inner sketches of this sketch.
 	 * <br>
 	 * The elements of this set. Must all have a dominance of {@link
-	 * Source.Dominance#PART} with this sketch and a dominance of {@link
-	 * Source.Dominance#NONE} with each other.
+	 * Reference.Dominance#PART} with this sketch and a dominance of {@link
+	 * Reference.Dominance#NONE} with each other.
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
@@ -48,12 +48,12 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	 * Construct a new sketch for the given {@code source}. The given source is the source
 	 * the constructed sketch will reserve.
 	 *
-	 * @param source the source of the constructed sketch.
+	 * @param reference the source of the constructed sketch.
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	protected AbstractContextSketch(Source source) {
-		super(source);
+	protected AbstractContextSketch(Reference reference) {
+		super(reference);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	public boolean check(int start, int end) {
 		if (start < 0 || start > end)
 			return false;
-		Source.Dominance dominance = Source.dominance(this.source, start, end);
-		return (dominance == Source.Dominance.PART ||
-				dominance == Source.Dominance.EXACT) &&
+		Reference.Dominance dominance = Reference.dominance(this.reference, start, end);
+		return (dominance == Reference.Dominance.PART ||
+				dominance == Reference.Dominance.EXACT) &&
 			   this.sketches.stream()
 					   .allMatch(sketch ->
-							   Source.dominance(sketch.source(), start, end) ==
-							   Source.Dominance.NONE
+							   Reference.dominance(sketch.source(), start, end) ==
+							   Reference.Dominance.NONE
 					   );
 	}
 
@@ -86,7 +86,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
-		switch (Source.dominance(this.source, sketch.source())) {
+		switch (Reference.dominance(this.reference, sketch.source())) {
 			case PART:
 			case EXACT:
 				break;
@@ -96,7 +96,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		//case Dominance.SHARE or Dominance.EXACT with another sketch
 		for (Sketch next : this.sketches)
-			switch (Source.dominance(next.source(), sketch.source())) {
+			switch (Reference.dominance(next.source(), sketch.source())) {
 				case SHARE:
 				case EXACT:
 					throw new IllegalStateException("Sketch Clash");
@@ -107,7 +107,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		while (iterator.hasNext()) {
 			Sketch next = iterator.next();
 
-			switch (Source.dominance(sketch.source(), next.source())) {
+			switch (Reference.dominance(sketch.source(), next.source())) {
 				case CONTAIN:
 					next.put(sketch);
 					return;
