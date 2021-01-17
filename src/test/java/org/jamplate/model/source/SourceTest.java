@@ -15,11 +15,17 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.impl.Parentheses;
+import org.jamplate.model.document.PseudoDocument;
+import org.jamplate.model.sketch.AbstractContextSketch;
+import org.jamplate.model.sketch.DocumentSketch;
+import org.jamplate.model.sketch.Sketch;
 import org.jamplate.model.source.Source.Relation;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
-import java.util.regex.Pattern;
+import java.util.SortedSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -77,82 +83,99 @@ public class SourceTest {
 		);
 	}
 
+	static Sketch getSketchAt(Sketch sketch, int position) {
+		AbstractContextSketch contextSketch = (AbstractContextSketch) sketch;
+		try {
+			Field field = AbstractContextSketch.class.getDeclaredField("sketches");
+			field.setAccessible(true);
+			SortedSet set = (SortedSet) field.get(sketch);
+			return (Sketch) set.stream()
+					.skip(position)
+					.findFirst()
+					.get();
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Test
 	public void matcher() {
-		TestContextSketch sketch = new TestContextSketch(new SourceSlice(new PseudoDocument("(()()())")));
+		Sketch sketch = new DocumentSketch("(()()())");
 
-		while (sketch.accept(s -> {
-			Source source = Sketch.find(s, Pattern.compile("[(]"), Pattern.compile("[)]"));
-
-			if (source != null) {
-				Sketch it = new TestContextSketch(source);
-				Sketch open = new TestConcreteSketch(source.slice(0, 1));
-				Sketch close = new TestConcreteSketch(source.slice(
-						source.length() - 1, 1));
-
-				it.put(open);
-				it.put(close);
-				s.put(it);
-
-				return true;
-			}
-
-			return false;
-		}))
+		//		while (sketch.accept(s -> {
+		//			Source source = Sketch.find(s, Pattern.compile("[(]"), Pattern.compile("[)]"));
+		//
+		//			if (source != null) {
+		//				Sketch it = new TestContextSketch(source);
+		//				Sketch open = new TestConcreteSketch(source.slice(0, 1));
+		//				Sketch close = new TestConcreteSketch(source.slice(
+		//						source.length() - 1, 1));
+		//
+		//				it.put(open);
+		//				it.put(close);
+		//				s.put(it);
+		//
+		//				return true;
+		//			}
+		//
+		//			return false;
+		//		}))
+		//			;
+		while (sketch.accept(Parentheses.SKETCHER))
 			;
 
 		//base sketch
 		assertCount(sketch, 13);
 		//context group
-		TestContextSketch px = (TestContextSketch) sketch.sketches.first();
-		TestConcreteSketch pxo = (TestConcreteSketch) px.sketches.first();
-		TestConcreteSketch pxc = (TestConcreteSketch) px.sketches.last();
+		Sketch px = getSketchAt(sketch, 0);
+		Sketch pxo = getSketchAt(px, 0);
+		Sketch pxc = getSketchAt(px, 4);
 		assertCount(px, 12);
 		assertCount(pxo, 1);
 		assertCount(pxc, 1);
-		assertDimensions(px.source, 0, 8);
-		assertDimensions(pxo.source, 0, 1);
-		assertDimensions(pxc.source, 7, 1);
+		assertDimensions(px.source(), 0, 8);
+		assertDimensions(pxo.source(), 0, 1);
+		assertDimensions(pxc.source(), 7, 1);
 		//first group
-		TestContextSketch p1 = (TestContextSketch) px.sketches.stream().skip(1).findFirst().get();
-		TestConcreteSketch p1o = (TestConcreteSketch) p1.sketches.first();
-		TestConcreteSketch p1c = (TestConcreteSketch) p1.sketches.last();
+		Sketch p1 = getSketchAt(px, 1);
+		Sketch p1o = getSketchAt(p1, 0);
+		Sketch p1c = getSketchAt(p1, 1);
 		assertCount(p1, 3);
 		assertCount(p1o, 1);
 		assertCount(p1c, 1);
-		assertDimensions(p1.source, 1, 2);
-		assertDimensions(p1o.source, 1, 1);
-		assertDimensions(p1c.source, 2, 1);
+		assertDimensions(p1.source(), 1, 2);
+		assertDimensions(p1o.source(), 1, 1);
+		assertDimensions(p1c.source(), 2, 1);
 		//second group
-		TestContextSketch p2 = (TestContextSketch) px.sketches.stream().skip(2).findFirst().get();
-		TestConcreteSketch p2o = (TestConcreteSketch) p2.sketches.first();
-		TestConcreteSketch p2c = (TestConcreteSketch) p2.sketches.last();
+		Sketch p2 = getSketchAt(px, 2);
+		Sketch p2o = getSketchAt(p2, 0);
+		Sketch p2c = getSketchAt(p2, 1);
 		assertCount(p2, 3);
 		assertCount(p2o, 1);
 		assertCount(p2c, 1);
-		assertDimensions(p2.source, 3, 2);
-		assertDimensions(p2o.source, 3, 1);
-		assertDimensions(p2c.source, 4, 1);
+		assertDimensions(p2.source(), 3, 2);
+		assertDimensions(p2o.source(), 3, 1);
+		assertDimensions(p2c.source(), 4, 1);
 		//third group
-		TestContextSketch p3 = (TestContextSketch) px.sketches.stream().skip(3).findFirst().get();
-		TestConcreteSketch p3o = (TestConcreteSketch) p3.sketches.first();
-		TestConcreteSketch p3c = (TestConcreteSketch) p3.sketches.last();
+		Sketch p3 = getSketchAt(px, 3);
+		Sketch p3o = getSketchAt(p3, 0);
+		Sketch p3c = getSketchAt(p3, 1);
 		assertCount(p3, 3);
 		assertCount(p3o, 1);
 		assertCount(p3c, 1);
-		assertDimensions(p3.source, 5, 2);
-		assertDimensions(p3o.source, 5, 1);
-		assertDimensions(p3c.source, 6, 1);
+		assertDimensions(p3.source(), 5, 2);
+		assertDimensions(p3o.source(), 5, 1);
+		assertDimensions(p3c.source(), 6, 1);
 	}
 
 	@Test
 	public void relations() {
-		Source source = new SourceSlice(new PseudoDocument("ABC0123"));
-		Source letters = source.slice(0, 3);
-		Source numbers = source.slice(3, 4);
-		Source b = source.slice(1, 1);
-		Source bc = letters.slice(1, 2);
-		Source c0 = source.slice(2, 2);
+		Source source = new DocumentSource(new PseudoDocument("ABC0123"));
+		Source letters = source.subSource(0, 3);
+		Source numbers = source.subSource(3, 4);
+		Source b = source.subSource(1, 1);
+		Source bc = letters.subSource(1, 2);
+		Source c0 = source.subSource(2, 2);
 
 		assertEquals("Wrong Slice", "ABC", letters.content());
 		assertEquals("Wrong Slice", "0123", numbers.content());
@@ -187,16 +210,16 @@ public class SourceTest {
 
 		assertRelation(c0, c0, Relation.SAME);
 	}
-
-	public static class TestConcreteSketch extends AbstractConcreteSketch {
-		public TestConcreteSketch(Source source) {
-			super(source);
-		}
-	}
-
-	public static class TestContextSketch extends AbstractContextSketch {
-		public TestContextSketch(Source source) {
-			super(source);
-		}
-	}
+//
+	//	public static class TestConcreteSketch extends AbstractConcreteSketch {
+	//		public TestConcreteSketch(Source source) {
+	//			super(source);
+	//		}
+	//	}
+	//
+	//	public static class TestContextSketch extends AbstractContextSketch {
+	//		public TestContextSketch(Source source) {
+	//			super(source);
+	//		}
+	//	}
 }
