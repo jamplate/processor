@@ -171,6 +171,6 @@ public abstract class AbstractSource implements Source {
 
 	@Override
 	public String toString() {
-		return this.document + "[" + this.position + ", " + this.content.length() + "]";
+		return this.document + "[" + this.position + ", " + this.length() + "]";
 	}
 }
