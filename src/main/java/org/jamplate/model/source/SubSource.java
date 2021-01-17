@@ -24,7 +24,7 @@ import org.jamplate.model.document.Document;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class SourceSlice extends AbstractSource {
+public class SubSource extends AbstractSource {
 	/**
 	 * Construct a new sub-source from the given {@code parent} source. The constructed
 	 * source will have the same {@link #document()} as the given {@code parent} source.
@@ -50,7 +50,7 @@ public class SourceSlice extends AbstractSource {
 	 * @see AbstractSource#AbstractSource(Source, int, int)
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public SourceSlice(Source parent, int position, int length) {
+	public SubSource(Source parent, int position, int length) {
 		super(
 				parent,
 				position,
@@ -61,7 +61,7 @@ public class SourceSlice extends AbstractSource {
 	@Override
 	public Source slice(int position) {
 		//checked in the constructor
-		return new SourceSlice(
+		return new SubSource(
 				this,
 				position,
 				this.length() - position
@@ -71,7 +71,7 @@ public class SourceSlice extends AbstractSource {
 	@Override
 	public Source slice(int position, int length) {
 		//checked in the constructor
-		return new SourceSlice(
+		return new SubSource(
 				this,
 				position,
 				length
