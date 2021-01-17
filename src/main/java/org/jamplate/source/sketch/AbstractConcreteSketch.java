@@ -15,6 +15,7 @@
  */
 package org.jamplate.source.sketch;
 
+import org.jamplate.Diagnostic;
 import org.jamplate.source.reference.Reference;
 
 /**
@@ -55,6 +56,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	public void put(Sketch sketch) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
+		Diagnostic.printError("Concrete Sketch Clash", this.reference, sketch.reference());
 		throw new UnsupportedOperationException("Sketch.put");
 	}
 }

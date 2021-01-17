@@ -15,6 +15,7 @@
  */
 package org.jamplate.source.sketch;
 
+import org.jamplate.Diagnostic;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Iterator;
@@ -69,9 +70,8 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	public boolean check(int start, int end) {
 		if (start < 0 || start > end)
 			return false;
-		Reference.Dominance dominance = Reference.dominance(this.reference, start, end);
-		return (dominance == Reference.Dominance.PART ||
-				dominance == Reference.Dominance.EXACT) &&
+		Reference.Dominance d = Reference.dominance(this.reference, start, end);
+		return (d == Reference.Dominance.PART || d == Reference.Dominance.EXACT) &&
 			   this.sketches.stream()
 					   .allMatch(sketch ->
 							   Reference.dominance(sketch.reference(), start, end) ==
@@ -91,6 +91,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			case EXACT:
 				break;
 			default:
+				Diagnostic.printError("Context Sketch Clash", this.reference, sketch.reference());
 				throw new IllegalArgumentException("Cannot put a sketch with a dominance other than PART");
 		}
 
@@ -99,6 +100,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			switch (Reference.dominance(next.reference(), sketch.reference())) {
 				case SHARE:
 				case EXACT:
+					Diagnostic.printError("Ambiguous Sketch Clash", next.reference(), sketch.reference());
 					throw new IllegalStateException("Sketch Clash");
 			}
 
