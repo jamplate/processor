@@ -17,6 +17,7 @@ package org.jamplate.model.sketch;
 
 import org.jamplate.model.source.Source;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -27,12 +28,18 @@ import java.util.regex.Pattern;
  * <br>
  * Note: sketches are built from bottom to top. So, a typical sketch will store its
  * sub-sketches but never its parent sketch.
+ * <br>
+ * A sketch should serialize its {@link #source()} and inner sketches. It is encouraged to
+ * serialize additional data.
+ * <br>
+ * If a sketch is a deserialized sketch then the method {@link #put(Sketch)} will throw an
+ * {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2020.12.25
  */
-public interface Sketch {
+public interface Sketch extends Serializable {
 	/**
 	 * The standard sketch comparator.
 	 *
@@ -223,10 +230,11 @@ public interface Sketch {
 	 *
 	 * @param sketch the sketch to be put.
 	 * @throws NullPointerException          if the given {@code sketch} is null.
-	 * @throws IllegalStateException         if the given {@code sketch} is clashing with
-	 *                                       a previously reserved area (has a dominance
-	 *                                       of either {@link Source.Dominance#SHARE} or
-	 *                                       {@link Source.Dominance#EXACT}).
+	 * @throws IllegalStateException         if this sketch is deserialized; if the given
+	 *                                       {@code sketch} is clashing with a previously
+	 *                                       reserved area (has a dominance of either
+	 *                                       {@link Source.Dominance#SHARE} or {@link
+	 *                                       Source.Dominance#EXACT}).
 	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
 	 *                                       other than {@link Source.Dominance#PART} or
 	 *                                       {@link Source.Dominance#EXACT} with this

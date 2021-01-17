@@ -26,6 +26,9 @@ import org.jamplate.model.source.Source;
  * @since 0.2.0 ~2021.01.17
  */
 public abstract class AbstractConcreteSketch extends AbstractSketch {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = -4837539436780739571L;
+
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
 	 * the constructed sketch will reserve.
@@ -50,6 +53,8 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 
 	@Override
 	public void put(Sketch sketch) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Document");
 		throw new UnsupportedOperationException("Sketch.put");
 	}
 }

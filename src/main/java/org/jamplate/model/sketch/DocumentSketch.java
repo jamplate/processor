@@ -21,6 +21,7 @@ import org.jamplate.model.document.PseudoDocument;
 import org.jamplate.model.source.DocumentSource;
 
 import java.io.File;
+import java.io.IOError;
 
 /**
  * An unqualified (not specialized with a specific class) sketch for a whole document.
@@ -30,6 +31,9 @@ import java.io.File;
  * @since 0.2.0 ~2021.01.17
  */
 public class DocumentSketch extends AbstractContextSketch {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = -381022842178840192L;
+
 	/**
 	 * Construct a new document sketch with a {@link PseudoDocument} that have the given
 	 * {@code content}.
@@ -48,6 +52,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 *
 	 * @param file the file of the file document of the constructed sketch.
 	 * @throws NullPointerException if the given {@code file} is null.
+	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public DocumentSketch(File file) {
@@ -59,6 +64,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 *
 	 * @param document the document the constructed sketch will be for.
 	 * @throws NullPointerException if the given {@code document} is null.
+	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	public DocumentSketch(Document document) {

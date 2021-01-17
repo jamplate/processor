@@ -28,12 +28,24 @@ import java.util.Objects;
  * @since 0.2.0 ~2021.01.17
  */
 public abstract class AbstractSketch implements Sketch {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 7365834181285411955L;
+
 	/**
 	 * The source of this sketch. The source this sketch is reserving.
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected final Source source;
+
+	/**
+	 * True, if this sketch have been constructed using its constructor. (in other words
+	 * 'not deserialized')
+	 *
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient boolean constructed;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
@@ -46,6 +58,7 @@ public abstract class AbstractSketch implements Sketch {
 	protected AbstractSketch(Source source) {
 		Objects.requireNonNull(source, "source");
 		this.source = source;
+		this.constructed = true;
 	}
 
 	@Override

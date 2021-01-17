@@ -19,7 +19,6 @@ import org.jamplate.model.source.Source;
 
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -31,6 +30,9 @@ import java.util.TreeSet;
  * @since 0.2.0 ~2021.01.07
  */
 public abstract class AbstractContextSketch extends AbstractSketch {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 2088310421014333821L;
+
 	/**
 	 * The inner sketches of this sketch.
 	 * <br>
@@ -40,7 +42,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	protected final SortedSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
+	protected final TreeSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
@@ -79,6 +81,9 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 	@Override
 	public void put(Sketch sketch) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Sketch");
+
 		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
 		switch (Source.dominance(this.source, sketch.source())) {
