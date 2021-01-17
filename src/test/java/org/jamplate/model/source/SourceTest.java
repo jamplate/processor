@@ -61,8 +61,7 @@ public class SourceTest {
 				Source.relation(source, other)
 		);
 		assertSame(
-				"Relation of " + source + " to " +
-				other,
+				"Relation of " + source + " to " + other,
 				relation.opposite(),
 				Source.relation(other, source)
 		);
