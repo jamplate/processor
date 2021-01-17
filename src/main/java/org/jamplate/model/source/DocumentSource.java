@@ -24,7 +24,7 @@ import org.jamplate.model.document.Document;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public class SourceRoot extends AbstractSource {
+public class DocumentSource extends AbstractSource {
 	/**
 	 * Construct a new source standard implementation instance for the given {@code
 	 * document}.
@@ -34,13 +34,13 @@ public class SourceRoot extends AbstractSource {
 	 * @see AbstractSource#AbstractSource(Document)
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public SourceRoot(Document document) {
+	public DocumentSource(Document document) {
 		super(document);
 	}
 
 	@Override
 	public Source slice(int position) {
-		return new SourceSlice(
+		return new SubSource(
 				this,
 				position,
 				this.length() - position
@@ -49,7 +49,7 @@ public class SourceRoot extends AbstractSource {
 
 	@Override
 	public Source slice(int position, int length) {
-		return new SourceSlice(
+		return new SubSource(
 				this,
 				position,
 				length
