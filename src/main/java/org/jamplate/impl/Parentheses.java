@@ -15,10 +15,10 @@
  */
 package org.jamplate.impl;
 
+import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
 import org.jamplate.source.sketch.Sketch;
-import org.jamplate.source.reference.Reference;
 
 import java.util.regex.Pattern;
 
@@ -79,6 +79,9 @@ public final class Parentheses {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public static class ParenthesesSketch extends AbstractContextSketch {
+		@SuppressWarnings("JavaDoc")
+		private static final long serialVersionUID = -7623010704158441542L;
+
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
 		 * source the constructed sketch will reserve.
@@ -100,6 +103,9 @@ public final class Parentheses {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public static class ParenthesisSketch extends AbstractConcreteSketch {
+		@SuppressWarnings("JavaDoc")
+		private static final long serialVersionUID = -4906923428406502483L;
+
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
 		 * source the constructed sketch will reserve.
