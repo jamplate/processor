@@ -21,6 +21,9 @@ import java.util.Comparator;
 /**
  * An interface that abstracts the functionality required to deal with source-code files.
  * <br>
+ * The document should serialize its {@link #qualifiedName()}, {@link #name()} and {@link
+ * #simpleName()}. It is encouraged to serialized additional data.
+ * <br>
  * If a document is a deserialized document then the methods {@link #length()}, {@link
  * #openInputStream()}, {@link #openReader()} and {@link #readContent()} will throw an
  * {@link IllegalStateException}.
@@ -77,6 +80,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return the length of this document.
 	 * @throws IllegalStateException if this document is deserialized.
+	 * @throws IOError               if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	int length();

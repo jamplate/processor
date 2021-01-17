@@ -36,6 +36,7 @@ public class FileDocument extends AbstractDocument {
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
 	protected final transient File file;
+
 	/**
 	 * The content of this document cached.
 	 *
