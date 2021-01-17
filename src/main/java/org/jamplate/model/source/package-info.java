@@ -39,7 +39,7 @@
  * </ul>
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.06
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.06
  */
 package org.jamplate.model.source;

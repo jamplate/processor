@@ -22,20 +22,20 @@ import java.util.Objects;
  * A document that delegates to a {@link File}.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.13
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.13
  */
 public class FileDocument implements Document {
 	/**
 	 * The file of this file document.
 	 *
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	protected final File file;
 	/**
 	 * The content of this document cached.
 	 *
-	 * @since 0.0.2 ~2021.01.16
+	 * @since 0.2.0 ~2021.01.16
 	 */
 	protected String content;
 
@@ -44,7 +44,7 @@ public class FileDocument implements Document {
 	 *
 	 * @param file the file for the constructed document.
 	 * @throws NullPointerException if the given {@code file} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	public FileDocument(File file) {
 		Objects.requireNonNull(file, "file");

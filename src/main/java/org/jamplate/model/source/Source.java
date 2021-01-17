@@ -1,5 +1,5 @@
 /*
- *	Copyright 2020-2021 Cufy
+ *	Copyright 20.2.0021 Cufy
  *
  *	Licensed under the Apache License, Version 2.0 (the "License");
  *	you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ import java.util.regex.Pattern;
  * source but never store any sub-source of it.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2020.12.25
+ * @version 0.2.0
+ * @since 0.2.0 ~2020.12.25
  */
 public interface Source {
 	/**
 	 * The standard source comparator.
 	 *
-	 * @since 0.0.2 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.9
 	 */
 	Comparator<Source> COMPARATOR = Comparator.comparing(Source::document, Document.COMPARATOR)
 			.thenComparingInt(Source::position)
@@ -51,7 +51,7 @@ public interface Source {
 	 * @throws NullPointerException     if the given {@code source} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Dominance#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.11
+	 * @since 0.2.0 ~2021.01.11
 	 */
 	static Dominance dominance(Source source, int s, int e) {
 		Objects.requireNonNull(source, "source");
@@ -69,7 +69,7 @@ public interface Source {
 	 * @return how much dominant the second source over the first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Dominance dominance(Source source, Source other) {
 		Objects.requireNonNull(source, "source");
@@ -100,7 +100,7 @@ public interface Source {
 	 * @throws NullPointerException     if the given {@code source} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Relation relation(Source source, int s, int e) {
 		Objects.requireNonNull(source, "source");
@@ -126,7 +126,7 @@ public interface Source {
 	 * 		first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
 	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.0.2 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	static Relation relation(Source source, Source other) {
 		Objects.requireNonNull(source, "source");
@@ -143,7 +143,7 @@ public interface Source {
 	 * #document()}, {@link #position()} and {@link #length()} of this source.
 	 *
 	 * @return if the given object is a source and equals this source.
-	 * @since 0.0.2 ~2021.01.7
+	 * @since 0.2.0 ~2021.01.7
 	 */
 	@Override
 	boolean equals(Object other);
@@ -155,7 +155,7 @@ public interface Source {
 	 * </pre>
 	 *
 	 * @return the hashCode of this source.
-	 * @since 0.0.2 ~2021.01.7
+	 * @since 0.2.0 ~2021.01.7
 	 */
 	@Override
 	int hashCode();
@@ -168,7 +168,7 @@ public interface Source {
 	 * </pre>
 	 *
 	 * @return a string representation of this source.
-	 * @since 0.0.2 ~2021.01.6
+	 * @since 0.2.0 ~2021.01.6
 	 */
 	@Override
 	String toString();
@@ -178,7 +178,7 @@ public interface Source {
 	 * same value.
 	 *
 	 * @return the content of this source. (unmodifiable view)
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	CharSequence content();
 
@@ -186,7 +186,7 @@ public interface Source {
 	 * The source document that this source is from.
 	 *
 	 * @return the document of this source.
-	 * @since 0.0.2 ~2021.01.7
+	 * @since 0.2.0 ~2021.01.7
 	 */
 	Document document();
 
@@ -195,7 +195,7 @@ public interface Source {
 	 * same as the length of the content of this source.
 	 *
 	 * @return the length of the content of this source.
-	 * @since 0.0.2 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	int length();
 
@@ -209,7 +209,7 @@ public interface Source {
 	 * @param pattern the pattern to match.
 	 * @return a matcher over the content of this source.
 	 * @throws NullPointerException if the given {@code pattern} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	Matcher matcher(Pattern pattern);
 
@@ -217,7 +217,7 @@ public interface Source {
 	 * The parent source of this source.
 	 *
 	 * @return the parent source of this source. Or null if this source has no parent.
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	Source parent();
 
@@ -225,7 +225,7 @@ public interface Source {
 	 * Return where this source starts at its {@link #document()}.
 	 *
 	 * @return the position of this source.
-	 * @since 0.0.2 ~2021.01.4
+	 * @since 0.2.0 ~2021.01.4
 	 */
 	int position();
 
@@ -237,7 +237,7 @@ public interface Source {
 	 * @return a slice of this source that starts from the given {@code position}.
 	 * @throws IllegalArgumentException  if the given {@code position} is negative.
 	 * @throws IndexOutOfBoundsException if {@code position > this.length()}.
-	 * @since 0.0.2 ~2021.01.6
+	 * @since 0.2.0 ~2021.01.6
 	 */
 	Source slice(int position);
 
@@ -252,7 +252,7 @@ public interface Source {
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length > this.length()}.
-	 * @since 0.0.2 ~2021.01.6
+	 * @since 0.2.0 ~2021.01.6
 	 */
 	Source slice(int position, int length);
 
@@ -260,8 +260,8 @@ public interface Source {
 	 * An enumeration of how dominant a relation is over another relation.
 	 *
 	 * @author LSafer
-	 * @version 0.0.2
-	 * @since 0.0.2 ~2021.01.10
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	enum Dominance {
 		/**
@@ -293,7 +293,7 @@ public interface Source {
 		 * @see Relation#CONTAINER
 		 * @see Relation#AHEAD
 		 * @see Relation#BEHIND
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		CONTAIN("PART"),
 		/**
@@ -313,7 +313,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Relation#SAME
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		EXACT("EXACT"),
 		/**
@@ -339,7 +339,7 @@ public interface Source {
 		 *
 		 * @see Relation#OVERFLOW
 		 * @see Relation#UNDERFLOW
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		SHARE("SHARE"),
 		/**
@@ -371,7 +371,7 @@ public interface Source {
 		 * @see Relation#FRAGMENT
 		 * @see Relation#START
 		 * @see Relation#END
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		PART("CONTAIN"),
 		/**
@@ -408,7 +408,7 @@ public interface Source {
 		 * @see Relation#PREVIOUS
 		 * @see Relation#AFTER
 		 * @see Relation#BEFORE
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		NONE("NONE"),
 		;
@@ -416,7 +416,7 @@ public interface Source {
 		/**
 		 * The opposite dominance type of this.
 		 *
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		private final String opposite;
 
@@ -426,7 +426,7 @@ public interface Source {
 		 * @param opposite the name of the dominance type that is opposite of this
 		 *                 dominance type.
 		 * @throws NullPointerException if the given {@code opposite} is null.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		Dominance(String opposite) {
 			Objects.requireNonNull(opposite, "opposite");
@@ -444,7 +444,7 @@ public interface Source {
 		 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0,
 		 *                                  j)} or if {@code s} is not in the range {@code
 		 *                                  [0, e]}.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		@SuppressWarnings("OverlyComplexMethod")
 		public static Dominance compute(int i, int j, int s, int e) {
@@ -466,7 +466,7 @@ public interface Source {
 		 * Get the opposite dominance type of this dominance type.
 		 *
 		 * @return the opposite dominance type.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		public Dominance opposite() {
 			return Dominance.valueOf(this.opposite);
@@ -509,8 +509,8 @@ public interface Source {
 	 * </pre>
 	 *
 	 * @author LSafer
-	 * @version 0.0.2
-	 * @since 0.0.2 ~2021.01.9
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.01.9
 	 */
 	enum Relation {
 		/**
@@ -530,7 +530,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#CONTAIN
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		CONTAINER("FRAGMENT", Dominance.CONTAIN),
 		/**
@@ -549,7 +549,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#CONTAIN
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		AHEAD("START", Dominance.CONTAIN),
 		/**
@@ -568,7 +568,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#CONTAIN
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		BEHIND("END", Dominance.CONTAIN),
 
@@ -588,7 +588,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#EXACT
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		SAME("SAME", Dominance.EXACT),
 
@@ -609,7 +609,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#SHARE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		OVERFLOW("UNDERFLOW", Dominance.SHARE),
 		/**
@@ -629,7 +629,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#SHARE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		UNDERFLOW("OVERFLOW", Dominance.SHARE),
 
@@ -650,7 +650,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#PART
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		FRAGMENT("CONTAINER", Dominance.PART),
 		/**
@@ -669,7 +669,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#PART
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		START("AHEAD", Dominance.PART),
 		/**
@@ -688,7 +688,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#PART
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		END("BEHIND", Dominance.PART),
 
@@ -708,7 +708,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#NONE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		NEXT("PREVIOUS", Dominance.NONE),
 		/**
@@ -727,7 +727,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#NONE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		PREVIOUS("NEXT", Dominance.NONE),
 		/**
@@ -746,7 +746,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#NONE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		AFTER("BEFORE", Dominance.NONE),
 		/**
@@ -765,7 +765,7 @@ public interface Source {
 		 * </pre>
 		 *
 		 * @see Dominance#NONE
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		BEFORE("AFTER", Dominance.NONE),
 		;
@@ -773,13 +773,13 @@ public interface Source {
 		/**
 		 * How dominant this relation over the opposite relation.
 		 *
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		private final Dominance dominance;
 		/**
 		 * The name of the opposite enum.
 		 *
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		private final String opposite;
 
@@ -791,7 +791,7 @@ public interface Source {
 		 * @param dominance how dominant the constructed relation over its opposite
 		 *                  relation.
 		 * @throws NullPointerException if the given {@code opposite} is null.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		Relation(String opposite, Dominance dominance) {
 			Objects.requireNonNull(opposite, "opposite");
@@ -820,7 +820,7 @@ public interface Source {
 		 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0,
 		 *                                  j]} or if {@code s} is not in the range {@code
 		 *                                  [0, e]}.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		@SuppressWarnings("OverlyComplexMethod")
 		public static Relation compute(int i, int j, int s, int e) {
@@ -858,7 +858,7 @@ public interface Source {
 		 * Returns how dominance this relation over its opposite relation.
 		 *
 		 * @return how dominance this relation.
-		 * @since 0.0.2 ~2021.01.10
+		 * @since 0.2.0 ~2021.01.10
 		 */
 		public Dominance dominance() {
 			return this.dominance;
@@ -868,7 +868,7 @@ public interface Source {
 		 * Get the opposite relation of this relation.
 		 *
 		 * @return the opposite relation. Or null if none.
-		 * @since 0.0.2 ~2021.01.9
+		 * @since 0.2.0 ~2021.01.9
 		 */
 		public Relation opposite() {
 			return Relation.valueOf(this.opposite);

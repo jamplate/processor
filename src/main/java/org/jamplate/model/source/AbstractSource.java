@@ -23,38 +23,38 @@ import java.util.regex.Pattern;
  * An implementation for the basic functionality of a source.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.09
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.09
  */
 public abstract class AbstractSource implements Source {
 	/**
 	 * The file of this source.
 	 *
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	protected final Document document;
 	/**
 	 * The length of this source. {@code -1} when targeting the whole document)
 	 *
-	 * @since 0.0.2 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected final int length;
 	/**
 	 * The parent source of this source. (might be null)
 	 *
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	protected final Source parent;
 	/**
 	 * The position where the content of this source starts at its {@link #document}.
 	 *
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	protected final int position;
 	/**
 	 * The content of this source. (lazily initialized)
 	 *
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.8
 	 */
 	protected CharSequence content;
 
@@ -64,7 +64,7 @@ public abstract class AbstractSource implements Source {
 	 *
 	 * @param document the document of the constructed source.
 	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.0.2 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractSource(Document document) {
 		Objects.requireNonNull(document, "document");
@@ -96,7 +96,7 @@ public abstract class AbstractSource implements Source {
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
-	 * @since 0.0.2 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractSource(Source parent, int position, int length) {
 		Objects.requireNonNull(parent, "parent");

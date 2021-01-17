@@ -25,32 +25,32 @@ import java.util.Objects;
  * A pseudo document that get made programmatically.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.13
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.13
  */
 public class PseudoDocument implements Document {
 	/**
 	 * The content of this document.
 	 *
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	protected final CharSequence content;
 	/**
 	 * The name of this document.
 	 *
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	protected final String name;
 	/**
 	 * The qualified name of this document.
 	 *
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	protected final String qualifiedName;
 	/**
 	 * The simple name of this document.
 	 *
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	protected final String simpleName;
 
@@ -61,7 +61,7 @@ public class PseudoDocument implements Document {
 	 *
 	 * @param content the content of the constructed pseudo content.
 	 * @throws NullPointerException if the given {@code content} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content) {
 		Objects.requireNonNull(content, "content");
@@ -79,7 +79,7 @@ public class PseudoDocument implements Document {
 	 * @param name    the qualified-name, name and simple-name of the constructed
 	 *                document.
 	 * @throws NullPointerException if the given {@code content} or {@code name} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content, String name) {
 		Objects.requireNonNull(content, "content");
@@ -100,7 +100,7 @@ public class PseudoDocument implements Document {
 	 * @param simpleName    the simple name of the constructed document.
 	 * @throws NullPointerException if the given {@code content} or {@code qualifiedName}
 	 *                              or {@code name} or {@code simpleName} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content, String qualifiedName, String name, String simpleName) {
 		Objects.requireNonNull(content, "content");

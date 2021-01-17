@@ -19,8 +19,8 @@ package org.jamplate.model.source;
  * The default implementation of the interface {@link Source}.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.13
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.13
  */
 public class SourceSlice extends AbstractSource {
 	/**
@@ -30,7 +30,7 @@ public class SourceSlice extends AbstractSource {
 	 * @param document the document.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @see AbstractSource#AbstractSource(Document)
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	public SourceSlice(Document document) {
 		super(document);
@@ -59,7 +59,7 @@ public class SourceSlice extends AbstractSource {
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
 	 * @see AbstractSource#AbstractSource(Source, int, int)
-	 * @since 0.0.2 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected SourceSlice(Source parent, int position, int length) {
 		super(

@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  * a sketch.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2021.01.07
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.01.07
  */
 public abstract class AbstractSketch implements Sketch {
 	/**
@@ -38,13 +38,13 @@ public abstract class AbstractSketch implements Sketch {
 	 * Source.Dominance#PART} with this sketch and a dominance of {@link
 	 * Source.Dominance#NONE} with each other.
 	 *
-	 * @since 0.0.2 ~2021.01.12
+	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected final SortedSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
 	/**
 	 * The source of this sketch. The source this sketch is reserving.
 	 *
-	 * @since 0.0.2 ~2021.01.12
+	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected final Source source;
 
@@ -54,7 +54,7 @@ public abstract class AbstractSketch implements Sketch {
 	 *
 	 * @param source the source of the constructed sketch.
 	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.0.2 ~2021.01.12
+	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected AbstractSketch(Source source) {
 		Objects.requireNonNull(source, "source");

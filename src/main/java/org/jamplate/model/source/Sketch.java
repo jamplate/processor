@@ -25,14 +25,14 @@ import java.util.regex.Pattern;
  * sub-sketches but never its parent sketch.
  *
  * @author LSafer
- * @version 0.0.2
- * @since 0.0.2 ~2020.12.25
+ * @version 0.2.0
+ * @since 0.2.0 ~2020.12.25
  */
 public interface Sketch {
 	/**
 	 * The standard sketch comparator.
 	 *
-	 * @since 0.0.2 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.9
 	 */
 	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::source, Source.COMPARATOR);
 
@@ -40,7 +40,7 @@ public interface Sketch {
 	 * A sketch is equals to another sketch if they are the same instance.
 	 *
 	 * @return if the given {@code object} is this sketch instance.
-	 * @since 0.0.2 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.17
 	 */
 	@Override
 	boolean equals(Object object);
@@ -52,7 +52,7 @@ public interface Sketch {
 	 * </pre>
 	 *
 	 * @return the hashCode of this sketch.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override
 	int hashCode();
@@ -64,7 +64,7 @@ public interface Sketch {
 	 * </pre>
 	 *
 	 * @return a string representation of this sketch.
-	 * @since 0.0.2 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.10
 	 */
 	@Override
 	String toString();
@@ -79,7 +79,7 @@ public interface Sketch {
 	 * @param visitor the visitor to be invoked for each element.
 	 * @return true, if the given {@code visitor} stopped the loop.
 	 * @throws NullPointerException if the given {@code visitor} is null.
-	 * @since 0.0.2 ~2021.01.11
+	 * @since 0.2.0 ~2021.01.11
 	 */
 	boolean accept(Visitor visitor);
 
@@ -94,7 +94,7 @@ public interface Sketch {
 	 * @return a source that matches the given {@code pattern} while not interacting with
 	 * 		any sketches in this.
 	 * @throws NullPointerException if the given {@code pattern} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	Source find(Pattern pattern);
 
@@ -113,7 +113,7 @@ public interface Sketch {
 	 * 		this.
 	 * @throws NullPointerException if the given {@code startPattern} or {@code
 	 *                              endPattern} is null.
-	 * @since 0.0.2 ~2021.01.13
+	 * @since 0.2.0 ~2021.01.13
 	 */
 	Source find(Pattern startPattern, Pattern endPattern);
 
@@ -138,7 +138,7 @@ public interface Sketch {
 	 *                                       {@link Source.Dominance#EXACT} with this
 	 *                                       sketch.
 	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
-	 * @since 0.0.2 ~2021.01.12
+	 * @since 0.2.0 ~2021.01.12
 	 */
 	void put(Sketch sketch);
 
@@ -146,7 +146,7 @@ public interface Sketch {
 	 * Get the source of this sketch.
 	 *
 	 * @return the source of this sketch.
-	 * @since 0.0.2 ~2021.01.7
+	 * @since 0.2.0 ~2021.01.7
 	 */
 	Source source();
 
@@ -158,8 +158,8 @@ public interface Sketch {
 	 * this remain a {@link FunctionalInterface}.
 	 *
 	 * @author LSafer
-	 * @version 0.0.2
-	 * @since 0.0.2 ~2021.01.11
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.01.11
 	 */
 	@FunctionalInterface
 	interface Visitor {
@@ -169,7 +169,7 @@ public interface Sketch {
 		 * @param sketch the sketch met.
 		 * @return true, if this visitor wishes to stop the loop.
 		 * @throws NullPointerException if the given {@code sketch} is null.
-		 * @since 0.0.2 ~2021.01.11
+		 * @since 0.2.0 ~2021.01.11
 		 */
 		boolean visit(Sketch sketch);
 	}

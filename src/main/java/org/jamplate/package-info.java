@@ -17,7 +17,7 @@
  * Jamplate is a java pre-processor.
  *
  * @author LSafer
- * @version 0.0.2
+ * @version 0.2.0
  * @since 0.0.1 ~2020.09.20
  */
 package org.jamplate;
