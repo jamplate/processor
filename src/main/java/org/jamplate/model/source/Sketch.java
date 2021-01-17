@@ -85,6 +85,23 @@ public interface Sketch {
 	boolean accept(Visitor visitor);
 
 	/**
+	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An
+	 * area get rejected when the area has a dominance other than {@link
+	 * Source.Dominance#PART} nor {@link Source.Dominance#EXACT} with this sketch or has a
+	 * dominance other than {@link Source.Dominance#NONE} with any of the sketches
+	 * contained currently in this sketch.
+	 * <br>
+	 * Note: this is a checking method. Thus, it will simply return {@code false} if the
+	 * given arguments are invalid.
+	 *
+	 * @param start the first index of the area to be checked.
+	 * @param end   one past the last index of the area to be checked.
+	 * @return true, if the given area {@code [start, end)} is free at this sketch.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	boolean check(int start, int end);
+
+	/**
 	 * Find a source that matches the given {@code pattern} while not interacting with any
 	 * of the sketches in this (not interacting means {@link Source.Dominance#NONE}).
 	 * <br>
@@ -97,6 +114,7 @@ public interface Sketch {
 	 * @throws NullPointerException if the given {@code pattern} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@Deprecated
 	Source find(Pattern pattern);
 
 	/**
@@ -116,6 +134,7 @@ public interface Sketch {
 	 *                              endPattern} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@Deprecated
 	Source find(Pattern startPattern, Pattern endPattern);
 
 	/**
