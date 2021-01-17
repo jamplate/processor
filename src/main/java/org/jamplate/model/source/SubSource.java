@@ -25,6 +25,9 @@ import org.jamplate.model.document.Document;
  * @since 0.2.0 ~2021.01.13
  */
 public class SubSource extends AbstractSource {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 8737902111302332073L;
+
 	/**
 	 * Construct a new sub-source from the given {@code parent} source. The constructed
 	 * source will have the same {@link #document()} as the given {@code parent} source.
@@ -60,7 +63,8 @@ public class SubSource extends AbstractSource {
 
 	@Override
 	public Source subSource(int position) {
-		//checked in the constructor
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		return new SubSource(
 				this,
 				position,
@@ -70,7 +74,8 @@ public class SubSource extends AbstractSource {
 
 	@Override
 	public Source subSource(int position, int length) {
-		//checked in the constructor
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		return new SubSource(
 				this,
 				position,

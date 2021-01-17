@@ -17,6 +17,7 @@ package org.jamplate.model.source;
 
 import org.jamplate.model.document.Document;
 
+import java.io.IOError;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,9 @@ import java.util.regex.Pattern;
  * @since 0.2.0 ~2021.01.09
  */
 public abstract class AbstractSource implements Source {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 1099496699050172132L;
+
 	/**
 	 * The file of this source.
 	 *
@@ -36,29 +40,40 @@ public abstract class AbstractSource implements Source {
 	 */
 	protected final Document document;
 	/**
-	 * The length of this source. {@code -1} when targeting the whole document)
+	 * The length of this source.
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected final int length;
-	/**
-	 * The parent source of this source. (might be null)
-	 *
-	 * @since 0.2.0 ~2021.01.8
-	 */
-	protected final Source parent;
 	/**
 	 * The position where the content of this source starts at its {@link #document}.
 	 *
 	 * @since 0.2.0 ~2021.01.8
 	 */
 	protected final int position;
+
+	/**
+	 * True, if this source have been constructed using its constructor. (in other words
+	 * 'not deserialized')
+	 *
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient boolean constructed;
+	/**
+	 * The parent source of this source. (might be null)
+	 *
+	 * @since 0.2.0 ~2021.01.8
+	 */
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient Source parent;
+
 	/**
 	 * The content of this source. (lazily initialized)
 	 *
 	 * @since 0.2.0 ~2021.01.8
 	 */
-	protected CharSequence content;
+	protected transient CharSequence content;
 
 	/**
 	 * Construct a new source that takes the whole given {@code document} as its actual
@@ -66,6 +81,7 @@ public abstract class AbstractSource implements Source {
 	 *
 	 * @param document the document of the constructed source.
 	 * @throws NullPointerException if the given {@code document} is null.
+	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractSource(Document document) {
@@ -73,7 +89,8 @@ public abstract class AbstractSource implements Source {
 		this.document = document;
 		this.parent = null;
 		this.position = 0;
-		this.length = -1;
+		this.length = document.length();
+		this.constructed = true;
 	}
 
 	/**
@@ -112,10 +129,13 @@ public abstract class AbstractSource implements Source {
 		this.parent = parent;
 		this.position = parent.position() + position;
 		this.length = length;
+		this.constructed = true;
 	}
 
 	@Override
 	public CharSequence content() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		if (this.content == null)
 			this.content = this.document.readContent()
 					.subSequence(
@@ -136,23 +156,23 @@ public abstract class AbstractSource implements Source {
 		return other instanceof Source &&
 			   Objects.equals(this.document, ((Source) other).document()) &&
 			   this.position == ((Source) other).position() &&
-			   this.length() == ((Source) other).length();
+			   this.length == ((Source) other).length();
 	}
 
 	@Override
 	public int hashCode() {
-		return this.document.hashCode() * this.length() + this.position;
+		return this.document.hashCode() * this.length + this.position;
 	}
 
 	@Override
 	public int length() {
-		return this.length == -1 ?
-			   this.document.length() :
-			   this.length;
+		return this.length;
 	}
 
 	@Override
 	public Matcher matcher(Pattern pattern) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		Objects.requireNonNull(pattern, "pattern");
 		Matcher matcher = pattern.matcher(this.document.readContent());
 		matcher.region(this.position, this.position + this.length());
@@ -163,6 +183,8 @@ public abstract class AbstractSource implements Source {
 
 	@Override
 	public Source parent() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		return this.parent;
 	}
 
@@ -173,6 +195,6 @@ public abstract class AbstractSource implements Source {
 
 	@Override
 	public String toString() {
-		return this.document + "[" + this.position + ", " + this.length() + "]";
+		return this.document + "[" + this.position + ", " + this.length + "]";
 	}
 }

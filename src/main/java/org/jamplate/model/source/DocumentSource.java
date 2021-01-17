@@ -20,6 +20,7 @@ import org.jamplate.model.document.FileDocument;
 import org.jamplate.model.document.PseudoDocument;
 
 import java.io.File;
+import java.io.IOError;
 
 /**
  * An implementation of the interface {@link Source} that takes a whole {@link Document}.
@@ -29,6 +30,9 @@ import java.io.File;
  * @since 0.2.0 ~2021.01.17
  */
 public class DocumentSource extends AbstractSource {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = -3080162447729968421L;
+
 	/**
 	 * Construct a new document source with a {@link PseudoDocument} that have the given
 	 * {@code content}.
@@ -47,6 +51,7 @@ public class DocumentSource extends AbstractSource {
 	 *
 	 * @param file the file of the file document of the constructed source.
 	 * @throws NullPointerException if the given {@code file} is null.
+	 * @throws IOError              if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public DocumentSource(File file) {
@@ -59,6 +64,7 @@ public class DocumentSource extends AbstractSource {
 	 *
 	 * @param document the document.
 	 * @throws NullPointerException if the given {@code document} is null.
+	 * @throws IOError              if any I/O exception occurs.
 	 * @see AbstractSource#AbstractSource(Document)
 	 * @since 0.2.0 ~2021.01.13
 	 */
@@ -68,6 +74,8 @@ public class DocumentSource extends AbstractSource {
 
 	@Override
 	public Source subSource(int position) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		return new SubSource(
 				this,
 				position,
@@ -77,6 +85,8 @@ public class DocumentSource extends AbstractSource {
 
 	@Override
 	public Source subSource(int position, int length) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Source");
 		return new SubSource(
 				this,
 				position,

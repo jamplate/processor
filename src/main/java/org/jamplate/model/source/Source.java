@@ -17,6 +17,8 @@ package org.jamplate.model.source;
 
 import org.jamplate.model.document.Document;
 
+import java.io.IOError;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -27,12 +29,19 @@ import java.util.regex.Pattern;
  * <br>
  * Note: sources are built from top to bottom. So, a typical source will store its parent
  * source but never store any sub-source of it.
+ * <br>
+ * The source should serialize its {@link #document()}, {@link #position()} and {@link
+ * #length()}. It is encouraged to serialize additional data.
+ * <br>
+ * If a source is a deserialized source then the methods {@link #content()}, {@link
+ * #matcher(Pattern)}, {@link #parent()}, {@link #subSource(int)} and {@link
+ * #subSource(int, int)} will throw an {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2020.12.25
  */
-public interface Source {
+public interface Source extends Serializable {
 	/**
 	 * The standard source comparator.
 	 *
@@ -180,6 +189,8 @@ public interface Source {
 	 * same value.
 	 *
 	 * @return the content of this source. (unmodifiable view)
+	 * @throws IllegalStateException if this source is deserialized.
+	 * @throws IOError               if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.8
 	 */
 	CharSequence content();
@@ -210,7 +221,8 @@ public interface Source {
 	 *
 	 * @param pattern the pattern to match.
 	 * @return a matcher over the content of this source.
-	 * @throws NullPointerException if the given {@code pattern} is null.
+	 * @throws NullPointerException  if the given {@code pattern} is null.
+	 * @throws IllegalStateException if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	Matcher matcher(Pattern pattern);
@@ -219,6 +231,7 @@ public interface Source {
 	 * The parent source of this source.
 	 *
 	 * @return the parent source of this source. Or null if this source has no parent.
+	 * @throws IllegalStateException if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.8
 	 */
 	Source parent();
@@ -239,6 +252,7 @@ public interface Source {
 	 * @return a slice of this source that starts from the given {@code position}.
 	 * @throws IllegalArgumentException  if the given {@code position} is negative.
 	 * @throws IndexOutOfBoundsException if {@code position > this.length()}.
+	 * @throws IllegalStateException     if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.6
 	 */
 	Source subSource(int position);
@@ -254,6 +268,7 @@ public interface Source {
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length > this.length()}.
+	 * @throws IllegalStateException     if this source is deserialized.
 	 * @since 0.2.0 ~2021.01.6
 	 */
 	Source subSource(int position, int length);
