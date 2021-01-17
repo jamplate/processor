@@ -15,139 +15,14 @@
  */
 package org.jamplate.source.reference;
 
-import org.jamplate.impl.Parentheses;
-import org.jamplate.source.sketch.AbstractContextSketch;
-import org.jamplate.source.sketch.DocumentSketch;
-import org.jamplate.source.sketch.Sketch;
 import org.jamplate.source.reference.Reference.Relation;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.util.Objects;
-import java.util.SortedSet;
-
+import static org.jamplate.InternalAssert.assertRelation;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
 public class ReferenceTest {
-	static void assertCount(Sketch sketch, int count) {
-		Objects.requireNonNull(sketch, "sketch");
-		int[] sCount = {0};
-		sketch.accept(s -> {
-			sCount[0]++;
-			return false;
-		});
-		assertSame(
-				sketch + " has an unexpected inner sketches count",
-				count,
-				sCount[0]
-		);
-	}
-
-	static void assertDimensions(Reference reference, int position, int length) {
-		Objects.requireNonNull(reference, "source");
-		assertSame(
-				reference + " has an unexpected position ",
-				position,
-				reference.position()
-		);
-		assertSame(
-				reference + " has an unexpected length ",
-				length,
-				reference.length()
-		);
-	}
-
-	static void assertRelation(Reference reference, Reference other, Relation relation) {
-		assertSame(
-				"Relation of " + other + " to " + reference,
-				relation,
-				Reference.relation(reference, other)
-		);
-		assertSame(
-				"Relation of " + reference + " to " + other,
-				relation.opposite(),
-				Reference.relation(other, reference)
-		);
-		assertSame(
-				"Dominance of " + other + " over " + reference,
-				relation.dominance(),
-				Reference.dominance(reference, other)
-		);
-		assertSame(
-				"Dominance of " + reference + " over " + other,
-				relation.dominance().opposite(),
-				Reference.dominance(other, reference)
-		);
-	}
-
-	static Sketch getSketchAt(Sketch sketch, int position) {
-		AbstractContextSketch contextSketch = (AbstractContextSketch) sketch;
-		try {
-			Field field = AbstractContextSketch.class.getDeclaredField("sketches");
-			field.setAccessible(true);
-			SortedSet set = (SortedSet) field.get(sketch);
-			return (Sketch) set.stream()
-					.skip(position)
-					.findFirst()
-					.get();
-		} catch (ReflectiveOperationException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Test
-	public void matcher() {
-		Sketch sketch = new DocumentSketch("(()()())");
-
-		while (sketch.accept(Parentheses.SKETCHER))
-			;
-
-		//base sketch
-		assertCount(sketch, 13);
-		//context group
-		Sketch px = getSketchAt(sketch, 0);
-		Sketch pxo = getSketchAt(px, 0);
-		Sketch pxc = getSketchAt(px, 4);
-		assertCount(px, 12);
-		assertCount(pxo, 1);
-		assertCount(pxc, 1);
-		assertDimensions(px.reference(), 0, 8);
-		assertDimensions(pxo.reference(), 0, 1);
-		assertDimensions(pxc.reference(), 7, 1);
-		//first group
-		Sketch p1 = getSketchAt(px, 1);
-		Sketch p1o = getSketchAt(p1, 0);
-		Sketch p1c = getSketchAt(p1, 1);
-		assertCount(p1, 3);
-		assertCount(p1o, 1);
-		assertCount(p1c, 1);
-		assertDimensions(p1.reference(), 1, 2);
-		assertDimensions(p1o.reference(), 1, 1);
-		assertDimensions(p1c.reference(), 2, 1);
-		//second group
-		Sketch p2 = getSketchAt(px, 2);
-		Sketch p2o = getSketchAt(p2, 0);
-		Sketch p2c = getSketchAt(p2, 1);
-		assertCount(p2, 3);
-		assertCount(p2o, 1);
-		assertCount(p2c, 1);
-		assertDimensions(p2.reference(), 3, 2);
-		assertDimensions(p2o.reference(), 3, 1);
-		assertDimensions(p2c.reference(), 4, 1);
-		//third group
-		Sketch p3 = getSketchAt(px, 3);
-		Sketch p3o = getSketchAt(p3, 0);
-		Sketch p3c = getSketchAt(p3, 1);
-		assertCount(p3, 3);
-		assertCount(p3o, 1);
-		assertCount(p3c, 1);
-		assertDimensions(p3.reference(), 5, 2);
-		assertDimensions(p3o.reference(), 5, 1);
-		assertDimensions(p3c.reference(), 6, 1);
-	}
-
 	@Test
 	public void relations() {
 		Reference reference = new DocumentReference("ABC0123");
