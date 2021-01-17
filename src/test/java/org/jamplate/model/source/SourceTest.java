@@ -16,7 +16,6 @@
 package org.jamplate.model.source;
 
 import org.jamplate.impl.Parentheses;
-import org.jamplate.model.document.PseudoDocument;
 import org.jamplate.model.sketch.AbstractContextSketch;
 import org.jamplate.model.sketch.DocumentSketch;
 import org.jamplate.model.sketch.Sketch;
@@ -102,25 +101,6 @@ public class SourceTest {
 	public void matcher() {
 		Sketch sketch = new DocumentSketch("(()()())");
 
-		//		while (sketch.accept(s -> {
-		//			Source source = Sketch.find(s, Pattern.compile("[(]"), Pattern.compile("[)]"));
-		//
-		//			if (source != null) {
-		//				Sketch it = new TestContextSketch(source);
-		//				Sketch open = new TestConcreteSketch(source.slice(0, 1));
-		//				Sketch close = new TestConcreteSketch(source.slice(
-		//						source.length() - 1, 1));
-		//
-		//				it.put(open);
-		//				it.put(close);
-		//				s.put(it);
-		//
-		//				return true;
-		//			}
-		//
-		//			return false;
-		//		}))
-		//			;
 		while (sketch.accept(Parentheses.SKETCHER))
 			;
 
@@ -170,7 +150,7 @@ public class SourceTest {
 
 	@Test
 	public void relations() {
-		Source source = new DocumentSource(new PseudoDocument("ABC0123"));
+		Source source = new DocumentSource("ABC0123");
 		Source letters = source.subSource(0, 3);
 		Source numbers = source.subSource(3, 4);
 		Source b = source.subSource(1, 1);
@@ -210,16 +190,4 @@ public class SourceTest {
 
 		assertRelation(c0, c0, Relation.SAME);
 	}
-//
-	//	public static class TestConcreteSketch extends AbstractConcreteSketch {
-	//		public TestConcreteSketch(Source source) {
-	//			super(source);
-	//		}
-	//	}
-	//
-	//	public static class TestContextSketch extends AbstractContextSketch {
-	//		public TestContextSketch(Source source) {
-	//			super(source);
-	//		}
-	//	}
 }
