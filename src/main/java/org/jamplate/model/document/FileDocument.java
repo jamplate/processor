@@ -25,19 +25,23 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class FileDocument implements Document {
+public class FileDocument extends AbstractDocument {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = -210192396401745547L;
+
 	/**
 	 * The file of this file document.
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	protected final File file;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient File file;
 	/**
 	 * The content of this document cached.
 	 *
 	 * @since 0.2.0 ~2021.01.16
 	 */
-	protected String content;
+	protected transient String content;
 
 	/**
 	 * Construct a new document for the given {@code file}.
@@ -47,19 +51,52 @@ public class FileDocument implements Document {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public FileDocument(File file) {
-		Objects.requireNonNull(file, "file");
+		super(
+				FileDocument.qualifiedName(file),
+				FileDocument.name(file),
+				FileDocument.simpleName(file)
+		);
 		this.file = file;
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		return object instanceof Document &&
-			   Objects.equals(((Document) object).qualifiedName(), this.qualifiedName());
+	/**
+	 * Returns the name of the given {@code file}.
+	 *
+	 * @param file the file to get its name.
+	 * @return the name of the given {@code file}.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String name(File file) {
+		Objects.requireNonNull(file, "file");
+		return file.getName();
 	}
 
-	@Override
-	public int hashCode() {
-		return this.qualifiedName().hashCode();
+	/**
+	 * Returns the qualified name of the given {@code file}.
+	 *
+	 * @param file the file to get its qualified name.
+	 * @return the qualified name of the given {@code file}.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String qualifiedName(File file) {
+		Objects.requireNonNull(file, "file");
+		return file.toString();
+	}
+
+	/**
+	 * Returns the simple name of the given {@code file}.
+	 *
+	 * @param file the file to get its simple name.
+	 * @return the simple name of the given {@code file}.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String simpleName(File file) {
+		Objects.requireNonNull(file, "file");
+		//noinspection DynamicRegexReplaceableByCompiledPattern
+		return file.getName().replaceAll("[.][^.]*$", "");
 	}
 
 	@Override
@@ -69,27 +106,23 @@ public class FileDocument implements Document {
 	}
 
 	@Override
-	public String name() {
-		return this.file.getName();
-	}
-
-	@Override
 	public InputStream openInputStream() throws FileNotFoundException {
+		if (this.file == null)
+			throw new IllegalStateException("Deserialized Document");
 		return new FileInputStream(this.file);
 	}
 
 	@Override
 	public Reader openReader() throws FileNotFoundException {
+		if (this.file == null)
+			throw new IllegalStateException("Deserialized Document");
 		return new FileReader(this.file);
 	}
 
 	@Override
-	public String qualifiedName() {
-		return this.file.toString();
-	}
-
-	@Override
 	public CharSequence readContent() {
+		if (this.file == null)
+			throw new IllegalStateException("Deserialized Document");
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {
 				StringBuilder builder = new StringBuilder();
@@ -110,16 +143,5 @@ public class FileDocument implements Document {
 			}
 
 		return this.content;
-	}
-
-	@Override
-	public String simpleName() {
-		//noinspection DynamicRegexReplaceableByCompiledPattern
-		return this.file.getName().replaceAll("[.][^.]*$", "");
-	}
-
-	@Override
-	public String toString() {
-		return this.qualifiedName();
 	}
 }

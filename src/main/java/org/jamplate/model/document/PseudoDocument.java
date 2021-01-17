@@ -28,31 +28,17 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class PseudoDocument implements Document {
+public class PseudoDocument extends AbstractDocument {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 5906973056576376713L;
+
 	/**
 	 * The content of this document.
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	protected final CharSequence content;
-	/**
-	 * The name of this document.
-	 *
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	protected final String name;
-	/**
-	 * The qualified name of this document.
-	 *
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	protected final String qualifiedName;
-	/**
-	 * The simple name of this document.
-	 *
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	protected final String simpleName;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected final transient CharSequence content;
 
 	/**
 	 * Construct a new pseudo document that have the given {@code content}. The qualified
@@ -64,11 +50,12 @@ public class PseudoDocument implements Document {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content) {
-		Objects.requireNonNull(content, "content");
+		super(
+				PseudoDocument.qualifiedName(content),
+				PseudoDocument.name(content),
+				PseudoDocument.simpleName(content)
+		);
 		this.content = content;
-		this.qualifiedName = Integer.toHexString(System.identityHashCode(content));
-		this.name = "";
-		this.simpleName = "";
 	}
 
 	/**
@@ -82,12 +69,9 @@ public class PseudoDocument implements Document {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content, String name) {
+		super(name, name, name);
 		Objects.requireNonNull(content, "content");
-		Objects.requireNonNull(name, "name");
 		this.content = content;
-		this.qualifiedName = name;
-		this.name = name;
-		this.simpleName = name;
 	}
 
 	/**
@@ -103,64 +87,75 @@ public class PseudoDocument implements Document {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content, String qualifiedName, String name, String simpleName) {
+		super(qualifiedName, name, simpleName);
 		Objects.requireNonNull(content, "content");
-		Objects.requireNonNull(qualifiedName, "qualifiedName");
-		Objects.requireNonNull(name, "name");
-		Objects.requireNonNull(simpleName, "simpleName");
 		this.content = content;
-		this.qualifiedName = qualifiedName;
-		this.name = name;
-		this.simpleName = simpleName;
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		return object instanceof Document &&
-			   Objects.equals(((Document) object).qualifiedName(), this.qualifiedName);
+	/**
+	 * Returns the name of the given {@code content}.
+	 *
+	 * @param content the content to get its name.
+	 * @return the name of the given {@code content}.
+	 * @throws NullPointerException if the given {@code content} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String name(CharSequence content) {
+		Objects.requireNonNull(content, "content");
+		return "";
 	}
 
-	@Override
-	public int hashCode() {
-		return this.qualifiedName.hashCode();
+	/**
+	 * Returns the qualified name of the given {@code content}.
+	 *
+	 * @param content the content to get its qualified name.
+	 * @return the qualified name of the given {@code content}.
+	 * @throws NullPointerException if the given {@code content} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String qualifiedName(CharSequence content) {
+		Objects.requireNonNull(content, "content");
+		return Integer.toHexString(System.identityHashCode(content));
+	}
+
+	/**
+	 * Returns the simple name of the given {@code content} is null.
+	 *
+	 * @param content the content to get its simple name.
+	 * @return the simple name of the given {@code content}.
+	 * @throws NullPointerException if the given {@code content} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static String simpleName(CharSequence content) {
+		Objects.requireNonNull(content, "content");
+		return "";
 	}
 
 	@Override
 	public int length() {
+		if (this.content == null)
+			throw new IllegalStateException("Deserialized Document");
 		return this.content.length();
 	}
 
 	@Override
-	public String name() {
-		return this.name;
-	}
-
-	@Override
 	public InputStream openInputStream() {
+		if (this.content == null)
+			throw new IllegalStateException("Deserialized Document");
 		return new ByteArrayInputStream(this.content.toString().getBytes());
 	}
 
 	@Override
 	public Reader openReader() {
+		if (this.content == null)
+			throw new IllegalStateException("Deserialized Document");
 		return new StringReader(this.content.toString());
 	}
 
 	@Override
-	public String qualifiedName() {
-		return this.qualifiedName;
-	}
-
-	@Override
 	public CharSequence readContent() {
+		if (this.content == null)
+			throw new IllegalStateException("Deserialized Document");
 		return this.content;
-	}
-
-	@Override
-	public String simpleName() {
-		return this.simpleName;
-	}
-
-	@Override
-	public String toString() {
-		return this.qualifiedName;
 	}
 }

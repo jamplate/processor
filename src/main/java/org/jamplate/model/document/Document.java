@@ -15,20 +15,21 @@
  */
 package org.jamplate.model.document;
 
-import java.io.IOError;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.util.Comparator;
 
 /**
  * An interface that abstracts the functionality required to deal with source-code files.
+ * <br>
+ * If a document is a deserialized document then the methods {@link #length()}, {@link
+ * #openInputStream()}, {@link #openReader()} and {@link #readContent()} will throw an
+ * {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public interface Document {
+public interface Document extends Serializable {
 	/**
 	 * The default comparator that compares documents.
 	 *
@@ -75,6 +76,7 @@ public interface Document {
 	 * on the same instance.
 	 *
 	 * @return the length of this document.
+	 * @throws IllegalStateException if this document is deserialized.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	int length();
@@ -91,7 +93,8 @@ public interface Document {
 	 * Open a new input-stream that reads the content of this document.
 	 *
 	 * @return a new input-stream that reads the content of this document.
-	 * @throws IOException if any I/O exception occurs.
+	 * @throws IOException           if any I/O exception occurs.
+	 * @throws IllegalStateException if this document is deserialized.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	InputStream openInputStream() throws IOException;
@@ -100,7 +103,8 @@ public interface Document {
 	 * Open a new reader that reads the content of this document.
 	 *
 	 * @return a new reader that reads the content of this document.
-	 * @throws IOException if any I/O exception occurs. (optional)
+	 * @throws IOException           if any I/O exception occurs. (optional)
+	 * @throws IllegalStateException if this document is deserialized.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	Reader openReader() throws IOException;
@@ -119,7 +123,8 @@ public interface Document {
 	 * invoking this method multiple times must be easy to perform.
 	 *
 	 * @return the content of this document. (unmodifiable view)
-	 * @throws IOError if any I/O exception occurs. (optional)
+	 * @throws IOError               if any I/O exception occurs. (optional)
+	 * @throws IllegalStateException if this document is deserialized.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	CharSequence readContent();
