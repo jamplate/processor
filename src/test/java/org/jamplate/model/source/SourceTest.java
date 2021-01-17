@@ -79,7 +79,7 @@ public class SourceTest {
 
 	@Test
 	public void matcher() {
-		TestSketch sketch = new TestSketch(new SourceSlice(new PseudoDocument("(()()())")));
+		TestContextSketch sketch = new TestContextSketch(new SourceSlice(new PseudoDocument("(()()())")));
 
 		//These 2 loops shall be interchangeable, mergable and independent
 		//But, they are not. Why? Since we need to collect matching parentheses first then the wrapping ones
@@ -87,9 +87,10 @@ public class SourceTest {
 			Source source = s.find(Pattern.compile("[(][^()]*[)]"));
 
 			if (source != null) {
-				Sketch it = new TestSketch(source);
-				Sketch open = new TestSketch(source.slice(0, 1), true);
-				Sketch close = new TestSketch(source.slice(source.length() - 1, 1), true);
+				Sketch it = new TestContextSketch(source);
+				Sketch open = new TestConcreteSketch(source.slice(0, 1));
+				Sketch close = new TestConcreteSketch(source.slice(
+						source.length() - 1, 1));
 
 				it.put(open);
 				it.put(close);
@@ -105,9 +106,10 @@ public class SourceTest {
 			Source source = s.find(Pattern.compile("[(]"), Pattern.compile("[)]"));
 
 			if (source != null) {
-				Sketch it = new TestSketch(source);
-				Sketch open = new TestSketch(source.slice(0, 1), true);
-				Sketch close = new TestSketch(source.slice(source.length() - 1, 1), true);
+				Sketch it = new TestContextSketch(source);
+				Sketch open = new TestConcreteSketch(source.slice(0, 1));
+				Sketch close = new TestConcreteSketch(source.slice(
+						source.length() - 1, 1));
 
 				it.put(open);
 				it.put(close);
@@ -123,9 +125,9 @@ public class SourceTest {
 		//base sketch
 		assertCount(sketch, 13);
 		//context group
-		TestSketch px = (TestSketch) sketch.sketches.first();
-		TestSketch pxo = (TestSketch) px.sketches.first();
-		TestSketch pxc = (TestSketch) px.sketches.last();
+		TestContextSketch px = (TestContextSketch) sketch.sketches.first();
+		TestConcreteSketch pxo = (TestConcreteSketch) px.sketches.first();
+		TestConcreteSketch pxc = (TestConcreteSketch) px.sketches.last();
 		assertCount(px, 12);
 		assertCount(pxo, 1);
 		assertCount(pxc, 1);
@@ -133,9 +135,9 @@ public class SourceTest {
 		assertDimensions(pxo.source, 0, 1);
 		assertDimensions(pxc.source, 7, 1);
 		//first group
-		TestSketch p1 = (TestSketch) px.sketches.stream().skip(1).findFirst().get();
-		TestSketch p1o = (TestSketch) p1.sketches.first();
-		TestSketch p1c = (TestSketch) p1.sketches.last();
+		TestContextSketch p1 = (TestContextSketch) px.sketches.stream().skip(1).findFirst().get();
+		TestConcreteSketch p1o = (TestConcreteSketch) p1.sketches.first();
+		TestConcreteSketch p1c = (TestConcreteSketch) p1.sketches.last();
 		assertCount(p1, 3);
 		assertCount(p1o, 1);
 		assertCount(p1c, 1);
@@ -143,9 +145,9 @@ public class SourceTest {
 		assertDimensions(p1o.source, 1, 1);
 		assertDimensions(p1c.source, 2, 1);
 		//second group
-		TestSketch p2 = (TestSketch) px.sketches.stream().skip(2).findFirst().get();
-		TestSketch p2o = (TestSketch) p2.sketches.first();
-		TestSketch p2c = (TestSketch) p2.sketches.last();
+		TestContextSketch p2 = (TestContextSketch) px.sketches.stream().skip(2).findFirst().get();
+		TestConcreteSketch p2o = (TestConcreteSketch) p2.sketches.first();
+		TestConcreteSketch p2c = (TestConcreteSketch) p2.sketches.last();
 		assertCount(p2, 3);
 		assertCount(p2o, 1);
 		assertCount(p2c, 1);
@@ -153,9 +155,9 @@ public class SourceTest {
 		assertDimensions(p2o.source, 3, 1);
 		assertDimensions(p2c.source, 4, 1);
 		//third group
-		TestSketch p3 = (TestSketch) px.sketches.stream().skip(3).findFirst().get();
-		TestSketch p3o = (TestSketch) p3.sketches.first();
-		TestSketch p3c = (TestSketch) p3.sketches.last();
+		TestContextSketch p3 = (TestContextSketch) px.sketches.stream().skip(3).findFirst().get();
+		TestConcreteSketch p3o = (TestConcreteSketch) p3.sketches.first();
+		TestConcreteSketch p3c = (TestConcreteSketch) p3.sketches.last();
 		assertCount(p3, 3);
 		assertCount(p3o, 1);
 		assertCount(p3c, 1);
@@ -207,33 +209,15 @@ public class SourceTest {
 		assertRelation(c0, c0, Relation.SAME);
 	}
 
-	public static class TestSketch extends AbstractSketch {
-		private final boolean reserved;
-
-		public TestSketch(Source source) {
-			this(source, false);
-		}
-
-		public TestSketch(Source source, boolean reserved) {
+	public static class TestConcreteSketch extends AbstractConcreteSketch {
+		public TestConcreteSketch(Source source) {
 			super(source);
-			this.reserved = reserved;
 		}
+	}
 
-		@Override
-		public Source find(Pattern pattern) {
-			return this.reserved ? null : super.find(pattern);
-		}
-
-		@Override
-		public Source find(Pattern startPattern, Pattern endPattern) {
-			return this.reserved ? null : super.find(startPattern, endPattern);
-		}
-
-		@Override
-		public void put(Sketch sketch) {
-			if (this.reserved)
-				throw new UnsupportedOperationException();
-			super.put(sketch);
+	public static class TestContextSketch extends AbstractContextSketch {
+		public TestContextSketch(Source source) {
+			super(source);
 		}
 	}
 }

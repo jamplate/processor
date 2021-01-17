@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.07
  */
-public abstract class AbstractContextSketch implements Sketch {
+public abstract class AbstractContextSketch extends AbstractSketch {
 	/**
 	 * The inner sketches of this sketch.
 	 * <br>
@@ -41,12 +41,6 @@ public abstract class AbstractContextSketch implements Sketch {
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected final SortedSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
-	/**
-	 * The source of this sketch. The source this sketch is reserving.
-	 *
-	 * @since 0.2.0 ~2021.01.12
-	 */
-	protected final Source source;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
@@ -57,8 +51,7 @@ public abstract class AbstractContextSketch implements Sketch {
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected AbstractContextSketch(Source source) {
-		Objects.requireNonNull(source, "source");
-		this.source = source;
+		super(source);
 	}
 
 	@Override
@@ -68,11 +61,6 @@ public abstract class AbstractContextSketch implements Sketch {
 			   this.sketches.stream().anyMatch(
 					   sketch -> sketch.accept(visitor)
 			   );
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		return object == this;
 	}
 
 	@Override
@@ -140,11 +128,6 @@ public abstract class AbstractContextSketch implements Sketch {
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode() + this.getClass().hashCode();
-	}
-
-	@Override
 	public void put(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
@@ -182,15 +165,5 @@ public abstract class AbstractContextSketch implements Sketch {
 
 		//case Dominance.NONE with all other sketches
 		this.sketches.add(sketch);
-	}
-
-	@Override
-	public Source source() {
-		return this.source;
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + " (" + this.source + ")";
 	}
 }

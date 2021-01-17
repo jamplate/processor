@@ -15,17 +15,24 @@
  */
 package org.jamplate.model.source;
 
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 /**
- * An abstract of the interface {@link Sketch} that implements the basic functionality of
- * a concrete sketch. (a concrete sketch is a sketch that cannot have inner sketches)
+ * An abstract for the interface {@link Sketch} implementing the very basic functionality
+ * of a sketch.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public abstract class AbstractConcreteSketch extends AbstractSketch {
+public abstract class AbstractSketch implements Sketch {
+	/**
+	 * The source of this sketch. The source this sketch is reserving.
+	 *
+	 * @since 0.2.0 ~2021.01.12
+	 */
+	protected final Source source;
+
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
 	 * the constructed sketch will reserve.
@@ -34,27 +41,28 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractConcreteSketch(Source source) {
-		super(source);
+	protected AbstractSketch(Source source) {
+		Objects.requireNonNull(source, "source");
+		this.source = source;
 	}
 
 	@Override
-	public boolean accept(Visitor visitor) {
-		return visitor.visit(this);
+	public boolean equals(Object object) {
+		return object == this;
 	}
 
 	@Override
-	public Source find(Pattern pattern) {
-		return null;
+	public int hashCode() {
+		return super.hashCode() + this.getClass().hashCode();
 	}
 
 	@Override
-	public Source find(Pattern startPattern, Pattern endPattern) {
-		return null;
+	public Source source() {
+		return this.source;
 	}
 
 	@Override
-	public void put(Sketch sketch) {
-		throw new UnsupportedOperationException("Sketch.put");
+	public String toString() {
+		return this.getClass().getSimpleName() + " (" + this.source + ")";
 	}
 }
