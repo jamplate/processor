@@ -16,7 +16,10 @@
 package org.jamplate.model.source;
 
 import org.jamplate.model.document.Document;
+import org.jamplate.model.document.FileDocument;
 import org.jamplate.model.document.PseudoDocument;
+
+import java.io.File;
 
 /**
  * An implementation of the interface {@link Source} that takes a whole {@link Document}.
@@ -36,6 +39,18 @@ public class DocumentSource extends AbstractSource {
 	 */
 	public DocumentSource(CharSequence content) {
 		super(new PseudoDocument(content));
+	}
+
+	/**
+	 * Create a new document source with a {@link FileDocument} that have the given {@code
+	 * file}.
+	 *
+	 * @param file the file of the file document of the constructed source.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public DocumentSource(File file) {
+		super(new FileDocument(file));
 	}
 
 	/**

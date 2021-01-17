@@ -16,8 +16,11 @@
 package org.jamplate.model.sketch;
 
 import org.jamplate.model.document.Document;
+import org.jamplate.model.document.FileDocument;
 import org.jamplate.model.document.PseudoDocument;
 import org.jamplate.model.source.DocumentSource;
+
+import java.io.File;
 
 /**
  * An unqualified (not specialized with a specific class) sketch for a whole document.
@@ -37,6 +40,18 @@ public class DocumentSketch extends AbstractContextSketch {
 	 */
 	public DocumentSketch(CharSequence content) {
 		super(new DocumentSource(content));
+	}
+
+	/**
+	 * Construct a new document sketch with a {@link FileDocument} that have the given
+	 * {@code file}.
+	 *
+	 * @param file the file of the file document of the constructed sketch.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public DocumentSketch(File file) {
+		super(new DocumentSource(file));
 	}
 
 	/**
