@@ -16,6 +16,7 @@
 package org.jamplate.model.source;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -163,6 +164,21 @@ public interface Sketch {
 	 */
 	@FunctionalInterface
 	interface Visitor {
+		/**
+		 * Return a new visitor that invokes this visitor then invokes the given {@code
+		 * visitor}. (if this visitor did not wish to stop)
+		 *
+		 * @param visitor the visitor to be invoked after this visitor by the returned
+		 *                visitor.
+		 * @return a visitor that invokes this visitor then the given visitor.
+		 * @throws NullPointerException if the given {@code visitor} is null.
+		 * @since 0.2.0 ~2021.01.17
+		 */
+		default Visitor andThen(Visitor visitor) {
+			Objects.requireNonNull(visitor, "visitor");
+			return sketch -> this.visit(sketch) || visitor.visit(sketch);
+		}
+
 		/**
 		 * Invoked for every sketch met down in the tree.
 		 *
