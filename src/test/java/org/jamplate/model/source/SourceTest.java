@@ -15,6 +15,7 @@
  */
 package org.jamplate.model.source;
 
+import org.jamplate.model.source.Source.Relation;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -53,7 +54,7 @@ public class SourceTest {
 		);
 	}
 
-	static void assertRelation(Source source, Source other, Source.Relation relation) {
+	static void assertRelation(Source source, Source other, Relation relation) {
 		assertSame(
 				"Relation of " + other + " to " + source,
 				relation,
@@ -178,32 +179,32 @@ public class SourceTest {
 		assertEquals("Wrong Slice", "BC", bc.content());
 		assertEquals("Wrong Slice", "C0", c0.content());
 
-		assertRelation(source, source, Source.Relation.SAME);
-		assertRelation(source, letters, Source.Relation.START);
-		assertRelation(source, numbers, Source.Relation.END);
-		assertRelation(source, b, Source.Relation.FRAGMENT);
-		assertRelation(source, bc, Source.Relation.FRAGMENT);
-		assertRelation(source, c0, Source.Relation.FRAGMENT);
+		assertRelation(source, source, Relation.SAME);
+		assertRelation(source, letters, Relation.START);
+		assertRelation(source, numbers, Relation.END);
+		assertRelation(source, b, Relation.FRAGMENT);
+		assertRelation(source, bc, Relation.FRAGMENT);
+		assertRelation(source, c0, Relation.FRAGMENT);
 
-		assertRelation(letters, letters, Source.Relation.SAME);
-		assertRelation(letters, numbers, Source.Relation.NEXT);
-		assertRelation(letters, b, Source.Relation.FRAGMENT);
-		assertRelation(letters, bc, Source.Relation.END);
-		assertRelation(letters, c0, Source.Relation.OVERFLOW);
+		assertRelation(letters, letters, Relation.SAME);
+		assertRelation(letters, numbers, Relation.NEXT);
+		assertRelation(letters, b, Relation.FRAGMENT);
+		assertRelation(letters, bc, Relation.END);
+		assertRelation(letters, c0, Relation.OVERFLOW);
 
-		assertRelation(numbers, numbers, Source.Relation.SAME);
-		assertRelation(numbers, b, Source.Relation.BEFORE);
-		assertRelation(numbers, bc, Source.Relation.PREVIOUS);
-		assertRelation(numbers, c0, Source.Relation.UNDERFLOW);
+		assertRelation(numbers, numbers, Relation.SAME);
+		assertRelation(numbers, b, Relation.BEFORE);
+		assertRelation(numbers, bc, Relation.PREVIOUS);
+		assertRelation(numbers, c0, Relation.UNDERFLOW);
 
-		assertRelation(b, b, Source.Relation.SAME);
-		assertRelation(b, bc, Source.Relation.AHEAD);
-		assertRelation(b, c0, Source.Relation.NEXT);
+		assertRelation(b, b, Relation.SAME);
+		assertRelation(b, bc, Relation.AHEAD);
+		assertRelation(b, c0, Relation.NEXT);
 
-		assertRelation(bc, bc, Source.Relation.SAME);
-		assertRelation(bc, c0, Source.Relation.OVERFLOW);
+		assertRelation(bc, bc, Relation.SAME);
+		assertRelation(bc, c0, Relation.OVERFLOW);
 
-		assertRelation(c0, c0, Source.Relation.SAME);
+		assertRelation(c0, c0, Relation.SAME);
 	}
 
 	public static class TestSketch extends AbstractSketch {
