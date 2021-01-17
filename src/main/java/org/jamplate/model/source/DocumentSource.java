@@ -16,6 +16,7 @@
 package org.jamplate.model.source;
 
 import org.jamplate.model.document.Document;
+import org.jamplate.model.document.PseudoDocument;
 
 /**
  * An implementation of the interface {@link Source} that takes a whole {@link Document}.
@@ -25,6 +26,18 @@ import org.jamplate.model.document.Document;
  * @since 0.2.0 ~2021.01.17
  */
 public class DocumentSource extends AbstractSource {
+	/**
+	 * Construct a new document source with a {@link PseudoDocument} that have the given
+	 * {@code content}.
+	 *
+	 * @param content the content of the pseudo document of the constructed source.
+	 * @throws NullPointerException if the given {@code content} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public DocumentSource(CharSequence content) {
+		super(new PseudoDocument(content));
+	}
+
 	/**
 	 * Construct a new source standard implementation instance for the given {@code
 	 * document}.

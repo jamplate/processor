@@ -16,6 +16,7 @@
 package org.jamplate.model.sketch;
 
 import org.jamplate.model.document.Document;
+import org.jamplate.model.document.PseudoDocument;
 import org.jamplate.model.source.DocumentSource;
 
 /**
@@ -26,6 +27,18 @@ import org.jamplate.model.source.DocumentSource;
  * @since 0.2.0 ~2021.01.17
  */
 public class DocumentSketch extends AbstractContextSketch {
+	/**
+	 * Construct a new document sketch with a {@link PseudoDocument} that have the given
+	 * {@code content}.
+	 *
+	 * @param content the content of the pseudo document of the constructed sketch.
+	 * @throws NullPointerException if the given {@code content} is null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public DocumentSketch(CharSequence content) {
+		super(new DocumentSource(content));
+	}
+
 	/**
 	 * Construct a new sketch for the given {@code document}.
 	 *
