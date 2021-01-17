@@ -66,7 +66,7 @@ public class PseudoDocument implements Document {
 	public PseudoDocument(CharSequence content) {
 		Objects.requireNonNull(content, "content");
 		this.content = content;
-		this.qualifiedName = String.valueOf(System.identityHashCode(content));
+		this.qualifiedName = Integer.toHexString(System.identityHashCode(content));
 		this.name = "";
 		this.simpleName = "";
 	}
