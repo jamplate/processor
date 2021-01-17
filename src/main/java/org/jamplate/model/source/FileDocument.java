@@ -89,7 +89,7 @@ public class FileDocument implements Document {
 	}
 
 	@Override
-	public String readContent() {
+	public CharSequence readContent() {
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {
 				StringBuilder builder = new StringBuilder();

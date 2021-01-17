@@ -34,7 +34,7 @@ public class PseudoDocument implements Document {
 	 *
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	protected final String content;
+	protected final CharSequence content;
 	/**
 	 * The name of this document.
 	 *
@@ -63,7 +63,7 @@ public class PseudoDocument implements Document {
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	public PseudoDocument(String content) {
+	public PseudoDocument(CharSequence content) {
 		Objects.requireNonNull(content, "content");
 		this.content = content;
 		this.qualifiedName = String.valueOf(System.identityHashCode(content));
@@ -81,7 +81,7 @@ public class PseudoDocument implements Document {
 	 * @throws NullPointerException if the given {@code content} or {@code name} is null.
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	public PseudoDocument(String content, String name) {
+	public PseudoDocument(CharSequence content, String name) {
 		Objects.requireNonNull(content, "content");
 		Objects.requireNonNull(name, "name");
 		this.content = content;
@@ -102,7 +102,7 @@ public class PseudoDocument implements Document {
 	 *                              or {@code name} or {@code simpleName} is null.
 	 * @since 0.0.2 ~2021.01.13
 	 */
-	public PseudoDocument(String content, String qualifiedName, String name, String simpleName) {
+	public PseudoDocument(CharSequence content, String qualifiedName, String name, String simpleName) {
 		Objects.requireNonNull(content, "content");
 		Objects.requireNonNull(qualifiedName, "qualifiedName");
 		Objects.requireNonNull(name, "name");
@@ -136,12 +136,12 @@ public class PseudoDocument implements Document {
 
 	@Override
 	public InputStream openInputStream() {
-		return new ByteArrayInputStream(this.content.getBytes());
+		return new ByteArrayInputStream(this.content.toString().getBytes());
 	}
 
 	@Override
 	public Reader openReader() {
-		return new StringReader(this.content);
+		return new StringReader(this.content.toString());
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class PseudoDocument implements Document {
 	}
 
 	@Override
-	public String readContent() {
+	public CharSequence readContent() {
 		return this.content;
 	}
 
