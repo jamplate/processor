@@ -30,7 +30,7 @@
  * <br>
  * Document reading is as follows:
  * <ul>
- *     <li>First, the source is converted into a {@link org.jamplate.model.source.Document}</li>
+ *     <li>First, the source-code is converted into a {@link org.jamplate.model.source.Document}</li>
  *     <li>Second, the document is converted into a {@link org.jamplate.model.source.Source}</li>
  *     <li>Third, the source is converted into a {@link org.jamplate.model.source.Sketch}</li>
  *     <li>Forth, the sketch is solved via a {@link org.jamplate.model.source.Sketch.Visitor}</li>
