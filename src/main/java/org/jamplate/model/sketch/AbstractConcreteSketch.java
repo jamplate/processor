@@ -13,7 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.source;
+package org.jamplate.model.sketch;
+
+import org.jamplate.model.source.Source;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
