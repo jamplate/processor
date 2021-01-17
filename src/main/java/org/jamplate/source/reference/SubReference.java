@@ -18,7 +18,8 @@ package org.jamplate.source.reference;
 import org.jamplate.source.document.Document;
 
 /**
- * An implementation of the interface {@link Reference} that is a slice of another source.
+ * An implementation of the interface {@link Reference} that is a slice of another
+ * source.
  *
  * @author LSafer
  * @version 0.2.0

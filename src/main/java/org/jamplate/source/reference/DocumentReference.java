@@ -23,7 +23,8 @@ import java.io.File;
 import java.io.IOError;
 
 /**
- * An implementation of the interface {@link Reference} that takes a whole {@link Document}.
+ * An implementation of the interface {@link Reference} that takes a whole {@link
+ * Document}.
  *
  * @author LSafer
  * @version 0.2.0

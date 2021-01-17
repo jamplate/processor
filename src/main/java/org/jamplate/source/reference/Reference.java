@@ -56,8 +56,8 @@ public interface Reference extends Serializable {
 	 * source}.
 	 *
 	 * @param reference the source (first area).
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
 	 * @return how much dominant the second area over the given {@code source}.
 	 * @throws NullPointerException     if the given {@code source} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
@@ -76,7 +76,7 @@ public interface Reference extends Serializable {
 	 * source}.
 	 *
 	 * @param reference the first source.
-	 * @param other  the second source.
+	 * @param other     the second source.
 	 * @return how much dominant the second source over the first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
@@ -104,8 +104,8 @@ public interface Reference extends Serializable {
 	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
 	 *
 	 * @param reference the source (first area).
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
 	 * @return the relation constant describing the relation of the second area to the
 	 * 		source.
 	 * @throws NullPointerException     if the given {@code source} is null.
@@ -132,7 +132,7 @@ public interface Reference extends Serializable {
 	 * the retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
 	 *
 	 * @param reference the first source.
-	 * @param other  the second source.
+	 * @param other     the second source.
 	 * @return the relation constant describing the relation of the second source to the
 	 * 		first source.
 	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
