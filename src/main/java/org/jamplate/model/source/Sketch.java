@@ -102,30 +102,6 @@ public interface Sketch {
 		Matcher startMatcher = source.matcher(startPattern);
 		Matcher endMatcher = source.matcher(endPattern);
 
-		//search for `startPattern`
-		//		while (startMatcher.find()) {
-		//			int i = startMatcher.start();
-		//			int j = startMatcher.end();
-		//
-		//			//validate found start
-		//			if (sketch.check(i, j))
-		//				//search for `endPattern`
-		//				while (endMatcher.find()) {
-		//					int s = endMatcher.start();
-		//					int e = endMatcher.end();
-		//
-		//					if (s < i)
-		//						continue;
-		//
-		//					//validate found end
-		//					if (sketch.check(s, e))
-		//						return source.slice(
-		//								i,
-		//								e - i
-		//						);
-		//				}
-		//		}
-
 		//search for a valid start
 		while (startMatcher.find()) {
 			int i = startMatcher.start();

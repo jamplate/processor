@@ -81,27 +81,6 @@ public class SourceTest {
 	public void matcher() {
 		TestContextSketch sketch = new TestContextSketch(new SourceSlice(new PseudoDocument("(()()())")));
 
-		//These 2 loops shall be interchangeable, mergable and independent
-		//But, they are not. Why? Since we need to collect matching parentheses first then the wrapping ones
-//		while (sketch.accept(s -> {
-//			Source source = Sketch.find(s, Pattern.compile("[(][^()]*[)]"));
-//
-//			if (source != null) {
-//				Sketch it = new TestContextSketch(source);
-//				Sketch open = new TestConcreteSketch(source.slice(0, 1));
-//				Sketch close = new TestConcreteSketch(source.slice(
-//						source.length() - 1, 1));
-//
-//				it.put(open);
-//				it.put(close);
-//				s.put(it);
-//
-//				return true;
-//			}
-//
-//			return false;
-//		}))
-//			;
 		while (sketch.accept(s -> {
 			Source source = Sketch.find(s, Pattern.compile("[(]"), Pattern.compile("[)]"));
 
