@@ -28,17 +28,17 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractSource implements Source {
 	/**
-	 * The content of this source.
-	 *
-	 * @since 0.0.2 ~2021.01.8
-	 */
-	protected final CharSequence content;
-	/**
 	 * The file of this source.
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
 	protected final Document document;
+	/**
+	 * The length of this source. {@code -1} when targeting the whole document)
+	 *
+	 * @since 0.0.2 ~2021.01.17
+	 */
+	protected final int length;
 	/**
 	 * The parent source of this source. (might be null)
 	 *
@@ -52,78 +52,75 @@ public abstract class AbstractSource implements Source {
 	 */
 	protected final int position;
 	/**
-	 * The root source of this source. (might be this)
+	 * The content of this source. (lazily initialized)
 	 *
 	 * @since 0.0.2 ~2021.01.8
 	 */
-	protected final Source root;
+	protected CharSequence content;
 
 	/**
-	 * Construct a new source that takes the given {@code document} as its actual source.
-	 * <br>
-	 * This constructor just trusts the caller that the given {@code content} is taken
-	 * from the given {@code document} starting from the given {@code position}.
+	 * Construct a new source that takes the whole given {@code document} as its actual
+	 * source.
 	 *
 	 * @param document the document of the constructed source.
-	 * @param content  the content from the given {@code document}.
-	 * @param position the position the given {@code content} started from the given
-	 *                 {@code document}.
 	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.0.2 ~2021.01.8
+	 * @since 0.0.2 ~2021.01.17
 	 */
-	protected AbstractSource(Document document, CharSequence content, int position) {
+	protected AbstractSource(Document document) {
 		Objects.requireNonNull(document, "document");
-		Objects.requireNonNull(content, "content");
-		this.root = this;
-		this.parent = null;
 		this.document = document;
-		this.content = content;
-		this.position = position;
+		this.parent = null;
+		this.position = 0;
+		this.length = -1;
 	}
 
 	/**
 	 * Construct a new sub-source from the given {@code parent} source. The constructed
-	 * source will have the same {@link #root()} and {@link #document()} as the given
-	 * {@code parent} source. But, it will have its {@link #content()} equals to the
-	 * {@link String#substring(int, int)} of the {@link #content()} of the given {@code
-	 * parent} source. Also, the constructed source will have its {@link #position()}
-	 * equals to the sum of the given {@code pos} and the {@link #position()} of the given
-	 * {@code parent} source. Finally, its obvious that the constructed source will have
-	 * the given {@code parent} source as its {@link #parent()}.
+	 * source will have the same {@link #document()} as the given {@code parent} source.
+	 * It will have its {@link #content()} lazily initialized and equals to the {@link
+	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
+	 * of the given {@code parent} source. Also, the constructed source will have its
+	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
+	 * #position()} of the given {@code parent} source. Finally, its obvious that the
+	 * constructed source will have the given {@code parent} source as its {@link
+	 * #parent()}.
 	 * <br>
 	 * Note: this constructor was built on trust. It trusts the implementation of the
 	 * given {@code parent} source.
-	 * <br>
-	 * Also Note: it is possible that the given {@code parent} returns an object that does
-	 * not fit into the {@code D} type parameter when invoking its {@link
-	 * Source#document()} method.
 	 *
-	 * @param parent the parent source.
-	 * @param pos    the sub-position to get from the given {@code parent} source.
-	 * @param len    the length to get from the given {@code parent} source.
+	 * @param parent   the parent source.
+	 * @param position the sub-position to get from the given {@code parent} source.
+	 * @param length   the length to get from the given {@code parent} source.
 	 * @throws NullPointerException      if the given {@code parent} is null.
-	 * @throws IllegalArgumentException  if the given {@code pos} or {@code len} is
-	 *                                   negative.
-	 * @throws IndexOutOfBoundsException if {@code parent.content().substring(pos, len)}
-	 *                                   throws it.
-	 * @since 0.0.2 ~2021.01.8
+	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
+	 *                                   is negative.
+	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
+	 *                                   length of the given {@code parent}.
+	 * @since 0.0.2 ~2021.01.17
 	 */
-	protected AbstractSource(Source parent, int pos, int len) {
+	protected AbstractSource(Source parent, int position, int length) {
 		Objects.requireNonNull(parent, "parent");
-		if (pos < 0)
+		if (position < 0)
 			throw new IllegalArgumentException("negative position");
-		if (len < 0)
+		if (length < 0)
 			throw new IllegalArgumentException("negative length");
-		this.root = parent.root();
-		this.parent = parent;
+		if (position + length > parent.length())
+			throw new IndexOutOfBoundsException("position + length > parent.length()");
 		this.document = parent.document();
-		this.content = parent.content()
-				.subSequence(pos, pos + len);
-		this.position = parent.position() + pos;
+		this.parent = parent;
+		this.position = parent.position() + position;
+		this.length = length;
 	}
 
 	@Override
 	public CharSequence content() {
+		if (this.content == null)
+			this.content = this.document.readContent()
+					.subSequence(
+							this.position,
+							this.position + this.length()
+					);
+
 		return this.content;
 	}
 
@@ -134,30 +131,28 @@ public abstract class AbstractSource implements Source {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Source) {
-			Source source = (Source) other;
-			return Objects.equals(this.document, source.document()) &&
-				   this.position == ((Source) other).position() &&
-				   this.content.length() == ((Source) other).length();
-		}
-
-		return false;
+		return other instanceof Source &&
+			   Objects.equals(this.document, ((Source) other).document()) &&
+			   this.position == ((Source) other).position() &&
+			   this.length() == ((Source) other).length();
 	}
 
 	@Override
 	public int hashCode() {
-		return this.document.hashCode() * this.content.length() + this.position;
+		return this.document.hashCode() * this.length() + this.position;
 	}
 
 	@Override
 	public int length() {
-		return this.content.length();
+		return this.length == -1 ?
+			   this.document.length() :
+			   this.length;
 	}
 
 	@Override
 	public Matcher matcher(Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		Matcher matcher = pattern.matcher(this.root.content());
+		Matcher matcher = pattern.matcher(this.document.readContent());
 		matcher.region(this.position, this.position + this.length());
 		matcher.useTransparentBounds(true);
 		matcher.useAnchoringBounds(true);
@@ -175,75 +170,7 @@ public abstract class AbstractSource implements Source {
 	}
 
 	@Override
-	public Source root() {
-		return this.root;
-	}
-
-	@Override
 	public String toString() {
 		return this.document + "[" + this.position + ", " + this.content.length() + "]";
 	}
 }
-//	@Override
-//	public List<Source<D>> find(String regex) {
-//		Objects.requireNonNull(regex, "regex");
-//		return this.find(Pattern.compile(regex));
-//	}
-//
-//	@Override
-//	public List<Source<D>> find(Pattern pattern) {
-//		Objects.requireNonNull(pattern, "pattern");
-//		List<Source<D>> sources = new ArrayList<>();
-//
-//		Matcher matcher = pattern.matcher(this.content);
-//		while (matcher.find()) {
-//			int start = matcher.start();
-//			int end = matcher.end();
-//
-//			sources.add(this.slice(
-//					start,
-//					end - start
-//			));
-//		}
-//
-//		return sources;
-//	}
-//
-//	@Override
-//	public List<Source<D>> find(String startRegex, String endRegex) {
-//		Objects.requireNonNull(startRegex, "startRegex");
-//		Objects.requireNonNull(endRegex, "endRegex");
-//		return this.find(Pattern.compile(startRegex), Pattern.compile(endRegex));
-//	}
-//
-//	@Override
-//	public List<Source<D>> find(Pattern startPattern, Pattern endPattern) {
-//		Objects.requireNonNull(startPattern, "startPattern");
-//		Objects.requireNonNull(endPattern, "endPattern");
-//		List<Source<D>> sources = new ArrayList<>();
-//
-//		Matcher startMatcher = startPattern.matcher(this.content);
-//		Matcher endMatcher = endPattern.matcher(this.content);
-//		while (startMatcher.find()) {
-//			int start = startMatcher.start();
-//			int s = startMatcher.end();
-//
-//			if (endMatcher.find(s)) {
-//				int e = endMatcher.start();
-//				int end = endMatcher.end();
-//
-//				sources.add(this.slice(
-//						start,
-//						end - start
-//				));
-//			}
-//		}
-//
-//		return sources;
-//	}
-
-//	@Override
-//	public Matcher matcher(String regex) {
-//		Objects.requireNonNull(regex, "regex");
-//		return this.matcher(Pattern.compile(regex));
-//	}
