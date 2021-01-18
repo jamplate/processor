@@ -140,7 +140,7 @@ public abstract class AbstractReference implements Reference {
 			this.content = this.document.readContent()
 					.subSequence(
 							this.position,
-							this.position + this.length()
+							this.position + this.length
 					);
 
 		return this.content;
@@ -175,7 +175,7 @@ public abstract class AbstractReference implements Reference {
 			throw new IllegalStateException("Deserialized Source");
 		Objects.requireNonNull(pattern, "pattern");
 		Matcher matcher = pattern.matcher(this.document.readContent());
-		matcher.region(this.position, this.position + this.length());
+		matcher.region(this.position, this.position + this.length);
 		matcher.useTransparentBounds(true);
 		matcher.useAnchoringBounds(true);
 		return matcher;

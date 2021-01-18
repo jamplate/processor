@@ -69,7 +69,7 @@ public class SubReference extends AbstractReference {
 		return new SubReference(
 				this,
 				position,
-				this.length() - position
+				this.length - position
 		);
 	}
 
