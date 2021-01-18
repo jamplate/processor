@@ -73,12 +73,13 @@ public interface Sketch extends Serializable {
 			int j = matcher.end();
 
 			//validate match
-			if (sketch.check(i, j))
+			if (sketch.check(i, j)) {
+				int position = i - reference.position();
+				int length = j - i;
+
 				//bingo!
-				return reference.subReference(
-						i,
-						j - i
-				);
+				return reference.subReference(position, length);
+			}
 		}
 
 		//no valid matches
@@ -111,43 +112,38 @@ public interface Sketch extends Serializable {
 		Matcher startMatcher = reference.matcher(startPattern);
 		Matcher endMatcher = reference.matcher(endPattern);
 
-		//search for a valid start
-		while (startMatcher.find()) {
-			int i = startMatcher.start();
-			int j = startMatcher.end();
+		//find the first valid end
+		while (endMatcher.find()) {
+			int s = endMatcher.start();
+			int e = endMatcher.end();
 
-			//validate start
-			if (sketch.check(i, j))
-				//search for a valid end
-				while (endMatcher.find()) {
-					int s = endMatcher.start();
-					int e = endMatcher.end();
+			//validate end
+			if (sketch.check(s, e)) {
+				int i = -1;
 
-					//validate end
-					if (sketch.check(s, e)) {
-						int start = i;
-						int end = e;
+				//find the nearest valid start before the end
+				while (startMatcher.find()) {
+					int ii = startMatcher.start();
+					int jj = startMatcher.end();
 
-						//search for a shorter start
-						while (startMatcher.find()) {
-							int ii = startMatcher.start();
-							int jj = startMatcher.end();
+					if (ii > s)
+						//early break
+						break;
 
-							//break?
-							if (ii > s)
-								break;
-							//validate shorter start
-							if (sketch.check(ii, jj))
-								start = ii;
-						}
-
-						//bingo!
-						return reference.subReference(
-								start,
-								end - start
-						);
-					}
+					//validate start
+					if (sketch.check(ii, jj))
+						i = ii;
 				}
+
+				//validate results
+				if (i >= 0) {
+					int position = i - reference.position();
+					int length = e - i;
+
+					//bingo!
+					return reference.subReference(position, length);
+				}
+			}
 		}
 
 		//no valid matches

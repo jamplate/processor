@@ -218,6 +218,9 @@ public interface Reference extends Serializable {
 	 * this source (using {@link Matcher#region(int, int)}). The returned matcher also has
 	 * {@link Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
 	 * both enabled.
+	 * <br>
+	 * Important Note: the returned matcher will return {@link Matcher#start()} and {@link
+	 * Matcher#end()} as indexes at the original document.
 	 *
 	 * @param pattern the pattern to match.
 	 * @return a matcher over the content of this source.
