@@ -50,7 +50,7 @@ public final class CurlyBracketSketch extends AbstractConcreteSketch {
 	public static final SketcherVisitor VISITOR = new SketcherVisitor();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 221622774376086228L;
+	private static final long serialVersionUID = 3996900909023911874L;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source

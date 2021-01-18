@@ -54,7 +54,7 @@ public final class ParenthesesSketch extends AbstractContextSketch {
 	public static final Pattern PATTERN_START = Pattern.compile("[(]");
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -7623010704158441542L;
+	private static final long serialVersionUID = 1731395059192255934L;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source

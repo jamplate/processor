@@ -54,7 +54,7 @@ public final class SquareBracketsSketch extends AbstractContextSketch {
 	public static final SketcherVisitor VISITOR = new SketcherVisitor();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 5670528453137010594L;
+	private static final long serialVersionUID = 3428179238573892953L;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source

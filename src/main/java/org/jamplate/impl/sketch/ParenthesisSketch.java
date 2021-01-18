@@ -50,7 +50,7 @@ public final class ParenthesisSketch extends AbstractConcreteSketch {
 	public static final SketcherVisitor VISITOR = new SketcherVisitor();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -4906923428406502483L;
+	private static final long serialVersionUID = 5687797376406575149L;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source

@@ -54,7 +54,7 @@ public final class CurlyBracketsSketch extends AbstractContextSketch {
 	public static final SketcherVisitor VISITOR = new SketcherVisitor();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 5670528453137010594L;
+	private static final long serialVersionUID = 1738781066145922168L;
 
 	/**
 	 * Construct a new sketch for the given {@code source}. The given source is the source
