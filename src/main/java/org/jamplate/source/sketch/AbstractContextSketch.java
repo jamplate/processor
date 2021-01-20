@@ -57,13 +57,60 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		super(reference);
 	}
 
+	@SuppressWarnings("OverlyComplexMethod")
 	@Override
 	public boolean accept(Visitor visitor) {
 		Objects.requireNonNull(visitor, "visitor");
-		return visitor.visit(this) ||
-			   this.sketches.stream().anyMatch(
-					   sketch -> sketch.accept(visitor)
-			   );
+
+		//visit this
+		if (visitor.visit(this))
+			return true;
+
+		Iterator<Sketch> iterator = this.sketches.iterator();
+
+		int i = this.reference.position();
+		int m = this.reference.length();
+		int j = i + m;
+
+		//if this sketch has any inner sketches
+		if (iterator.hasNext()) {
+			Sketch first = iterator.next();
+
+			int s0 = first.reference().position();
+			int ep = s0 + first.reference().length();
+
+			//visit `[i, s0)` (if not empty)
+			if (i != s0 && visitor.visit(this, i, s0 - i))
+				return true;
+
+			//visit the first sketch
+			if (first.accept(visitor))
+				return true;
+
+			//iterate over next sketches (might be none)
+			while (iterator.hasNext()) {
+				Sketch next = iterator.next();
+
+				int sn = next.reference().position();
+				int en = sn + next.reference().length();
+
+				//visit `[ep, sn)` (if not empty)
+				if (ep < sn && visitor.visit(this, ep, sn - ep))
+					return true;
+
+				//visit the next sketch
+				if (next.accept(visitor))
+					return true;
+
+				ep = en;
+			}
+
+			//visit `[ep, j)` (if not empty)
+			return ep != j && visitor.visit(this, ep, j - ep);
+		}
+
+		//visit `[i, j)` (if not empty)
+		return m != 0 && visitor.visit(this, i, m);
 	}
 
 	@Override

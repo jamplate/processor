@@ -189,6 +189,21 @@ public interface Sketch extends Serializable {
 	 * from the containers to the parts.
 	 * <br>
 	 * Exceptions thrown by the given {@code visitor} will not be caught.
+	 * <br>
+	 * <br>
+	 * Elements to be visited are:
+	 * <ul>
+	 *     <li>
+	 *         Any sketch met.
+	 *         <br>
+	 *         Visited via {@link Visitor#visit(Sketch)}
+	 *     </li>
+	 *     <li>
+	 *         Any non-reserved areas (areas that has no sketch reserving it) met.
+	 *         <br>
+	 *         Visited via {@link Visitor#visit(Sketch, int, int)}
+	 *     </li>
+	 * </ul>
 	 *
 	 * @param visitor the visitor to be invoked for each element.
 	 * @return true, if the given {@code visitor} stopped the loop.
@@ -274,6 +289,27 @@ public interface Sketch extends Serializable {
 		default Visitor andThen(Visitor visitor) {
 			Objects.requireNonNull(visitor, "visitor");
 			return sketch -> this.visit(sketch) || visitor.visit(sketch);
+		}
+
+		/**
+		 * Visits areas in a non-reserving parent that has not been reserved by any parent
+		 * in it.
+		 *
+		 * @param parent   the non-reserving parent the area was in it.
+		 * @param position the position of the area. (relative to the whole document)
+		 * @param length   the length of the area.
+		 * @return true, if this visitor wishes to stop the loop.
+		 * @throws NullPointerException      if the given {@code parent} is null.
+		 * @throws IllegalArgumentException  if the given {@code position} or {@code
+		 *                                   length} is null. (optional)
+		 * @throws IndexOutOfBoundsException if {@code position + length} is larger than
+		 *                                   the size of the original document of the
+		 *                                   given {@code sketch}. (optional)
+		 * @since 0.2.0 ~2021.01.19
+		 */
+		default boolean visit(Sketch parent, int position, int length) {
+			Objects.requireNonNull(parent, "parent");
+			return false;
 		}
 
 		/**
