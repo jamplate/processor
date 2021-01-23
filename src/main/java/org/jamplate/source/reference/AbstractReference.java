@@ -19,8 +19,6 @@ import org.jamplate.source.document.Document;
 
 import java.io.IOError;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An implementation for the basic functionality of a source.
@@ -167,18 +165,6 @@ public abstract class AbstractReference implements Reference {
 	@Override
 	public int length() {
 		return this.length;
-	}
-
-	@Override
-	public Matcher matcher(Pattern pattern) {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
-		Objects.requireNonNull(pattern, "pattern");
-		Matcher matcher = pattern.matcher(this.document.readContent());
-		matcher.region(this.position, this.position + this.length);
-		matcher.useTransparentBounds(true);
-		matcher.useAnchoringBounds(true);
-		return matcher;
 	}
 
 	@Override

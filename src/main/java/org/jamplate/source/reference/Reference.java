@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
  * #length()}. It is encouraged to serialize additional data.
  * <br>
  * If a source is a deserialized source then the methods {@link #content()}, {@link
- * #matcher(Pattern)}, {@link #parent()}, {@link #subReference(int)} and {@link
- * #subReference(int, int)} will throw an {@link IllegalStateException}.
+ * #parent()}, {@link #subReference(int)} and {@link #subReference(int, int)} will throw
+ * an {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
@@ -93,31 +93,33 @@ public interface Reference extends Serializable {
 	}
 
 	/**
-	 * Calculate what is the relation between the given {@code source} and the given area
-	 * {@code [s, e)}.
+	 * Construct a ready-to-use matcher from the given {@code reference}. The returned
+	 * matcher has the whole content of the document of the given {@code reference}. But,
+	 * it is limited to the region of the given {@code reference} (using {@link
+	 * Matcher#region(int, int)}). The returned matcher also has {@link
+	 * Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
+	 * both enabled.
 	 * <br>
-	 * The given {@code source} is the source to compare the second area with. The
-	 * returned relation will be the relation describing the feelings of the source about
-	 * the second area.
-	 * <br>
-	 * For example: if the second area is contained in the middle of the source, then the
-	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
+	 * Important Note: the returned matcher will return {@link Matcher#start()} and {@link
+	 * Matcher#end()} as indexes at the original document.
 	 *
-	 * @param reference the source (first area).
-	 * @param s         the first index of the second area.
-	 * @param e         one past the last index of the second area.
-	 * @return the relation constant describing the relation of the second area to the
-	 * 		source.
-	 * @throws NullPointerException     if the given {@code source} is null.
-	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
-	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.2.0 ~2021.01.10
+	 * @param reference the reference to create a matcher for.
+	 * @param pattern   the pattern to match.
+	 * @return a matcher over the content of the given {@code reference}.
+	 * @throws NullPointerException  if the given {@code reference} or {@code pattern} is
+	 *                               null.
+	 * @throws IllegalStateException if the {@link Reference#document() document} of the
+	 *                               given {@code reference} is deserialized.
+	 * @since 0.2.0 ~2021.01.23
 	 */
-	static Relation relation(Reference reference, int s, int e) {
+	static Matcher matcher(Reference reference, Pattern pattern) {
 		Objects.requireNonNull(reference, "reference");
-		int i = reference.position();
-		int j = i + reference.length();
-		return Relation.compute(i, j, s, e);
+		Objects.requireNonNull(pattern, "pattern");
+		Matcher matcher = pattern.matcher(reference.document().readContent());
+		matcher.region(reference.position(), reference.position() + reference.length());
+		matcher.useTransparentBounds(true);
+		matcher.useAnchoringBounds(true);
+		return matcher;
 	}
 
 	/**
@@ -146,6 +148,34 @@ public interface Reference extends Serializable {
 		int j = i + reference.length();
 		int s = other.position();
 		int e = s + other.length();
+		return Relation.compute(i, j, s, e);
+	}
+
+	/**
+	 * Calculate what is the relation between the given {@code source} and the given area
+	 * {@code [s, e)}.
+	 * <br>
+	 * The given {@code source} is the source to compare the second area with. The
+	 * returned relation will be the relation describing the feelings of the source about
+	 * the second area.
+	 * <br>
+	 * For example: if the second area is contained in the middle of the source, then the
+	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
+	 *
+	 * @param reference the source (first area).
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
+	 * @return the relation constant describing the relation of the second area to the
+	 * 		source.
+	 * @throws NullPointerException     if the given {@code source} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @see Relation#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.10
+	 */
+	static Relation relation(Reference reference, int s, int e) {
+		Objects.requireNonNull(reference, "reference");
+		int i = reference.position();
+		int j = i + reference.length();
 		return Relation.compute(i, j, s, e);
 	}
 
@@ -211,24 +241,6 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	int length();
-
-	/**
-	 * Construct a ready-to-use matcher from this source. The returned matcher has the
-	 * whole content of the document of this source. But, it is limited to the region of
-	 * this source (using {@link Matcher#region(int, int)}). The returned matcher also has
-	 * {@link Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
-	 * both enabled.
-	 * <br>
-	 * Important Note: the returned matcher will return {@link Matcher#start()} and {@link
-	 * Matcher#end()} as indexes at the original document.
-	 *
-	 * @param pattern the pattern to match.
-	 * @return a matcher over the content of this source.
-	 * @throws NullPointerException  if the given {@code pattern} is null.
-	 * @throws IllegalStateException if this source is deserialized.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	Matcher matcher(Pattern pattern);
 
 	/**
 	 * The parent source of this source.
