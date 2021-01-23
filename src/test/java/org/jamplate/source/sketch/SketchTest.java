@@ -15,9 +15,9 @@
  */
 package org.jamplate.source.sketch;
 
-import org.jamplate.impl.sketch.CurlyBracketsSketch;
-import org.jamplate.impl.sketch.ParenthesesSketch;
-import org.jamplate.impl.sketch.SquareBracketsSketch;
+import org.jamplate.impl.sketch.CurlyBrackets;
+import org.jamplate.impl.sketch.Parentheses;
+import org.jamplate.impl.sketch.SquareBrackets;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -47,12 +47,12 @@ public class SketchTest {
 	public void liveMix() {
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
 
-		while (sketch.accept(ParenthesesSketch.VISITOR))
-			;
-		while (sketch.accept(SquareBracketsSketch.VISITOR))
-			;
-		while (sketch.accept(CurlyBracketsSketch.VISITOR))
-			;
+		Sketch.accept(
+				sketch,
+				Parentheses.SKETCHER,
+				SquareBrackets.SKETCHER,
+				CurlyBrackets.SKETCHER
+		);
 
 		//document 1
 		//	parentheses 3
@@ -71,7 +71,7 @@ public class SketchTest {
 	public void matcher() {
 		Sketch sketch = new DocumentSketch("(()()())");
 
-		while (sketch.accept(ParenthesesSketch.VISITOR))
+		while (sketch.accept(Parentheses.SKETCHER))
 			;
 
 		//base sketch
