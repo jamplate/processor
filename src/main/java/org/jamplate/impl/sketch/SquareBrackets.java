@@ -139,19 +139,14 @@ public final class SquareBrackets {
 		@Override
 		public boolean visit(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference reference = Sketch.find(sketch, SquareBrackets.PATTERN_START, SquareBrackets.PATTERN_END);
+			Reference[] references = Sketch.find(sketch, SquareBrackets.PATTERN_START, SquareBrackets.PATTERN_END);
 
-			if (reference != null) {
-				Sketch s = new SquareBracketsSketch(reference);
-				Reference rs = Sketch.find(s, SquareBrackets.PATTERN_START);
-				Reference re = Sketch.find(s, SquareBrackets.PATTERN_END);
-
-				if (rs != null && re != null) {
-					s.put(new SquareBracketSketch(rs));
-					s.put(new SquareBracketSketch(re));
-					sketch.put(s);
-					return true;
-				}
+			if (references != null) {
+				Sketch s = new SquareBracketsSketch(references[0]);
+				s.put(new SquareBracketSketch(references[1]));
+				s.put(new SquareBracketSketch(references[2]));
+				sketch.put(s);
+				return true;
 			}
 
 			return false;

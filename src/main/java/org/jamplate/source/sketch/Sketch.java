@@ -78,21 +78,23 @@ public interface Sketch extends Serializable {
 	 * @param sketch       the sketch to find in.
 	 * @param startPattern the pattern of the start.
 	 * @param endPattern   the pattern of the end.
-	 * @return a source that starts with the given {@code startPattern} and ends with
-	 *        {@code endPattern} in the given {@code sketch}.
+	 * @return a fixed length array with the second item being the reference matching
+	 *        {@code startPattern} and the third item being the reference matching {@code
+	 * 		endPattern} and the first item being the reference matching the area between
+	 *        {@code startPattern} and {@code endPattern}. (inclusive)
 	 * @throws NullPointerException if the given {@code sketch} or {@code startPattern} or
 	 *                              {@code endPattern} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	static Reference find(Sketch sketch, Pattern startPattern, Pattern endPattern) {
+	static Reference[] find(Sketch sketch, Pattern startPattern, Pattern endPattern) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
 
 		Reference reference = sketch.reference();
 
-		Matcher startMatcher = reference.matcher(startPattern);
-		Matcher endMatcher = reference.matcher(endPattern);
+		Matcher startMatcher = Reference.matcher(reference, startPattern);
+		Matcher endMatcher = Reference.matcher(reference, endPattern);
 
 		//find the first valid end
 		while (endMatcher.find()) {
@@ -102,6 +104,7 @@ public interface Sketch extends Serializable {
 			//validate end
 			if (sketch.check(s, e)) {
 				int i = -1;
+				int j = -1;
 
 				//find the nearest valid start before the end
 				while (startMatcher.find()) {
@@ -113,17 +116,26 @@ public interface Sketch extends Serializable {
 						break;
 
 					//validate start
-					if (sketch.check(ii, jj))
+					if (sketch.check(ii, jj)) {
 						i = ii;
+						j = jj;
+					}
 				}
 
 				//validate results
-				if (i >= 0) {
+				if (i >= 0 && j >= 0) {
 					int position = i - reference.position();
 					int length = e - i;
 
 					//bingo!
-					return reference.subReference(position, length);
+					Reference match = reference.subReference(position, length);
+					Reference startMatch = match.subReference(0, j - i);
+					Reference endMatch = match.subReference(s - i, e - s);
+					return new Reference[]{
+							match,
+							startMatch,
+							endMatch
+					};
 				}
 			}
 		}
@@ -150,7 +162,7 @@ public interface Sketch extends Serializable {
 
 		Reference reference = sketch.reference();
 
-		Matcher matcher = reference.matcher(pattern);
+		Matcher matcher = Reference.matcher(reference, pattern);
 
 		//search for a valid match
 		while (matcher.find()) {

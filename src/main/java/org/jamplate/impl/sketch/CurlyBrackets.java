@@ -139,19 +139,14 @@ public final class CurlyBrackets {
 		@Override
 		public boolean visit(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference reference = Sketch.find(sketch, CurlyBrackets.PATTERN_START, CurlyBrackets.PATTERN_END);
+			Reference[] references = Sketch.find(sketch, CurlyBrackets.PATTERN_START, CurlyBrackets.PATTERN_END);
 
-			if (reference != null) {
-				Sketch s = new CurlyBracketsSketch(reference);
-				Reference rs = Sketch.find(s, CurlyBrackets.PATTERN_START);
-				Reference re = Sketch.find(s, CurlyBrackets.PATTERN_END);
-
-				if (rs != null && re != null) {
-					s.put(new CurlyBracketSketch(rs));
-					s.put(new CurlyBracketSketch(re));
-					sketch.put(s);
-					return true;
-				}
+			if (references != null) {
+				Sketch s = new CurlyBracketsSketch(references[0]);
+				s.put(new CurlyBracketSketch(references[1]));
+				s.put(new CurlyBracketSketch(references[2]));
+				sketch.put(s);
+				return true;
 			}
 
 			return false;

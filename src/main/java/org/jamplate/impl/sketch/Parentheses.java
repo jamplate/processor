@@ -109,19 +109,14 @@ public final class Parentheses {
 		@Override
 		public boolean visit(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference reference = Sketch.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
+			Reference[] references = Sketch.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
 
-			if (reference != null) {
-				Sketch s = new ParenthesesSketch(reference);
-				Reference rs = Sketch.find(s, Parentheses.PATTERN_START);
-				Reference re = Sketch.find(s, Parentheses.PATTERN_END);
-
-				if (rs != null && re != null) {
-					s.put(new ParenthesisSketch(rs));
-					s.put(new ParenthesisSketch(re));
-					sketch.put(s);
-					return true;
-				}
+			if (references != null) {
+				Sketch s = new ParenthesesSketch(references[0]);
+				s.put(new ParenthesisSketch(references[1]));
+				s.put(new ParenthesisSketch(references[2]));
+				sketch.put(s);
+				return true;
 			}
 
 			return false;
