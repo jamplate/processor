@@ -48,42 +48,24 @@ public interface Sketch extends Serializable {
 	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::reference, Reference.COMPARATOR);
 
 	/**
-	 * Find an available source in the given {@code sketch} that matches the given {@code
-	 * pattern}.
+	 * Until the given {@code visitors} all completes a complete loop, Make the given
+	 * {@code sketch} {@link Sketch#accept(Visitor) accept} them. (first completes the
+	 * loop then the next)
 	 *
-	 * @param sketch  the sketch to find a source from.
-	 * @param pattern the pattern to match the required source with.
-	 * @return an available source in the given {@code sketch} that matches the given
-	 *        {@code pattern} or null if no such source found.
-	 * @throws NullPointerException if the given {@code sketch} or {@code pattern} is
+	 * @param sketch   the sketch to accept the given {@code visitor}.
+	 * @param visitors the visitors to loop over the elements of the given {@code
+	 *                 sketch}.
+	 * @throws NullPointerException if the given {@code sketch} or {@code visitors} is
 	 *                              null.
-	 * @since 0.2.0 ~2021.01.17
+	 * @since 0.2.0 ~2021.01.23
 	 */
-	static Reference find(Sketch sketch, Pattern pattern) {
-		Objects.requireNonNull(pattern, "pattern");
-		Objects.requireNonNull(pattern, "pattern");
-
-		Reference reference = sketch.reference();
-
-		Matcher matcher = reference.matcher(pattern);
-
-		//search for a valid match
-		while (matcher.find()) {
-			int i = matcher.start();
-			int j = matcher.end();
-
-			//validate match
-			if (sketch.check(i, j)) {
-				int position = i - reference.position();
-				int length = j - i;
-
-				//bingo!
-				return reference.subReference(position, length);
-			}
-		}
-
-		//no valid matches
-		return null;
+	static void accept(Sketch sketch, Visitor... visitors) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(visitors, "visitors");
+		for (Visitor visitor : visitors)
+			if (visitor != null)
+				while (sketch.accept(visitor))
+					;
 	}
 
 	/**
@@ -143,6 +125,45 @@ public interface Sketch extends Serializable {
 					//bingo!
 					return reference.subReference(position, length);
 				}
+			}
+		}
+
+		//no valid matches
+		return null;
+	}
+
+	/**
+	 * Find an available source in the given {@code sketch} that matches the given {@code
+	 * pattern}.
+	 *
+	 * @param sketch  the sketch to find a source from.
+	 * @param pattern the pattern to match the required source with.
+	 * @return an available source in the given {@code sketch} that matches the given
+	 *        {@code pattern} or null if no such source found.
+	 * @throws NullPointerException if the given {@code sketch} or {@code pattern} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	static Reference find(Sketch sketch, Pattern pattern) {
+		Objects.requireNonNull(pattern, "pattern");
+		Objects.requireNonNull(pattern, "pattern");
+
+		Reference reference = sketch.reference();
+
+		Matcher matcher = reference.matcher(pattern);
+
+		//search for a valid match
+		while (matcher.find()) {
+			int i = matcher.start();
+			int j = matcher.end();
+
+			//validate match
+			if (sketch.check(i, j)) {
+				int position = i - reference.position();
+				int length = j - i;
+
+				//bingo!
+				return reference.subReference(position, length);
 			}
 		}
 
