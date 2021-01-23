@@ -283,7 +283,8 @@ public interface Sketch extends Serializable {
 	 *                                       other than {@link Reference.Dominance#PART}
 	 *                                       or {@link Reference.Dominance#EXACT} with
 	 *                                       this sketch.
-	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
+	 * @throws UnsupportedOperationException if this sketch cannot have the given {@code
+	 *                                       sketch} as an inner sketch.
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	void put(Sketch sketch);
