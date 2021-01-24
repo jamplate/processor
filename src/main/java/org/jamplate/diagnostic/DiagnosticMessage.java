@@ -26,7 +26,7 @@ import java.util.*;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public class Message {
+public class DiagnosticMessage {
 	/**
 	 * A detailed message describing this message.
 	 *
@@ -61,7 +61,7 @@ public class Message {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public Message(DiagnosticType type, Reference... references) {
+	public DiagnosticMessage(DiagnosticType type, Reference... references) {
 		Objects.requireNonNull(type, "type");
 		Objects.requireNonNull(references, "references");
 		this.type = type;
@@ -81,7 +81,7 @@ public class Message {
 	 *                              references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public Message(DiagnosticType type, String title, Reference... references) {
+	public DiagnosticMessage(DiagnosticType type, String title, Reference... references) {
 		Objects.requireNonNull(type, "type");
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
@@ -103,7 +103,7 @@ public class Message {
 	 *                              details} or {@code references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public Message(DiagnosticType type, String title, String details, Reference... references) {
+	public DiagnosticMessage(DiagnosticType type, String title, String details, Reference... references) {
 		Objects.requireNonNull(type, "type");
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
