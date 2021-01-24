@@ -13,11 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate;
+package org.jamplate.diagnostic;
 
 import org.jamplate.source.reference.Reference;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Objects;
 
 /**
  * Diagnostics Manager class. All managed by thread locals.
@@ -81,7 +82,7 @@ public final class Diagnostic {
 	public static void printDebug(Reference... references) {
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.DEBUG,
+				DiagnosticType.DEBUG,
 				references
 		));
 	}
@@ -99,7 +100,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.DEBUG,
+				DiagnosticType.DEBUG,
 				title,
 				references
 		));
@@ -120,7 +121,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.DEBUG,
+				DiagnosticType.DEBUG,
 				title,
 				details,
 				references
@@ -137,7 +138,7 @@ public final class Diagnostic {
 	public static void printError(Reference... references) {
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.ERROR,
+				DiagnosticType.ERROR,
 				references
 		));
 	}
@@ -155,7 +156,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.ERROR,
+				DiagnosticType.ERROR,
 				title,
 				references
 		));
@@ -176,7 +177,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.ERROR,
+				DiagnosticType.ERROR,
 				title,
 				details,
 				references
@@ -193,7 +194,7 @@ public final class Diagnostic {
 	public static void printNote(Reference... references) {
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.NOTE,
+				DiagnosticType.NOTE,
 				references
 		));
 	}
@@ -211,7 +212,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.NOTE,
+				DiagnosticType.NOTE,
 				title,
 				references
 		));
@@ -232,7 +233,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.NOTE,
+				DiagnosticType.NOTE,
 				title,
 				details,
 				references
@@ -249,7 +250,7 @@ public final class Diagnostic {
 	public static void printWarning(Reference... references) {
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.WARNING,
+				DiagnosticType.WARNING,
 				references
 		));
 	}
@@ -267,7 +268,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.WARNING,
+				DiagnosticType.WARNING,
 				title,
 				references
 		));
@@ -288,198 +289,10 @@ public final class Diagnostic {
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
 		Diagnostic.print(new Message(
-				Type.WARNING,
+				DiagnosticType.WARNING,
 				title,
 				details,
 				references
 		));
-	}
-
-	/**
-	 * An enumeration of the allowed types of a diagnostic message.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public enum Type {
-		/**
-		 * A type for messages that get printed for internal debugging.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		DEBUG,
-		/**
-		 * A type for messages that get printed to notify the user about an update or an
-		 * advice.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		NOTE,
-		/**
-		 * A type for messages that get printed to warn the user about a potential error.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		WARNING,
-		/**
-		 * A type for messages that get printed to tell the user more about an error to be
-		 * or already thrown.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		ERROR
-	}
-
-	/**
-	 * A diagnostic message describing a message from a component while it is working.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static class Message {
-		/**
-		 * A detailed message describing this message.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		protected final String details;
-		/**
-		 * The references caused this message. (might be null)
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		protected final List<Reference> references;
-		/**
-		 * The title of this message.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		protected final String title;
-		/**
-		 * The type of this message.
-		 *
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		protected final Diagnostic.Type type;
-
-		/**
-		 * Construct a new message that caused by the given {@code references}.
-		 *
-		 * @param type       the type of the message.
-		 * @param references the references that caused the constructed message.
-		 * @throws NullPointerException if the given {@code type} or {@code references} is
-		 *                              null.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public Message(Diagnostic.Type type, Reference... references) {
-			Objects.requireNonNull(type, "type");
-			Objects.requireNonNull(references, "references");
-			this.type = type;
-			this.title = "";
-			this.details = "";
-			this.references = new ArrayList<>(Arrays.asList(references));
-		}
-
-		/**
-		 * Construct a new message that have the given {@code title} and caused by the
-		 * given {@code references}.
-		 *
-		 * @param type       the type of the constructed message.
-		 * @param title      the title for the constructed message.
-		 * @param references the references caused this message.
-		 * @throws NullPointerException if the given {@code type} or {@code title} or
-		 *                              {@code references} is null.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public Message(Diagnostic.Type type, String title, Reference... references) {
-			Objects.requireNonNull(type, "type");
-			Objects.requireNonNull(title, "title");
-			Objects.requireNonNull(references, "references");
-			this.type = type;
-			this.title = title;
-			this.details = "";
-			this.references = new ArrayList<>(Arrays.asList(references));
-		}
-
-		/**
-		 * Construct a new message that have the given {@code title} and the given {@code
-		 * details} and caused by the given {@code references}.
-		 *
-		 * @param type       the type of the constructed message.
-		 * @param references the references caused the constructed message.
-		 * @param title      the title for the constructed message.
-		 * @param details    the detailed message for the constructed message.
-		 * @throws NullPointerException if the given {@code type} or {@code title} or
-		 *                              {@code details} or {@code references} is null.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public Message(Diagnostic.Type type, String title, String details, Reference... references) {
-			Objects.requireNonNull(type, "type");
-			Objects.requireNonNull(title, "title");
-			Objects.requireNonNull(details, "details");
-			Objects.requireNonNull(references, "references");
-			this.type = type;
-			this.title = title;
-			this.details = details;
-			this.references = new ArrayList<>(Arrays.asList(references));
-		}
-
-		@Override
-		public boolean equals(Object object) {
-			return object == this;
-		}
-
-		@Override
-		public int hashCode() {
-			return this.type.hashCode() + this.title.hashCode() + this.details.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return this.title + ": " + this.details;
-		}
-
-		/**
-		 * A detailed message about this message.
-		 *
-		 * @return the details of this message.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public String details() {
-			return this.details;
-		}
-
-		/**
-		 * The references that caused this message.
-		 * <br>
-		 *
-		 * @return the references that caused this message.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public List<Reference> references() {
-			return Collections.unmodifiableList(this.references);
-		}
-
-		/**
-		 * The title of this message.
-		 *
-		 * @return the title of this message.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public String title() {
-			return this.title;
-		}
-
-		/**
-		 * The type of this message.
-		 *
-		 * @return the type of this message.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		public Diagnostic.Type type() {
-			return this.type;
-		}
 	}
 }

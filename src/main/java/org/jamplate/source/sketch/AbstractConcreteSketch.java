@@ -15,7 +15,7 @@
  */
 package org.jamplate.source.sketch;
 
-import org.jamplate.Diagnostic;
+import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Optional;
