@@ -19,8 +19,10 @@ import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
 import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.sketch.Sketcher;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -50,7 +52,7 @@ public final class Parentheses {
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static final Sketch.Visitor SKETCHER = new ParenthesesSketcher();
+	public static final Sketcher SKETCHER = new ParenthesesSketcher();
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -97,7 +99,7 @@ public final class Parentheses {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class ParenthesesSketcher implements Sketch.Visitor {
+	public static final class ParenthesesSketcher implements Sketcher {
 		/**
 		 * A private constructor to avoid creating multiple instances of this.
 		 *
@@ -107,7 +109,7 @@ public final class Parentheses {
 		}
 
 		@Override
-		public boolean visit(Sketch sketch) {
+		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
 			Reference[] references = Sketch.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
 
@@ -115,11 +117,10 @@ public final class Parentheses {
 				Sketch s = new ParenthesesSketch(references[0]);
 				s.put(new ParenthesisSketch(references[1]));
 				s.put(new ParenthesisSketch(references[2]));
-				sketch.put(s);
-				return true;
+				return Optional.of(s);
 			}
 
-			return false;
+			return null;
 		}
 	}
 

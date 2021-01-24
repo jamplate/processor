@@ -19,8 +19,10 @@ import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
 import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.sketch.Sketcher;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -49,7 +51,7 @@ public final class DoubleQuotes {
 	 *
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static final Sketch.Visitor SKETCHER = new DoubleQuotesSketcher();
+	public static final Sketcher SKETCHER = new DoubleQuotesSketcher();
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -117,7 +119,7 @@ public final class DoubleQuotes {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static final class DoubleQuotesSketcher implements Sketch.Visitor {
+	public static final class DoubleQuotesSketcher implements Sketcher {
 		/**
 		 * A private constructor to avoid creating multiple instances of this.
 		 *
@@ -127,7 +129,7 @@ public final class DoubleQuotes {
 		}
 
 		@Override
-		public boolean visit(Sketch sketch) {
+		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
 			Reference[] references = Sketch.find(sketch, DoubleQuotes.PATTERN_START, DoubleQuotes.PATTERN_END);
 
@@ -135,11 +137,10 @@ public final class DoubleQuotes {
 				Sketch s = new DoubleQuotesSketch(references[0]);
 				s.put(new DoubleQuoteSketch(references[1]));
 				s.put(new DoubleQuoteSketch(references[2]));
-				sketch.put(s);
-				return true;
+				return Optional.of(s);
 			}
 
-			return false;
+			return null;
 		}
 	}
 }

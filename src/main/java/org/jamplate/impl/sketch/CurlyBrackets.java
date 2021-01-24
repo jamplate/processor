@@ -19,8 +19,10 @@ import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
 import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.sketch.Sketcher;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -50,7 +52,7 @@ public final class CurlyBrackets {
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketch.Visitor SKETCHER = new CurlyBracketsSketcher();
+	public static final Sketcher SKETCHER = new CurlyBracketsSketcher();
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -127,7 +129,7 @@ public final class CurlyBrackets {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class CurlyBracketsSketcher implements Sketch.Visitor {
+	public static final class CurlyBracketsSketcher implements Sketcher {
 		/**
 		 * A private constructor to avoid creating multiple instances of this.
 		 *
@@ -137,7 +139,7 @@ public final class CurlyBrackets {
 		}
 
 		@Override
-		public boolean visit(Sketch sketch) {
+		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
 			Reference[] references = Sketch.find(sketch, CurlyBrackets.PATTERN_START, CurlyBrackets.PATTERN_END);
 
@@ -145,11 +147,10 @@ public final class CurlyBrackets {
 				Sketch s = new CurlyBracketsSketch(references[0]);
 				s.put(new CurlyBracketSketch(references[1]));
 				s.put(new CurlyBracketSketch(references[2]));
-				sketch.put(s);
-				return true;
+				return Optional.of(s);
 			}
 
-			return false;
+			return null;
 		}
 	}
 }
