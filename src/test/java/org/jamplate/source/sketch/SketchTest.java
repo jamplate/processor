@@ -45,7 +45,7 @@ public class SketchTest {
 	}
 
 	@Test
-	public void liveMix() {
+	public void contexts() {
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
 
 		Sketch.accept(
@@ -69,7 +69,7 @@ public class SketchTest {
 	}
 
 	@Test
-	public void matcher() {
+	public void parentheses() {
 		Sketch sketch = new DocumentSketch("(()()())");
 
 		while (sketch.accept(Parentheses.SKETCHER))
