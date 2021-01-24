@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * source but never store any sub-source of it.
  * <br>
  * The source should serialize its {@link #document()}, {@link #position()} and {@link
- * #length()}. It is encouraged to serialize additional data.
+ * #length()}. It is not encouraged to serialize additional data.
  * <br>
  * If a source is a deserialized source then the methods {@link #content()}, {@link
  * #parent()}, {@link #subReference(int)} and {@link #subReference(int, int)} will throw

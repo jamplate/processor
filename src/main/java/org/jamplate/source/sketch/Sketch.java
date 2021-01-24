@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
  * Note: sketches are built from bottom to top. So, a typical sketch will store its
  * sub-sketches but never its parent sketch.
  * <br>
- * A sketch should serialize its {@link #reference()} and inner sketches. It is encouraged
- * to serialize additional data.
+ * A sketch should serialize its {@link #reference()} and inner sketches. It is not
+ * encouraged to serialize additional data.
  * <br>
  * If a sketch is a deserialized sketch then the method {@link #put(Sketch)} will throw an
  * {@link IllegalStateException}.
