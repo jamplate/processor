@@ -15,10 +15,7 @@
  */
 package org.jamplate.source.sketch;
 
-import org.jamplate.impl.sketch.CurlyBrackets;
-import org.jamplate.impl.sketch.Parentheses;
-import org.jamplate.impl.sketch.Quotes;
-import org.jamplate.impl.sketch.SquareBrackets;
+import org.jamplate.impl.sketch.*;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -26,8 +23,9 @@ import java.util.SortedSet;
 
 import static org.jamplate.InternalAssert.assertCount;
 import static org.jamplate.InternalAssert.assertDimensions;
+import static org.junit.Assert.assertSame;
 
-@SuppressWarnings("JUnitTestNG")
+@SuppressWarnings({"JUnitTestNG", "MigrateAssertToMatcherAssert"})
 public class SketchTest {
 	static Sketch getSketchAt(Sketch sketch, int position) {
 		AbstractContextSketch contextSketch = (AbstractContextSketch) sketch;
@@ -48,12 +46,11 @@ public class SketchTest {
 	public void contexts() {
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
 
-		Sketch.accept(
-				sketch,
+		sketch.accept(Sketcher.builder(Sketcher.sequence(
 				Parentheses.SKETCHER,
 				SquareBrackets.SKETCHER,
 				CurlyBrackets.SKETCHER
-		);
+		)));
 
 		//document 1
 		//	parentheses 3
@@ -69,11 +66,33 @@ public class SketchTest {
 	}
 
 	@Test
+	public void doubleQuotes() {
+		Sketch sketch = new DocumentSketch("\"'\"'\"'\"");
+
+		sketch.accept(Sketcher.builder(Sketcher.precedence(
+				DoubleQuotes.SKETCHER,
+				Quotes.SKETCHER
+		)));
+
+		assertSame(
+				"Double quotes occurred first. So, it should be the dominant",
+				DoubleQuotes.DoubleQuotesSketch.class,
+				getSketchAt(sketch, 0).getClass()
+		);
+		assertSame(
+				"Single quotes occurred first. So, it should be the dominant",
+				Quotes.QuotesSketch.class,
+				getSketchAt(sketch, 1).getClass()
+		);
+	}
+
+	@Test
 	public void parentheses() {
 		Sketch sketch = new DocumentSketch("(()()())");
 
-		while (sketch.accept(Parentheses.SKETCHER))
-			;
+		sketch.accept(Sketcher.builder(
+				Parentheses.SKETCHER
+		));
 
 		//base sketch
 		assertCount(sketch, 13);
@@ -123,13 +142,12 @@ public class SketchTest {
 	public void quotes() {
 		Sketch sketch = new DocumentSketch("()'([{')}]");
 
-		Sketch.accept(
-				sketch,
+		sketch.accept(Sketcher.builder(Sketcher.sequence(
 				Quotes.SKETCHER,
 				Parentheses.SKETCHER,
 				SquareBrackets.SKETCHER,
 				CurlyBrackets.SKETCHER
-		);
+		)));
 
 		//document 1
 		//	parentheses 3

@@ -15,7 +15,9 @@
  */
 package org.jamplate;
 
+import org.jamplate.source.reference.Dominance;
 import org.jamplate.source.reference.Reference;
+import org.jamplate.source.reference.Relation;
 import org.jamplate.source.sketch.Sketch;
 
 import java.util.Objects;
@@ -33,7 +35,7 @@ public final class InternalAssert {
 		int[] sCount = {0};
 		sketch.accept(s -> {
 			sCount[0]++;
-			return false;
+			return null;
 		});
 		assertSame(
 				sketch + " has an unexpected inner sketches count",
@@ -56,26 +58,26 @@ public final class InternalAssert {
 		);
 	}
 
-	public static void assertRelation(Reference reference, Reference other, Reference.Relation relation) {
+	public static void assertRelation(Reference reference, Reference other, Relation relation) {
 		assertSame(
 				"Relation of " + other + " to " + reference,
 				relation,
-				Reference.relation(reference, other)
+				Relation.compute(reference, other)
 		);
 		assertSame(
 				"Relation of " + reference + " to " + other,
 				relation.opposite(),
-				Reference.relation(other, reference)
+				Relation.compute(other, reference)
 		);
 		assertSame(
 				"Dominance of " + other + " over " + reference,
 				relation.dominance(),
-				Reference.dominance(reference, other)
+				Dominance.compute(reference, other)
 		);
 		assertSame(
 				"Dominance of " + reference + " over " + other,
 				relation.dominance().opposite(),
-				Reference.dominance(other, reference)
+				Dominance.compute(other, reference)
 		);
 	}
 }
