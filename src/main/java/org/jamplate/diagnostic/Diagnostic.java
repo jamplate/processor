@@ -34,7 +34,7 @@ public final class Diagnostic {
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	private static final ThreadLocal<LinkedList<Message>> messages = ThreadLocal.withInitial(LinkedList::new);
+	private static final ThreadLocal<LinkedList<DiagnosticMessage>> messages = ThreadLocal.withInitial(LinkedList::new);
 
 	/**
 	 * This is a utility class and should not be instantiated.
@@ -53,7 +53,7 @@ public final class Diagnostic {
 	 * @return the last message printed.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static Message poll() {
+	public static DiagnosticMessage poll() {
 		return Diagnostic.messages.get()
 				.pollLast();
 	}
@@ -66,7 +66,7 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code message} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void print(Message message) {
+	public static void print(DiagnosticMessage message) {
 		Objects.requireNonNull(message, "message");
 		Diagnostic.messages.get()
 				.addLast(message);
@@ -81,7 +81,7 @@ public final class Diagnostic {
 	 */
 	public static void printDebug(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.DEBUG,
 				references
 		));
@@ -99,7 +99,7 @@ public final class Diagnostic {
 	public static void printDebug(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.DEBUG,
 				title,
 				references
@@ -120,7 +120,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.DEBUG,
 				title,
 				details,
@@ -137,7 +137,7 @@ public final class Diagnostic {
 	 */
 	public static void printError(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.ERROR,
 				references
 		));
@@ -155,7 +155,7 @@ public final class Diagnostic {
 	public static void printError(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.ERROR,
 				title,
 				references
@@ -176,7 +176,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.ERROR,
 				title,
 				details,
@@ -193,7 +193,7 @@ public final class Diagnostic {
 	 */
 	public static void printNote(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.NOTE,
 				references
 		));
@@ -211,7 +211,7 @@ public final class Diagnostic {
 	public static void printNote(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.NOTE,
 				title,
 				references
@@ -232,8 +232,64 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.NOTE,
+				title,
+				details,
+				references
+		));
+	}
+
+	/**
+	 * Print a progress message.
+	 *
+	 * @param references the references caused the message.
+	 * @throws NullPointerException if the given {@code references} is null.
+	 * @since 0.2.0 ~2021.01.24
+	 */
+	public static void printProgress(Reference... references) {
+		Objects.requireNonNull(references, "references");
+		Diagnostic.print(new DiagnosticMessage(
+				DiagnosticType.PROGRESS,
+				references
+		));
+	}
+
+	/**
+	 * Print a progress message.
+	 *
+	 * @param references the references caused the message.
+	 * @param title      the title of the message.
+	 * @throws NullPointerException if the given {@code references} or {@code title} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.01.24
+	 */
+	public static void printProgress(String title, Reference... references) {
+		Objects.requireNonNull(title, "title");
+		Objects.requireNonNull(references, "references");
+		Diagnostic.print(new DiagnosticMessage(
+				DiagnosticType.PROGRESS,
+				title,
+				references
+		));
+	}
+
+	/**
+	 * Print a progress message.
+	 *
+	 * @param references the references caused the message.
+	 * @param title      the title of the message.
+	 * @param details    the message details.
+	 * @throws NullPointerException if the given {@code references} or {@code title} or
+	 *                              {@code details} is null.
+	 * @since 0.2.0 ~2021.01.24
+	 */
+	public static void printProgress(String title, String details, Reference... references) {
+		Objects.requireNonNull(title, "title");
+		Objects.requireNonNull(details, "details");
+		Objects.requireNonNull(references, "references");
+		Diagnostic.print(new DiagnosticMessage(
+				DiagnosticType.PROGRESS,
 				title,
 				details,
 				references
@@ -249,7 +305,7 @@ public final class Diagnostic {
 	 */
 	public static void printWarning(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.WARNING,
 				references
 		));
@@ -267,7 +323,7 @@ public final class Diagnostic {
 	public static void printWarning(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.WARNING,
 				title,
 				references
@@ -288,7 +344,7 @@ public final class Diagnostic {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new Message(
+		Diagnostic.print(new DiagnosticMessage(
 				DiagnosticType.WARNING,
 				title,
 				details,

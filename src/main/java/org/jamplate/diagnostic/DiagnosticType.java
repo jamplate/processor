@@ -30,6 +30,12 @@ public enum DiagnosticType {
 	 */
 	DEBUG,
 	/**
+	 * A type for messages that get printed to notify the user about the progress.
+	 *
+	 * @since 0.2.0 ~2021.01.24
+	 */
+	PROGRESS,
+	/**
 	 * A type for messages that get printed to notify the user about an update or an
 	 * advice.
 	 *
