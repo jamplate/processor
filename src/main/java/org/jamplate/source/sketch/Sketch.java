@@ -93,7 +93,6 @@ public interface Sketch extends Serializable {
 
 		Reference reference = sketch.reference();
 
-		Matcher startMatcher = Reference.matcher(reference, startPattern);
 		Matcher endMatcher = Reference.matcher(reference, endPattern);
 
 		//find the first valid end
@@ -103,6 +102,8 @@ public interface Sketch extends Serializable {
 
 			//validate end
 			if (sketch.check(s, e)) {
+				Matcher startMatcher = Reference.matcher(reference, startPattern);
+
 				int i = -1;
 				int j = -1;
 
@@ -111,7 +112,7 @@ public interface Sketch extends Serializable {
 					int ii = startMatcher.start();
 					int jj = startMatcher.end();
 
-					if (ii > s)
+					if (ii >= s)
 						//early break
 						break;
 
