@@ -17,6 +17,7 @@ package org.jamplate.source.sketch;
 
 import org.jamplate.impl.sketch.CurlyBrackets;
 import org.jamplate.impl.sketch.Parentheses;
+import org.jamplate.impl.sketch.Quotes;
 import org.jamplate.impl.sketch.SquareBrackets;
 import org.junit.Test;
 
@@ -116,5 +117,23 @@ public class SketchTest {
 		assertDimensions(p3.reference(), 5, 2);
 		assertDimensions(p3o.reference(), 5, 1);
 		assertDimensions(p3c.reference(), 6, 1);
+	}
+
+	@Test
+	public void quotes() {
+		Sketch sketch = new DocumentSketch("()'([{')}]");
+
+		Sketch.accept(
+				sketch,
+				Quotes.SKETCHER,
+				Parentheses.SKETCHER,
+				SquareBrackets.SKETCHER,
+				CurlyBrackets.SKETCHER
+		);
+
+		//document 1
+		//	parentheses 3
+		//	quotes 3
+		assertCount(sketch, 7);
 	}
 }
