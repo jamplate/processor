@@ -16,10 +16,12 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.Diagnostic;
+import org.jamplate.source.reference.Dominance;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeSet;
 
 /**
@@ -37,9 +39,8 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	/**
 	 * The inner sketches of this sketch.
 	 * <br>
-	 * The elements of this set. Must all have a dominance of {@link
-	 * Reference.Dominance#PART} with this sketch and a dominance of {@link
-	 * Reference.Dominance#NONE} with each other.
+	 * The elements of this set. Must all have a dominance of {@link Dominance#PART} with
+	 * this sketch and a dominance of {@link Dominance#NONE} with each other.
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
@@ -59,12 +60,14 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 	@SuppressWarnings("OverlyComplexMethod")
 	@Override
-	public boolean accept(Visitor visitor) {
+	public <R> Optional<R> accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
 
+		Optional<R> results;
+
 		//visit this
-		if (visitor.visit(this))
-			return true;
+		if ((results = visitor.visitSketch(this)) != null)
+			return results;
 
 		Iterator<Sketch> iterator = this.sketches.iterator();
 
@@ -80,12 +83,13 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			int ep = s0 + first.reference().length();
 
 			//visit `[i, s0)` (if not empty)
-			if (i != s0 && visitor.visit(this, i, s0 - i))
-				return true;
+			if (i != s0)
+				if ((results = visitor.visitNonSketched(this, i, s0 - i)) != null)
+					return results;
 
 			//visit the first sketch
-			if (first.accept(visitor))
-				return true;
+			if ((results = first.accept(visitor)) != null)
+				return results;
 
 			//iterate over next sketches (might be none)
 			while (iterator.hasNext()) {
@@ -95,34 +99,35 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 				int en = sn + next.reference().length();
 
 				//visit `[ep, sn)` (if not empty)
-				if (ep < sn && visitor.visit(this, ep, sn - ep))
-					return true;
+				if (ep < sn)
+					if ((results = visitor.visitNonSketched(this, ep, sn - ep)) != null)
+						return results;
 
 				//visit the next sketch
-				if (next.accept(visitor))
-					return true;
+				if ((results = next.accept(visitor)) != null)
+					return results;
 
 				ep = en;
 			}
 
 			//visit `[ep, j)` (if not empty)
-			return ep != j && visitor.visit(this, ep, j - ep);
+			return ep == j ? null : visitor.visitNonSketched(this, ep, j - ep);
 		}
 
 		//visit `[i, j)` (if not empty)
-		return m != 0 && visitor.visit(this, i, m);
+		return m == 0 ? null : visitor.visitNonSketched(this, i, m);
 	}
 
 	@Override
 	public boolean check(int start, int end) {
 		if (start < 0 || start > end)
 			return false;
-		Reference.Dominance d = Reference.dominance(this.reference, start, end);
-		return (d == Reference.Dominance.PART || d == Reference.Dominance.EXACT) &&
+		Dominance d = Dominance.compute(this.reference, start, end);
+		return (d == Dominance.PART || d == Dominance.EXACT) &&
 			   this.sketches.stream()
 					   .allMatch(sketch ->
-							   Reference.dominance(sketch.reference(), start, end) ==
-							   Reference.Dominance.NONE
+							   Dominance.compute(sketch.reference(), start, end) ==
+							   Dominance.NONE
 					   );
 	}
 
@@ -133,7 +138,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
-		switch (Reference.dominance(this.reference, sketch.reference())) {
+		switch (Dominance.compute(this.reference, sketch.reference())) {
 			case PART:
 			case EXACT:
 				break;
@@ -144,7 +149,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		//case Dominance.SHARE or Dominance.EXACT with another sketch
 		for (Sketch next : this.sketches)
-			switch (Reference.dominance(next.reference(), sketch.reference())) {
+			switch (Dominance.compute(next.reference(), sketch.reference())) {
 				case SHARE:
 				case EXACT:
 					Diagnostic.printError("Ambiguous Sketch Clash", next.reference(), sketch.reference());
@@ -156,7 +161,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		while (iterator.hasNext()) {
 			Sketch next = iterator.next();
 
-			switch (Reference.dominance(sketch.reference(), next.reference())) {
+			switch (Dominance.compute(sketch.reference(), next.reference())) {
 				case CONTAIN:
 					next.put(sketch);
 					return;

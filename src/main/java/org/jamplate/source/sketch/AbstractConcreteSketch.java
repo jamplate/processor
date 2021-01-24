@@ -18,6 +18,8 @@ package org.jamplate.source.sketch;
 import org.jamplate.Diagnostic;
 import org.jamplate.source.reference.Reference;
 
+import java.util.Optional;
+
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
  * a concrete sketch. (a concrete sketch is a sketch that cannot have inner sketches)
@@ -43,8 +45,8 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	}
 
 	@Override
-	public boolean accept(Visitor visitor) {
-		return visitor.visit(this);
+	public <R> Optional<R> accept(Visitor<R> visitor) {
+		return visitor.visitSketch(this);
 	}
 
 	@Override

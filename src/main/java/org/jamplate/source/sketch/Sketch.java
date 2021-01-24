@@ -15,11 +15,13 @@
  */
 package org.jamplate.source.sketch;
 
+import org.jamplate.source.reference.Dominance;
 import org.jamplate.source.reference.Reference;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,37 +50,16 @@ public interface Sketch extends Serializable {
 	Comparator<Sketch> COMPARATOR = Comparator.comparing(Sketch::reference, Reference.COMPARATOR);
 
 	/**
-	 * Until the given {@code visitors} all completes a complete loop, Make the given
-	 * {@code sketch} {@link Sketch#accept(Visitor) accept} them. (first completes the
-	 * loop then the next)
-	 *
-	 * @param sketch   the sketch to accept the given {@code visitor}.
-	 * @param visitors the visitors to loop over the elements of the given {@code
-	 *                 sketch}.
-	 * @throws NullPointerException if the given {@code sketch} or {@code visitors} is
-	 *                              null.
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	static void accept(Sketch sketch, Visitor... visitors) {
-		Objects.requireNonNull(sketch, "sketch");
-		Objects.requireNonNull(visitors, "visitors");
-		for (Visitor visitor : visitors)
-			if (visitor != null)
-				while (sketch.accept(visitor))
-					;
-	}
-
-	/**
 	 * Find an available source that starts with the given {@code startPatter} and ends
 	 * with the given {@code endPatter}. The two patterns each has a dominance of {@link
-	 * Reference.Dominance#NONE} with every inner sketch in the given {@code sketch}. The
-	 * returned source will have no AVAILABLE sequence that matches the given {@code
-	 * startPattern} in between.
+	 * Dominance#NONE} with every inner sketch in the given {@code sketch}. The returned
+	 * source will have no AVAILABLE sequence that matches the given {@code startPattern}
+	 * in between.
 	 *
 	 * @param sketch       the sketch to find in.
 	 * @param startPattern the pattern of the start.
 	 * @param endPattern   the pattern of the end.
-	 * @return a fixed length array with the second item being the reference matching
+	 * @return a new fixed length array with the second item being the reference matching
 	 *        {@code startPattern} and the third item being the reference matching {@code
 	 * 		endPattern} and the first item being the reference matching the area between
 	 *        {@code startPattern} and {@code endPattern}. (inclusive)
@@ -230,28 +211,29 @@ public interface Sketch extends Serializable {
 	 *     <li>
 	 *         Any sketch met.
 	 *         <br>
-	 *         Visited via {@link Visitor#visit(Sketch)}
+	 *         Visited via {@link Visitor#visitSketch(Sketch)}
 	 *     </li>
 	 *     <li>
 	 *         Any non-reserved areas (areas that has no sketch reserving it) met.
 	 *         <br>
-	 *         Visited via {@link Visitor#visit(Sketch, int, int)}
+	 *         Visited via {@link Visitor#visitNonSketched(Sketch, int, int)}
 	 *     </li>
 	 * </ul>
 	 *
 	 * @param visitor the visitor to be invoked for each element.
-	 * @return true, if the given {@code visitor} stopped the loop.
+	 * @param <R>     the type of the results of the given {@code visitor}.
+	 * @return an optional containing the results of visiting an element. Or {@code null}
+	 * 		if the visitor wishes to continue the loop.
 	 * @throws NullPointerException if the given {@code visitor} is null.
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	boolean accept(Visitor visitor);
+	<R> Optional<R> accept(Visitor<R> visitor);
 
 	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An
-	 * area get rejected when the area has a dominance other than {@link
-	 * Reference.Dominance#PART} nor {@link Reference.Dominance#EXACT} with this sketch or
-	 * has a dominance other than {@link Reference.Dominance#NONE} with any of the
-	 * sketches contained currently in this sketch.
+	 * area get rejected when the area has a dominance other than {@link Dominance#PART}
+	 * nor {@link Dominance#EXACT} with this sketch or has a dominance other than {@link
+	 * Dominance#NONE} with any of the sketches contained currently in this sketch.
 	 * <br>
 	 * Note: this is a checking method. Thus, it will simply return {@code false} if the
 	 * given arguments are invalid.
@@ -266,24 +248,22 @@ public interface Sketch extends Serializable {
 	/**
 	 * Put the given {@code sketch} to this sketch. Putting a sketch into another sketch
 	 * is like telling that other sketch to mark its place as reserved. If the given
-	 * sketch is a {@link Reference.Dominance#PART} with a sketch in this sketch. Then the
-	 * given {@code sketch} should be put into that sketch instead. On the other hand, if
-	 * a sketch in this sketch has a dominance of {@link Reference.Dominance#PART} with
-	 * the given {@code sketch}. Then this sketch will transfer that sketch to the given
-	 * {@code sketch}. (unless a clash happened, then an exception thrown and nothing
-	 * happens)
+	 * sketch is a {@link Dominance#PART} with a sketch in this sketch. Then the given
+	 * {@code sketch} should be put into that sketch instead. On the other hand, if a
+	 * sketch in this sketch has a dominance of {@link Dominance#PART} with the given
+	 * {@code sketch}. Then this sketch will transfer that sketch to the given {@code
+	 * sketch}. (unless a clash happened, then an exception thrown and nothing happens)
 	 *
 	 * @param sketch the sketch to be put.
 	 * @throws NullPointerException          if the given {@code sketch} is null.
 	 * @throws IllegalStateException         if this sketch is deserialized; if the given
 	 *                                       {@code sketch} is clashing with a previously
 	 *                                       reserved area (has a dominance of either
-	 *                                       {@link Reference.Dominance#SHARE} or {@link
-	 *                                       Reference.Dominance#EXACT}).
+	 *                                       {@link Dominance#SHARE} or {@link
+	 *                                       Dominance#EXACT}).
 	 * @throws IllegalArgumentException      if the given {@code sketch} has a dominance
-	 *                                       other than {@link Reference.Dominance#PART}
-	 *                                       or {@link Reference.Dominance#EXACT} with
-	 *                                       this sketch.
+	 *                                       other than {@link Dominance#PART} or {@link
+	 *                                       Dominance#EXACT} with this sketch.
 	 * @throws UnsupportedOperationException if this sketch cannot have the given {@code
 	 *                                       sketch} as an inner sketch.
 	 * @since 0.2.0 ~2021.01.12
@@ -297,64 +277,4 @@ public interface Sketch extends Serializable {
 	 * @since 0.2.0 ~2021.01.7
 	 */
 	Reference reference();
-
-	/**
-	 * A callback that can be passed to a sketch for that sketch to invoke this visitor
-	 * with every element in it. (recursively)
-	 * <br>
-	 * Note: any new method added will always have the modifier {@code default} making
-	 * this remain a {@link FunctionalInterface}.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.11
-	 */
-	@FunctionalInterface
-	interface Visitor {
-		/**
-		 * Return a new visitor that invokes this visitor then invokes the given {@code
-		 * visitor}. (if this visitor did not wish to stop)
-		 *
-		 * @param visitor the visitor to be invoked after this visitor by the returned
-		 *                visitor.
-		 * @return a visitor that invokes this visitor then the given visitor.
-		 * @throws NullPointerException if the given {@code visitor} is null.
-		 * @since 0.2.0 ~2021.01.17
-		 */
-		default Visitor andThen(Visitor visitor) {
-			Objects.requireNonNull(visitor, "visitor");
-			return sketch -> this.visit(sketch) || visitor.visit(sketch);
-		}
-
-		/**
-		 * Visits areas in a non-reserving parent that has not been reserved by any parent
-		 * in it.
-		 *
-		 * @param parent   the non-reserving parent the area was in it.
-		 * @param position the position of the area. (relative to the whole document)
-		 * @param length   the length of the area.
-		 * @return true, if this visitor wishes to stop the loop.
-		 * @throws NullPointerException      if the given {@code parent} is null.
-		 * @throws IllegalArgumentException  if the given {@code position} or {@code
-		 *                                   length} is null. (optional)
-		 * @throws IndexOutOfBoundsException if {@code position + length} is larger than
-		 *                                   the size of the original document of the
-		 *                                   given {@code sketch}. (optional)
-		 * @since 0.2.0 ~2021.01.19
-		 */
-		default boolean visit(Sketch parent, int position, int length) {
-			Objects.requireNonNull(parent, "parent");
-			return false;
-		}
-
-		/**
-		 * Invoked for every sketch met down in the tree.
-		 *
-		 * @param sketch the sketch met.
-		 * @return true, if this visitor wishes to stop the loop.
-		 * @throws NullPointerException if the given {@code sketch} is null.
-		 * @since 0.2.0 ~2021.01.11
-		 */
-		boolean visit(Sketch sketch);
-	}
 }
