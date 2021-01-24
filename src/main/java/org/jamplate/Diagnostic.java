@@ -310,22 +310,21 @@ public final class Diagnostic {
 		 */
 		DEBUG,
 		/**
-		 * A type for messages that get printed to notify the user about an update or
-		 * an advice.
+		 * A type for messages that get printed to notify the user about an update or an
+		 * advice.
 		 *
 		 * @since 0.2.0 ~2021.01.17
 		 */
 		NOTE,
 		/**
-		 * A type for messages that get printed to warn the user about a potential
-		 * error.
+		 * A type for messages that get printed to warn the user about a potential error.
 		 *
 		 * @since 0.2.0 ~2021.01.17
 		 */
 		WARNING,
 		/**
-		 * A type for messages that get printed to tell the user more about an error
-		 * to be or already thrown.
+		 * A type for messages that get printed to tell the user more about an error to be
+		 * or already thrown.
 		 *
 		 * @since 0.2.0 ~2021.01.17
 		 */
@@ -427,6 +426,21 @@ public final class Diagnostic {
 			this.references = new ArrayList<>(Arrays.asList(references));
 		}
 
+		@Override
+		public boolean equals(Object object) {
+			return object == this;
+		}
+
+		@Override
+		public int hashCode() {
+			return this.type.hashCode() + this.title.hashCode() + this.details.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return this.title + ": " + this.details;
+		}
+
 		/**
 		 * A detailed message about this message.
 		 *
@@ -444,7 +458,7 @@ public final class Diagnostic {
 		 * @return the references that caused this message.
 		 * @since 0.2.0 ~2021.01.17
 		 */
-		public List<Reference> reference() {
+		public List<Reference> references() {
 			return Collections.unmodifiableList(this.references);
 		}
 
