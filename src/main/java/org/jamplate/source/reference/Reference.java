@@ -49,7 +49,7 @@ public interface Reference extends Serializable {
 	 */
 	Comparator<Reference> COMPARATOR = Comparator.comparing(Reference::document, Document.COMPARATOR)
 			.thenComparingInt(Reference::position)
-			.thenComparingInt(Reference::length);
+			.thenComparing(Comparator.comparingInt(Reference::length).reversed());
 
 	/**
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
