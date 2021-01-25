@@ -32,7 +32,7 @@ public abstract class AbstractSketch implements Sketch {
 	private static final long serialVersionUID = 7365834181285411955L;
 
 	/**
-	 * The source of this sketch. The source this sketch is reserving.
+	 * The source reference of this sketch. (the reference this sketch is reserving)
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
@@ -48,11 +48,11 @@ public abstract class AbstractSketch implements Sketch {
 	protected final transient boolean constructed;
 
 	/**
-	 * Construct a new sketch for the given {@code source}. The given source is the source
-	 * the constructed sketch will reserve.
+	 * Construct a new sketch with the given {@code reference}. The given source reference
+	 * is the reference the constructed sketch will reserve.
 	 *
-	 * @param reference the source of the constructed sketch.
-	 * @throws NullPointerException if the given {@code source} is null.
+	 * @param reference the source reference of the constructed sketch.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractSketch(Reference reference) {
@@ -63,12 +63,12 @@ public abstract class AbstractSketch implements Sketch {
 
 	@Override
 	public boolean equals(Object object) {
-		return object == this;
+		return this == object;
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + this.getClass().hashCode();
+		return this.reference.hashCode() + this.getClass().hashCode();
 	}
 
 	@Override

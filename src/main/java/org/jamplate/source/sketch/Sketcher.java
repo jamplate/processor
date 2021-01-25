@@ -37,6 +37,7 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @return a visitor that builds the sketch hierarchy of the provided sketch using the
 	 * 		given {@code sketchers}.
 	 * @throws NullPointerException if the given {@code sketchers} is null.
+	 * @since 0.2.0 ~2021.01.25
 	 */
 	static Visitor<?> builder(Sketcher... sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
@@ -54,6 +55,7 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @return a visitor that builds the sketch hierarchy of the provided sketch using the
 	 * 		given {@code sketchers}.
 	 * @throws NullPointerException if the given {@code sketchers} is null.
+	 * @since 0.2.0 ~2021.01.25
 	 */
 	static Visitor<?> builder(Collection<Sketcher> sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
@@ -103,6 +105,7 @@ public interface Sketcher extends Visitor<Sketch> {
 						.filter(Objects::nonNull)
 						.map(sketch::accept)
 						.filter(Objects::nonNull)
+						.filter(Optional::isPresent)
 						.min(Comparator.comparing(Optional::get, Sketch.COMPARATOR))
 						.orElse(null);
 	}
@@ -145,9 +148,9 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * Return a matching sketch in the given {@code area} to be {@link Sketch#put(Sketch)}
 	 * to the given {@code parent} or a parent of it.
 	 *
-	 * @param parent   the non-reserving parent the area was in it.
-	 * @param position the position of the area. (relative to the whole document)
-	 * @param length   the length of the area.
+	 * @param parent   {@inheritDoc}
+	 * @param position {@inheritDoc}
+	 * @param length   {@inheritDoc}
 	 * @return a sketch to be {@link Sketch#put(Sketch)} to the given {@code parent} or a
 	 * 		parent of it. Or {@code null} if no matching sketch. (aka, continue the loop)
 	 * @throws NullPointerException      {@inheritDoc}
@@ -166,7 +169,7 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * Return a matching sketch in the given {@code sketch} to be {@link
 	 * Sketch#put(Sketch)} to it or a parent of it.
 	 *
-	 * @param sketch the sketch to try sketching a new matching sketch on it.
+	 * @param sketch {@inheritDoc}
 	 * @return a sketch to be {@link Sketch#put(Sketch)} to the given {@code sketch} or a
 	 * 		parent of it. Or {@code null} if no matching sketch. (aka, continue the loop)
 	 * @throws NullPointerException {@inheritDoc}

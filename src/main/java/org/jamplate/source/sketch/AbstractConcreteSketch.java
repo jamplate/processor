@@ -18,6 +18,7 @@ package org.jamplate.source.sketch;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.source.reference.Reference;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,11 +34,11 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	private static final long serialVersionUID = -4837539436780739571L;
 
 	/**
-	 * Construct a new sketch for the given {@code source}. The given source is the source
-	 * the constructed sketch will reserve.
+	 * Construct a new sketch with the given {@code reference}. The given source reference
+	 * is the reference the constructed sketch will reserve.
 	 *
-	 * @param reference the source of the constructed sketch.
-	 * @throws NullPointerException if the given {@code source} is null.
+	 * @param reference the source reference of the constructed sketch.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractConcreteSketch(Reference reference) {
@@ -46,6 +47,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 
 	@Override
 	public <R> Optional<R> accept(Visitor<R> visitor) {
+		Objects.requireNonNull(visitor, "visitor");
 		return visitor.visitSketch(this);
 	}
 
@@ -56,8 +58,10 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 
 	@Override
 	public void put(Sketch sketch) {
+		Objects.requireNonNull(sketch, "sketch");
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
+
 		Diagnostic.printError("Concrete Sketch Clash", this.reference, sketch.reference());
 		throw new UnsupportedOperationException("Sketch.put");
 	}

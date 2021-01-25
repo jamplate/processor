@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOError;
 
 /**
- * An unqualified (not specialized with a specific class) sketch for a whole document.
+ * A context sketch implementation for a whole document.
  *
  * @author LSafer
  * @version 0.2.0
@@ -60,9 +60,9 @@ public class DocumentSketch extends AbstractContextSketch {
 	}
 
 	/**
-	 * Construct a new sketch for the given {@code document}.
+	 * Construct a new sketch with the given {@code document}.
 	 *
-	 * @param document the document the constructed sketch will be for.
+	 * @param document the document of the constructed sketch.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.12
@@ -72,9 +72,9 @@ public class DocumentSketch extends AbstractContextSketch {
 	}
 
 	/**
-	 * Construct a new sketch for the given document {@code reference}.
+	 * Construct a new sketch with the given document {@code reference}.
 	 *
-	 * @param reference the document reference the constructed sketch will be for.
+	 * @param reference the document reference of the constructed sketch.
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */

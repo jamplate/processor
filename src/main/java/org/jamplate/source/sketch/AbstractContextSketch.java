@@ -47,11 +47,11 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	protected final TreeSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
 
 	/**
-	 * Construct a new sketch for the given {@code source}. The given source is the source
-	 * the constructed sketch will reserve.
+	 * Construct a new sketch with the given {@code reference}. The given source reference
+	 * is the source the constructed sketch will reserve.
 	 *
-	 * @param reference the source of the constructed sketch.
-	 * @throws NullPointerException if the given {@code source} is null.
+	 * @param reference the source reference of the constructed sketch.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	protected AbstractContextSketch(Reference reference) {
@@ -82,8 +82,8 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			int s0 = first.reference().position();
 			int ep = s0 + first.reference().length();
 
-			//visit `[i, s0)` (if not empty)
 			if (i != s0)
+				//visit `[i, s0)`
 				if ((results = visitor.visitNonSketched(this, i, s0 - i)) != null)
 					return results;
 
@@ -98,8 +98,8 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 				int sn = next.reference().position();
 				int en = sn + next.reference().length();
 
-				//visit `[ep, sn)` (if not empty)
 				if (ep < sn)
+					//visit `[ep, sn)`
 					if ((results = visitor.visitNonSketched(this, ep, sn - ep)) != null)
 						return results;
 
@@ -110,33 +110,42 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 				ep = en;
 			}
 
-			//visit `[ep, j)` (if not empty)
-			return ep == j ? null : visitor.visitNonSketched(this, ep, j - ep);
+			return ep == j ?
+				   null :
+				   //visit `[ep, j)`
+				   visitor.visitNonSketched(this, ep, j - ep);
 		}
 
-		//visit `[i, j)` (if not empty)
-		return m == 0 ? null : visitor.visitNonSketched(this, i, m);
+		return m == 0 ?
+			   null :
+			   //visit `[i, j)`
+			   visitor.visitNonSketched(this, i, m);
 	}
 
 	@Override
 	public boolean check(int start, int end) {
 		if (start < 0 || start > end)
 			return false;
-		Dominance d = Dominance.compute(this.reference, start, end);
-		return (d == Dominance.PART || d == Dominance.EXACT) &&
-			   this.sketches.stream()
-					   .allMatch(sketch ->
-							   Dominance.compute(sketch.reference(), start, end) ==
-							   Dominance.NONE
-					   );
+
+		switch (Dominance.compute(this.reference, start, end)) {
+			case PART:
+			case EXACT:
+				return this.sketches.stream()
+						.allMatch(sketch ->
+								Dominance.compute(sketch.reference(), start, end) ==
+								Dominance.NONE
+						);
+			default:
+				return false;
+		}
 	}
 
 	@Override
 	public void put(Sketch sketch) {
+		Objects.requireNonNull(sketch, "sketch");
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Sketch");
 
-		Objects.requireNonNull(sketch, "sketch");
 		//case not Dominance.PART or Dominance.EXACT with this sketch
 		switch (Dominance.compute(this.reference, sketch.reference())) {
 			case PART:
@@ -152,7 +161,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			switch (Dominance.compute(next.reference(), sketch.reference())) {
 				case SHARE:
 				case EXACT:
-					Diagnostic.printError("Ambiguous Sketch Clash", next.reference(), sketch.reference());
+					Diagnostic.printError("Ambiguous Sketch Clash", this.reference, next.reference(), sketch.reference());
 					throw new IllegalStateException("Sketch Clash");
 			}
 
@@ -166,13 +175,14 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 					next.put(sketch);
 					return;
 				case PART:
-					iterator.remove();
+					//wait for the sketch accept the child, then remove it
 					sketch.put(next);
+					iterator.remove();
 					break;
 			}
 		}
 
-		//case Dominance.NONE with all other sketches
+		//case Dominance.NONE or Dominance.CONTAIN with all other sketches
 		this.sketches.add(sketch);
 	}
 }

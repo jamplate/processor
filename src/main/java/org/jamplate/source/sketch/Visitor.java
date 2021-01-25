@@ -19,8 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A multipurpose callback that can be passed to a sketch for that sketch to invoke this
- * visitor with every element in it. (recursively)
+ * A multipurpose callback that can be passed to a sketch for that sketch to invoke it
+ * with every element in it. (recursively)
  * <br>
  * Note: any new method added will always have the modifier {@code default} making this
  * remain a {@link FunctionalInterface} with its functional method being {@link
