@@ -127,13 +127,12 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		if (start < 0 || start > end)
 			return false;
 
-		switch (Dominance.compute(this.reference, start, end)) {
+		switch (Dominance.compute(this, start, end)) {
 			case PART:
 			case EXACT:
 				return this.sketches.stream()
 						.allMatch(sketch ->
-								Dominance.compute(sketch.reference(), start, end) ==
-								Dominance.NONE
+								Dominance.compute(sketch, start, end) == Dominance.NONE
 						);
 			default:
 				return false;
@@ -147,7 +146,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			throw new IllegalStateException("Deserialized Sketch");
 
 		//case not Dominance.PART or Dominance.EXACT with this sketch
-		switch (Dominance.compute(this.reference, sketch.reference())) {
+		switch (Dominance.compute(this, sketch)) {
 			case PART:
 			case EXACT:
 				break;
@@ -158,7 +157,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 		//case Dominance.SHARE or Dominance.EXACT with another sketch
 		for (Sketch next : this.sketches)
-			switch (Dominance.compute(next.reference(), sketch.reference())) {
+			switch (Dominance.compute(next, sketch)) {
 				case SHARE:
 				case EXACT:
 					Diagnostic.printError("Ambiguous Sketch Clash", this.reference, next.reference(), sketch.reference());
@@ -170,7 +169,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		while (iterator.hasNext()) {
 			Sketch next = iterator.next();
 
-			switch (Dominance.compute(sketch.reference(), next.reference())) {
+			switch (Dominance.compute(sketch, next)) {
 				case CONTAIN:
 					next.put(sketch);
 					return;
