@@ -42,8 +42,8 @@ public class PseudoDocument extends AbstractDocument {
 
 	/**
 	 * Construct a new pseudo document that have the given {@code content}. The qualified
-	 * name will be the string of the {@link System#identityHashCode(Object) identitiy
-	 * hash code} of the given content.
+	 * name will be the string in hex of the {@link System#identityHashCode(Object)
+	 * identitiy hash code} of the given content.
 	 *
 	 * @param content the content of the constructed pseudo content.
 	 * @throws NullPointerException if the given {@code content} is null.
@@ -119,7 +119,7 @@ public class PseudoDocument extends AbstractDocument {
 	}
 
 	/**
-	 * Returns the simple name of the given {@code content} is null.
+	 * Returns the simple name of the given {@code content}.
 	 *
 	 * @param content the content to get its simple name.
 	 * @return the simple name of the given {@code content}.

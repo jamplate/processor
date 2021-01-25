@@ -24,9 +24,8 @@ import java.util.Comparator;
  * The document should serialize its {@link #qualifiedName()}, {@link #name()} and {@link
  * #simpleName()}. It is not encouraged to serialized additional data.
  * <br>
- * If a document is a deserialized document then the methods {@link #length()}, {@link
- * #openInputStream()}, {@link #openReader()} and {@link #readContent()} will throw an
- * {@link IllegalStateException}.
+ * If a document is a deserialized document then any method that attempts to read the
+ * content or its length will throw an {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
@@ -34,7 +33,8 @@ import java.util.Comparator;
  */
 public interface Document extends Serializable {
 	/**
-	 * The default comparator that compares documents.
+	 * The standard document comparator. This comparator is sorting documents by their
+	 * qualified name. (natural ordering)
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
@@ -46,27 +46,37 @@ public interface Document extends Serializable {
 	 * #qualifiedName()} as this document. (regardless of its content, assuming the user
 	 * is honest and does not provide two documents with same qualified name but from
 	 * different origins or have different content)
+	 * <pre>
+	 *     equals = object instanceof Document &&
+	 *     			this.qualifiedName.equals(object.qualifiedName)
+	 * </pre>
 	 *
 	 * @param object the object to be matched.
-	 * @return true, if the given {@code object} equals this document.
+	 * @return true, if the given {@code object} is a document and equals this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override
 	boolean equals(Object object);
 
 	/**
-	 * Calculates the hashCode of this document. The hashCode must always be the hashCode
-	 * of the {@link #qualifiedName()} of this document.
+	 * Calculates the hashCode of this document. The hash code of a document is the hash
+	 * code of the {@link #qualifiedName()} of it.
+	 * <pre>
+	 *     hashCode = &lt;QualifiedNameHashCode&gt;
+	 * </pre>
 	 *
-	 * @return the hashCode of this document.
+	 * @return the hash code of this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override
 	int hashCode();
 
 	/**
-	 * Returns a string representation of this document. The string representation must
-	 * always be the {@link #qualifiedName()}.
+	 * Returns a string representation of this document. The string representation of a
+	 * document is its {@link #qualifiedName()}.
+	 * <pre>
+	 *     toString = &lt;QualifiedNameToString&gt;
+	 * </pre>
 	 *
 	 * @return a string representation of this document.
 	 * @since 0.2.0 ~2021.01.13
@@ -79,7 +89,7 @@ public interface Document extends Serializable {
 	 * on the same instance.
 	 *
 	 * @return the length of this document.
-	 * @throws IllegalStateException if this document is deserialized.
+	 * @throws IllegalStateException if this document is a deserialized document.
 	 * @throws IOError               if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.17
 	 */
@@ -98,7 +108,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return a new input-stream that reads the content of this document.
 	 * @throws IOException           if any I/O exception occurs.
-	 * @throws IllegalStateException if this document is deserialized.
+	 * @throws IllegalStateException if this document is a deserialized document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	InputStream openInputStream() throws IOException;
@@ -108,7 +118,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return a new reader that reads the content of this document.
 	 * @throws IOException           if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is deserialized.
+	 * @throws IllegalStateException if this document is a deserialized document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	Reader openReader() throws IOException;
@@ -128,7 +138,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return the content of this document. (unmodifiable view)
 	 * @throws IOError               if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is deserialized.
+	 * @throws IllegalStateException if this document is a deserialized document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	CharSequence readContent();

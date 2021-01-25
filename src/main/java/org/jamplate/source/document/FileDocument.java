@@ -38,7 +38,7 @@ public class FileDocument extends AbstractDocument {
 	protected final transient File file;
 
 	/**
-	 * The content of this document cached.
+	 * The content of this document. (cached, lazily initialized)
 	 *
 	 * @since 0.2.0 ~2021.01.16
 	 */

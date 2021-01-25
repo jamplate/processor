@@ -48,7 +48,7 @@ public abstract class AbstractDocument implements Document {
 	protected final String simpleName;
 
 	/**
-	 * True, if this document have been constructed using its constructor. (in other words
+	 * True, if this document bas been constructed using its constructor. (in other words
 	 * 'not deserialized')
 	 *
 	 * @since 0.2.0 ~2021.01.17
@@ -57,8 +57,8 @@ public abstract class AbstractDocument implements Document {
 	protected final transient boolean constructed;
 
 	/**
-	 * Construct a new document that have the given {@code qualifiedName}, {@code name}
-	 * and {@code simpleName}.
+	 * Construct a new document that has the given {@code qualifiedName}, {@code name} and
+	 * {@code simpleName}.
 	 *
 	 * @param qualifiedName the uniq name of the constructed document.
 	 * @param name          the name of the constructed document.
