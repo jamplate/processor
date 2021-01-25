@@ -35,10 +35,10 @@ public class DocumentReference extends AbstractReference {
 	private static final long serialVersionUID = -3080162447729968421L;
 
 	/**
-	 * Construct a new document source with a {@link PseudoDocument} that have the given
-	 * {@code content}.
+	 * Construct a new document reference with a {@link PseudoDocument} that have the
+	 * given {@code content}.
 	 *
-	 * @param content the content of the pseudo document of the constructed source.
+	 * @param content the content of the pseudo document of the constructed reference.
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
@@ -47,10 +47,10 @@ public class DocumentReference extends AbstractReference {
 	}
 
 	/**
-	 * Create a new document source with a {@link FileDocument} that have the given {@code
-	 * file}.
+	 * Create a new document reference with a {@link FileDocument} that have the given
+	 * {@code file}.
 	 *
-	 * @param file the file of the file document of the constructed source.
+	 * @param file the file of the file document of the constructed reference.
 	 * @throws NullPointerException if the given {@code file} is null.
 	 * @throws IOError              if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.17
@@ -60,13 +60,11 @@ public class DocumentReference extends AbstractReference {
 	}
 
 	/**
-	 * Construct a new source standard implementation instance for the given {@code
-	 * document}.
+	 * Construct a new reference that points to the whole given {@code document}.
 	 *
 	 * @param document the document.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @throws IOError              if any I/O exception occurs.
-	 * @see AbstractReference#AbstractReference(Document)
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public DocumentReference(Document document) {

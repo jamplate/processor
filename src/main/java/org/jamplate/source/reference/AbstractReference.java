@@ -32,36 +32,36 @@ public abstract class AbstractReference implements Reference {
 	private static final long serialVersionUID = 1099496699050172132L;
 
 	/**
-	 * The file of this source.
+	 * The document of this reference.
 	 *
-	 * @since 0.2.0 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	protected final Document document;
 	/**
-	 * The length of this source.
+	 * The length of this reference.
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected final int length;
 	/**
-	 * The position where the content of this source starts at its {@link #document}.
+	 * The position where the content of this reference starts at its {@link #document}.
 	 *
-	 * @since 0.2.0 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	protected final int position;
 
 	/**
-	 * True, if this source have been constructed using its constructor. (in other words
-	 * 'not deserialized')
+	 * True, if this reference have been constructed using its constructor. (in other
+	 * words 'not deserialized')
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
 	protected final transient boolean constructed;
 	/**
-	 * The parent source of this source. (might be null)
+	 * The parent reference of this reference. (might be null)
 	 *
-	 * @since 0.2.0 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.08
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
 	protected final transient Reference parent;
@@ -69,15 +69,15 @@ public abstract class AbstractReference implements Reference {
 	/**
 	 * The content of this source. (lazily initialized)
 	 *
-	 * @since 0.2.0 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.08
 	 */
 	protected transient CharSequence content;
 
 	/**
-	 * Construct a new source that takes the whole given {@code document} as its actual
+	 * Construct a new reference that takes the whole given {@code document} as its actual
 	 * source.
 	 *
-	 * @param document the document of the constructed source.
+	 * @param document the document of the constructed reference.
 	 * @throws NullPointerException if the given {@code document} is null.
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
@@ -92,22 +92,22 @@ public abstract class AbstractReference implements Reference {
 	}
 
 	/**
-	 * Construct a new sub-source from the given {@code parent} source. The constructed
-	 * source will have the same {@link #document()} as the given {@code parent} source.
-	 * It will have its {@link #content()} lazily initialized and equals to the {@link
-	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
-	 * of the given {@code parent} source. Also, the constructed source will have its
-	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
-	 * #position()} of the given {@code parent} source. Finally, its obvious that the
-	 * constructed source will have the given {@code parent} source as its {@link
-	 * #parent()}.
+	 * Construct a new sub-reference from the given {@code parent} reference. The
+	 * constructed reference will have the same {@link #document()} as the given {@code
+	 * parent} reference. It will have its {@link #content()} lazily initialized and
+	 * equals to the {@link String#substring(int, int)} of the {@link
+	 * Document#readContent()} of the document of the given {@code parent} reference.
+	 * Also, the constructed reference will have its {@link #position()} equals to the sum
+	 * of the given {@code position} and the {@link #position()} of the given {@code
+	 * parent} reference. Finally, its obvious that the constructed reference will have
+	 * the given {@code parent} reference as its {@link #parent()}.
 	 * <br>
 	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code parent} source.
+	 * given {@code parent} reference.
 	 *
-	 * @param parent   the parent source.
-	 * @param position the sub-position to get from the given {@code parent} source.
-	 * @param length   the length to get from the given {@code parent} source.
+	 * @param parent   the parent source reference.
+	 * @param position the sub-position to get from the given {@code parent} reference.
+	 * @param length   the length to get from the given {@code parent} reference.
 	 * @throws NullPointerException      if the given {@code parent} is null.
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
@@ -150,11 +150,11 @@ public abstract class AbstractReference implements Reference {
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		return other instanceof Reference &&
-			   Objects.equals(this.document, ((Reference) other).document()) &&
-			   this.position == ((Reference) other).position() &&
-			   this.length == ((Reference) other).length();
+	public boolean equals(Object object) {
+		return object instanceof Reference &&
+			   Objects.equals(this.document, ((Reference) object).document()) &&
+			   this.position == ((Reference) object).position() &&
+			   this.length == ((Reference) object).length();
 	}
 
 	@Override

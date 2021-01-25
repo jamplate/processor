@@ -1,5 +1,5 @@
 /*
- *	Copyright 20.2.0021 Cufy
+ *	Copyright 2020-2021 Cufy
  *
  *	Licensed under the Apache License, Version 2.0 (the "License");
  *	you may not use this file except in compliance with the License.
@@ -25,17 +25,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A source is a component that points to a {@code D} source or a fragment of it.
+ * A source reference is a component that points to a document or a fragment of it.
  * <br>
- * Note: sources are built from top to bottom. So, a typical source will store its parent
- * source but never store any sub-source of it.
+ * Note: source references are built from top to bottom. So, a typical source reference
+ * will store its parent reference but never store any sub-reference of it.
  * <br>
- * The source should serialize its {@link #document()}, {@link #position()} and {@link
+ * The reference should serialize its {@link #document()}, {@link #position()} and {@link
  * #length()}. It is not encouraged to serialize additional data.
  * <br>
- * If a source is a deserialized source then the methods {@link #content()}, {@link
- * #parent()}, {@link #subReference(int)} and {@link #subReference(int, int)} will throw
- * an {@link IllegalStateException}.
+ * If a reference is a deserialized reference then any method that attempts to read the
+ * document or attempts to access the parent or attempts to create new references will
+ * throw an {@link IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
@@ -43,9 +43,10 @@ import java.util.regex.Pattern;
  */
 public interface Reference extends Serializable {
 	/**
-	 * The standard source comparator.
+	 * The standard reference comparator. This comparator is sorting references from the
+	 * first occurrence on the document to the last and from the longest to the shortest.
 	 *
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	Comparator<Reference> COMPARATOR = Comparator.comparing(Reference::document, Document.COMPARATOR)
 			.thenComparingInt(Reference::position)
@@ -59,7 +60,7 @@ public interface Reference extends Serializable {
 	 * Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
 	 * both enabled.
 	 * <br>
-	 * Important Note: the returned matcher will return {@link Matcher#start()} and {@link
+	 * Notice: the returned matcher will return {@link Matcher#start()} and {@link
 	 * Matcher#end()} as indexes at the original document.
 	 *
 	 * @param reference the reference to create a matcher for.
@@ -68,7 +69,7 @@ public interface Reference extends Serializable {
 	 * @throws NullPointerException  if the given {@code reference} or {@code pattern} is
 	 *                               null.
 	 * @throws IllegalStateException if the {@link Reference#document() document} of the
-	 *                               given {@code reference} is deserialized.
+	 *                               given {@code reference} is a deserialized document.
 	 * @since 0.2.0 ~2021.01.23
 	 */
 	static Matcher matcher(Reference reference, Pattern pattern) {
@@ -82,111 +83,120 @@ public interface Reference extends Serializable {
 	}
 
 	/**
-	 * A source equals another object, if that object is a source and has the same {@link
-	 * #document()}, {@link #position()} and {@link #length()} of this source.
-	 *
-	 * @return if the given object is a source and equals this source.
-	 * @since 0.2.0 ~2021.01.7
-	 */
-	@Override
-	boolean equals(Object other);
-
-	/**
-	 * The hashcode of a source is calculated as follows.
+	 * A reference is equals another object, if that object is a reference and has the
+	 * same {@link #document()}, {@link #position()} and {@link #length()} of this
+	 * source.
 	 * <pre>
-	 *     hashCode = {@link #document()}.hashCode() * {@link #length()} + {@link #position()}
+	 *     equals = object instanceof Reference &&
+	 *     			object.document.equals(this.document) &&
+	 *     			object.position == this.position &&
+	 *     			object.length == this.length
 	 * </pre>
 	 *
-	 * @return the hashCode of this source.
-	 * @since 0.2.0 ~2021.01.7
+	 * @return if the given object is a reference and equals this reference.
+	 * @since 0.2.0 ~2021.01.07
+	 */
+	@Override
+	boolean equals(Object object);
+
+	/**
+	 * The hashcode of a reference is calculated as follows.
+	 * <pre>
+	 *     hashCode = &lt;DocumentHashCode&gt; * &lt;Length&gt; + &lt;Position&gt;
+	 * </pre>
+	 *
+	 * @return the hashCode of this reference.
+	 * @since 0.2.0 ~2021.01.07
 	 */
 	@Override
 	int hashCode();
 
 	/**
-	 * Returns a string representation of this source. The source shall follow the below
-	 * template:
+	 * Returns a string representation of this reference.
 	 * <pre>
-	 *     {@link #document() &lt;document()&gt;} [{@link #position() &lt;position()&gt;}, {@link #length() &lt;length()&gt;}]
+	 *     toString = &lt;DocumentToString&gt; [&lt;Position&gt;, &lt;Length&gt;]
 	 * </pre>
 	 *
-	 * @return a string representation of this source.
-	 * @since 0.2.0 ~2021.01.6
+	 * @return a string representation of this reference.
+	 * @since 0.2.0 ~2021.01.06
 	 */
 	@Override
 	String toString();
 
 	/**
-	 * Return the content of this source as a string. This method should always return the
-	 * same value.
+	 * Return the content of this reference as a string. This method should always return
+	 * the same value.
 	 *
-	 * @return the content of this source. (unmodifiable view)
-	 * @throws IllegalStateException if this source is deserialized.
+	 * @return the content of this reference. (unmodifiable)
+	 * @throws IllegalStateException if this reference is a deserialized reference.
 	 * @throws IOError               if any I/O exception occurs.
-	 * @since 0.2.0 ~2021.01.8
+	 * @since 0.2.0 ~2021.01.08
 	 */
 	CharSequence content();
 
 	/**
-	 * The source document that this source is from.
+	 * The document that this reference is from.
 	 *
-	 * @return the document of this source.
-	 * @since 0.2.0 ~2021.01.7
+	 * @return the document of this reference.
+	 * @since 0.2.0 ~2021.01.07
 	 */
 	Document document();
 
 	/**
-	 * The length of this source. Must always return the same value. Must always be the
+	 * The length of this reference. Must always return the same value. Must always be the
 	 * same as the length of the content of this source.
 	 *
-	 * @return the length of the content of this source.
+	 * @return the length of the content of this reference.
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	int length();
 
 	/**
-	 * The parent source of this source.
+	 * The parent reference of this reference.
 	 *
-	 * @return the parent source of this source. Or null if this source has no parent.
-	 * @throws IllegalStateException if this source is deserialized.
-	 * @since 0.2.0 ~2021.01.8
+	 * @return the parent reference of this reference. Or null if this reference has no
+	 * 		parent.
+	 * @throws IllegalStateException if this reference is a deserialized reference.
+	 * @since 0.2.0 ~2021.01.08
 	 */
 	Reference parent();
 
 	/**
-	 * Return where this source starts at its {@link #document()}.
+	 * Return where this reference starts at its {@link #document()}.
 	 *
-	 * @return the position of this source.
-	 * @since 0.2.0 ~2021.01.4
+	 * @return the position of this reference.
+	 * @since 0.2.0 ~2021.01.04
 	 */
 	int position();
 
 	/**
-	 * Slice this source from the given {@code position} to the end of this {@code
-	 * source}.
+	 * Slice this reference from the given {@code position} to the end of this reference.
 	 *
-	 * @param position the position where the new slice source will have.
-	 * @return a slice of this source that starts from the given {@code position}.
+	 * @param position the position where the new slice reference will have relative to
+	 *                 this reference.
+	 * @return a sub reference of this reference that starts from the given {@code
+	 * 		position} relative to this reference.
 	 * @throws IllegalArgumentException  if the given {@code position} is negative.
 	 * @throws IndexOutOfBoundsException if {@code position > this.length()}.
-	 * @throws IllegalStateException     if this source is deserialized.
-	 * @since 0.2.0 ~2021.01.6
+	 * @throws IllegalStateException     if this reference is a deserialized reference.
+	 * @since 0.2.0 ~2021.01.06
 	 */
 	Reference subReference(int position);
 
 	/**
-	 * Slice this source from the given {@code position} and limit it with the given
+	 * Slice this reference from the given {@code position} and limit it with the given
 	 * {@code length}.
 	 *
-	 * @param position the position where the new slice source will have.
-	 * @param length   the length of the new slice source.
-	 * @return a slice of this source that starts from the given {@code position} and have
-	 * 		the given {@code length}.
+	 * @param position the position where the new slice reference will have relative to
+	 *                 this reference.
+	 * @param length   the length of the new slice reference.
+	 * @return a slice of this reference that starts from the given {@code position}
+	 * 		relative to this reference and have the given {@code length}.
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length > this.length()}.
-	 * @throws IllegalStateException     if this source is deserialized.
-	 * @since 0.2.0 ~2021.01.6
+	 * @throws IllegalStateException     if this reference is a deserialized reference.
+	 * @since 0.2.0 ~2021.01.06
 	 */
 	Reference subReference(int position, int length);
 }

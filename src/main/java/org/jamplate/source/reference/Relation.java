@@ -15,6 +15,8 @@
  */
 package org.jamplate.source.reference;
 
+import org.jamplate.source.sketch.Sketch;
+
 import java.util.Objects;
 
 /**
@@ -54,7 +56,7 @@ import java.util.Objects;
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.9
+ * @since 0.2.0 ~2021.01.09
  */
 public enum Relation {
 	/**
@@ -74,7 +76,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	CONTAINER("FRAGMENT", Dominance.CONTAIN),
 	/**
@@ -93,7 +95,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	AHEAD("START", Dominance.CONTAIN),
 	/**
@@ -112,7 +114,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	BEHIND("END", Dominance.CONTAIN),
 
@@ -132,7 +134,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#EXACT
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	SAME("SAME", Dominance.EXACT),
 
@@ -153,7 +155,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#SHARE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	OVERFLOW("UNDERFLOW", Dominance.SHARE),
 	/**
@@ -173,7 +175,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#SHARE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	UNDERFLOW("OVERFLOW", Dominance.SHARE),
 
@@ -194,7 +196,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	FRAGMENT("CONTAINER", Dominance.PART),
 	/**
@@ -213,7 +215,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	START("AHEAD", Dominance.PART),
 	/**
@@ -232,7 +234,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	END("BEHIND", Dominance.PART),
 
@@ -252,7 +254,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	NEXT("PREVIOUS", Dominance.NONE),
 	/**
@@ -271,7 +273,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	PREVIOUS("NEXT", Dominance.NONE),
 	/**
@@ -290,7 +292,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	AFTER("BEFORE", Dominance.NONE),
 	/**
@@ -309,7 +311,7 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	BEFORE("AFTER", Dominance.NONE),
 	;
@@ -323,7 +325,7 @@ public enum Relation {
 	/**
 	 * The name of the opposite enum.
 	 *
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	private final String opposite;
 
@@ -397,21 +399,35 @@ public enum Relation {
 	}
 
 	/**
-	 * Calculate what is the relation between the sources {@code source} and {@code
-	 * other}.
-	 * <br>
-	 * The first source is the source to compare the second source with. The returned
-	 * relation will be the relation describing the feelings of the first source about the
-	 * second source.
-	 * <br>
-	 * For example: if the second source is contained in the middle of first source, then
-	 * the retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
+	 * Calculate what is the relation between the given {@code reference} and the given
+	 * area {@code [s, e)}.
 	 *
-	 * @param reference the first source.
-	 * @param other     the second source.
-	 * @return the relation constant describing the relation of the second source to the
-	 * 		first source.
-	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
+	 * @param reference the reference (first area).
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
+	 * @return the relation constant describing the relation of the second area to the
+	 * 		reference.
+	 * @throws NullPointerException     if the given {@code reference} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @see Relation#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.10
+	 */
+	public static Relation compute(Reference reference, int s, int e) {
+		Objects.requireNonNull(reference, "reference");
+		int i = reference.position();
+		int j = i + reference.length();
+		return Relation.compute(i, j, s, e);
+	}
+
+	/**
+	 * Calculate the relation between the references {@code reference} and {@code other}.
+	 *
+	 * @param reference the first reference.
+	 * @param other     the second reference.
+	 * @return the relation constant describing the relation of the second reference to
+	 * 		the first reference.
+	 * @throws NullPointerException if the given {@code reference} or {@code other} is
+	 *                              null.
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
@@ -426,31 +442,56 @@ public enum Relation {
 	}
 
 	/**
-	 * Calculate what is the relation between the given {@code source} and the given area
+	 * Calculate what is the relation between the given {@code sketch} and the given area
 	 * {@code [s, e)}.
-	 * <br>
-	 * The given {@code source} is the source to compare the second area with. The
-	 * returned relation will be the relation describing the feelings of the source about
-	 * the second area.
-	 * <br>
-	 * For example: if the second area is contained in the middle of the source, then the
-	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
 	 *
-	 * @param reference the source (first area).
-	 * @param s         the first index of the second area.
-	 * @param e         one past the last index of the second area.
+	 * @param sketch the sketch (first area).
+	 * @param s      the first index of the second area.
+	 * @param e      one past the last index of the second area.
 	 * @return the relation constant describing the relation of the second area to the
-	 * 		source.
-	 * @throws NullPointerException     if the given {@code source} is null.
+	 * 		sketch.
+	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Relation#compute(int, int, int, int)
-	 * @since 0.2.0 ~2021.01.10
+	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Relation compute(Reference reference, int s, int e) {
-		Objects.requireNonNull(reference, "reference");
-		int i = reference.position();
-		int j = i + reference.length();
-		return Relation.compute(i, j, s, e);
+	public static Relation compute(Sketch sketch, int s, int e) {
+		Objects.requireNonNull(sketch, "sketch");
+		return Relation.compute(sketch.reference(), s, e);
+	}
+
+	/**
+	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
+	 *
+	 * @param sketch the first sketch.
+	 * @param other  the second sketch.
+	 * @return the relation constant describing the relation of the second sketch to the
+	 * 		first sketch.
+	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @see Relation#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.25
+	 */
+	public static Relation compute(Sketch sketch, Reference other) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(other, "other");
+		return Relation.compute(sketch.reference(), other);
+	}
+
+	/**
+	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
+	 *
+	 * @param sketch the first sketch.
+	 * @param other  the second sketch.
+	 * @return the relation constant describing the relation of the second sketch to the
+	 * 		first sketch.
+	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @see Relation#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.25
+	 */
+	public static Relation compute(Sketch sketch, Sketch other) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(other, "other");
+		return Relation.compute(sketch.reference(), other.reference());
 	}
 
 	/**
@@ -467,7 +508,7 @@ public enum Relation {
 	 * Get the opposite relation of this relation.
 	 *
 	 * @return the opposite relation. Or null if none.
-	 * @since 0.2.0 ~2021.01.9
+	 * @since 0.2.0 ~2021.01.09
 	 */
 	public Relation opposite() {
 		return Relation.valueOf(this.opposite);

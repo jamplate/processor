@@ -15,6 +15,8 @@
  */
 package org.jamplate.source.reference;
 
+import org.jamplate.source.sketch.Sketch;
+
 import java.util.Objects;
 
 /**
@@ -224,13 +226,13 @@ public enum Dominance {
 
 	/**
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
-	 * source}.
+	 * reference}.
 	 *
-	 * @param reference the source (first area).
+	 * @param reference the reference (first area).
 	 * @param s         the first index of the second area.
 	 * @param e         one past the last index of the second area.
-	 * @return how much dominant the second area over the given {@code source}.
-	 * @throws NullPointerException     if the given {@code source} is null.
+	 * @return how much dominant the second area over the given {@code reference}.
+	 * @throws NullPointerException     if the given {@code reference} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.11
@@ -243,13 +245,14 @@ public enum Dominance {
 	}
 
 	/**
-	 * Calculate how much dominant the {@code other} source over the given {@code
-	 * source}.
+	 * Calculate how much dominant the {@code other} reference over the given {@code
+	 * reference}.
 	 *
-	 * @param reference the first source.
-	 * @param other     the second source.
-	 * @return how much dominant the second source over the first source.
-	 * @throws NullPointerException if the given {@code source} or {@code other} is null.
+	 * @param reference the first reference.
+	 * @param other     the second reference.
+	 * @return how much dominant the second reference over the first reference.
+	 * @throws NullPointerException if the given {@code reference} or {@code other} is
+	 *                              null.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
@@ -261,6 +264,58 @@ public enum Dominance {
 		int s = other.position();
 		int e = s + other.length();
 		return Dominance.compute(i, j, s, e);
+	}
+
+	/**
+	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
+	 * sketch}.
+	 *
+	 * @param sketch the sketch (first area).
+	 * @param s      the first index of the second area.
+	 * @param e      one past the last index of the second area.
+	 * @return how much dominant the second area over the given {@code sketch}.
+	 * @throws NullPointerException     if the given {@code sketch} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @see Dominance#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.25
+	 */
+	public static Dominance compute(Sketch sketch, int s, int e) {
+		Objects.requireNonNull(sketch, "sketch");
+		return Dominance.compute(sketch.reference(), s, e);
+	}
+
+	/**
+	 * Calculate how much dominant the {@code other} reference over the given {@code
+	 * sketch}.
+	 *
+	 * @param sketch the first sketch.
+	 * @param other  the second reference.
+	 * @return how much dominant the second reference over the first sketch.
+	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @see Dominance#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.25
+	 */
+	public static Dominance compute(Sketch sketch, Reference other) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(other, "other");
+		return Dominance.compute(sketch.reference(), other);
+	}
+
+	/**
+	 * Calculate how much dominant the {@code other} sketch over the given {@code
+	 * sketch}.
+	 *
+	 * @param sketch the first sketch.
+	 * @param other  the second sketch.
+	 * @return how much dominant the second sketch over the first sketch.
+	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @see Dominance#compute(int, int, int, int)
+	 * @since 0.2.0 ~2021.01.25
+	 */
+	public static Dominance compute(Sketch sketch, Sketch other) {
+		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(other, "other");
+		return Dominance.compute(sketch.reference(), other.reference());
 	}
 
 	/**

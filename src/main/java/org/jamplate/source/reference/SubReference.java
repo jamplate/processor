@@ -19,7 +19,7 @@ import org.jamplate.source.document.Document;
 
 /**
  * An implementation of the interface {@link Reference} that is a slice of another
- * source.
+ * reference.
  *
  * @author LSafer
  * @version 0.2.0
@@ -30,28 +30,27 @@ public class SubReference extends AbstractReference {
 	private static final long serialVersionUID = 8737902111302332073L;
 
 	/**
-	 * Construct a new sub-source from the given {@code parent} source. The constructed
-	 * source will have the same {@link #document()} as the given {@code parent} source.
-	 * It will have its {@link #content()} lazily initialized and equals to the {@link
-	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
-	 * of the given {@code parent} source. Also, the constructed source will have its
-	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
-	 * #position()} of the given {@code parent} source. Finally, its obvious that the
-	 * constructed source will have the given {@code parent} source as its {@link
-	 * #parent()}.
+	 * Construct a new sub-reference from the given {@code parent} reference. The
+	 * constructed reference will have the same {@link #document()} as the given {@code
+	 * parent} reference. It will have its {@link #content()} lazily initialized and
+	 * equals to the {@link String#substring(int, int)} of the {@link
+	 * Document#readContent()} of the document of the given {@code parent} reference.
+	 * Also, the constructed reference will have its {@link #position()} equals to the sum
+	 * of the given {@code position} and the {@link #position()} of the given {@code
+	 * parent} reference. Finally, its obvious that the constructed reference will have
+	 * the given {@code parent} reference as its {@link #parent()}.
 	 * <br>
 	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code parent} source.
+	 * given {@code parent} reference.
 	 *
-	 * @param parent   the parent source.
-	 * @param position the sub-position to get from the given {@code parent} source.
-	 * @param length   the length to get from the given {@code parent} source.
+	 * @param parent   the parent source reference.
+	 * @param position the sub-position to get from the given {@code parent} reference.
+	 * @param length   the length to get from the given {@code parent} reference.
 	 * @throws NullPointerException      if the given {@code parent} is null.
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
-	 * @see AbstractReference#AbstractReference(Reference, int, int)
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public SubReference(Reference parent, int position, int length) {
