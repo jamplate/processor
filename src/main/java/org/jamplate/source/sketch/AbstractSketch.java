@@ -39,7 +39,7 @@ public abstract class AbstractSketch implements Sketch {
 	protected final Reference reference;
 
 	/**
-	 * True, if this sketch have been constructed using its constructor. (in other words
+	 * True, if this sketch has been constructed using its constructor. (in other words
 	 * 'not deserialized')
 	 *
 	 * @since 0.2.0 ~2021.01.17

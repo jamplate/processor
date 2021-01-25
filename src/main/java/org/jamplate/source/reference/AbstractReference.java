@@ -51,7 +51,7 @@ public abstract class AbstractReference implements Reference {
 	protected final int position;
 
 	/**
-	 * True, if this reference have been constructed using its constructor. (in other
+	 * True, if this reference has been constructed using its constructor. (in other
 	 * words 'not deserialized')
 	 *
 	 * @since 0.2.0 ~2021.01.17
