@@ -15,7 +15,8 @@
  */
 package org.jamplate.source.sketch;
 
-import org.jamplate.source.reference.Dominance;
+import org.jamplate.source.Dominance;
+import org.jamplate.source.tools.Visitor;
 import org.jamplate.source.reference.Reference;
 
 import java.io.Serializable;
