@@ -16,7 +16,7 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.source.Dominance;
-import org.jamplate.source.tools.Visitor;
+import org.jamplate.source.tools.SketchVisitor;
 import org.jamplate.source.reference.Reference;
 
 import java.io.Serializable;
@@ -266,7 +266,7 @@ public interface Sketch extends Serializable {
 	 * @throws NullPointerException if the given {@code visitor} is null.
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	<R> Optional<R> accept(Visitor<R> visitor);
+	<R> Optional<R> accept(SketchVisitor<R> visitor);
 
 	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An

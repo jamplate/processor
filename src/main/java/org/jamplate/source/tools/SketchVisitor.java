@@ -34,7 +34,7 @@ import java.util.Optional;
  * @since 0.2.0 ~2021.01.11
  */
 @FunctionalInterface
-public interface Visitor<R> {
+public interface SketchVisitor<R> {
 	/**
 	 * Visits areas in a non-reserving parent that has not been reserved by any parent in
 	 * it.

@@ -27,7 +27,7 @@ import java.util.*;
  * @since 0.2.0 ~2021.01.24
  */
 @FunctionalInterface
-public interface Sketcher extends Visitor<Sketch> {
+public interface Sketcher extends SketchVisitor<Sketch> {
 	/**
 	 * Return a visitor that loops until all the given {@code sketchers} can not find any
 	 * matching sketch in the provided sketch anymore. Foreach found sketch in a provided
@@ -41,7 +41,7 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	static Visitor<?> builder(Sketcher... sketchers) {
+	static SketchVisitor<?> builder(Sketcher... sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		return Sketcher.builder(Arrays.asList(sketchers));
 	}
@@ -59,7 +59,7 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	static Visitor<?> builder(Collection<Sketcher> sketchers) {
+	static SketchVisitor<?> builder(Collection<Sketcher> sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		//noinspection OverlyLongLambda
 		return sketch -> {

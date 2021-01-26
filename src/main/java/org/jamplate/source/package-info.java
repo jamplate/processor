@@ -22,8 +22,8 @@
  *     <li>Source-Code are wrapped with {@link org.jamplate.source.document.Document}s.</li>
  *     <li>Documents get sliced into {@link org.jamplate.source.reference.Reference}s.</li>
  *     <li>Source get referenced by {@link org.jamplate.source.sketch.Sketch}s.</li>
- *     <li>Sketch Hierarchy get built from Sketches using {@link org.jamplate.source.tools.Visitor}s.</li>
- *     <li>Element Hierarchy get built from a Sketch Hierarchy using {@link org.jamplate.source.tools.Visitor}s.</li>
+ *     <li>Sketch Hierarchy get built from Sketches using {@link org.jamplate.source.tools.SketchVisitor}s.</li>
+ *     <li>Element Hierarchy get built from a Sketch Hierarchy using {@link org.jamplate.source.tools.SketchVisitor}s.</li>
  *     <li>An Element Hierarchy can be serialized and stored for later use.</li>
  *     <li>The Processing start executing by invoking the Root Element of an Element Hierarchy.</li>
  * </ul>

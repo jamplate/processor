@@ -17,7 +17,7 @@ package org.jamplate.source.sketch;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.source.Dominance;
-import org.jamplate.source.tools.Visitor;
+import org.jamplate.source.tools.SketchVisitor;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 	@SuppressWarnings("OverlyComplexMethod")
 	@Override
-	public <R> Optional<R> accept(Visitor<R> visitor) {
+	public <R> Optional<R> accept(SketchVisitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
 
 		Optional<R> results;

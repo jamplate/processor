@@ -16,7 +16,7 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.source.tools.Visitor;
+import org.jamplate.source.tools.SketchVisitor;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Objects;
@@ -47,7 +47,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	}
 
 	@Override
-	public <R> Optional<R> accept(Visitor<R> visitor) {
+	public <R> Optional<R> accept(SketchVisitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
 		return visitor.visitSketch(this);
 	}
