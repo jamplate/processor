@@ -13,8 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.source.reference;
+package org.jamplate.source;
 
+import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.Sketch;
 
 import java.util.Objects;
@@ -259,6 +260,10 @@ public enum Dominance {
 	public static Dominance compute(Reference reference, Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
+
+		if (!reference.document().equals(other.document()))
+			return Dominance.NONE;
+
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();

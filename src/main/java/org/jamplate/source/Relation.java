@@ -13,8 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.source.reference;
+package org.jamplate.source;
 
+import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.Sketch;
 
 import java.util.Objects;
@@ -314,6 +315,26 @@ public enum Relation {
 	 * @since 0.2.0 ~2021.01.09
 	 */
 	BEFORE("AFTER", Dominance.NONE),
+
+	/**
+	 * <b>Parallel Universe</b> {@link #PARALLEL (opposite)}
+	 * <br>
+	 * When the two source found to be from different document.
+	 * <pre>
+	 *     |-->. .....
+	 *     ..... .|-->
+	 * </pre>
+	 * <pre>
+	 *     {@code d != o}
+	 * </pre>
+	 * <pre>
+	 *     {@code d != o}
+	 * </pre>
+	 *
+	 * @see Dominance#NONE
+	 * @since 0.2.0 ~2021.01.26
+	 */
+	PARALLEL("PARALLEL", Dominance.NONE),
 	;
 
 	/**
@@ -434,6 +455,10 @@ public enum Relation {
 	public static Relation compute(Reference reference, Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
+
+		if (!reference.document().equals(other.document()))
+			return Relation.PARALLEL;
+
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();
