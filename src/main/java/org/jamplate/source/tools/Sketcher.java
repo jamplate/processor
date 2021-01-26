@@ -13,7 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.source.sketch;
+package org.jamplate.source.tools;
+
+import org.jamplate.source.sketch.Sketch;
 
 import java.util.*;
 

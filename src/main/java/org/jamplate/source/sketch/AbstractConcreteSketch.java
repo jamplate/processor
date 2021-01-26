@@ -16,6 +16,7 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.diagnostic.Diagnostic;
+import org.jamplate.source.tools.Visitor;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Objects;

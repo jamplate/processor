@@ -16,7 +16,8 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.source.reference.Dominance;
+import org.jamplate.source.Dominance;
+import org.jamplate.source.tools.Visitor;
 import org.jamplate.source.reference.Reference;
 
 import java.util.Iterator;
@@ -152,7 +153,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 				break;
 			default:
 				Diagnostic.printError("Context Sketch Clash", this.reference, sketch.reference());
-				throw new IllegalArgumentException("Cannot put a sketch with a dominance other than PART");
+				throw new IllegalArgumentException("Cannot put a sketch with a dominance other than PART or EXACT");
 		}
 
 		//case Dominance.SHARE or Dominance.EXACT with another sketch
