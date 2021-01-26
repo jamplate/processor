@@ -16,6 +16,7 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.impl.sketch.*;
+import org.jamplate.source.tools.Sketcher;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

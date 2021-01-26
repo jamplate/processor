@@ -15,9 +15,9 @@
  */
 package org.jamplate;
 
-import org.jamplate.source.reference.Dominance;
+import org.jamplate.source.Dominance;
 import org.jamplate.source.reference.Reference;
-import org.jamplate.source.reference.Relation;
+import org.jamplate.source.Relation;
 import org.jamplate.source.sketch.Sketch;
 
 import java.util.Objects;

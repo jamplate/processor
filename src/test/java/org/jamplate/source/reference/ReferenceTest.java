@@ -15,6 +15,7 @@
  */
 package org.jamplate.source.reference;
 
+import org.jamplate.source.Relation;
 import org.junit.Test;
 
 import static org.jamplate.InternalAssert.assertRelation;
