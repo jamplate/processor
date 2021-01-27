@@ -101,14 +101,6 @@ public class FileDocument extends AbstractDocument {
 	}
 
 	@Override
-	public int length() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		//we should call it either way
-		return this.readContent().length();
-	}
-
-	@Override
 	public InputStream openInputStream() throws FileNotFoundException {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");

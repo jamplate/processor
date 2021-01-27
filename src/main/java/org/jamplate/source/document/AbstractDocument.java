@@ -15,7 +15,9 @@
  */
 package org.jamplate.source.document;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * An abstraction of the basic functionality of a document.
@@ -57,6 +59,20 @@ public abstract class AbstractDocument implements Document {
 	protected final transient boolean constructed;
 
 	/**
+	 * The length of this document. (lazily initialized)
+	 *
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	@SuppressWarnings("TransientFieldNotInitialized")
+	protected transient int length = -1;
+	/**
+	 * An array of the positions of the lines in this document. (lazily initialized)
+	 *
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	protected transient int[] lines;
+
+	/**
 	 * Construct a new document that has the given {@code qualifiedName}, {@code name} and
 	 * {@code simpleName}.
 	 *
@@ -86,6 +102,31 @@ public abstract class AbstractDocument implements Document {
 	@Override
 	public int hashCode() {
 		return this.qualifiedName.hashCode();
+	}
+
+	@Override
+	public int length() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Document");
+		if (this.length == -1)
+			this.length = this.readContent().length();
+
+		return this.length;
+	}
+
+	@Override
+	public IntStream lines() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Document");
+		if (this.lines == null) {
+			CharSequence content = this.readContent();
+			//noinspection MagicCharacter
+			this.lines = IntStream.range(0, content.length())
+					.filter(i -> i == 0 || content.charAt(i) == '\n')
+					.toArray();
+		}
+
+		return Arrays.stream(this.lines);
 	}
 
 	@Override

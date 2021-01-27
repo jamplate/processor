@@ -132,13 +132,6 @@ public class PseudoDocument extends AbstractDocument {
 	}
 
 	@Override
-	public int length() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		return this.content.length();
-	}
-
-	@Override
 	public InputStream openInputStream() {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");

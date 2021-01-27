@@ -17,6 +17,7 @@ package org.jamplate.source.document;
 
 import java.io.*;
 import java.util.Comparator;
+import java.util.stream.IntStream;
 
 /**
  * An interface that abstracts the functionality required to deal with source-code files.
@@ -94,6 +95,16 @@ public interface Document extends Serializable {
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	int length();
+
+	/**
+	 * Returns an ordered stream of the positions of the lines in this document.
+	 *
+	 * @return a stream of the lines in this document.
+	 * @throws IllegalStateException if this document is a deserialized document.
+	 * @throws IOError               if any I/O exception occurs.
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	IntStream lines();
 
 	/**
 	 * Return the name of this document.
