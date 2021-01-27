@@ -64,6 +64,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 *
 	 * @param document the document of the constructed sketch.
 	 * @throws NullPointerException if the given {@code document} is null.
+	 * @throws IllegalStateException if the given {@code document} is a deserialized document.
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.12
 	 */
