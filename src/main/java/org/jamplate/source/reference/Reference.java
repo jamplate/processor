@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
  * Note: source references are built from top to bottom. So, a typical source reference
  * will store its parent reference but never store any sub-reference of it.
  * <br>
- * The reference should serialize its {@link #document()}, {@link #position()} and {@link
- * #length()}. It is not encouraged to serialize additional data.
+ * The reference should serialize its {@link #document()}, {@link #line()}, {@link
+ * #position()} and {@link #length()}. It is not encouraged to serialize additional data.
  * <br>
  * If a reference is a deserialized reference then any method that attempts to read the
  * document or attempts to access the parent or attempts to create new references will
@@ -150,6 +150,23 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	int length();
+
+	/**
+	 * Return the line number of this reference.
+	 *
+	 * @return the line number of this reference.
+	 * @since 0.2.0 ~2021.01.26
+	 */
+	int line();
+
+	/**
+	 * Return a reference for the whole line this reference has occurred at.
+	 *
+	 * @return a reference of the whole line of this.
+	 * @throws IllegalStateException if this reference is a deserialized reference.
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	Reference lineReference();
 
 	/**
 	 * The parent reference of this reference.

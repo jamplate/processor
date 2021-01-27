@@ -16,12 +16,13 @@
 package org.jamplate;
 
 import org.jamplate.source.Dominance;
-import org.jamplate.source.reference.Reference;
 import org.jamplate.source.Relation;
+import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.Sketch;
 
 import java.util.Objects;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "UtilityClass"})
@@ -55,6 +56,28 @@ public final class InternalAssert {
 				reference + " has an unexpected length ",
 				length,
 				reference.length()
+		);
+	}
+
+	public static void assertLine(Reference reference, int line) {
+		Objects.requireNonNull(reference, "reference");
+		assertSame(
+				"Reference " + reference + " calculated to unexpected line",
+				line,
+				reference.line()
+		);
+		Reference lineReference = reference.lineReference();
+		assertSame(
+				"Has an invalid line reference " + reference,
+				line,
+				lineReference.line()
+		);
+		assertFalse(
+				"Has an invalid line reference " + reference,
+				lineReference.content().
+						toString()
+						.substring(1)
+						.contains("\n")
 		);
 	}
 

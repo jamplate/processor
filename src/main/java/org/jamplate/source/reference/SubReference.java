@@ -51,6 +51,8 @@ public class SubReference extends AbstractReference {
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
+	 * @throws IllegalStateException     if the given {@code parent} or is a deserialized
+	 *                                   reference.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	public SubReference(Reference parent, int position, int length) {

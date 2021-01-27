@@ -63,33 +63,13 @@ public class DocumentReference extends AbstractReference {
 	 * Construct a new reference that points to the whole given {@code document}.
 	 *
 	 * @param document the document.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @throws IOError              if any I/O exception occurs.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws IllegalStateException if the given {@code document} is a deserialized
+	 *                               document.
+	 * @throws IOError               if any I/O exception occurs.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public DocumentReference(Document document) {
 		super(document);
-	}
-
-	@Override
-	public Reference subReference(int position) {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
-		return new SubReference(
-				this,
-				position,
-				this.length - position
-		);
-	}
-
-	@Override
-	public Reference subReference(int position, int length) {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
-		return new SubReference(
-				this,
-				position,
-				length
-		);
 	}
 }

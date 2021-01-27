@@ -18,6 +18,7 @@ package org.jamplate.source.reference;
 import org.jamplate.source.document.Document;
 
 import java.io.IOError;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -44,6 +45,12 @@ public abstract class AbstractReference implements Reference {
 	 */
 	protected final int length;
 	/**
+	 * The line this reference is at in its document.
+	 *
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	protected final int line;
+	/**
 	 * The position where the content of this reference starts at its {@link #document}.
 	 *
 	 * @since 0.2.0 ~2021.01.09
@@ -51,8 +58,8 @@ public abstract class AbstractReference implements Reference {
 	protected final int position;
 
 	/**
-	 * True, if this reference has been constructed using its constructor. (in other
-	 * words 'not deserialized')
+	 * True, if this reference has been constructed using its constructor. (in other words
+	 * 'not deserialized')
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
@@ -78,8 +85,10 @@ public abstract class AbstractReference implements Reference {
 	 * source.
 	 *
 	 * @param document the document of the constructed reference.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @throws IOError              if any I/O exception occur.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws IllegalStateException if the given {@code document} is a deserialized
+	 *                               document.
+	 * @throws IOError               if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractReference(Document document) {
@@ -88,6 +97,43 @@ public abstract class AbstractReference implements Reference {
 		this.parent = null;
 		this.position = 0;
 		this.length = document.length();
+		this.line = 1;
+		this.constructed = true;
+	}
+
+	/**
+	 * Construct a new reference that points to the line with the given {@code line}
+	 * number in the given {@code document}.
+	 *
+	 * @param document the document the constructed reference will be referencing.
+	 * @param line     the line the constructed reference will point to.
+	 * @throws NullPointerException     if the given {@code document} is null.
+	 * @throws IllegalArgumentException if {@code line < 1}.
+	 * @throws NoSuchElementException   if the given {@code document} do not have such
+	 *                                  line.
+	 * @throws IllegalStateException    if the given {@code document} or is a deserialized
+	 *                                  document.
+	 * @throws IOError                  if any I/O error occur.
+	 * @since 0.2.0 ~2021.01.27
+	 */
+	protected AbstractReference(Document document, int line) {
+		Objects.requireNonNull(document, "document");
+		if (line < 1)
+			throw new IllegalArgumentException("non-positive line");
+		if (line > document.lines().count())
+			throw new NoSuchElementException("line not found");
+		this.document = document;
+		this.parent = new DocumentReference(document);
+		this.position = document.lines()
+				.skip(line - 1)
+				.findFirst()
+				.getAsInt();
+		this.length = document.lines()
+							  .skip(line)
+							  .findFirst()
+							  .orElseGet(document::length) -
+					  this.position;
+		this.line = line;
 		this.constructed = true;
 	}
 
@@ -113,6 +159,8 @@ public abstract class AbstractReference implements Reference {
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
 	 *                                   length of the given {@code parent}.
+	 * @throws IllegalStateException     if the given {@code parent} or is a deserialized
+	 *                                   reference.
 	 * @since 0.2.0 ~2021.01.17
 	 */
 	protected AbstractReference(Reference parent, int position, int length) {
@@ -127,13 +175,18 @@ public abstract class AbstractReference implements Reference {
 		this.parent = parent;
 		this.position = parent.position() + position;
 		this.length = length;
+		//noinspection NumericCastThatLosesPrecision
+		this.line = (int) parent.document()
+				.lines()
+				.filter(i -> i <= position)
+				.count();
 		this.constructed = true;
 	}
 
 	@Override
 	public CharSequence content() {
 		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
+			throw new IllegalStateException("Deserialized Reference");
 		if (this.content == null)
 			this.content = this.document.readContent()
 					.subSequence(
@@ -168,15 +221,52 @@ public abstract class AbstractReference implements Reference {
 	}
 
 	@Override
+	public int line() {
+		return this.line;
+	}
+
+	@Override
+	public Reference lineReference() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Reference");
+		return new LineReference(
+				this.document,
+				this.line
+		);
+	}
+
+	@Override
 	public Reference parent() {
 		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
+			throw new IllegalStateException("Deserialized Reference");
 		return this.parent;
 	}
 
 	@Override
 	public int position() {
 		return this.position;
+	}
+
+	@Override
+	public Reference subReference(int position) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Reference");
+		return new SubReference(
+				this,
+				position,
+				this.length - position
+		);
+	}
+
+	@Override
+	public Reference subReference(int position, int length) {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Reference");
+		return new SubReference(
+				this,
+				position,
+				length
+		);
 	}
 
 	@Override

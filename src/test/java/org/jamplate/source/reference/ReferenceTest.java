@@ -16,13 +16,34 @@
 package org.jamplate.source.reference;
 
 import org.jamplate.source.Relation;
+import org.jamplate.source.document.Document;
+import org.jamplate.source.document.PseudoDocument;
 import org.junit.Test;
 
+import static org.jamplate.InternalAssert.assertLine;
 import static org.jamplate.InternalAssert.assertRelation;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
 public class ReferenceTest {
+	@Test
+	public void lines() {
+		Document document = new PseudoDocument("ABC\n123\n=+-");
+		Reference reference = new DocumentReference(document);
+		Reference c = reference.subReference(2);
+		Reference ln = reference.subReference(3);
+		Reference n3 = reference.subReference(6);
+		Reference ln2 = reference.subReference(7);
+		Reference eod = reference.subReference(11);
+
+		assertLine(reference, 1);
+		assertLine(c, 1);
+		assertLine(ln, 2);
+		assertLine(n3, 2);
+		assertLine(ln2, 3);
+		assertLine(eod, 3);
+	}
+
 	@Test
 	public void relations() {
 		Reference reference = new DocumentReference("ABC0123");
