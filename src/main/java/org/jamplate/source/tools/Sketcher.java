@@ -162,7 +162,7 @@ public interface Sketcher extends SketchVisitor<Sketch> {
 	 */
 	@SuppressWarnings("RedundantMethodOverride")
 	@Override
-	default Optional<Sketch> visitNonSketched(Sketch parent, int position, int length) {
+	default Optional<Sketch> visitRange(Sketch parent, int position, int length) {
 		Objects.requireNonNull(parent, "parent");
 		return null;
 	}

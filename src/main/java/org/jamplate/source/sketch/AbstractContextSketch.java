@@ -85,7 +85,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 			if (i != s0)
 				//visit `[i, s0)`
-				if ((results = visitor.visitNonSketched(this, i, s0 - i)) != null)
+				if ((results = visitor.visitRange(this, i, s0 - i)) != null)
 					return results;
 
 			//visit the first sketch
@@ -101,7 +101,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 				if (ep < sn)
 					//visit `[ep, sn)`
-					if ((results = visitor.visitNonSketched(this, ep, sn - ep)) != null)
+					if ((results = visitor.visitRange(this, ep, sn - ep)) != null)
 						return results;
 
 				//visit the next sketch
@@ -114,13 +114,13 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			return ep == j ?
 				   null :
 				   //visit `[ep, j)`
-				   visitor.visitNonSketched(this, ep, j - ep);
+				   visitor.visitRange(this, ep, j - ep);
 		}
 
 		return m == 0 ?
 			   null :
 			   //visit `[i, j)`
-			   visitor.visitNonSketched(this, i, m);
+			   visitor.visitRange(this, i, m);
 	}
 
 	@Override

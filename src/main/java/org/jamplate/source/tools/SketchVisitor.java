@@ -52,7 +52,7 @@ public interface SketchVisitor<R> {
 	 *                                   sketch}. (optional)
 	 * @since 0.2.0 ~2021.01.19
 	 */
-	default Optional<R> visitNonSketched(Sketch parent, int position, int length) {
+	default Optional<R> visitRange(Sketch parent, int position, int length) {
 		Objects.requireNonNull(parent, "parent");
 		return null;
 	}
