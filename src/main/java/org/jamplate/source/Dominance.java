@@ -172,6 +172,7 @@ public enum Dominance {
 	 * @see Relation#PREVIOUS
 	 * @see Relation#AFTER
 	 * @see Relation#BEFORE
+	 * @see Relation#PARALLEL
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	NONE("NONE"),
