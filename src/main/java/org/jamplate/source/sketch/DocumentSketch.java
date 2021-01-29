@@ -19,7 +19,6 @@ import org.jamplate.source.document.Document;
 import org.jamplate.source.document.FileDocument;
 import org.jamplate.source.document.PseudoDocument;
 import org.jamplate.source.reference.DocumentReference;
-import org.jamplate.source.reference.Reference;
 
 import java.io.File;
 import java.io.IOError;
@@ -31,7 +30,7 @@ import java.io.IOError;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public class RootSketch extends AbstractContextSketch {
+public class DocumentSketch extends AbstractContextSketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -381022842178840192L;
 
@@ -43,7 +42,7 @@ public class RootSketch extends AbstractContextSketch {
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public RootSketch(CharSequence content) {
+	public DocumentSketch(CharSequence content) {
 		super(new DocumentReference(content));
 	}
 
@@ -56,7 +55,7 @@ public class RootSketch extends AbstractContextSketch {
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public RootSketch(File file) {
+	public DocumentSketch(File file) {
 		super(new DocumentReference(file));
 	}
 
@@ -70,7 +69,7 @@ public class RootSketch extends AbstractContextSketch {
 	 * @throws IOError               if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public RootSketch(Document document) {
+	public DocumentSketch(Document document) {
 		super(new DocumentReference(document));
 	}
 
@@ -81,7 +80,7 @@ public class RootSketch extends AbstractContextSketch {
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public RootSketch(Reference reference) {
+	public DocumentSketch(DocumentReference reference) {
 		super(reference);
 	}
 }
