@@ -38,7 +38,7 @@ public class PseudoDocument extends AbstractDocument {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
-	protected final transient CharSequence content;
+	protected final transient String content;
 
 	/**
 	 * Construct a new pseudo document that have the given {@code content}. The qualified
@@ -55,7 +55,7 @@ public class PseudoDocument extends AbstractDocument {
 				PseudoDocument.name(content),
 				PseudoDocument.simpleName(content)
 		);
-		this.content = content;
+		this.content = content.toString();
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class PseudoDocument extends AbstractDocument {
 	public PseudoDocument(CharSequence content, String name) {
 		super(name, name, name);
 		Objects.requireNonNull(content, "content");
-		this.content = content;
+		this.content = content.toString();
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class PseudoDocument extends AbstractDocument {
 	public PseudoDocument(CharSequence content, String qualifiedName, String name, String simpleName) {
 		super(qualifiedName, name, simpleName);
 		Objects.requireNonNull(content, "content");
-		this.content = content;
+		this.content = content.toString();
 	}
 
 	/**
@@ -135,14 +135,14 @@ public class PseudoDocument extends AbstractDocument {
 	public InputStream openInputStream() {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
-		return new ByteArrayInputStream(this.content.toString().getBytes());
+		return new ByteArrayInputStream(this.content.getBytes());
 	}
 
 	@Override
 	public Reader openReader() {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
-		return new StringReader(this.content.toString());
+		return new StringReader(this.content);
 	}
 
 	@Override
