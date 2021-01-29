@@ -20,10 +20,7 @@ import org.jamplate.source.Dominance;
 import org.jamplate.source.Visitor;
 import org.jamplate.source.reference.Reference;
 
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -40,12 +37,13 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	/**
 	 * The inner sketches of this sketch.
 	 * <br>
-	 * The elements of this set. Must all have a dominance of {@link Dominance#PART} with
-	 * this sketch and a dominance of {@link Dominance#NONE} with each other.
+	 * The elements of this set must all be not null and cheat-checked and have a
+	 * dominance of {@link Dominance#PART} with this sketch and a dominance of {@link
+	 * Dominance#NONE} with each other.
 	 *
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	protected final TreeSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
+	protected final NavigableSet<Sketch> sketches = new TreeSet<>(Sketch.COMPARATOR);
 
 	/**
 	 * Construct a new sketch with the given {@code reference}. The given source reference
