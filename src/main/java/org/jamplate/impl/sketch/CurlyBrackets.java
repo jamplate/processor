@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.sketch;
 
-import org.jamplate.source.tools.Sketcher;
+import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;

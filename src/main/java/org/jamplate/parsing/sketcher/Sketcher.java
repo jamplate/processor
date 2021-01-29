@@ -13,9 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.source.tools;
+package org.jamplate.parsing.sketcher;
 
 import org.jamplate.source.sketch.Sketch;
+import org.jamplate.source.Visitor;
 
 import java.util.*;
 
@@ -27,7 +28,7 @@ import java.util.*;
  * @since 0.2.0 ~2021.01.24
  */
 @FunctionalInterface
-public interface Sketcher extends SketchVisitor<Sketch> {
+public interface Sketcher extends Visitor<Sketch> {
 	/**
 	 * Return a visitor that loops until all the given {@code sketchers} can not find any
 	 * matching sketch in the provided sketch anymore. Foreach found sketch in a provided
@@ -41,7 +42,7 @@ public interface Sketcher extends SketchVisitor<Sketch> {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	static SketchVisitor<?> builder(Sketcher... sketchers) {
+	static Visitor<?> builder(Sketcher... sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		return Sketcher.builder(Arrays.asList(sketchers));
 	}
@@ -59,7 +60,7 @@ public interface Sketcher extends SketchVisitor<Sketch> {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	static SketchVisitor<?> builder(Collection<Sketcher> sketchers) {
+	static Visitor<?> builder(Collection<Sketcher> sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		//noinspection OverlyLongLambda
 		return sketch -> {

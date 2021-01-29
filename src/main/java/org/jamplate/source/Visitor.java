@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.source.tools;
+package org.jamplate.source;
 
 import org.jamplate.source.sketch.Sketch;
 
@@ -34,7 +34,7 @@ import java.util.Optional;
  * @since 0.2.0 ~2021.01.11
  */
 @FunctionalInterface
-public interface SketchVisitor<R> {
+public interface Visitor<R> {
 	/**
 	 * Visits areas in a non-reserving parent that has not been reserved by any parent in
 	 * it.
