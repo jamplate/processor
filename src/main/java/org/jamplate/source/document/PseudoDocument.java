@@ -51,9 +51,9 @@ public class PseudoDocument extends AbstractDocument {
 	 */
 	public PseudoDocument(CharSequence content) {
 		super(
-				PseudoDocument.qualifiedName(content),
-				PseudoDocument.name(content),
-				PseudoDocument.simpleName(content)
+				Integer.toHexString(System.identityHashCode(content)),
+				"",
+				""
 		);
 		this.content = content.toString();
 	}
@@ -90,45 +90,6 @@ public class PseudoDocument extends AbstractDocument {
 		super(qualifiedName, name, simpleName);
 		Objects.requireNonNull(content, "content");
 		this.content = content.toString();
-	}
-
-	/**
-	 * Returns the name of the given {@code content}.
-	 *
-	 * @param content the content to get its name.
-	 * @return the name of the given {@code content}.
-	 * @throws NullPointerException if the given {@code content} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String name(CharSequence content) {
-		Objects.requireNonNull(content, "content");
-		return "";
-	}
-
-	/**
-	 * Returns the qualified name of the given {@code content}.
-	 *
-	 * @param content the content to get its qualified name.
-	 * @return the qualified name of the given {@code content}.
-	 * @throws NullPointerException if the given {@code content} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String qualifiedName(CharSequence content) {
-		Objects.requireNonNull(content, "content");
-		return Integer.toHexString(System.identityHashCode(content));
-	}
-
-	/**
-	 * Returns the simple name of the given {@code content}.
-	 *
-	 * @param content the content to get its simple name.
-	 * @return the simple name of the given {@code content}.
-	 * @throws NullPointerException if the given {@code content} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String simpleName(CharSequence content) {
-		Objects.requireNonNull(content, "content");
-		return "";
 	}
 
 	@Override

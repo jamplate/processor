@@ -16,7 +16,6 @@
 package org.jamplate.source.document;
 
 import java.io.*;
-import java.util.Objects;
 
 /**
  * A document that delegates to a {@link File}.
@@ -52,52 +51,13 @@ public class FileDocument extends AbstractDocument {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public FileDocument(File file) {
+		//noinspection DynamicRegexReplaceableByCompiledPattern
 		super(
-				FileDocument.qualifiedName(file),
-				FileDocument.name(file),
-				FileDocument.simpleName(file)
+				file.toString(),
+				file.getName(),
+				file.getName().replaceAll("[.][^.]*$", "")
 		);
 		this.file = file;
-	}
-
-	/**
-	 * Returns the name of the given {@code file}.
-	 *
-	 * @param file the file to get its name.
-	 * @return the name of the given {@code file}.
-	 * @throws NullPointerException if the given {@code file} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String name(File file) {
-		Objects.requireNonNull(file, "file");
-		return file.getName();
-	}
-
-	/**
-	 * Returns the qualified name of the given {@code file}.
-	 *
-	 * @param file the file to get its qualified name.
-	 * @return the qualified name of the given {@code file}.
-	 * @throws NullPointerException if the given {@code file} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String qualifiedName(File file) {
-		Objects.requireNonNull(file, "file");
-		return file.toString();
-	}
-
-	/**
-	 * Returns the simple name of the given {@code file}.
-	 *
-	 * @param file the file to get its simple name.
-	 * @return the simple name of the given {@code file}.
-	 * @throws NullPointerException if the given {@code file} is null.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static String simpleName(File file) {
-		Objects.requireNonNull(file, "file");
-		//noinspection DynamicRegexReplaceableByCompiledPattern
-		return file.getName().replaceAll("[.][^.]*$", "");
 	}
 
 	@Override
