@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.23
  */
-public final class CurlyBrackets {
+public final class Braces {
 	/**
 	 * A pattern that detects the start of a brackets context.
 	 *
@@ -47,12 +47,12 @@ public final class CurlyBrackets {
 	public static final Pattern PATTERN_START = Pattern.compile("[{]");
 
 	/**
-	 * A visitor that makes {@link CurlyBracketsSketch} when it found available brackets
-	 * pair in a sketch.
+	 * A visitor that makes {@link BracesSketch} when it found available brackets pair in
+	 * a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketcher SKETCHER = new CurlyBracketsSketcher();
+	public static final Sketcher SKETCHER = new BracesSketcher();
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -60,7 +60,7 @@ public final class CurlyBrackets {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	private CurlyBrackets() {
+	private Braces() {
 		throw new AssertionError("No instance for you!");
 	}
 
@@ -77,7 +77,7 @@ public final class CurlyBrackets {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class CurlyBracketSketch extends AbstractConcreteSketch {
+	public static final class BraceSketch extends AbstractConcreteSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 3996900909023911874L;
 
@@ -89,7 +89,7 @@ public final class CurlyBrackets {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private CurlyBracketSketch(Reference reference) {
+		private BraceSketch(Reference reference) {
 			super(reference);
 		}
 	}
@@ -104,7 +104,7 @@ public final class CurlyBrackets {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class CurlyBracketsSketch extends AbstractContextSketch {
+	public static final class BracesSketch extends AbstractContextSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 1738781066145922168L;
 
@@ -116,37 +116,37 @@ public final class CurlyBrackets {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private CurlyBracketsSketch(Reference reference) {
+		private BracesSketch(Reference reference) {
 			super(reference);
 		}
 	}
 
 	/**
-	 * A visitor that makes {@link CurlyBracketsSketch} when it found available brackets
-	 * pair in a sketch.
+	 * A visitor that makes {@link BracesSketch} when it found available brackets pair in
+	 * a sketch.
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class CurlyBracketsSketcher implements Sketcher {
+	public static final class BracesSketcher implements Sketcher {
 		/**
 		 * A private constructor to avoid creating multiple instances of this.
 		 *
 		 * @since 0.2.0 ~2021.01.23
 		 */
-		private CurlyBracketsSketcher() {
+		private BracesSketcher() {
 		}
 
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, CurlyBrackets.PATTERN_START, CurlyBrackets.PATTERN_END);
+			Reference[] references = Sketch.find(sketch, Braces.PATTERN_START, Braces.PATTERN_END);
 
 			if (references != null) {
-				Sketch s = new CurlyBracketsSketch(references[0]);
-				s.put(new CurlyBracketSketch(references[1]));
-				s.put(new CurlyBracketSketch(references[2]));
+				Sketch s = new BracesSketch(references[0]);
+				s.put(new BraceSketch(references[1]));
+				s.put(new BraceSketch(references[2]));
 				return Optional.of(s);
 			}
 

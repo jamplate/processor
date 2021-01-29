@@ -15,11 +15,11 @@
  */
 package org.jamplate.impl.sketch;
 
+import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
 import org.jamplate.source.sketch.Sketch;
-import org.jamplate.parsing.sketcher.Sketcher;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.23
  */
-public final class SquareBrackets {
+public final class Brackets {
 	/**
 	 * A pattern that detects the start of a brackets context.
 	 *
@@ -47,12 +47,12 @@ public final class SquareBrackets {
 	public static final Pattern PATTERN_START = Pattern.compile("[\\[]");
 
 	/**
-	 * A visitor that makes {@link SquareBracketsSketch} when it found available brackets
-	 * pair in a sketch.
+	 * A visitor that makes {@link BracketsSketch} when it found available brackets pair
+	 * in a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketcher SKETCHER = new SquareBracketsSketcher();
+	public static final Sketcher SKETCHER = new BracketsSketcher();
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -60,7 +60,7 @@ public final class SquareBrackets {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	private SquareBrackets() {
+	private Brackets() {
 		throw new AssertionError("No instance for you!");
 	}
 
@@ -77,7 +77,7 @@ public final class SquareBrackets {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class SquareBracketSketch extends AbstractConcreteSketch {
+	public static final class BracketSketch extends AbstractConcreteSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 6108441942086890901L;
 
@@ -89,7 +89,7 @@ public final class SquareBrackets {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private SquareBracketSketch(Reference reference) {
+		private BracketSketch(Reference reference) {
 			super(reference);
 		}
 	}
@@ -104,7 +104,7 @@ public final class SquareBrackets {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class SquareBracketsSketch extends AbstractContextSketch {
+	public static final class BracketsSketch extends AbstractContextSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 3428179238573892953L;
 
@@ -116,37 +116,37 @@ public final class SquareBrackets {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private SquareBracketsSketch(Reference reference) {
+		private BracketsSketch(Reference reference) {
 			super(reference);
 		}
 	}
 
 	/**
-	 * A visitor that makes {@link SquareBracketsSketch} when it found available brackets
-	 * pair in a sketch.
+	 * A visitor that makes {@link BracketsSketch} when it found available brackets pair
+	 * in a sketch.
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class SquareBracketsSketcher implements Sketcher {
+	public static final class BracketsSketcher implements Sketcher {
 		/**
 		 * A private constructor to avoid creating multiple instances of this.
 		 *
 		 * @since 0.2.0 ~2021.01.23
 		 */
-		private SquareBracketsSketcher() {
+		private BracketsSketcher() {
 		}
 
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, SquareBrackets.PATTERN_START, SquareBrackets.PATTERN_END);
+			Reference[] references = Sketch.find(sketch, Brackets.PATTERN_START, Brackets.PATTERN_END);
 
 			if (references != null) {
-				Sketch s = new SquareBracketsSketch(references[0]);
-				s.put(new SquareBracketSketch(references[1]));
-				s.put(new SquareBracketSketch(references[2]));
+				Sketch s = new BracketsSketch(references[0]);
+				s.put(new BracketSketch(references[1]));
+				s.put(new BracketSketch(references[2]));
 				return Optional.of(s);
 			}
 

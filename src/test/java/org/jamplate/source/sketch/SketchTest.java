@@ -49,8 +49,8 @@ public class SketchTest {
 
 		sketch.accept(Sketcher.builder(Sketcher.sequence(
 				Parentheses.SKETCHER,
-				SquareBrackets.SKETCHER,
-				CurlyBrackets.SKETCHER
+				Brackets.SKETCHER,
+				Braces.SKETCHER
 		)));
 
 		//document 1
@@ -146,8 +146,8 @@ public class SketchTest {
 		sketch.accept(Sketcher.builder(Sketcher.sequence(
 				Quotes.SKETCHER,
 				Parentheses.SKETCHER,
-				SquareBrackets.SKETCHER,
-				CurlyBrackets.SKETCHER
+				Brackets.SKETCHER,
+				Braces.SKETCHER
 		)));
 
 		//document 1
