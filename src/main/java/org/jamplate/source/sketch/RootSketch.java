@@ -19,6 +19,7 @@ import org.jamplate.source.document.Document;
 import org.jamplate.source.document.FileDocument;
 import org.jamplate.source.document.PseudoDocument;
 import org.jamplate.source.reference.DocumentReference;
+import org.jamplate.source.reference.Reference;
 
 import java.io.File;
 import java.io.IOError;
@@ -30,7 +31,7 @@ import java.io.IOError;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public class DocumentSketch extends AbstractContextSketch {
+public class RootSketch extends AbstractContextSketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -381022842178840192L;
 
@@ -42,7 +43,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public DocumentSketch(CharSequence content) {
+	public RootSketch(CharSequence content) {
 		super(new DocumentReference(content));
 	}
 
@@ -55,7 +56,7 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * @throws IOError              if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public DocumentSketch(File file) {
+	public RootSketch(File file) {
 		super(new DocumentReference(file));
 	}
 
@@ -63,23 +64,24 @@ public class DocumentSketch extends AbstractContextSketch {
 	 * Construct a new sketch with the given {@code document}.
 	 *
 	 * @param document the document of the constructed sketch.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @throws IllegalStateException if the given {@code document} is a deserialized document.
-	 * @throws IOError              if any I/O exception occur.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws IllegalStateException if the given {@code document} is a deserialized
+	 *                               document.
+	 * @throws IOError               if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public DocumentSketch(Document document) {
+	public RootSketch(Document document) {
 		super(new DocumentReference(document));
 	}
 
 	/**
 	 * Construct a new sketch with the given document {@code reference}.
 	 *
-	 * @param reference the document reference of the constructed sketch.
+	 * @param reference the source reference of the constructed sketch.
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.12
 	 */
-	public DocumentSketch(DocumentReference reference) {
+	public RootSketch(Reference reference) {
 		super(reference);
 	}
 }
