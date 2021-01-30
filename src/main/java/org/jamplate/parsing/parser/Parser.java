@@ -43,6 +43,7 @@ public interface Parser {
 	 * @throws RuntimeException     if the parser got into an unrecoverable state because
 	 *                              of something unexpected in the given {@code
 	 *                              document}.
+	 * @throws Error                if any unexpected error occurred.
 	 * @since 0.2.0 ~2021.01.26
 	 */
 	default Sketch parse(Document document) {
@@ -62,6 +63,7 @@ public interface Parser {
 	 * @throws RuntimeException     if the parser got into an unrecoverable state because
 	 *                              of something unexpected in the given {@code
 	 *                              reference}.
+	 * @throws Error                if any unexpected error occurred.
 	 * @since 0.2.0 ~2021.01.30
 	 */
 	default Sketch parse(Reference reference) {
@@ -78,6 +80,7 @@ public interface Parser {
 	 * @throws NullPointerException if the given {@code sketch} is null.
 	 * @throws RuntimeException     if the parser got into an unrecoverable state because
 	 *                              of something unexpected in the given {@code sketch}.
+	 * @throws Error                if any unexpected error occurred.
 	 * @since 0.2.0 ~2021.01.29
 	 */
 	void parse(Sketch sketch);
