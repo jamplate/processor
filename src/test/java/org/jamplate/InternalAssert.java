@@ -15,10 +15,10 @@
  */
 package org.jamplate;
 
-import org.jamplate.source.Dominance;
-import org.jamplate.source.Relation;
-import org.jamplate.source.reference.Reference;
-import org.jamplate.source.sketch.Sketch;
+import org.jamplate.model.Dominance;
+import org.jamplate.model.Relation;
+import org.jamplate.model.reference.Reference;
+import org.jamplate.model.sketch.Sketch;
 
 import java.util.Objects;
 

@@ -15,7 +15,7 @@
  */
 package org.jamplate.diagnostic;
 
-import org.jamplate.source.reference.Reference;
+import org.jamplate.model.reference.Reference;
 
 import java.io.PrintStream;
 import java.util.Deque;

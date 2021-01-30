@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package of Jamplate {@link org.jamplate.model.sketch.Sketch} implementations.
+ * A package all about the interface {@link org.jamplate.parse.sketcher.Sketcher}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.18
+ * @since 0.2.0 ~2021.01.29
  */
-package org.cufyplate.sketch;
+package org.jamplate.parse.sketcher;

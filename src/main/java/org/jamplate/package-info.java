@@ -15,6 +15,14 @@
  */
 /**
  * Jamplate is a java pre-processor.
+ * <br>
+ * Package layout:
+ * <ul>
+ *     <li>
+ *         Using the package {@link org.jamplate.parse}, source code get converted into
+ *         instances of the package {@link org.jamplate.model}
+ *     </li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

@@ -15,14 +15,14 @@
  */
 package org.cufyplate.sketch;
 
-import org.jamplate.parsing.crawler.ContextCrawler;
-import org.jamplate.parsing.crawler.Crawler;
-import org.jamplate.parsing.maker.Maker;
-import org.jamplate.parsing.sketcher.CrawlerSketcher;
-import org.jamplate.parsing.sketcher.Sketcher;
-import org.jamplate.source.reference.Reference;
-import org.jamplate.source.sketch.AbstractConcreteSketch;
-import org.jamplate.source.sketch.AbstractContextSketch;
+import org.jamplate.parse.crawler.ContextCrawler;
+import org.jamplate.parse.crawler.Crawler;
+import org.jamplate.parse.maker.Maker;
+import org.jamplate.parse.sketcher.CrawlerSketcher;
+import org.jamplate.parse.sketcher.Sketcher;
+import org.jamplate.model.reference.Reference;
+import org.jamplate.model.sketch.AbstractConcreteSketch;
+import org.jamplate.model.sketch.AbstractContextSketch;
 
 import java.util.regex.Pattern;
 
