@@ -15,7 +15,7 @@
  */
 package org.jamplate.source.sketch;
 
-import org.jamplate.impl.sketch.*;
+import org.cufyplate.sketch.*;
 import org.jamplate.parsing.parser.Parser;
 import org.jamplate.parsing.parser.SketchersParser;
 import org.jamplate.parsing.sketcher.PrecedentialSketcher;

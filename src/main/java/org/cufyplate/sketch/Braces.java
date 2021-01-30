@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.sketch;
+package org.cufyplate.sketch;
 
 import org.jamplate.parsing.crawler.ContextCrawler;
 import org.jamplate.parsing.crawler.Crawler;
@@ -27,53 +27,53 @@ import org.jamplate.source.sketch.AbstractContextSketch;
 import java.util.regex.Pattern;
 
 /**
- * A class holding classes about sketching {@code ''}. (quotes)
+ * A class holding classes about sketching {@code {}}. (curly brackets)
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.23
  */
-public final class Quotes {
+public final class Braces {
 	/**
 	 * The maker of the concrete sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Maker MAKER_CONCRETE = QuoteSketch::new;
+	public static final Maker MAKER_CONCRETE = BraceSketch::new;
 	/**
 	 * The maker of the context sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Maker MAKER_CONTEXT = QuotesSketch::new;
+	public static final Maker MAKER_CONTEXT = BracesSketch::new;
 
 	/**
-	 * The pattern of an ending quote.
+	 * A pattern that detects the start of a brackets context.
 	 *
-	 * @since 0.2.0 ~2021.01.23
+	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Pattern PATTERN_END = Pattern.compile("(?<!\\\\)[']");
+	public static final Pattern PATTERN_END = Pattern.compile("[}]");
 	/**
-	 * The pattern of a starting quote.
+	 * A pattern that detects the end of a brackets context.
 	 *
-	 * @since 0.2.0 ~2021.01.23
+	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Pattern PATTERN_START = Pattern.compile("(?<!\\\\)[']");
+	public static final Pattern PATTERN_START = Pattern.compile("[{]");
 
 	/**
-	 * The crawler that crawls for possibly valid quotes.
+	 * The crawler that crawls for possibly valid braces.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Crawler CRAWLER = new ContextCrawler(Quotes.PATTERN_START, Quotes.PATTERN_END);
+	public static final Crawler CRAWLER = new ContextCrawler(Braces.PATTERN_START, Braces.PATTERN_END);
 
 	/**
-	 * A visitor that makes {@link QuotesSketch} when it found available quotes pair in a
-	 * sketch.
+	 * A visitor that makes {@link BracesSketch} when it found available brackets pair in
+	 * a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.23
+	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(Quotes.CRAWLER, Quotes.MAKER_CONTEXT, Quotes.MAKER_CONCRETE, Quotes.MAKER_CONCRETE);
+	public static final Sketcher SKETCHER = new CrawlerSketcher(Braces.CRAWLER, Braces.MAKER_CONTEXT, Braces.MAKER_CONCRETE, Braces.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -81,20 +81,26 @@ public final class Quotes {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	private Quotes() {
+	private Braces() {
 		throw new AssertionError("No instance for you!");
 	}
 
 	/**
-	 * A sketch that represents a {@code '}. (quote)
+	 * A sketch for bracket symbol.
+	 * <pre>
+	 *     {
+	 * </pre>
+	 * <pre>
+	 *     }
+	 * </pre>
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.23
+	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class QuoteSketch extends AbstractConcreteSketch {
+	public static final class BraceSketch extends AbstractConcreteSketch {
 		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = 777485260949931605L;
+		private static final long serialVersionUID = 3996900909023911874L;
 
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
@@ -102,23 +108,26 @@ public final class Quotes {
 		 *
 		 * @param reference the source of the constructed sketch.
 		 * @throws NullPointerException if the given {@code source} is null.
-		 * @since 0.2.0 ~2021.01.17
+		 * @since 0.2.0 ~2021.01.18
 		 */
-		private QuoteSketch(Reference reference) {
+		private BraceSketch(Reference reference) {
 			super(reference);
 		}
 	}
 
 	/**
-	 * A sketch that represents {@code ''}. (quotes context)
+	 * A sketch for brackets context.
+	 * <pre>
+	 *     {}
+	 * </pre>
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.23
+	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class QuotesSketch extends AbstractContextSketch {
+	public static final class BracesSketch extends AbstractContextSketch {
 		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = -3465886194836402720L;
+		private static final long serialVersionUID = 1738781066145922168L;
 
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
@@ -126,9 +135,9 @@ public final class Quotes {
 		 *
 		 * @param reference the source of the constructed sketch.
 		 * @throws NullPointerException if the given {@code source} is null.
-		 * @since 0.2.0 ~2021.01.23
+		 * @since 0.2.0 ~2021.01.18
 		 */
-		private QuotesSketch(Reference reference) {
+		private BracesSketch(Reference reference) {
 			super(reference);
 		}
 	}

@@ -20,4 +20,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.18
  */
-package org.jamplate.impl.sketch;
+package org.cufyplate.sketch;

@@ -20,4 +20,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-package org.jamplate.impl;
+package org.cufyplate;

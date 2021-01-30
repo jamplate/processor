@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.sketch;
+package org.cufyplate.sketch;
 
 import org.jamplate.parsing.crawler.ContextCrawler;
 import org.jamplate.parsing.crawler.Crawler;
@@ -27,53 +27,53 @@ import org.jamplate.source.sketch.AbstractContextSketch;
 import java.util.regex.Pattern;
 
 /**
- * A class holding classes about sketching {@code {}}. (curly brackets)
+ * A class holding classes about sketching {@code []}. (square brackets)
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.23
  */
-public final class Braces {
+public final class Brackets {
 	/**
 	 * The maker of the concrete sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Maker MAKER_CONCRETE = BraceSketch::new;
+	public static final Maker MAKER_CONCRETE = BracketSketch::new;
 	/**
 	 * The maker of the context sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Maker MAKER_CONTEXT = BracesSketch::new;
+	public static final Maker MAKER_CONTEXT = BracketsSketch::new;
 
 	/**
 	 * A pattern that detects the start of a brackets context.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Pattern PATTERN_END = Pattern.compile("[}]");
+	public static final Pattern PATTERN_END = Pattern.compile("[\\]]");
 	/**
 	 * A pattern that detects the end of a brackets context.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Pattern PATTERN_START = Pattern.compile("[{]");
+	public static final Pattern PATTERN_START = Pattern.compile("[\\[]");
 
 	/**
-	 * The crawler that crawls for possibly valid braces.
+	 * The crawler that crawls for possibly valid brackets.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Crawler CRAWLER = new ContextCrawler(Braces.PATTERN_START, Braces.PATTERN_END);
+	public static final Crawler CRAWLER = new ContextCrawler(Brackets.PATTERN_START, Brackets.PATTERN_END);
 
 	/**
-	 * A visitor that makes {@link BracesSketch} when it found available brackets pair in
-	 * a sketch.
+	 * A visitor that makes {@link BracketsSketch} when it found available brackets pair
+	 * in a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(Braces.CRAWLER, Braces.MAKER_CONTEXT, Braces.MAKER_CONCRETE, Braces.MAKER_CONCRETE);
+	public static final Sketcher SKETCHER = new CrawlerSketcher(Brackets.CRAWLER, Brackets.MAKER_CONTEXT, Brackets.MAKER_CONCRETE, Brackets.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -81,26 +81,26 @@ public final class Braces {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	private Braces() {
+	private Brackets() {
 		throw new AssertionError("No instance for you!");
 	}
 
 	/**
 	 * A sketch for bracket symbol.
 	 * <pre>
-	 *     {
+	 *     [
 	 * </pre>
 	 * <pre>
-	 *     }
+	 *     ]
 	 * </pre>
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class BraceSketch extends AbstractConcreteSketch {
+	public static final class BracketSketch extends AbstractConcreteSketch {
 		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = 3996900909023911874L;
+		private static final long serialVersionUID = 6108441942086890901L;
 
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
@@ -110,7 +110,7 @@ public final class Braces {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private BraceSketch(Reference reference) {
+		private BracketSketch(Reference reference) {
 			super(reference);
 		}
 	}
@@ -118,16 +118,16 @@ public final class Braces {
 	/**
 	 * A sketch for brackets context.
 	 * <pre>
-	 *     {}
+	 *     []
 	 * </pre>
 	 *
 	 * @author LSafer
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final class BracesSketch extends AbstractContextSketch {
+	public static final class BracketsSketch extends AbstractContextSketch {
 		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = 1738781066145922168L;
+		private static final long serialVersionUID = 3428179238573892953L;
 
 		/**
 		 * Construct a new sketch for the given {@code source}. The given source is the
@@ -137,7 +137,7 @@ public final class Braces {
 		 * @throws NullPointerException if the given {@code source} is null.
 		 * @since 0.2.0 ~2021.01.18
 		 */
-		private BracesSketch(Reference reference) {
+		private BracketsSketch(Reference reference) {
 			super(reference);
 		}
 	}
