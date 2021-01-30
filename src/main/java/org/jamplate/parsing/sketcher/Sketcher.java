@@ -42,6 +42,8 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @throws NullPointerException      {@inheritDoc}
 	 * @throws IllegalArgumentException  {@inheritDoc}
 	 * @throws IndexOutOfBoundsException {@inheritDoc}
+	 * @throws RuntimeException          {@inheritDoc}
+	 * @throws Error                     {@inheritDoc}
 	 * @since 0.2.0 ~2021.01.24
 	 */
 	@SuppressWarnings("RedundantMethodOverride")
@@ -59,6 +61,8 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @return a sketch to be {@link Sketch#put(Sketch)} to the given {@code sketch} or a
 	 * 		parent of it. Or {@code null} if no matching sketch. (aka, continue the loop)
 	 * @throws NullPointerException {@inheritDoc}
+	 * @throws RuntimeException     {@inheritDoc}
+	 * @throws Error                {@inheritDoc}
 	 * @since 0.2.0 ~2021.01.24
 	 */
 	@Override

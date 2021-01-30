@@ -50,6 +50,8 @@ public interface Visitor<R> {
 	 * @throws IndexOutOfBoundsException if {@code position + length} is larger than the
 	 *                                   size of the original document of the given {@code
 	 *                                   sketch}. (optional)
+	 * @throws RuntimeException          optional.
+	 * @throws Error                     optional.
 	 * @since 0.2.0 ~2021.01.19
 	 */
 	default Optional<R> visitRange(Sketch parent, int position, int length) {
@@ -64,6 +66,8 @@ public interface Visitor<R> {
 	 * @return an optional containing the results of visiting the given {@code sketch}. Or
 	 *        {@code null} if this visitor wishes to continue the loop.
 	 * @throws NullPointerException if the given {@code sketch} is null.
+	 * @throws RuntimeException     optional.
+	 * @throws Error                optional.
 	 * @since 0.2.0 ~2021.01.11
 	 */
 	Optional<R> visitSketch(Sketch sketch);
