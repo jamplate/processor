@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * All about the interface {@link org.jamplate.parse.maker.Maker}.
+ * A package all about the interface {@link org.jamplate.process.sketcher.Sketcher}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.30
+ * @since 0.2.0 ~2021.01.29
  */
-package org.jamplate.parse.maker;
+package org.jamplate.process.sketcher;

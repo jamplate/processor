@@ -15,11 +15,11 @@
  */
 package org.cufyplate.sketch;
 
-import org.jamplate.parse.crawler.ContextCrawler;
-import org.jamplate.parse.crawler.Crawler;
-import org.jamplate.parse.maker.Maker;
-import org.jamplate.parse.sketcher.CrawlerSketcher;
-import org.jamplate.parse.sketcher.Sketcher;
+import org.jamplate.process.crawler.ContextCrawler;
+import org.jamplate.process.crawler.Crawler;
+import org.jamplate.process.maker.Maker;
+import org.jamplate.process.sketcher.CrawlerSketcher;
+import org.jamplate.process.sketcher.Sketcher;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
 import org.jamplate.model.sketch.AbstractContextSketch;

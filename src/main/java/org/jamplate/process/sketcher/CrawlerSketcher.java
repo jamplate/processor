@@ -13,10 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.parse.sketcher;
+package org.jamplate.process.sketcher;
 
-import org.jamplate.parse.crawler.Crawler;
-import org.jamplate.parse.maker.Maker;
+import org.jamplate.process.crawler.Crawler;
+import org.jamplate.process.maker.Maker;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.Sketch;
 

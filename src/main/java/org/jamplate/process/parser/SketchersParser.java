@@ -13,38 +13,43 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.parse.sketcher;
+package org.jamplate.process.parser;
 
+import org.jamplate.process.sketcher.Sketcher;
 import org.jamplate.model.sketch.Sketch;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * A sketcher that sketches the first sketch (in position) from a list of other
- * sketchers.
+ * An abstraction of the basic functionality of a {@link Parser} that uses {@link Sketcher
+ * sketchers} to perform the parsing.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.30
+ * @since 0.2.0 ~2021.01.26
  */
-public class PrecedentialSketcher implements Sketcher {
+public class SketchersParser implements Parser {
 	/**
-	 * The sketchers backing this sketcher. (non-null, cheat checked)
+	 * A list of the sketchers used by this parser. (non-null, cheat checked)
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.01.26
 	 */
 	protected final List<Sketcher> sketchers;
 
 	/**
-	 * Construct a new sketcher that uses the given {@code sketchers}.
+	 * Construct a new parser that uses the given {@code sketchers}.
 	 *
-	 * @param sketchers the sketchers to be backing the constructed sketcher.
+	 * @param sketchers the sketchers to be used by this parser. (null or elements are
+	 *                  simply ignored)
 	 * @throws NullPointerException if the given {@code sketchers} is null.
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.01.26
 	 */
-	public PrecedentialSketcher(Sketcher... sketchers) {
+	public SketchersParser(Sketcher... sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		this.sketchers = Arrays.stream(sketchers)
 				.filter(Objects::nonNull)
@@ -52,13 +57,14 @@ public class PrecedentialSketcher implements Sketcher {
 	}
 
 	/**
-	 * Construct a new sketcher that uses the given {@code sketchers}.
+	 * Construct a new parser that uses the given {@code sketchers}.
 	 *
-	 * @param sketchers the sketchers to be backing the constructed sketcher.
+	 * @param sketchers the sketchers to be used by this parser. (null or non-sketcher
+	 *                  elements are simply ignored)
 	 * @throws NullPointerException if the given {@code sketchers} is null.
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.01.26
 	 */
-	public PrecedentialSketcher(Iterable<Sketcher> sketchers) {
+	public SketchersParser(Iterable<Sketcher> sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		//noinspection ConstantConditions
 		this.sketchers = StreamSupport.stream(sketchers.spliterator(), false)
@@ -67,12 +73,16 @@ public class PrecedentialSketcher implements Sketcher {
 	}
 
 	@Override
-	public Optional<Sketch> visitSketch(Sketch sketch) {
-		return this.sketchers.stream()
-				.map(sketch::accept)
-				.filter(Objects::nonNull)
-				.filter(Optional::isPresent)
-				.min(Comparator.comparing(Optional::get, Sketch.COMPARATOR))
-				.orElse(null);
+	public void parse(Sketch sketch) {
+		Objects.requireNonNull(sketch, "sketch");
+		for (Sketcher sketcher : this.sketchers)
+			while (true) {
+				Optional<Sketch> optional = sketch.accept(sketcher);
+
+				if (optional == null)
+					break;
+
+				optional.ifPresent(sketch::put);
+			}
 	}
 }

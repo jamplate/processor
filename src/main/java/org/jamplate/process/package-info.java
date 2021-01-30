@@ -20,22 +20,22 @@
  * Default layout:
  * <ul>
  *     <li>
- *         A {@link org.jamplate.parse.crawler.Crawler} search in a source to find
+ *         A {@link org.jamplate.process.crawler.Crawler} search in a source to find
  *         matching references.
  *     </li>
  *     <li>
- *         A {@link org.jamplate.parse.maker.Maker} takes a reference and convert it
+ *         A {@link org.jamplate.process.maker.Maker} takes a reference and convert it
  *         into a sketch.
  *     </li>
  *     <li>
- *         A {@link org.jamplate.parse.sketcher.Sketcher} uses a
- *         {@link org.jamplate.parse.crawler.Crawler} to find references and multiple
- *         {@link org.jamplate.parse.maker.Maker}s to convert them into sketches.
+ *         A {@link org.jamplate.process.sketcher.Sketcher} uses a
+ *         {@link org.jamplate.process.crawler.Crawler} to find references and multiple
+ *         {@link org.jamplate.process.maker.Maker}s to convert them into sketches.
  *         Also, it can be a poll sketcher that generates results using other sketchers.
  *     </li>
  *     <li>
- *         A {@link org.jamplate.parse.parser.Parser} loops on multiple
- *         {@link org.jamplate.parse.sketcher.Sketcher}s to build a sketch hierarchy.
+ *         A {@link org.jamplate.process.parser.Parser} loops on multiple
+ *         {@link org.jamplate.process.sketcher.Sketcher}s to build a sketch hierarchy.
  *     </li>
  * </ul>
  *
@@ -43,4 +43,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.26
  */
-package org.jamplate.parse;
+package org.jamplate.process;

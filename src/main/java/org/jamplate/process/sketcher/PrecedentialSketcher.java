@@ -13,26 +13,23 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.parse.sketcher;
+package org.jamplate.process.sketcher;
 
 import org.jamplate.model.sketch.Sketch;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * A sketcher that sketches the first sketch (in sketcher order) from a list of other
+ * A sketcher that sketches the first sketch (in position) from a list of other
  * sketchers.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.30
  */
-public class SequentialSketcher implements Sketcher {
+public class PrecedentialSketcher implements Sketcher {
 	/**
 	 * The sketchers backing this sketcher. (non-null, cheat checked)
 	 *
@@ -47,7 +44,7 @@ public class SequentialSketcher implements Sketcher {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public SequentialSketcher(Sketcher... sketchers) {
+	public PrecedentialSketcher(Sketcher... sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		this.sketchers = Arrays.stream(sketchers)
 				.filter(Objects::nonNull)
@@ -61,7 +58,7 @@ public class SequentialSketcher implements Sketcher {
 	 * @throws NullPointerException if the given {@code sketchers} is null.
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public SequentialSketcher(Iterable<Sketcher> sketchers) {
+	public PrecedentialSketcher(Iterable<Sketcher> sketchers) {
 		Objects.requireNonNull(sketchers, "sketchers");
 		//noinspection ConstantConditions
 		this.sketchers = StreamSupport.stream(sketchers.spliterator(), false)
@@ -71,12 +68,11 @@ public class SequentialSketcher implements Sketcher {
 
 	@Override
 	public Optional<Sketch> visitSketch(Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
 		return this.sketchers.stream()
 				.map(sketch::accept)
 				.filter(Objects::nonNull)
 				.filter(Optional::isPresent)
-				.findFirst()
+				.min(Comparator.comparing(Optional::get, Sketch.COMPARATOR))
 				.orElse(null);
 	}
 }

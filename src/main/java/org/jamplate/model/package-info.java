@@ -21,11 +21,10 @@
  * <ul>
  *     <li>Source-Code are wrapped with {@link org.jamplate.model.document.Document}s.</li>
  *     <li>Documents get sliced into {@link org.jamplate.model.reference.Reference}s.</li>
- *     <li>Source get referenced by {@link org.jamplate.model.sketch.Sketch}s.</li>
- *     <li>Sketch Hierarchy get built from Sketches using {@link org.jamplate.model.Visitor}s.</li>
- *     <li>Element Hierarchy get built from a Sketch Hierarchy using {@link org.jamplate.model.Visitor}s.</li>
- *     <li>An Element Hierarchy can be serialized and stored for later use.</li>
- *     <li>The Processing start executing by invoking the Root Element of an Element Hierarchy.</li>
+ *     <li>References get referenced by {@link org.jamplate.model.sketch.Sketch}s.</li>
+ *     <li>Sketches get converted into {@link org.jamplate.model.element.Element}s.</li>
+ *     <li>Elements get compiled into {@link org.jamplate.model.instruction.Instruction}s.</li>
+ *     <li>Instructions can be executed.</li>
  * </ul>
  *
  * @author LSafer
