@@ -96,6 +96,8 @@ public interface Sketch extends Serializable {
 	 * @return an optional containing the results of visiting an element. Or {@code null}
 	 * 		if the visitor wishes to continue the loop.
 	 * @throws NullPointerException if the given {@code visitor} is null.
+	 * @throws RuntimeException     if any exception thrown by the given {@code visitor}.
+	 * @throws Error                if any error thrown by the given {@code visitor}.
 	 * @since 0.2.0 ~2021.01.11
 	 */
 	<R> Optional<R> accept(Visitor<R> visitor);
