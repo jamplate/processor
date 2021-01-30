@@ -15,15 +15,15 @@
  */
 package org.jamplate.impl.sketch;
 
-import org.jamplate.parsing.Patterns;
+import org.jamplate.parsing.crawler.ContextCrawler;
+import org.jamplate.parsing.crawler.Crawler;
+import org.jamplate.parsing.maker.Maker;
+import org.jamplate.parsing.sketcher.CrawlerSketcher;
+import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
-import org.jamplate.source.sketch.Sketch;
-import org.jamplate.parsing.sketcher.Sketcher;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +34,19 @@ import java.util.regex.Pattern;
  * @since 0.2.0 ~2021.01.23
  */
 public final class Parentheses {
+	/**
+	 * The maker of the concrete sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONCRETE = ParenthesisSketch::new;
+	/**
+	 * The maker of the context sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONTEXT = ParenthesesSketch::new;
+
 	/**
 	 * A pattern that detects the start of a parentheses context.
 	 *
@@ -48,12 +61,19 @@ public final class Parentheses {
 	public static final Pattern PATTERN_START = Pattern.compile("[(]");
 
 	/**
+	 * The crawler that crawls for possibly valid parentheses.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Crawler CRAWLER = new ContextCrawler(Parentheses.PATTERN_START, Parentheses.PATTERN_END);
+
+	/**
 	 * A visitor that makes {@link ParenthesesSketch} when it found available parenthesis
 	 * pair in a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static final Sketcher SKETCHER = new ParenthesesSketcher();
+	public static final Sketcher SKETCHER = new CrawlerSketcher(Parentheses.CRAWLER, Parentheses.MAKER_CONTEXT, Parentheses.MAKER_CONCRETE, Parentheses.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -89,39 +109,6 @@ public final class Parentheses {
 		 */
 		private ParenthesesSketch(Reference reference) {
 			super(reference);
-		}
-	}
-
-	/**
-	 * A visitor that makes {@link ParenthesesSketch} when it found available parenthesis
-	 * pair in a sketch.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final class ParenthesesSketcher implements Sketcher {
-		/**
-		 * A private constructor to avoid creating multiple instances of this.
-		 *
-		 * @since 0.2.0 ~2021.01.23
-		 */
-		private ParenthesesSketcher() {
-		}
-
-		@Override
-		public Optional<Sketch> visitSketch(Sketch sketch) {
-			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Patterns.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
-
-			if (references != null) {
-				Sketch s = new ParenthesesSketch(references[0]);
-				s.put(new ParenthesisSketch(references[1]));
-				s.put(new ParenthesisSketch(references[2]));
-				return Optional.of(s);
-			}
-
-			return null;
 		}
 	}
 

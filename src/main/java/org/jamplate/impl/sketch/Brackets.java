@@ -15,15 +15,15 @@
  */
 package org.jamplate.impl.sketch;
 
-import org.jamplate.parsing.Patterns;
+import org.jamplate.parsing.crawler.ContextCrawler;
+import org.jamplate.parsing.crawler.Crawler;
+import org.jamplate.parsing.maker.Maker;
+import org.jamplate.parsing.sketcher.CrawlerSketcher;
 import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
-import org.jamplate.source.sketch.Sketch;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +34,19 @@ import java.util.regex.Pattern;
  * @since 0.2.0 ~2021.01.23
  */
 public final class Brackets {
+	/**
+	 * The maker of the concrete sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONCRETE = BracketSketch::new;
+	/**
+	 * The maker of the context sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONTEXT = BracketsSketch::new;
+
 	/**
 	 * A pattern that detects the start of a brackets context.
 	 *
@@ -48,12 +61,19 @@ public final class Brackets {
 	public static final Pattern PATTERN_START = Pattern.compile("[\\[]");
 
 	/**
+	 * The crawler that crawls for possibly valid brackets.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Crawler CRAWLER = new ContextCrawler(Brackets.PATTERN_START, Brackets.PATTERN_END);
+
+	/**
 	 * A visitor that makes {@link BracketsSketch} when it found available brackets pair
 	 * in a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	public static final Sketcher SKETCHER = new BracketsSketcher();
+	public static final Sketcher SKETCHER = new CrawlerSketcher(Brackets.CRAWLER, Brackets.MAKER_CONTEXT, Brackets.MAKER_CONCRETE, Brackets.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -119,39 +139,6 @@ public final class Brackets {
 		 */
 		private BracketsSketch(Reference reference) {
 			super(reference);
-		}
-	}
-
-	/**
-	 * A visitor that makes {@link BracketsSketch} when it found available brackets pair
-	 * in a sketch.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final class BracketsSketcher implements Sketcher {
-		/**
-		 * A private constructor to avoid creating multiple instances of this.
-		 *
-		 * @since 0.2.0 ~2021.01.23
-		 */
-		private BracketsSketcher() {
-		}
-
-		@Override
-		public Optional<Sketch> visitSketch(Sketch sketch) {
-			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Patterns.find(sketch, Brackets.PATTERN_START, Brackets.PATTERN_END);
-
-			if (references != null) {
-				Sketch s = new BracketsSketch(references[0]);
-				s.put(new BracketSketch(references[1]));
-				s.put(new BracketSketch(references[2]));
-				return Optional.of(s);
-			}
-
-			return null;
 		}
 	}
 }

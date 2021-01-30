@@ -15,15 +15,15 @@
  */
 package org.jamplate.impl.sketch;
 
-import org.jamplate.parsing.Patterns;
+import org.jamplate.parsing.crawler.ContextCrawler;
+import org.jamplate.parsing.crawler.Crawler;
+import org.jamplate.parsing.maker.Maker;
+import org.jamplate.parsing.sketcher.CrawlerSketcher;
+import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
-import org.jamplate.source.sketch.Sketch;
-import org.jamplate.parsing.sketcher.Sketcher;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +34,19 @@ import java.util.regex.Pattern;
  * @since 0.2.0 ~2021.01.23
  */
 public final class Quotes {
+	/**
+	 * The maker of the concrete sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONCRETE = QuoteSketch::new;
+	/**
+	 * The maker of the context sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONTEXT = QuotesSketch::new;
+
 	/**
 	 * The pattern of an ending quote.
 	 *
@@ -48,11 +61,19 @@ public final class Quotes {
 	public static final Pattern PATTERN_START = Pattern.compile("(?<!\\\\)[']");
 
 	/**
-	 * The singleton instance of the {@link QuotesSketcher}.
+	 * The crawler that crawls for possibly valid quotes.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Crawler CRAWLER = new ContextCrawler(Quotes.PATTERN_START, Quotes.PATTERN_END);
+
+	/**
+	 * A visitor that makes {@link QuotesSketch} when it found available quotes pair in a
+	 * sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	public static final Sketcher SKETCHER = new QuotesSketcher();
+	public static final Sketcher SKETCHER = new CrawlerSketcher(Quotes.CRAWLER, Quotes.MAKER_CONTEXT, Quotes.MAKER_CONCRETE, Quotes.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -109,38 +130,6 @@ public final class Quotes {
 		 */
 		private QuotesSketch(Reference reference) {
 			super(reference);
-		}
-	}
-
-	/**
-	 * A visitor that makes {@link QuoteSketch} and {@link QuotesSketch} sketches.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	public static final class QuotesSketcher implements Sketcher {
-		/**
-		 * A private constructor to avoid creating multiple instances of this.
-		 *
-		 * @since 0.2.0 ~2021.01.23
-		 */
-		private QuotesSketcher() {
-		}
-
-		@Override
-		public Optional<Sketch> visitSketch(Sketch sketch) {
-			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Patterns.find(sketch, Quotes.PATTERN_START, Quotes.PATTERN_END);
-
-			if (references != null) {
-				Sketch s = new QuotesSketch(references[0]);
-				s.put(new QuoteSketch(references[1]));
-				s.put(new QuoteSketch(references[2]));
-				return Optional.of(s);
-			}
-
-			return null;
 		}
 	}
 }

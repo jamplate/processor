@@ -15,15 +15,15 @@
  */
 package org.jamplate.impl.sketch;
 
-import org.jamplate.parsing.Patterns;
+import org.jamplate.parsing.crawler.ContextCrawler;
+import org.jamplate.parsing.crawler.Crawler;
+import org.jamplate.parsing.maker.Maker;
+import org.jamplate.parsing.sketcher.CrawlerSketcher;
+import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
-import org.jamplate.source.sketch.Sketch;
-import org.jamplate.parsing.sketcher.Sketcher;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -34,6 +34,19 @@ import java.util.regex.Pattern;
  * @since 0.2.0 ~2021.01.24
  */
 public final class DoubleQuotes {
+	/**
+	 * The maker of the concrete sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONCRETE = DoubleQuoteSketch::new;
+	/**
+	 * The maker of the context sketch.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Maker MAKER_CONTEXT = DoubleQuotesSketch::new;
+
 	/**
 	 * The pattern of an ending quote.
 	 *
@@ -48,11 +61,19 @@ public final class DoubleQuotes {
 	public static final Pattern PATTERN_START = Pattern.compile("(?<!\\\\)[\"]");
 
 	/**
-	 * The singleton instance of the {@link DoubleQuotes.DoubleQuotesSketcher}.
+	 * The crawler that crawls for possibly valid double quotes.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static final Crawler CRAWLER = new ContextCrawler(DoubleQuotes.PATTERN_START, DoubleQuotes.PATTERN_END);
+
+	/**
+	 * A visitor that makes {@link DoubleQuotesSketch} when it found available double
+	 * quotes pair in a sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static final Sketcher SKETCHER = new DoubleQuotesSketcher();
+	public static final Sketcher SKETCHER = new CrawlerSketcher(DoubleQuotes.CRAWLER, DoubleQuotes.MAKER_CONTEXT, DoubleQuotes.MAKER_CONCRETE, DoubleQuotes.MAKER_CONCRETE);
 
 	/**
 	 * A private always-fail constructor to avoid any instantiation of this class.
@@ -109,39 +130,6 @@ public final class DoubleQuotes {
 		 */
 		private DoubleQuotesSketch(Reference reference) {
 			super(reference);
-		}
-	}
-
-	/**
-	 * A visitor that makes {@link DoubleQuotes.DoubleQuoteSketch} and {@link
-	 * DoubleQuotes.DoubleQuotesSketch} sketches.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.24
-	 */
-	public static final class DoubleQuotesSketcher implements Sketcher {
-		/**
-		 * A private constructor to avoid creating multiple instances of this.
-		 *
-		 * @since 0.2.0 ~2021.01.24
-		 */
-		private DoubleQuotesSketcher() {
-		}
-
-		@Override
-		public Optional<Sketch> visitSketch(Sketch sketch) {
-			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Patterns.find(sketch, DoubleQuotes.PATTERN_START, DoubleQuotes.PATTERN_END);
-
-			if (references != null) {
-				Sketch s = new DoubleQuotesSketch(references[0]);
-				s.put(new DoubleQuoteSketch(references[1]));
-				s.put(new DoubleQuoteSketch(references[2]));
-				return Optional.of(s);
-			}
-
-			return null;
 		}
 	}
 }
