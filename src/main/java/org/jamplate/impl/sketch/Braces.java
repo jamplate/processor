@@ -15,6 +15,7 @@
  */
 package org.jamplate.impl.sketch;
 
+import org.jamplate.parsing.Patterns;
 import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
@@ -141,7 +142,7 @@ public final class Braces {
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, Braces.PATTERN_START, Braces.PATTERN_END);
+			Reference[] references = Patterns.find(sketch, Braces.PATTERN_START, Braces.PATTERN_END);
 
 			if (references != null) {
 				Sketch s = new BracesSketch(references[0]);

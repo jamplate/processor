@@ -20,9 +20,6 @@ import org.jamplate.source.document.Document;
 import java.io.IOError;
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A source reference is a component that points to a document or a fragment of it.
@@ -51,36 +48,6 @@ public interface Reference extends Serializable {
 	Comparator<Reference> COMPARATOR = Comparator.comparing(Reference::document, Document.COMPARATOR)
 			.thenComparingInt(Reference::position)
 			.thenComparing(Comparator.comparingInt(Reference::length).reversed());
-
-	/**
-	 * Construct a ready-to-use matcher from the given {@code reference}. The returned
-	 * matcher has the whole content of the document of the given {@code reference}. But,
-	 * it is limited to the region of the given {@code reference} (using {@link
-	 * Matcher#region(int, int)}). The returned matcher also has {@link
-	 * Matcher#hasTransparentBounds()} and {@link Matcher#useAnchoringBounds(boolean)}
-	 * both enabled.
-	 * <br>
-	 * Notice: the returned matcher will return {@link Matcher#start()} and {@link
-	 * Matcher#end()} as indexes at the original document.
-	 *
-	 * @param reference the reference to create a matcher for.
-	 * @param pattern   the pattern to match.
-	 * @return a matcher over the content of the given {@code reference}.
-	 * @throws NullPointerException  if the given {@code reference} or {@code pattern} is
-	 *                               null.
-	 * @throws IllegalStateException if the {@link Reference#document() document} of the
-	 *                               given {@code reference} is a deserialized document.
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	static Matcher matcher(Reference reference, Pattern pattern) {
-		Objects.requireNonNull(reference, "reference");
-		Objects.requireNonNull(pattern, "pattern");
-		Matcher matcher = pattern.matcher(reference.document().readContent());
-		matcher.region(reference.position(), reference.position() + reference.length());
-		matcher.useTransparentBounds(true);
-		matcher.useAnchoringBounds(true);
-		return matcher;
-	}
 
 	/**
 	 * A reference is equals another object, if that object is a reference and has the

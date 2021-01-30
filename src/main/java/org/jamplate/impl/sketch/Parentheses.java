@@ -15,6 +15,7 @@
  */
 package org.jamplate.impl.sketch;
 
+import org.jamplate.parsing.Patterns;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
@@ -111,7 +112,7 @@ public final class Parentheses {
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
+			Reference[] references = Patterns.find(sketch, Parentheses.PATTERN_START, Parentheses.PATTERN_END);
 
 			if (references != null) {
 				Sketch s = new ParenthesesSketch(references[0]);

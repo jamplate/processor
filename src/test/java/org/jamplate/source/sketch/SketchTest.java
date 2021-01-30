@@ -16,7 +16,10 @@
 package org.jamplate.source.sketch;
 
 import org.jamplate.impl.sketch.*;
-import org.jamplate.parsing.sketcher.Sketcher;
+import org.jamplate.parsing.parser.Parser;
+import org.jamplate.parsing.parser.SketchersParser;
+import org.jamplate.parsing.sketcher.PrecedentialSketcher;
+import org.jamplate.parsing.sketcher.SequentialSketcher;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -45,13 +48,16 @@ public class SketchTest {
 
 	@Test
 	public void contexts() {
+		Parser parser = new SketchersParser(
+				new SequentialSketcher(
+						Parentheses.SKETCHER,
+						Brackets.SKETCHER,
+						Braces.SKETCHER
+				)
+		);
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
 
-		sketch.accept(Sketcher.builder(Sketcher.sequence(
-				Parentheses.SKETCHER,
-				Brackets.SKETCHER,
-				Braces.SKETCHER
-		)));
+		parser.parse(sketch);
 
 		//document 1
 		//	parentheses 3
@@ -68,12 +74,15 @@ public class SketchTest {
 
 	@Test
 	public void doubleQuotes() {
+		Parser parser = new SketchersParser(
+				new PrecedentialSketcher(
+						DoubleQuotes.SKETCHER,
+						Quotes.SKETCHER
+				)
+		);
 		Sketch sketch = new DocumentSketch("\"'\"'\"'\"");
 
-		sketch.accept(Sketcher.builder(Sketcher.precedence(
-				DoubleQuotes.SKETCHER,
-				Quotes.SKETCHER
-		)));
+		parser.parse(sketch);
 
 		assertSame(
 				"Double quotes occurred first. So, it should be the dominant",
@@ -89,11 +98,12 @@ public class SketchTest {
 
 	@Test
 	public void parentheses() {
+		Parser parser = new SketchersParser(
+				Parentheses.SKETCHER
+		);
 		Sketch sketch = new DocumentSketch("(()()())");
 
-		sketch.accept(Sketcher.builder(
-				Parentheses.SKETCHER
-		));
+		parser.parse(sketch);
 
 		//base sketch
 		assertCount(sketch, 13);
@@ -141,14 +151,17 @@ public class SketchTest {
 
 	@Test
 	public void quotes() {
+		Parser parser = new SketchersParser(
+				new SequentialSketcher(
+						Quotes.SKETCHER,
+						Parentheses.SKETCHER,
+						Brackets.SKETCHER,
+						Braces.SKETCHER
+				)
+		);
 		Sketch sketch = new DocumentSketch("()'([{')}]");
 
-		sketch.accept(Sketcher.builder(Sketcher.sequence(
-				Quotes.SKETCHER,
-				Parentheses.SKETCHER,
-				Brackets.SKETCHER,
-				Braces.SKETCHER
-		)));
+		parser.parse(sketch);
 
 		//document 1
 		//	parentheses 3

@@ -15,6 +15,7 @@
  */
 package org.jamplate.impl.sketch;
 
+import org.jamplate.parsing.Patterns;
 import org.jamplate.parsing.sketcher.Sketcher;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
@@ -141,7 +142,7 @@ public final class Brackets {
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, Brackets.PATTERN_START, Brackets.PATTERN_END);
+			Reference[] references = Patterns.find(sketch, Brackets.PATTERN_START, Brackets.PATTERN_END);
 
 			if (references != null) {
 				Sketch s = new BracketsSketch(references[0]);

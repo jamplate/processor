@@ -15,6 +15,7 @@
  */
 package org.jamplate.impl.sketch;
 
+import org.jamplate.parsing.Patterns;
 import org.jamplate.source.reference.Reference;
 import org.jamplate.source.sketch.AbstractConcreteSketch;
 import org.jamplate.source.sketch.AbstractContextSketch;
@@ -131,7 +132,7 @@ public final class DoubleQuotes {
 		@Override
 		public Optional<Sketch> visitSketch(Sketch sketch) {
 			Objects.requireNonNull(sketch, "sketch");
-			Reference[] references = Sketch.find(sketch, DoubleQuotes.PATTERN_START, DoubleQuotes.PATTERN_END);
+			Reference[] references = Patterns.find(sketch, DoubleQuotes.PATTERN_START, DoubleQuotes.PATTERN_END);
 
 			if (references != null) {
 				Sketch s = new DoubleQuotesSketch(references[0]);
