@@ -15,10 +15,10 @@
  */
 package org.jamplate.processor.sketcher;
 
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.Sketch;
+import org.jamplate.processor.crawler.Crawler;
+import org.jamplate.processor.maker.Maker;
 
 import java.util.Arrays;
 import java.util.List;

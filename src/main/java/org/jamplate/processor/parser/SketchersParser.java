@@ -15,8 +15,8 @@
  */
 package org.jamplate.processor.parser;
 
-import org.jamplate.processor.sketcher.Sketcher;
 import org.jamplate.model.sketch.Sketch;
+import org.jamplate.processor.sketcher.Sketcher;
 
 import java.util.Arrays;
 import java.util.List;

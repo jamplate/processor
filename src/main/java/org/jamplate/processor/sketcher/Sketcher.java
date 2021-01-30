@@ -15,8 +15,8 @@
  */
 package org.jamplate.processor.sketcher;
 
-import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.model.sketch.Sketch;
+import org.jamplate.processor.visitor.Visitor;
 
 import java.util.Objects;
 import java.util.Optional;

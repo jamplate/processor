@@ -16,8 +16,8 @@
 package org.jamplate.model.sketch;
 
 import org.jamplate.model.Dominance;
-import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.model.reference.Reference;
+import org.jamplate.processor.visitor.Visitor;
 
 import java.io.Serializable;
 import java.util.Comparator;
