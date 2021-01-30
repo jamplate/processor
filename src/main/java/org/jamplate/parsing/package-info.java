@@ -16,6 +16,28 @@
 /**
  * This package is all about converting source code into {@link
  * org.jamplate.source.sketch.Sketch sketches}.
+ * <br>
+ * Default layout:
+ * <ul>
+ *     <li>
+ *         A {@link org.jamplate.parsing.crawler.Crawler} search in a source to find
+ *         matching references.
+ *     </li>
+ *     <li>
+ *         A {@link org.jamplate.parsing.maker.Maker} takes a reference and convert it
+ *         into a sketch.
+ *     </li>
+ *     <li>
+ *         A {@link org.jamplate.parsing.sketcher.Sketcher} uses a
+ *         {@link org.jamplate.parsing.crawler.Crawler} to find references and multiple
+ *         {@link org.jamplate.parsing.maker.Maker}s to convert them into sketches.
+ *         Also, it can be a poll sketcher that generates results using other sketchers.
+ *     </li>
+ *     <li>
+ *         A {@link org.jamplate.parsing.parser.Parser} loops on multiple
+ *         {@link org.jamplate.parsing.sketcher.Sketcher}s to build a sketch hierarchy.
+ *     </li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0
