@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package all about the interface {@link org.jamplate.process.parser.Parser}.
+ * All about the interface {@link org.jamplate.processor.crawler.Crawler}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.29
+ * @since 0.2.0 ~2021.01.30
  */
-package org.jamplate.process.parser;
+package org.jamplate.processor.crawler;

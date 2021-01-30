@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * All about the interface {@link org.jamplate.process.maker.Maker}.
+ * All about the interface {@link org.jamplate.processor.maker.Maker}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.30
  */
-package org.jamplate.process.maker;
+package org.jamplate.processor.maker;

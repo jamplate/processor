@@ -17,7 +17,7 @@ package org.jamplate.model.sketch;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.model.Dominance;
-import org.jamplate.process.visitor.Visitor;
+import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.model.reference.Reference;
 
 import java.util.*;

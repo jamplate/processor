@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.process.maker;
+package org.jamplate.processor.maker;
 
 import org.jamplate.model.document.Document;
 import org.jamplate.model.reference.DocumentReference;

@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.process.sketcher;
+package org.jamplate.processor.sketcher;
 
-import org.jamplate.process.visitor.Visitor;
+import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.model.sketch.Sketch;
 
 import java.util.Objects;

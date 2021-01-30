@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.process.parser;
+package org.jamplate.processor.parser;
 
 import org.jamplate.model.document.Document;
 import org.jamplate.model.reference.Reference;

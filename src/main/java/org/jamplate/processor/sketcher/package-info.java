@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * All about the interface {@link org.jamplate.process.visitor.Visitor}.
+ * A package all about the interface {@link org.jamplate.processor.sketcher.Sketcher}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.30
+ * @since 0.2.0 ~2021.01.29
  */
-package org.jamplate.process.visitor;
+package org.jamplate.processor.sketcher;

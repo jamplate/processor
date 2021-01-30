@@ -16,10 +16,10 @@
 package org.jamplate.model.sketch;
 
 import org.cufyplate.sketch.*;
-import org.jamplate.process.parser.Parser;
-import org.jamplate.process.parser.SketchersParser;
-import org.jamplate.process.sketcher.PrecedentialSketcher;
-import org.jamplate.process.sketcher.SequentialSketcher;
+import org.jamplate.processor.parser.Parser;
+import org.jamplate.processor.parser.SketchersParser;
+import org.jamplate.processor.sketcher.PrecedentialSketcher;
+import org.jamplate.processor.sketcher.SequentialSketcher;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

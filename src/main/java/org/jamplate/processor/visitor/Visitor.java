@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.process.visitor;
+package org.jamplate.processor.visitor;
 
 import org.jamplate.model.sketch.Sketch;
 

@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.process.crawler;
+package org.jamplate.processor.crawler;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.Sketch;
