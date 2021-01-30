@@ -57,7 +57,6 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 		super(reference);
 	}
 
-	@SuppressWarnings("OverlyComplexMethod")
 	@Override
 	public <R> Optional<R> accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
