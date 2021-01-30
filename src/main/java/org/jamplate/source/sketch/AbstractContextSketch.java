@@ -149,7 +149,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			case EXACT:
 				break;
 			default:
-				Diagnostic.printError("Context Sketch Clash", this.reference, sketch.reference());
+				Diagnostic.appendError("Context Sketch Clash", this.reference, sketch.reference());
 				throw new IllegalArgumentException("Cannot put a sketch with a dominance other than PART or EXACT");
 		}
 
@@ -158,7 +158,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 			switch (Dominance.compute(next, sketch)) {
 				case SHARE:
 				case EXACT:
-					Diagnostic.printError("Ambiguous Sketch Clash", this.reference, next.reference(), sketch.reference());
+					Diagnostic.appendError("Ambiguous Sketch Clash", this.reference, next.reference(), sketch.reference());
 					throw new IllegalStateException("Sketch Clash");
 			}
 

@@ -63,7 +63,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Document");
 
-		Diagnostic.printError("Concrete Sketch Clash", this.reference, sketch.reference());
+		Diagnostic.appendError("Concrete Sketch Clash", this.reference, sketch.reference());
 		throw new UnsupportedOperationException("Sketch.put");
 	}
 }

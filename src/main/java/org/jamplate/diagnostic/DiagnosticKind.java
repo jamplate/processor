@@ -22,7 +22,7 @@ package org.jamplate.diagnostic;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public enum DiagnosticType {
+public enum DiagnosticKind {
 	/**
 	 * A type for messages that get printed for internal debugging.
 	 *

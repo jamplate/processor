@@ -17,6 +17,8 @@ package org.jamplate.diagnostic;
 
 import org.jamplate.source.reference.Reference;
 
+import java.io.PrintStream;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -27,10 +29,10 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-@SuppressWarnings("UtilityClass")
 public final class Diagnostic {
 	/**
-	 * A thread-local containing the errors occurred by a thread.
+	 * A thread-local containing the errors occurred by a thread. (non-null, cheat
+	 * checked)
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
@@ -47,18 +49,6 @@ public final class Diagnostic {
 	}
 
 	/**
-	 * Returns and removes the last message printed. (making the last message the one
-	 * before it)
-	 *
-	 * @return the last message printed.
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	public static DiagnosticMessage poll() {
-		return Diagnostic.messages.get()
-				.pollLast();
-	}
-
-	/**
 	 * The given {@code message} will be printed whenever the diagnostic user decided to
 	 * print it.
 	 *
@@ -66,7 +56,7 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code message} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void print(DiagnosticMessage message) {
+	public static void append(DiagnosticMessage message) {
 		Objects.requireNonNull(message, "message");
 		Diagnostic.messages.get()
 				.addLast(message);
@@ -79,10 +69,10 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printDebug(Reference... references) {
+	public static void appendDebug(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.DEBUG,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.DEBUG,
 				references
 		));
 	}
@@ -96,11 +86,11 @@ public final class Diagnostic {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printDebug(String title, Reference... references) {
+	public static void appendDebug(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.DEBUG,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.DEBUG,
 				title,
 				references
 		));
@@ -116,12 +106,12 @@ public final class Diagnostic {
 	 *                              {@code details} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printDebug(String title, String details, Reference... references) {
+	public static void appendDebug(String title, String details, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.DEBUG,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.DEBUG,
 				title,
 				details,
 				references
@@ -135,10 +125,10 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printError(Reference... references) {
+	public static void appendError(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.ERROR,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.ERROR,
 				references
 		));
 	}
@@ -152,11 +142,11 @@ public final class Diagnostic {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printError(String title, Reference... references) {
+	public static void appendError(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.ERROR,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.ERROR,
 				title,
 				references
 		));
@@ -172,12 +162,12 @@ public final class Diagnostic {
 	 *                              {@code details} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printError(String title, String details, Reference... references) {
+	public static void appendError(String title, String details, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.ERROR,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.ERROR,
 				title,
 				details,
 				references
@@ -191,10 +181,10 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printNote(Reference... references) {
+	public static void appendNote(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.NOTE,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.NOTE,
 				references
 		));
 	}
@@ -208,11 +198,11 @@ public final class Diagnostic {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printNote(String title, Reference... references) {
+	public static void appendNote(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.NOTE,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.NOTE,
 				title,
 				references
 		));
@@ -228,12 +218,12 @@ public final class Diagnostic {
 	 *                              {@code details} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printNote(String title, String details, Reference... references) {
+	public static void appendNote(String title, String details, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.NOTE,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.NOTE,
 				title,
 				details,
 				references
@@ -247,10 +237,10 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code references} is null.
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static void printProgress(Reference... references) {
+	public static void appendProgress(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.PROGRESS,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.PROGRESS,
 				references
 		));
 	}
@@ -264,11 +254,11 @@ public final class Diagnostic {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static void printProgress(String title, Reference... references) {
+	public static void appendProgress(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.PROGRESS,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.PROGRESS,
 				title,
 				references
 		));
@@ -284,12 +274,12 @@ public final class Diagnostic {
 	 *                              {@code details} is null.
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	public static void printProgress(String title, String details, Reference... references) {
+	public static void appendProgress(String title, String details, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.PROGRESS,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.PROGRESS,
 				title,
 				details,
 				references
@@ -303,10 +293,10 @@ public final class Diagnostic {
 	 * @throws NullPointerException if the given {@code references} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printWarning(Reference... references) {
+	public static void appendWarning(Reference... references) {
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.WARNING,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.WARNING,
 				references
 		));
 	}
@@ -320,11 +310,11 @@ public final class Diagnostic {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printWarning(String title, Reference... references) {
+	public static void appendWarning(String title, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.WARNING,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.WARNING,
 				title,
 				references
 		));
@@ -340,15 +330,159 @@ public final class Diagnostic {
 	 *                              {@code details} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public static void printWarning(String title, String details, Reference... references) {
+	public static void appendWarning(String title, String details, Reference... references) {
 		Objects.requireNonNull(title, "title");
 		Objects.requireNonNull(details, "details");
 		Objects.requireNonNull(references, "references");
-		Diagnostic.print(new DiagnosticMessage(
-				DiagnosticType.WARNING,
+		Diagnostic.append(new DiagnosticMessage(
+				DiagnosticKind.WARNING,
 				title,
 				details,
 				references
 		));
+	}
+
+	/**
+	 * Capture the current message stack printed by the caller thread.
+	 *
+	 * @return an array of the non-polled messages printed by the caller thread.
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static DiagnosticMessage[] capture() {
+		//noinspection ZeroLengthArrayAllocation
+		return Diagnostic.messages.get()
+				.toArray(new DiagnosticMessage[0]);
+	}
+
+	/**
+	 * Return but not remove the last message printed by the caller thread.
+	 *
+	 * @return the last message printed. or null if no such message.
+	 * @since 0.2.0 ~2021.01.28
+	 */
+	public static DiagnosticMessage peek() {
+		return Diagnostic.messages.get()
+				.peekLast();
+	}
+
+	/**
+	 * Returns and removes the last message printed by the caller thread. (making the last
+	 * message the one before it)
+	 *
+	 * @return the last message printed.
+	 * @since 0.2.0 ~2021.01.17
+	 */
+	public static DiagnosticMessage poll() {
+		return Diagnostic.messages.get()
+				.pollLast();
+	}
+
+	/**
+	 * Print and remove the last message printed by the caller thread to the default
+	 * print-stream.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void print() {
+		Deque<DiagnosticMessage> messages = Diagnostic.messages.get();
+
+		if (!messages.isEmpty())
+			messages.pollLast()
+					.print();
+	}
+
+	/**
+	 * Print and remove the last message printed by the caller thread to the given {@code
+	 * stream}.
+	 *
+	 * @param stream the print stream to print the last message to.
+	 * @throws NullPointerException if the given {@code stream} is null.
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void print(PrintStream stream) {
+		Objects.requireNonNull(stream, "stream");
+		Deque<DiagnosticMessage> messages = Diagnostic.messages.get();
+
+		if (!messages.isEmpty())
+			messages.pollLast()
+					.print(stream);
+	}
+
+	/**
+	 * Print all the messages printed by the caller thread to the default print-stream.
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printAll() {
+		for (DiagnosticMessage message : Diagnostic.messages.get())
+			message.print();
+	}
+
+	/**
+	 * Print all the messages printed by the caller thread to the given {@code stream}.
+	 *
+	 * @param stream the print stream to print the messages to.
+	 * @throws NullPointerException if the given {@code stream} is null.
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printAll(PrintStream stream) {
+		for (DiagnosticMessage message : Diagnostic.messages.get())
+			message.print(stream);
+	}
+
+	/**
+	 * Print and remove the last message printed by the caller thread to the default
+	 * print-stream. (phrase only)
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printPhrase() {
+		Deque<DiagnosticMessage> messages = Diagnostic.messages.get();
+
+		if (!messages.isEmpty())
+			messages.pollLast()
+					.printPhrase();
+	}
+
+	/**
+	 * Print and remove the last message printed by the caller thread to the given {@code
+	 * stream}. (phrase only)
+	 *
+	 * @param stream the print stream to print the last message to.
+	 * @throws NullPointerException if the given {@code stream} is null.
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printPhrase(PrintStream stream) {
+		Objects.requireNonNull(stream, "stream");
+		Deque<DiagnosticMessage> messages = Diagnostic.messages.get();
+
+		if (!messages.isEmpty())
+			messages.pollLast()
+					.printPhrase(stream);
+	}
+
+	/**
+	 * Print all the messages printed by the caller thread to the default print-stream.
+	 * (phrase only)
+	 *
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printPhrases() {
+		for (DiagnosticMessage message : Diagnostic.messages.get())
+			message.printPhrase();
+	}
+
+	/**
+	 * Print all the messages printed by the caller thread to the given {@code stream}.
+	 * (phrase only)
+	 *
+	 * @param stream the print stream to print the messages to.
+	 * @throws NullPointerException if the given {@code stream} is null.
+	 * @since 0.2.0 ~2021.01.30
+	 */
+	public static void printPhrases(PrintStream stream) {
+		Objects.requireNonNull(stream, "stream");
+		for (DiagnosticMessage message : Diagnostic.messages.get())
+			message.printPhrase(stream);
 	}
 }
