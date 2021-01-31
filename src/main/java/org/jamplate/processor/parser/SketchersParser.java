@@ -21,7 +21,6 @@ import org.jamplate.processor.sketcher.Sketcher;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -77,12 +76,12 @@ public class SketchersParser implements Parser {
 		Objects.requireNonNull(sketch, "sketch");
 		for (Sketcher sketcher : this.sketchers)
 			while (true) {
-				Optional<Sketch> optional = sketch.accept(sketcher);
+				Sketch s = sketch.accept(sketcher);
 
-				if (optional == null)
+				if (s == null)
 					break;
 
-				optional.ifPresent(sketch::put);
+				sketch.put(s);
 			}
 	}
 }

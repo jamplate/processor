@@ -20,7 +20,10 @@ import org.jamplate.model.reference.Reference;
 import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.NavigableSet;
+import java.util.Objects;
+import java.util.TreeSet;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -58,12 +61,12 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	}
 
 	@Override
-	public <R> Optional<R> accept(Visitor<R> visitor) {
+	public <R> R accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
-		Optional<R> optional = visitor.visit(this);
+		R results = visitor.visit(this);
 
-		return optional != null ?
-			   optional :
+		return results != null ?
+			   results :
 			   this.sketches.stream()
 					   .map(sketch -> sketch.accept(visitor))
 					   .filter(Objects::nonNull)

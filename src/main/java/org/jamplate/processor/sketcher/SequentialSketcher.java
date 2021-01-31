@@ -20,7 +20,6 @@ import org.jamplate.model.sketch.Sketch;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -70,12 +69,11 @@ public class SequentialSketcher implements Sketcher {
 	}
 
 	@Override
-	public Optional<Sketch> visit(Sketch sketch) {
+	public Sketch visit(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		return this.sketchers.stream()
 				.map(sketch::accept)
 				.filter(Objects::nonNull)
-				.filter(Optional::isPresent)
 				.findFirst()
 				.orElse(null);
 	}

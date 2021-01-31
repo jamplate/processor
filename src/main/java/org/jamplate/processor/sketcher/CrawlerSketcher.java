@@ -23,7 +23,6 @@ import org.jamplate.processor.maker.Maker;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -89,7 +88,7 @@ public class CrawlerSketcher implements Sketcher {
 	}
 
 	@Override
-	public Optional<Sketch> visit(Sketch sketch) {
+	public Sketch visit(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		List<Reference> references = this.crawler.crawl(sketch);
 
@@ -102,7 +101,8 @@ public class CrawlerSketcher implements Sketcher {
 					.reduce((root, sub) -> {
 						root.put(sub);
 						return root;
-					});
+					})
+					.orElse(null);
 
 		return null;
 	}

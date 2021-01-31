@@ -18,8 +18,6 @@ package org.jamplate.processor.sketcher;
 import org.jamplate.model.sketch.Sketch;
 import org.jamplate.processor.visitor.Visitor;
 
-import java.util.Optional;
-
 /**
  * A visitor sub-interface specialized for visitors that builds the sketch hierarchy.
  *
@@ -42,5 +40,5 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @since 0.2.0 ~2021.01.24
 	 */
 	@Override
-	Optional<Sketch> visit(Sketch sketch);
+	Sketch visit(Sketch sketch);
 }

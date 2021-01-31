@@ -21,7 +21,6 @@ import org.jamplate.processor.visitor.Visitor;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * A temporary sketch containing initial thoughts about an element.
@@ -101,7 +100,7 @@ public interface Sketch extends Serializable {
 	 * @throws Error                if any error thrown by the given {@code visitor}.
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	<R> Optional<R> accept(Visitor<R> visitor);
+	<R> R accept(Visitor<R> visitor);
 
 	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An

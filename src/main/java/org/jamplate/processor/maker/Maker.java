@@ -15,13 +15,10 @@
  */
 package org.jamplate.processor.maker;
 
-import org.jamplate.model.document.Document;
-import org.jamplate.model.reference.DocumentReference;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.Sketch;
 
 import java.io.IOError;
-import java.util.Objects;
 
 /**
  * A function that takes a source and creates a sketch for it.
@@ -32,24 +29,6 @@ import java.util.Objects;
  */
 @FunctionalInterface
 public interface Maker {
-	/**
-	 * Make a sketch from given {@code document}.
-	 *
-	 * @param document the document of the sketch to be constructed.
-	 * @return a new sketch from given {@code document}.
-	 * @throws NullPointerException     if the given {@code document} is null.
-	 * @throws IllegalArgumentException if the given {@code document} is not satisfying
-	 *                                  the conditions of this maker. (optional)
-	 * @throws IllegalStateException    if the given {@code document} is a deserialized
-	 *                                  document. (optional)
-	 * @throws IOError                  if any I/O error occurs.
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	default Sketch make(Document document) {
-		Objects.requireNonNull(document, "document");
-		return this.make(new DocumentReference(document));
-	}
-
 	/**
 	 * Make a sketch from given {@code reference}.
 	 *

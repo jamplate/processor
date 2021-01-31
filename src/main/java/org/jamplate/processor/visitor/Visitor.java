@@ -17,8 +17,6 @@ package org.jamplate.processor.visitor;
 
 import org.jamplate.model.sketch.Sketch;
 
-import java.util.Optional;
-
 /**
  * A multipurpose callback that can be passed to a sketch for that sketch to invoke it
  * with every element in it. (recursively)
@@ -45,5 +43,5 @@ public interface Visitor<R> {
 	 * @throws Error                optional.
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	Optional<R> visit(Sketch sketch);
+	R visit(Sketch sketch);
 }

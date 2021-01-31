@@ -15,13 +15,7 @@
  */
 package org.jamplate.processor.parser;
 
-import org.jamplate.model.document.Document;
-import org.jamplate.model.reference.Reference;
-import org.jamplate.model.sketch.DocumentSketch;
-import org.jamplate.model.sketch.ReferenceSketch;
 import org.jamplate.model.sketch.Sketch;
-
-import java.util.Objects;
 
 /**
  * A parser is an event listener that takes unparsed documents and sketch a sketch
@@ -33,46 +27,6 @@ import java.util.Objects;
  */
 @FunctionalInterface
 public interface Parser {
-	/**
-	 * Parse the content of the given {@code document} and return the resultant root
-	 * sketch from parsing it.
-	 *
-	 * @param document the document to be parsed.
-	 * @return the root sketch from parsing the content of the given {@code document}.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @throws RuntimeException     if the parser got into an unrecoverable state because
-	 *                              of something unexpected in the given {@code
-	 *                              document}.
-	 * @throws Error                if any unexpected error occurred.
-	 * @since 0.2.0 ~2021.01.26
-	 */
-	default Sketch parse(Document document) {
-		Objects.requireNonNull(document, "document");
-		Sketch sketch = new DocumentSketch(document);
-		this.parse(sketch);
-		return sketch;
-	}
-
-	/**
-	 * Parse the content of the given {@code reference} and return the resultant root
-	 * sketch from parsing it.
-	 *
-	 * @param reference the source reference to be parsed.
-	 * @return the root sketch from parsing the content of the given {@code reference}.
-	 * @throws NullPointerException if the given {@code reference} is null.
-	 * @throws RuntimeException     if the parser got into an unrecoverable state because
-	 *                              of something unexpected in the given {@code
-	 *                              reference}.
-	 * @throws Error                if any unexpected error occurred.
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	default Sketch parse(Reference reference) {
-		Objects.requireNonNull(reference, "reference");
-		Sketch sketch = new ReferenceSketch(reference);
-		this.parse(sketch);
-		return sketch;
-	}
-
 	/**
 	 * Parse any parsable elements in the given {@code sketch}.
 	 *

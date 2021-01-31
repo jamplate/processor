@@ -17,7 +17,9 @@ package org.jamplate.processor.sketcher;
 
 import org.jamplate.model.sketch.Sketch;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -67,12 +69,11 @@ public class PrecedentialSketcher implements Sketcher {
 	}
 
 	@Override
-	public Optional<Sketch> visit(Sketch sketch) {
+	public Sketch visit(Sketch sketch) {
 		return this.sketchers.stream()
 				.map(sketch::accept)
 				.filter(Objects::nonNull)
-				.filter(Optional::isPresent)
-				.min(Comparator.comparing(Optional::get, Sketch.COMPARATOR))
+				.min(Sketch.COMPARATOR)
 				.orElse(null);
 	}
 }

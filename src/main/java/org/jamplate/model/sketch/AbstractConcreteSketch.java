@@ -20,7 +20,6 @@ import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -47,7 +46,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	}
 
 	@Override
-	public <R> Optional<R> accept(Visitor<R> visitor) {
+	public <R> R accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
 		return visitor.visit(this);
 	}
