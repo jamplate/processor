@@ -60,7 +60,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	@Override
 	public <R> Optional<R> accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
-		Optional<R> optional = visitor.visitSketch(this);
+		Optional<R> optional = visitor.visit(this);
 
 		return optional != null ?
 			   optional :

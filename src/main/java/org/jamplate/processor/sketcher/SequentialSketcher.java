@@ -70,7 +70,7 @@ public class SequentialSketcher implements Sketcher {
 	}
 
 	@Override
-	public Optional<Sketch> visitSketch(Sketch sketch) {
+	public Optional<Sketch> visit(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		return this.sketchers.stream()
 				.map(sketch::accept)

@@ -49,7 +49,7 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	@Override
 	public <R> Optional<R> accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
-		return visitor.visitSketch(this);
+		return visitor.visit(this);
 	}
 
 	@Override

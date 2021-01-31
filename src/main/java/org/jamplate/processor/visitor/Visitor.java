@@ -25,7 +25,7 @@ import java.util.Optional;
  * <br>
  * Note: any new method added will always have the modifier {@code default} making this
  * remain a {@link FunctionalInterface} with its functional method being {@link
- * #visitSketch(Sketch)}.
+ * #visit(Sketch)}.
  *
  * @param <R> the type of the element to be carried out as a result of visiting.
  * @author LSafer
@@ -45,5 +45,5 @@ public interface Visitor<R> {
 	 * @throws Error                optional.
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	Optional<R> visitSketch(Sketch sketch);
+	Optional<R> visit(Sketch sketch);
 }

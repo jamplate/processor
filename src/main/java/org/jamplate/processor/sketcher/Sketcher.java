@@ -42,5 +42,5 @@ public interface Sketcher extends Visitor<Sketch> {
 	 * @since 0.2.0 ~2021.01.24
 	 */
 	@Override
-	Optional<Sketch> visitSketch(Sketch sketch);
+	Optional<Sketch> visit(Sketch sketch);
 }
