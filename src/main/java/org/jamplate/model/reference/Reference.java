@@ -24,15 +24,12 @@ import java.util.Comparator;
 /**
  * A source reference is a component that points to a document or a fragment of it.
  * <br>
- * Note: source references are built from top to bottom. So, a typical source reference
- * will store its parent reference but never store any sub-reference of it.
- * <br>
  * The reference should serialize its {@link #document()}, {@link #line()}, {@link
  * #position()} and {@link #length()}. It is not encouraged to serialize additional data.
  * <br>
  * If a reference is a deserialized reference then any method that attempts to read the
- * document or attempts to access the parent or attempts to create new references will
- * throw an {@link IllegalStateException}.
+ * document or attempts to create new references will throw an {@link
+ * IllegalStateException}.
  *
  * @author LSafer
  * @version 0.2.0
@@ -135,16 +132,6 @@ public interface Reference extends Serializable {
 	 * @since 0.2.0 ~2021.01.27
 	 */
 	Reference lineReference();
-
-	/**
-	 * The parent reference of this reference.
-	 *
-	 * @return the parent reference of this reference. Or null if this reference has no
-	 * 		parent.
-	 * @throws IllegalStateException if this reference is a deserialized reference.
-	 * @since 0.2.0 ~2021.01.08
-	 */
-	Reference parent();
 
 	/**
 	 * Return where this reference starts at its {@link #document()}.

@@ -65,13 +65,6 @@ public abstract class AbstractReference implements Reference {
 	 */
 	@SuppressWarnings("TransientFieldNotInitialized")
 	protected final transient boolean constructed;
-	/**
-	 * The parent reference of this reference. (might be null)
-	 *
-	 * @since 0.2.0 ~2021.01.08
-	 */
-	@SuppressWarnings("TransientFieldNotInitialized")
-	protected final transient Reference parent;
 
 	/**
 	 * The content of this source. (lazily initialized)
@@ -94,7 +87,6 @@ public abstract class AbstractReference implements Reference {
 	protected AbstractReference(Document document) {
 		Objects.requireNonNull(document, "document");
 		this.document = document;
-		this.parent = null;
 		this.position = 0;
 		this.length = document.length();
 		this.line = 1;
@@ -123,7 +115,6 @@ public abstract class AbstractReference implements Reference {
 		if (line > document.lines().count())
 			throw new NoSuchElementException("line not found");
 		this.document = document;
-		this.parent = new DocumentReference(document);
 		this.position = document.lines()
 				.skip(line - 1)
 				.findFirst()
@@ -138,45 +129,42 @@ public abstract class AbstractReference implements Reference {
 	}
 
 	/**
-	 * Construct a new sub-reference from the given {@code parent} reference. The
-	 * constructed reference will have the same {@link #document()} as the given {@code
-	 * parent} reference. It will have its {@link #content()} lazily initialized and
-	 * equals to the {@link String#substring(int, int)} of the {@link
-	 * Document#readContent()} of the document of the given {@code parent} reference.
-	 * Also, the constructed reference will have its {@link #position()} equals to the sum
-	 * of the given {@code position} and the {@link #position()} of the given {@code
-	 * parent} reference. Finally, its obvious that the constructed reference will have
-	 * the given {@code parent} reference as its {@link #parent()}.
+	 * Construct a new sub-reference from the given {@code reference}. The constructed
+	 * reference will have the same {@link #document()} as the given {@code reference}. It
+	 * will have its {@link #content()} lazily initialized and equals to the {@link
+	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
+	 * of the given {@code reference}. Also, the constructed reference will have its
+	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
+	 * #position()} of the given {@code reference}.
 	 * <br>
 	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code parent} reference.
+	 * given {@code reference}.
 	 *
-	 * @param parent   the parent source reference.
-	 * @param position the sub-position to get from the given {@code parent} reference.
-	 * @param length   the length to get from the given {@code parent} reference.
-	 * @throws NullPointerException      if the given {@code parent} is null.
+	 * @param reference the parent source reference.
+	 * @param position  the sub-position to get from the given {@code reference}.
+	 * @param length    the length to get from the given {@code reference}.
+	 * @throws NullPointerException      if the given {@code reference} is null.
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
-	 *                                   length of the given {@code parent}.
-	 * @throws IllegalStateException     if the given {@code parent} or is a deserialized
-	 *                                   reference.
+	 *                                   length of the given {@code reference}.
+	 * @throws IllegalStateException     if the given {@code reference} or is a
+	 *                                   deserialized reference.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractReference(Reference parent, int position, int length) {
-		Objects.requireNonNull(parent, "parent");
+	protected AbstractReference(Reference reference, int position, int length) {
+		Objects.requireNonNull(reference, "reference");
 		if (position < 0)
 			throw new IllegalArgumentException("negative position");
 		if (length < 0)
 			throw new IllegalArgumentException("negative length");
-		if (position + length > parent.length())
-			throw new IndexOutOfBoundsException("position + length > parent.length()");
-		this.document = parent.document();
-		this.parent = parent;
-		this.position = parent.position() + position;
+		if (position + length > reference.length())
+			throw new IndexOutOfBoundsException("position + length > reference.length()");
+		this.document = reference.document();
+		this.position = reference.position() + position;
 		this.length = length;
 		//noinspection NumericCastThatLosesPrecision
-		this.line = (int) parent.document()
+		this.line = (int) reference.document()
 				.lines()
 				.filter(i -> i <= position)
 				.count();
@@ -233,13 +221,6 @@ public abstract class AbstractReference implements Reference {
 				this.document,
 				this.line
 		);
-	}
-
-	@Override
-	public Reference parent() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Reference");
-		return this.parent;
 	}
 
 	@Override

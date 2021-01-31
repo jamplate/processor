@@ -30,34 +30,32 @@ public class SubReference extends AbstractReference {
 	private static final long serialVersionUID = 8737902111302332073L;
 
 	/**
-	 * Construct a new sub-reference from the given {@code parent} reference. The
-	 * constructed reference will have the same {@link #document()} as the given {@code
-	 * parent} reference. It will have its {@link #content()} lazily initialized and
-	 * equals to the {@link String#substring(int, int)} of the {@link
-	 * Document#readContent()} of the document of the given {@code parent} reference.
-	 * Also, the constructed reference will have its {@link #position()} equals to the sum
-	 * of the given {@code position} and the {@link #position()} of the given {@code
-	 * parent} reference. Finally, its obvious that the constructed reference will have
-	 * the given {@code parent} reference as its {@link #parent()}.
+	 * Construct a new sub-reference from the given {@code reference}. The constructed
+	 * reference will have the same {@link #document()} as the given {@code reference}. It
+	 * will have its {@link #content()} lazily initialized and equals to the {@link
+	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
+	 * of the given {@code reference}. Also, the constructed reference will have its
+	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
+	 * #position()} of the given {@code reference}.
 	 * <br>
 	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code parent} reference.
+	 * given {@code reference}.
 	 *
-	 * @param parent   the parent source reference.
-	 * @param position the sub-position to get from the given {@code parent} reference.
-	 * @param length   the length to get from the given {@code parent} reference.
-	 * @throws NullPointerException      if the given {@code parent} is null.
+	 * @param reference the parent source reference.
+	 * @param position  the sub-position to get from the given {@code reference}.
+	 * @param length    the length to get from the given {@code reference}.
+	 * @throws NullPointerException      if the given {@code reference} is null.
 	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
 	 *                                   is negative.
 	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
-	 *                                   length of the given {@code parent}.
-	 * @throws IllegalStateException     if the given {@code parent} or is a deserialized
-	 *                                   reference.
+	 *                                   length of the given {@code reference}.
+	 * @throws IllegalStateException     if the given {@code reference} or is a
+	 *                                   deserialized reference.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	public SubReference(Reference parent, int position, int length) {
+	public SubReference(Reference reference, int position, int length) {
 		super(
-				parent,
+				reference,
 				position,
 				length
 		);
