@@ -54,6 +54,7 @@ public interface Sketch extends Serializable {
 	 *     equals = this == object
 	 * </pre>
 	 *
+	 * @param object the object to be matched.
 	 * @return if the given {@code object} is this.
 	 * @since 0.2.0 ~2021.01.17
 	 */
@@ -61,12 +62,12 @@ public interface Sketch extends Serializable {
 	boolean equals(Object object);
 
 	/**
-	 * Calculate the hashcode of this sketch.
+	 * Calculate the hash code of this sketch.
 	 * <pre>
 	 *     hashCode = &lt;ReferenceHashCode&gt; + &lt;ClassHashCode&gt;
 	 * </pre>
 	 *
-	 * @return the hashCode of this sketch.
+	 * @return the hash code of this sketch.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override

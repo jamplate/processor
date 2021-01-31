@@ -60,6 +60,7 @@ public interface Reference extends Serializable {
 	 *     			object.length == this.length
 	 * </pre>
 	 *
+	 * @param object the object to be matched.
 	 * @return if the given object is a reference and equals this reference.
 	 * @since 0.2.0 ~2021.01.07
 	 */
@@ -67,12 +68,12 @@ public interface Reference extends Serializable {
 	boolean equals(Object object);
 
 	/**
-	 * The hashcode of a reference is calculated as follows.
+	 * The hash code of a reference is calculated as follows.
 	 * <pre>
 	 *     hashCode = &lt;DocumentHashCode&gt; * &lt;Length&gt; + &lt;Position&gt;
 	 * </pre>
 	 *
-	 * @return the hashCode of this reference.
+	 * @return the hash code of this reference.
 	 * @since 0.2.0 ~2021.01.07
 	 */
 	@Override
