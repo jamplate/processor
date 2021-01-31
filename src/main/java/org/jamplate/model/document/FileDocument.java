@@ -16,6 +16,7 @@
 package org.jamplate.model.document;
 
 import java.io.*;
+import java.util.Objects;
 
 /**
  * A document that delegates to a {@link File}.
@@ -53,7 +54,7 @@ public class FileDocument extends AbstractDocument {
 	public FileDocument(File file) {
 		//noinspection DynamicRegexReplaceableByCompiledPattern
 		super(
-				file.toString(),
+				Objects.requireNonNull(file, "file").toString(),
 				file.getName(),
 				file.getName().replaceAll("[.][^.]*$", "")
 		);

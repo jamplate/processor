@@ -55,6 +55,7 @@ public class PseudoDocument extends AbstractDocument {
 				"",
 				""
 		);
+		Objects.requireNonNull(content, "content");
 		this.content = content.toString();
 	}
 
