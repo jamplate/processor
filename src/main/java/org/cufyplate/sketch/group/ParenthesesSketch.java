@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public final class ParenthesesSketch extends AbstractContextSketch {
+public final class ParenthesesSketch extends AbstractContextSketch implements GroupSketch {
 	/**
 	 * The maker of the context sketch.
 	 *

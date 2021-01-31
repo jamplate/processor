@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.18
  */
-public final class SemicolonSketch extends AbstractConcreteSketch {
+public final class SemicolonSketch extends AbstractConcreteSketch implements PunctuationSketch {
 	/**
 	 * The maker of the sketch.
 	 *

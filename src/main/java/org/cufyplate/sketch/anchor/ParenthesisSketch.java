@@ -32,7 +32,7 @@ import org.jamplate.processor.maker.Maker;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-public final class ParenthesisSketch extends AbstractConcreteSketch {
+public final class ParenthesisSketch extends AbstractConcreteSketch implements AnchorSketch {
 	/**
 	 * The maker of the concrete sketch.
 	 *

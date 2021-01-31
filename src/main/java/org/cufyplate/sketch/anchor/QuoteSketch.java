@@ -26,7 +26,7 @@ import org.jamplate.processor.maker.Maker;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.23
  */
-public final class QuoteSketch extends AbstractConcreteSketch {
+public final class QuoteSketch extends AbstractConcreteSketch implements AnchorSketch {
 	/**
 	 * The maker of the concrete sketch.
 	 *
