@@ -108,6 +108,15 @@ public interface Reference extends Serializable {
 	Document document();
 
 	/**
+	 * Return a reference for the whole document this reference has occurred at.
+	 *
+	 * @return a reference of the whole document of this.
+	 * @throws IllegalStateException if this reference is a deserialized reference.
+	 * @since 0.2.0 ~2021.01.31
+	 */
+	Reference documentReference();
+
+	/**
 	 * The length of this reference. Must always return the same value. Must always be the
 	 * same as the length of the content of this source.
 	 *

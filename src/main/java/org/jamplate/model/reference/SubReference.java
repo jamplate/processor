@@ -17,6 +17,9 @@ package org.jamplate.model.reference;
 
 import org.jamplate.model.document.Document;
 
+import java.io.IOError;
+import java.util.NoSuchElementException;
+
 /**
  * An implementation of the interface {@link Reference} that is a slice of another
  * reference.
@@ -30,54 +33,27 @@ public class SubReference extends AbstractReference {
 	private static final long serialVersionUID = 8737902111302332073L;
 
 	/**
-	 * Construct a new sub-reference from the given {@code reference}. The constructed
-	 * reference will have the same {@link #document()} as the given {@code reference}. It
-	 * will have its {@link #content()} lazily initialized and equals to the {@link
-	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
-	 * of the given {@code reference}. Also, the constructed reference will have its
-	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
-	 * #position()} of the given {@code reference}.
-	 * <br>
-	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code reference}.
+	 * Construct a new reference that points to a fragment in the given {@code document}
+	 * from the given {@code position} with the given {@code length}.
 	 *
-	 * @param reference the parent source reference.
-	 * @param position  the sub-position to get from the given {@code reference}.
-	 * @param length    the length to get from the given {@code reference}.
-	 * @throws NullPointerException      if the given {@code reference} is null.
-	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
-	 *                                   is negative.
-	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
-	 *                                   length of the given {@code reference}.
-	 * @throws IllegalStateException     if the given {@code reference} or is a
-	 *                                   deserialized reference.
-	 * @since 0.2.0 ~2021.01.17
+	 * @param document the document the constructed reference will be referencing.
+	 * @param position the position where the constructed reference will point at in the
+	 *                 given {@code document}.
+	 * @param length   the length of the fragment the constructed reference will point
+	 *                 at.
+	 * @throws NullPointerException     if the given {@code document} is null.
+	 * @throws IllegalArgumentException if the given {@code position} or {@code length} is
+	 *                                  negative.
+	 * @throws NoSuchElementException   if the given {@code document} does not have such
+	 *                                  fragment.
+	 * @throws IllegalStateException    if the given {@code document} is a deserialized
+	 *                                  document.
+	 * @throws IOError                  if any I/O error occur.
+	 * @since 0.2.0 ~2021.01.31
 	 */
-	public SubReference(Reference reference, int position, int length) {
+	public SubReference(Document document, int position, int length) {
 		super(
-				reference,
-				position,
-				length
-		);
-	}
-
-	@Override
-	public Reference subReference(int position) {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
-		return new SubReference(
-				this,
-				position,
-				this.length - position
-		);
-	}
-
-	@Override
-	public Reference subReference(int position, int length) {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Source");
-		return new SubReference(
-				this,
+				document,
 				position,
 				length
 		);

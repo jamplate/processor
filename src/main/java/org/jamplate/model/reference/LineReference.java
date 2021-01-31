@@ -41,7 +41,7 @@ public class LineReference extends AbstractReference {
 	 * @throws IllegalArgumentException if {@code line < 1}.
 	 * @throws NoSuchElementException   if the given {@code document} do not have such
 	 *                                  line.
-	 * @throws IllegalStateException    if the given {@code document} or is a deserialized
+	 * @throws IllegalStateException    if the given {@code document} is a deserialized
 	 *                                  document.
 	 * @throws IOError                  if any I/O error occur.
 	 * @since 0.2.0 ~2021.01.27

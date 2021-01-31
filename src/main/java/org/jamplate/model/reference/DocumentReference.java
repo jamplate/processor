@@ -60,13 +60,14 @@ public class DocumentReference extends AbstractReference {
 	}
 
 	/**
-	 * Construct a new reference that points to the whole given {@code document}.
+	 * Construct a new reference that takes the whole given {@code document} as its actual
+	 * source.
 	 *
-	 * @param document the document.
+	 * @param document the document the constructed reference will be referencing.
 	 * @throws NullPointerException  if the given {@code document} is null.
 	 * @throws IllegalStateException if the given {@code document} is a deserialized
 	 *                               document.
-	 * @throws IOError               if any I/O exception occurs.
+	 * @throws IOError               if any I/O exception occur.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public DocumentReference(Document document) {

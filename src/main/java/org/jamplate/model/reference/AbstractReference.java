@@ -77,7 +77,7 @@ public abstract class AbstractReference implements Reference {
 	 * Construct a new reference that takes the whole given {@code document} as its actual
 	 * source.
 	 *
-	 * @param document the document of the constructed reference.
+	 * @param document the document the constructed reference will be referencing.
 	 * @throws NullPointerException  if the given {@code document} is null.
 	 * @throws IllegalStateException if the given {@code document} is a deserialized
 	 *                               document.
@@ -103,7 +103,7 @@ public abstract class AbstractReference implements Reference {
 	 * @throws IllegalArgumentException if {@code line < 1}.
 	 * @throws NoSuchElementException   if the given {@code document} do not have such
 	 *                                  line.
-	 * @throws IllegalStateException    if the given {@code document} or is a deserialized
+	 * @throws IllegalStateException    if the given {@code document} is a deserialized
 	 *                                  document.
 	 * @throws IOError                  if any I/O error occur.
 	 * @since 0.2.0 ~2021.01.27
@@ -129,42 +129,37 @@ public abstract class AbstractReference implements Reference {
 	}
 
 	/**
-	 * Construct a new sub-reference from the given {@code reference}. The constructed
-	 * reference will have the same {@link #document()} as the given {@code reference}. It
-	 * will have its {@link #content()} lazily initialized and equals to the {@link
-	 * String#substring(int, int)} of the {@link Document#readContent()} of the document
-	 * of the given {@code reference}. Also, the constructed reference will have its
-	 * {@link #position()} equals to the sum of the given {@code position} and the {@link
-	 * #position()} of the given {@code reference}.
-	 * <br>
-	 * Note: this constructor was built on trust. It trusts the implementation of the
-	 * given {@code reference}.
+	 * Construct a new reference that points to a fragment in the given {@code document}
+	 * from the given {@code position} with the given {@code length}.
 	 *
-	 * @param reference the parent source reference.
-	 * @param position  the sub-position to get from the given {@code reference}.
-	 * @param length    the length to get from the given {@code reference}.
-	 * @throws NullPointerException      if the given {@code reference} is null.
-	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
-	 *                                   is negative.
-	 * @throws IndexOutOfBoundsException if {@code position + length} is more than the
-	 *                                   length of the given {@code reference}.
-	 * @throws IllegalStateException     if the given {@code reference} or is a
-	 *                                   deserialized reference.
-	 * @since 0.2.0 ~2021.01.17
+	 * @param document the document the constructed reference will be referencing.
+	 * @param position the position where the constructed reference will point at in the
+	 *                 given {@code document}.
+	 * @param length   the length of the fragment the constructed reference will point
+	 *                 at.
+	 * @throws NullPointerException     if the given {@code document} is null.
+	 * @throws IllegalArgumentException if the given {@code position} or {@code length} is
+	 *                                  negative.
+	 * @throws NoSuchElementException   if the given {@code document} does not have such
+	 *                                  fragment.
+	 * @throws IllegalStateException    if the given {@code document} is a deserialized
+	 *                                  document.
+	 * @throws IOError                  if any I/O error occur.
+	 * @since 0.2.0 ~2021.01.31
 	 */
-	protected AbstractReference(Reference reference, int position, int length) {
-		Objects.requireNonNull(reference, "reference");
+	protected AbstractReference(Document document, int position, int length) {
+		Objects.requireNonNull(document, "document");
 		if (position < 0)
 			throw new IllegalArgumentException("negative position");
 		if (length < 0)
 			throw new IllegalArgumentException("negative length");
-		if (position + length > reference.length())
-			throw new IndexOutOfBoundsException("position + length > reference.length()");
-		this.document = reference.document();
-		this.position = reference.position() + position;
+		if (position + length > document.length())
+			throw new NoSuchElementException("fragment not found");
+		this.document = document;
+		this.position = position;
 		this.length = length;
 		//noinspection NumericCastThatLosesPrecision
-		this.line = (int) reference.document()
+		this.line = (int) document
 				.lines()
 				.filter(i -> i <= position)
 				.count();
@@ -188,6 +183,15 @@ public abstract class AbstractReference implements Reference {
 	@Override
 	public Document document() {
 		return this.document;
+	}
+
+	@Override
+	public Reference documentReference() {
+		if (!this.constructed)
+			throw new IllegalStateException("Deserialized Reference");
+		return new DocumentReference(
+				this.document
+		);
 	}
 
 	@Override
@@ -232,9 +236,13 @@ public abstract class AbstractReference implements Reference {
 	public Reference subReference(int position) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Reference");
+		if (position < 0)
+			throw new IllegalArgumentException("negative position");
+		if (position > this.length)
+			throw new IndexOutOfBoundsException("position > this.length");
 		return new SubReference(
-				this,
-				position,
+				this.document,
+				this.position + position,
 				this.length - position
 		);
 	}
@@ -243,9 +251,15 @@ public abstract class AbstractReference implements Reference {
 	public Reference subReference(int position, int length) {
 		if (!this.constructed)
 			throw new IllegalStateException("Deserialized Reference");
+		if (position < 0)
+			throw new IllegalArgumentException("negative position");
+		if (length < 0)
+			throw new IllegalArgumentException("negative length");
+		if (position + length > this.length)
+			throw new IndexOutOfBoundsException("position + length > this.length");
 		return new SubReference(
-				this,
-				position,
+				this.document,
+				this.position + position,
 				length
 		);
 	}
