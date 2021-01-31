@@ -17,7 +17,6 @@ package org.jamplate.processor.visitor;
 
 import org.jamplate.model.sketch.Sketch;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -35,30 +34,6 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface Visitor<R> {
-	/**
-	 * Visits areas in a non-reserving parent that has not been reserved by any parent in
-	 * it.
-	 *
-	 * @param parent   the non-reserving parent the area was in it.
-	 * @param position the position of the area. (relative to the whole document)
-	 * @param length   the length of the area.
-	 * @return an optional containing the results of visiting the given area. Or {@code
-	 * 		null} if this visitors wishes to continue the loop.
-	 * @throws NullPointerException      if the given {@code parent} is null.
-	 * @throws IllegalArgumentException  if the given {@code position} or {@code length}
-	 *                                   is null. (optional)
-	 * @throws IndexOutOfBoundsException if {@code position + length} is larger than the
-	 *                                   size of the original document of the given {@code
-	 *                                   sketch}. (optional)
-	 * @throws RuntimeException          optional.
-	 * @throws Error                     optional.
-	 * @since 0.2.0 ~2021.01.19
-	 */
-	default Optional<R> visitRange(Sketch parent, int position, int length) {
-		Objects.requireNonNull(parent, "parent");
-		return null;
-	}
-
 	/**
 	 * Invoked for every sketch met down in the tree.
 	 *

@@ -15,10 +15,10 @@
  */
 package org.jamplate.model.sketch;
 
-import org.jamplate.runtime.diagnostic.Diagnostic;
 import org.jamplate.model.Dominance;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.processor.visitor.Visitor;
+import org.jamplate.runtime.diagnostic.Diagnostic;
 
 import java.util.*;
 
@@ -60,64 +60,15 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	@Override
 	public <R> Optional<R> accept(Visitor<R> visitor) {
 		Objects.requireNonNull(visitor, "visitor");
+		Optional<R> optional = visitor.visitSketch(this);
 
-		Optional<R> results;
-
-		//visit this
-		if ((results = visitor.visitSketch(this)) != null)
-			return results;
-
-		Iterator<Sketch> iterator = this.sketches.iterator();
-
-		int i = this.reference.position();
-		int m = this.reference.length();
-		int j = i + m;
-
-		//if this sketch has any inner sketches
-		if (iterator.hasNext()) {
-			Sketch first = iterator.next();
-
-			int s0 = first.reference().position();
-			int ep = s0 + first.reference().length();
-
-			if (i != s0)
-				//visit `[i, s0)`
-				if ((results = visitor.visitRange(this, i, s0 - i)) != null)
-					return results;
-
-			//visit the first sketch
-			if ((results = first.accept(visitor)) != null)
-				return results;
-
-			//iterate over next sketches (might be none)
-			while (iterator.hasNext()) {
-				Sketch next = iterator.next();
-
-				int sn = next.reference().position();
-				int en = sn + next.reference().length();
-
-				if (ep < sn)
-					//visit `[ep, sn)`
-					if ((results = visitor.visitRange(this, ep, sn - ep)) != null)
-						return results;
-
-				//visit the next sketch
-				if ((results = next.accept(visitor)) != null)
-					return results;
-
-				ep = en;
-			}
-
-			return ep == j ?
-				   null :
-				   //visit `[ep, j)`
-				   visitor.visitRange(this, ep, j - ep);
-		}
-
-		return m == 0 ?
-			   null :
-			   //visit `[i, j)`
-			   visitor.visitRange(this, i, m);
+		return optional != null ?
+			   optional :
+			   this.sketches.stream()
+					   .map(sketch -> sketch.accept(visitor))
+					   .filter(Objects::nonNull)
+					   .findFirst()
+					   .orElse(null);
 	}
 
 	@Override

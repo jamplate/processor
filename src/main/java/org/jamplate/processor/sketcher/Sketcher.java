@@ -18,7 +18,6 @@ package org.jamplate.processor.sketcher;
 import org.jamplate.model.sketch.Sketch;
 import org.jamplate.processor.visitor.Visitor;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -30,29 +29,6 @@ import java.util.Optional;
  */
 @FunctionalInterface
 public interface Sketcher extends Visitor<Sketch> {
-	/**
-	 * Return a matching sketch in the given {@code area} to be {@link Sketch#put(Sketch)}
-	 * to the given {@code parent} or a parent of it.
-	 *
-	 * @param parent   {@inheritDoc}
-	 * @param position {@inheritDoc}
-	 * @param length   {@inheritDoc}
-	 * @return a sketch to be {@link Sketch#put(Sketch)} to the given {@code parent} or a
-	 * 		parent of it. Or {@code null} if no matching sketch. (aka, continue the loop)
-	 * @throws NullPointerException      {@inheritDoc}
-	 * @throws IllegalArgumentException  {@inheritDoc}
-	 * @throws IndexOutOfBoundsException {@inheritDoc}
-	 * @throws RuntimeException          {@inheritDoc}
-	 * @throws Error                     {@inheritDoc}
-	 * @since 0.2.0 ~2021.01.24
-	 */
-	@SuppressWarnings("RedundantMethodOverride")
-	@Override
-	default Optional<Sketch> visitRange(Sketch parent, int position, int length) {
-		Objects.requireNonNull(parent, "parent");
-		return null;
-	}
-
 	/**
 	 * Return a matching sketch in the given {@code sketch} to be {@link
 	 * Sketch#put(Sketch)} to it or a parent of it.
