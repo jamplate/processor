@@ -15,7 +15,7 @@
  */
 package org.jamplate.model.sketch;
 
-import org.cufyplate.sketch.*;
+import org.cufyplate.sketch.group.*;
 import org.jamplate.processor.parser.Parser;
 import org.jamplate.processor.parser.SketchersParser;
 import org.jamplate.processor.sketcher.PrecedentialSketcher;
@@ -50,9 +50,9 @@ public class SketchTest {
 	public void contexts() {
 		Parser parser = new SketchersParser(
 				new SequentialSketcher(
-						Parentheses.SKETCHER,
-						Brackets.SKETCHER,
-						Braces.SKETCHER
+						ParenthesesSketch.SKETCHER,
+						BracketsSketch.SKETCHER,
+						BracesSketch.SKETCHER
 				)
 		);
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
@@ -76,8 +76,8 @@ public class SketchTest {
 	public void doubleQuotes() {
 		Parser parser = new SketchersParser(
 				new PrecedentialSketcher(
-						DoubleQuotes.SKETCHER,
-						Quotes.SKETCHER
+						DoubleQuotesSketch.SKETCHER,
+						QuotesSketch.SKETCHER
 				)
 		);
 		Sketch sketch = new DocumentSketch("\"'\"'\"'\"");
@@ -86,12 +86,12 @@ public class SketchTest {
 
 		assertSame(
 				"Double quotes occurred first. So, it should be the dominant",
-				DoubleQuotes.DoubleQuotesSketch.class,
+				DoubleQuotesSketch.class,
 				getSketchAt(sketch, 0).getClass()
 		);
 		assertSame(
 				"Single quotes occurred first. So, it should be the dominant",
-				Quotes.QuotesSketch.class,
+				QuotesSketch.class,
 				getSketchAt(sketch, 1).getClass()
 		);
 	}
@@ -99,7 +99,7 @@ public class SketchTest {
 	@Test
 	public void parentheses() {
 		Parser parser = new SketchersParser(
-				Parentheses.SKETCHER
+				ParenthesesSketch.SKETCHER
 		);
 		Sketch sketch = new DocumentSketch("(()()())");
 
@@ -153,10 +153,10 @@ public class SketchTest {
 	public void quotes() {
 		Parser parser = new SketchersParser(
 				new SequentialSketcher(
-						Quotes.SKETCHER,
-						Parentheses.SKETCHER,
-						Brackets.SKETCHER,
-						Braces.SKETCHER
+						QuotesSketch.SKETCHER,
+						ParenthesesSketch.SKETCHER,
+						BracketsSketch.SKETCHER,
+						BracesSketch.SKETCHER
 				)
 		);
 		Sketch sketch = new DocumentSketch("()'([{')}]");

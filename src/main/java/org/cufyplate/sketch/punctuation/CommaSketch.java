@@ -13,89 +13,67 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.cufyplate.sketch;
+package org.cufyplate.sketch.punctuation;
 
+import org.jamplate.model.reference.Reference;
+import org.jamplate.model.sketch.AbstractConcreteSketch;
 import org.jamplate.processor.crawler.ConcreteCrawler;
 import org.jamplate.processor.crawler.Crawler;
 import org.jamplate.processor.maker.Maker;
 import org.jamplate.processor.sketcher.CrawlerSketcher;
 import org.jamplate.processor.sketcher.Sketcher;
-import org.jamplate.model.reference.Reference;
-import org.jamplate.model.sketch.AbstractConcreteSketch;
 
 import java.util.regex.Pattern;
 
 /**
- * A class holding classes about sketching {@code ,}. (comma)
+ * A sketch for comma symbol.
+ * <pre>
+ *     ,
+ * </pre>
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.26
+ * @since 0.2.0 ~2021.01.18
  */
-public final class Comma {
+public final class CommaSketch extends AbstractConcreteSketch {
 	/**
 	 * The maker of the sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
 	public static final Maker MAKER = CommaSketch::new;
-
 	/**
 	 * A pattern that detects commas.
 	 *
 	 * @since 0.2.0 ~2021.01.26
 	 */
 	public static final Pattern PATTERN = Pattern.compile("[,]");
-
 	/**
 	 * The crawler that crawls for possibly valid commas.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Crawler CRAWLER = new ConcreteCrawler(Comma.PATTERN);
-
+	public static final Crawler CRAWLER = new ConcreteCrawler(CommaSketch.PATTERN);
 	/**
 	 * A visitor that makes {@link CommaSketch} when it found available comma in a
 	 * sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(Comma.CRAWLER, Comma.MAKER);
+	public static final Sketcher SKETCHER = new CrawlerSketcher(CommaSketch.CRAWLER, CommaSketch.MAKER);
+
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 1417694492546192558L;
 
 	/**
-	 * A private always-fail constructor to avoid any instantiation of this class.
+	 * Construct a new sketch with the given {@code reference}. The given source reference
+	 * is the reference the constructed sketch will reserve.
 	 *
-	 * @throws AssertionError when called.
+	 * @param reference the source reference of the constructed sketch.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	private Comma() {
-		throw new AssertionError("No instance for you!");
-	}
-
-	/**
-	 * A sketch for comma symbol.
-	 * <pre>
-	 *     ,
-	 * </pre>
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final class CommaSketch extends AbstractConcreteSketch {
-		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = 1417694492546192558L;
-
-		/**
-		 * Construct a new sketch with the given {@code reference}. The given source
-		 * reference is the reference the constructed sketch will reserve.
-		 *
-		 * @param reference the source reference of the constructed sketch.
-		 * @throws NullPointerException if the given {@code reference} is null.
-		 * @since 0.2.0 ~2021.01.26
-		 */
-		private CommaSketch(Reference reference) {
-			super(reference);
-		}
+	private CommaSketch(Reference reference) {
+		super(reference);
 	}
 }

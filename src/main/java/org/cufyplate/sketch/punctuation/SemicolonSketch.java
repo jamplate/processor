@@ -13,89 +13,67 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.cufyplate.sketch;
+package org.cufyplate.sketch.punctuation;
 
+import org.jamplate.model.reference.Reference;
+import org.jamplate.model.sketch.AbstractConcreteSketch;
 import org.jamplate.processor.crawler.ConcreteCrawler;
 import org.jamplate.processor.crawler.Crawler;
 import org.jamplate.processor.maker.Maker;
 import org.jamplate.processor.sketcher.CrawlerSketcher;
 import org.jamplate.processor.sketcher.Sketcher;
-import org.jamplate.model.reference.Reference;
-import org.jamplate.model.sketch.AbstractConcreteSketch;
 
 import java.util.regex.Pattern;
 
 /**
- * A class holding classes about sketching {@code ;}. (semicolons)
+ * A sketch for semicolon symbol.
+ * <pre>
+ *     ;
+ * </pre>
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.26
+ * @since 0.2.0 ~2021.01.18
  */
-public final class Semicolon {
+public final class SemicolonSketch extends AbstractConcreteSketch {
 	/**
 	 * The maker of the sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
 	public static final Maker MAKER = SemicolonSketch::new;
-
 	/**
 	 * A pattern that detects semicolons.
 	 *
 	 * @since 0.2.0 ~2021.01.26
 	 */
 	public static final Pattern PATTERN = Pattern.compile("[;]");
-
 	/**
 	 * The crawler that crawls for possibly valid semicolons.
 	 *
 	 * @since 0.2.0 ~2021.01.30
 	 */
-	public static final Crawler CRAWLER = new ConcreteCrawler(Semicolon.PATTERN);
-
+	public static final Crawler CRAWLER = new ConcreteCrawler(SemicolonSketch.PATTERN);
 	/**
 	 * A visitor that makes {@link SemicolonSketch} when it found available semicolon in a
 	 * sketch.
 	 *
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(Semicolon.CRAWLER, Semicolon.MAKER);
+	public static final Sketcher SKETCHER = new CrawlerSketcher(SemicolonSketch.CRAWLER, SemicolonSketch.MAKER);
+
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 1417694492546192558L;
 
 	/**
-	 * A private always-fail constructor to avoid any instantiation of this class.
+	 * Construct a new sketch with the given {@code reference}. The given source reference
+	 * is the reference the constructed sketch will reserve.
 	 *
-	 * @throws AssertionError when called.
+	 * @param reference the source reference of the constructed sketch.
+	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	private Semicolon() {
-		throw new AssertionError("No instance for you!");
-	}
-
-	/**
-	 * A sketch for semicolon symbol.
-	 * <pre>
-	 *     ;
-	 * </pre>
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final class SemicolonSketch extends AbstractConcreteSketch {
-		@SuppressWarnings("JavaDoc")
-		private static final long serialVersionUID = 1417694492546192558L;
-
-		/**
-		 * Construct a new sketch with the given {@code reference}. The given source
-		 * reference is the reference the constructed sketch will reserve.
-		 *
-		 * @param reference the source reference of the constructed sketch.
-		 * @throws NullPointerException if the given {@code reference} is null.
-		 * @since 0.2.0 ~2021.01.26
-		 */
-		private SemicolonSketch(Reference reference) {
-			super(reference);
-		}
+	private SemicolonSketch(Reference reference) {
+		super(reference);
 	}
 }
