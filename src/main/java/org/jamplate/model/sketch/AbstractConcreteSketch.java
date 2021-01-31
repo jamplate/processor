@@ -15,7 +15,7 @@
  */
 package org.jamplate.model.sketch;
 
-import org.jamplate.diagnostic.Diagnostic;
+import org.jamplate.runtime.diagnostic.Diagnostic;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.processor.visitor.Visitor;
 

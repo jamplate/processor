@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.diagnostic;
+package org.jamplate.runtime.diagnostic;
 
 import org.jamplate.model.reference.Reference;
 

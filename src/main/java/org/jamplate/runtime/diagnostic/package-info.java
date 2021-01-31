@@ -20,4 +20,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.24
  */
-package org.jamplate.diagnostic;
+package org.jamplate.runtime.diagnostic;
