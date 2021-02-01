@@ -38,7 +38,7 @@ import java.util.Comparator;
  * @version 0.2.0
  * @since 0.2.0 ~2020.12.25
  */
-public interface Sketch extends Serializable {
+public interface Sketch extends Serializable, Iterable<Sketch> {
 	/**
 	 * The standard sketch comparator. This comparator is sorting sketches from the first
 	 * occurrence on the document to the last and from the longest to the shortest.

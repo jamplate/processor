@@ -19,6 +19,8 @@ import org.jamplate.model.reference.Reference;
 import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -54,6 +56,11 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	@Override
 	public boolean check(int start, int end) {
 		return false;
+	}
+
+	@Override
+	public Iterator<Sketch> iterator() {
+		return Collections.emptyIterator();
 	}
 
 	@Override

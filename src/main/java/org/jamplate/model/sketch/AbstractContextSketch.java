@@ -92,6 +92,11 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	}
 
 	@Override
+	public Iterator<Sketch> iterator() {
+		return this.sketches.iterator();
+	}
+
+	@Override
 	public void put(Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		if (!this.constructed)
