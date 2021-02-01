@@ -20,10 +20,7 @@ import org.jamplate.model.reference.Reference;
 import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
-import java.util.Iterator;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * An abstract of the interface {@link Sketch} that implements the basic functionality of
@@ -93,7 +90,7 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 
 	@Override
 	public Iterator<Sketch> iterator() {
-		return this.sketches.iterator();
+		return Collections.unmodifiableCollection(this.sketches).iterator();
 	}
 
 	@Override
