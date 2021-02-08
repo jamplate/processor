@@ -320,16 +320,6 @@ public enum Relation {
 	 * <b>Parallel Universe</b> {@link #PARALLEL (opposite)}
 	 * <br>
 	 * When the two source found to be from different document.
-	 * <pre>
-	 *     |-->. .....
-	 *     ..... .|-->
-	 * </pre>
-	 * <pre>
-	 *     {@code d != o}
-	 * </pre>
-	 * <pre>
-	 *     {@code d != o}
-	 * </pre>
 	 *
 	 * @see Dominance#NONE
 	 * @since 0.2.0 ~2021.01.26
