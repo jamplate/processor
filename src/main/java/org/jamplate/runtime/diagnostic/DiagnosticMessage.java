@@ -190,9 +190,8 @@ public class DiagnosticMessage {
 		if (this.references.isEmpty())
 			this.printPhrase(stream);
 		else
-			//noinspection OverlyLongLambda,ConstantConditions
+			//noinspection OverlyLongLambda
 			this.references.stream()
-					.filter(Reference.class::isInstance)
 					.distinct()
 					.collect(Collectors.toMap(
 							Reference::lineReference,
