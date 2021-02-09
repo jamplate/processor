@@ -17,7 +17,6 @@ package org.jamplate.model.sketch;
 
 import org.jamplate.model.Dominance;
 import org.jamplate.model.reference.Reference;
-import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
 import java.util.*;
@@ -55,20 +54,6 @@ public abstract class AbstractContextSketch extends AbstractSketch {
 	 */
 	protected AbstractContextSketch(Reference reference) {
 		super(reference);
-	}
-
-	@Override
-	public <R> R accept(Visitor<R> visitor) {
-		Objects.requireNonNull(visitor, "visitor");
-		R results = visitor.visit(this);
-
-		return results != null ?
-			   results :
-			   this.sketches.stream()
-					   .map(sketch -> sketch.accept(visitor))
-					   .filter(Objects::nonNull)
-					   .findFirst()
-					   .orElse(null);
 	}
 
 	@Override

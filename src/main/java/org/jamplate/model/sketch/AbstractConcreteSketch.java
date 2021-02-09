@@ -16,7 +16,6 @@
 package org.jamplate.model.sketch;
 
 import org.jamplate.model.reference.Reference;
-import org.jamplate.processor.visitor.Visitor;
 import org.jamplate.runtime.diagnostic.Diagnostic;
 
 import java.util.Collections;
@@ -45,12 +44,6 @@ public abstract class AbstractConcreteSketch extends AbstractSketch {
 	 */
 	protected AbstractConcreteSketch(Reference reference) {
 		super(reference);
-	}
-
-	@Override
-	public <R> R accept(Visitor<R> visitor) {
-		Objects.requireNonNull(visitor, "visitor");
-		return visitor.visit(this);
 	}
 
 	@Override

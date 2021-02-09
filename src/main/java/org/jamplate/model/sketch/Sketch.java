@@ -17,7 +17,6 @@ package org.jamplate.model.sketch;
 
 import org.jamplate.model.Dominance;
 import org.jamplate.model.reference.Reference;
-import org.jamplate.processor.visitor.Visitor;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -85,24 +84,6 @@ public interface Sketch extends Serializable, Iterable<Sketch> {
 	String toString();
 
 	/**
-	 * Recursively loop down in the tree and invoke the appropriate method for each
-	 * element met. The invocation shall always be ordered from the first to the last and
-	 * from the containers to the parts.
-	 * <br>
-	 * Exceptions thrown by the given {@code visitor} will not be caught.
-	 *
-	 * @param visitor the visitor to be invoked for each element.
-	 * @param <R>     the type of the results of the given {@code visitor}.
-	 * @return an optional containing the results of visiting an element. Or {@code null}
-	 * 		if the visitor wishes to continue the loop.
-	 * @throws NullPointerException if the given {@code visitor} is null.
-	 * @throws RuntimeException     if any exception thrown by the given {@code visitor}.
-	 * @throws Error                if any error thrown by the given {@code visitor}.
-	 * @since 0.2.0 ~2021.01.11
-	 */
-	<R> R accept(Visitor<R> visitor);
-
-	/**
 	 * Check if the given area {@code [start, end)} can be put to this sketch or not. An
 	 * area get rejected when the area has a dominance other than {@link Dominance#PART}
 	 * nor {@link Dominance#EXACT} with this sketch or has a dominance other than {@link
@@ -143,8 +124,7 @@ public interface Sketch extends Serializable, Iterable<Sketch> {
 	 *                                       reserved area (has a dominance of either
 	 *                                       {@link Dominance#SHARE} or {@link
 	 *                                       Dominance#EXACT}).
-	 * @throws UnsupportedOperationException if the given {@code sketch} cannot be put to
-	 *                                       this sketch.
+	 * @throws UnsupportedOperationException if this sketch cannot have inner sketches.
 	 * @since 0.2.0 ~2021.01.12
 	 */
 	void put(Sketch sketch);
