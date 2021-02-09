@@ -16,10 +16,11 @@
 package org.jamplate.model.sketch;
 
 import org.cufyplate.sketch.group.*;
+import org.jamplate.runtime.compilation.Compilation;
+import org.jamplate.runtime.compilation.DynamicCompilation;
 import org.jamplate.processor.parser.Parser;
-import org.jamplate.processor.parser.SketchersParser;
-import org.jamplate.processor.sketcher.PrecedentialSketcher;
-import org.jamplate.processor.sketcher.SequentialSketcher;
+import org.jamplate.processor.parser.PrecedentialParser;
+import org.jamplate.processor.parser.SequentialParser;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -48,16 +49,17 @@ public class SketchTest {
 
 	@Test
 	public void contexts() {
-		Parser parser = new SketchersParser(
-				new SequentialSketcher(
-						ParenthesesSketch.SKETCHER,
-						BracketsSketch.SKETCHER,
-						BracesSketch.SKETCHER
-				)
+		Parser parser = new SequentialParser(
+				ParenthesesSketch.PARSER,
+				BracketsSketch.PARSER,
+				BracesSketch.PARSER
 		);
 		Sketch sketch = new DocumentSketch("()[([]({}))]{[]}()");
 
-		parser.parse(sketch);
+		Compilation compilation = new DynamicCompilation();
+		compilation.use(parser);
+		compilation.append(sketch);
+		compilation.parse();
 
 		//document 1
 		//	parentheses 3
@@ -74,15 +76,18 @@ public class SketchTest {
 
 	@Test
 	public void doubleQuotes() {
-		Parser parser = new SketchersParser(
-				new PrecedentialSketcher(
-						DoubleQuotesSketch.SKETCHER,
-						QuotesSketch.SKETCHER
+		Parser parser = new SequentialParser(
+				new PrecedentialParser(
+						DoubleQuotesSketch.PARSER,
+						QuotesSketch.PARSER
 				)
 		);
 		Sketch sketch = new DocumentSketch("\"'\"'\"'\"");
 
-		parser.parse(sketch);
+		Compilation compilation = new DynamicCompilation();
+		compilation.use(parser);
+		compilation.append(sketch);
+		compilation.parse();
 
 		assertSame(
 				"Double quotes occurred first. So, it should be the dominant",
@@ -98,12 +103,13 @@ public class SketchTest {
 
 	@Test
 	public void parentheses() {
-		Parser parser = new SketchersParser(
-				ParenthesesSketch.SKETCHER
-		);
+		Parser parser = ParenthesesSketch.PARSER;
 		Sketch sketch = new DocumentSketch("(()()())");
 
-		parser.parse(sketch);
+		Compilation compilation = new DynamicCompilation();
+		compilation.use(parser);
+		compilation.append(sketch);
+		compilation.parse();
 
 		//base sketch
 		assertCount(sketch, 13);
@@ -151,17 +157,18 @@ public class SketchTest {
 
 	@Test
 	public void quotes() {
-		Parser parser = new SketchersParser(
-				new SequentialSketcher(
-						QuotesSketch.SKETCHER,
-						ParenthesesSketch.SKETCHER,
-						BracketsSketch.SKETCHER,
-						BracesSketch.SKETCHER
-				)
+		Parser parser = new SequentialParser(
+				QuotesSketch.PARSER,
+				ParenthesesSketch.PARSER,
+				BracketsSketch.PARSER,
+				BracesSketch.PARSER
 		);
 		Sketch sketch = new DocumentSketch("()'([{')}]");
 
-		parser.parse(sketch);
+		Compilation compilation = new DynamicCompilation();
+		compilation.use(parser);
+		compilation.append(sketch);
+		compilation.parse();
 
 		//document 1
 		//	parentheses 3

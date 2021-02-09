@@ -17,7 +17,6 @@ package org.cufyplate.sketch.anchor;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.maker.Maker;
 
 /**
  * A sketch that represents a {@code "}. (double quote)
@@ -27,13 +26,6 @@ import org.jamplate.processor.maker.Maker;
  * @since 0.2.0 ~2021.01.24
  */
 public final class DoubleQuoteSketch extends AbstractConcreteSketch implements AnchorSketch {
-	/**
-	 * The maker of the concrete sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Maker MAKER = DoubleQuoteSketch::new;
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1307615983399045672L;
 
@@ -45,7 +37,7 @@ public final class DoubleQuoteSketch extends AbstractConcreteSketch implements A
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	private DoubleQuoteSketch(Reference reference) {
+	public DoubleQuoteSketch(Reference reference) {
 		super(reference);
 	}
 }

@@ -17,13 +17,8 @@ package org.cufyplate.sketch.punctuation;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.crawler.ConcreteCrawler;
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
-import org.jamplate.processor.sketcher.CrawlerSketcher;
-import org.jamplate.processor.sketcher.Sketcher;
-
-import java.util.regex.Pattern;
+import org.jamplate.processor.parser.Parser;
+import org.jamplate.processor.parser.ConcreteParser;
 
 /**
  * A sketch for comma symbol.
@@ -37,30 +32,11 @@ import java.util.regex.Pattern;
  */
 public final class CommaSketch extends AbstractConcreteSketch implements PunctuationSketch {
 	/**
-	 * The maker of the sketch.
+	 * A parser that parses sketches of this sketch kind from a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.02.08
 	 */
-	public static final Maker MAKER = CommaSketch::new;
-	/**
-	 * A pattern that detects commas.
-	 *
-	 * @since 0.2.0 ~2021.01.26
-	 */
-	public static final Pattern PATTERN = Pattern.compile("[,]");
-	/**
-	 * The crawler that crawls for possibly valid commas.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Crawler CRAWLER = new ConcreteCrawler(CommaSketch.PATTERN);
-	/**
-	 * A visitor that makes {@link CommaSketch} when it found available comma in a
-	 * sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.26
-	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(CommaSketch.CRAWLER, CommaSketch.MAKER);
+	public static final Parser PARSER = new ConcreteParser("[,]", CommaSketch::new);
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1417694492546192558L;
@@ -73,7 +49,7 @@ public final class CommaSketch extends AbstractConcreteSketch implements Punctua
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	private CommaSketch(Reference reference) {
+	public CommaSketch(Reference reference) {
 		super(reference);
 	}
 }

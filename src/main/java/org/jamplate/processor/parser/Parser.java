@@ -15,11 +15,15 @@
  */
 package org.jamplate.processor.parser;
 
+import org.jamplate.model.Dominance;
 import org.jamplate.model.sketch.Sketch;
 
+import java.io.IOError;
+import java.util.Set;
+
 /**
- * A parser is an event listener that takes unparsed documents and sketch a sketch
- * hierarchy from them.
+ * A parser is a non-modifying argument-state-dependent function that takes a sketch and
+ * sketch a sketch hierarchy from it.
  *
  * @author LSafer
  * @version 0.2.0
@@ -28,14 +32,46 @@ import org.jamplate.model.sketch.Sketch;
 @FunctionalInterface
 public interface Parser {
 	/**
-	 * Parse any parsable elements in the given {@code sketch}.
+	 * Return a sketch hierarchy (or part of it) in the given {@code sketch} from the
+	 * allowed areas in it.
+	 * <br>
+	 * Rules:
+	 * <ul>
+	 *     <li>
+	 *         The given {@code sketch} should not be modified by this method.
+	 *     </li>
+	 *     <li>
+	 *         The returned set all has a dominance of {@link Dominance#EXACT} or
+	 *         {@link Dominance#PART} with the given {@code sketch}. (be aware of infinite
+	 *         recursion -_-')
+	 *     </li>
+	 *     <li>
+	 *         The returned set all has a dominance of {@link Dominance#NONE} with any
+	 *         sketch currently in the given {@code sketch}'s tree.
+	 *     </li>
+	 *     <li>
+	 *         All the parsing operations is strictly-limited to the given {@code sketch}.
+	 *     </li>
+	 * </ul>
+	 * <br>
+	 * Note:
+	 * <ul>
+	 *     <li>
+	 *         The returned set might have sketches that clashes with each-other.
+	 *     </li>
+	 *     <li>
+	 *         The returned set might have a sketch that has inner sketches.
+	 *     </li>
+	 * </ul>
 	 *
 	 * @param sketch the sketch to parse the elements in it.
-	 * @throws NullPointerException if the given {@code sketch} is null.
-	 * @throws RuntimeException     if the parser got into an unrecoverable state because
-	 *                              of something unexpected in the given {@code sketch}.
-	 * @throws Error                if any unexpected error occurred.
+	 * @return an unmodifiable non-null set of the sketches parsed from the given {@code
+	 * 		sketch}. Or an empty set if no match was found.
+	 * @throws NullPointerException  if the given {@code sketch} is null.
+	 * @throws IllegalStateException if this sketch is deserialized or has a deserialized
+	 *                               reference or a deserialized document.
+	 * @throws IOError               if any I/O error occur.
 	 * @since 0.2.0 ~2021.01.29
 	 */
-	void parse(Sketch sketch);
+	Set<Sketch> parse(Sketch sketch);
 }

@@ -18,13 +18,8 @@ package org.cufyplate.sketch.group;
 import org.cufyplate.sketch.anchor.QuoteSketch;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractContextSketch;
-import org.jamplate.processor.crawler.ContextCrawler;
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
-import org.jamplate.processor.sketcher.CrawlerSketcher;
-import org.jamplate.processor.sketcher.Sketcher;
-
-import java.util.regex.Pattern;
+import org.jamplate.processor.parser.ContextParser;
+import org.jamplate.processor.parser.Parser;
 
 /**
  * A sketch that represents {@code ''}. (quotes context)
@@ -35,36 +30,11 @@ import java.util.regex.Pattern;
  */
 public final class QuotesSketch extends AbstractContextSketch implements GroupSketch {
 	/**
-	 * The maker of the context sketch.
+	 * A parser that parses sketches of this sketch kind from a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.02.08
 	 */
-	public static final Maker MAKER = QuotesSketch::new;
-	/**
-	 * The pattern of an ending quote.
-	 *
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	public static final Pattern PATTERN_END = Pattern.compile("(?<!\\\\)[']");
-	/**
-	 * The pattern of a starting quote.
-	 *
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	public static final Pattern PATTERN_START = Pattern.compile("(?<!\\\\)[']");
-	/**
-	 * The crawler that crawls for possibly valid quotes.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Crawler CRAWLER = new ContextCrawler(QuotesSketch.PATTERN_START, QuotesSketch.PATTERN_END);
-	/**
-	 * A visitor that makes {@link QuotesSketch} when it found available quotes pair in a
-	 * sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.23
-	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(QuotesSketch.CRAWLER, QuotesSketch.MAKER, QuoteSketch.MAKER, QuoteSketch.MAKER);
+	public static final Parser PARSER = new ContextParser("[']", "[']", QuotesSketch::new, QuoteSketch::new);
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3465886194836402720L;
@@ -77,7 +47,7 @@ public final class QuotesSketch extends AbstractContextSketch implements GroupSk
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.23
 	 */
-	private QuotesSketch(Reference reference) {
+	public QuotesSketch(Reference reference) {
 		super(reference);
 	}
 }

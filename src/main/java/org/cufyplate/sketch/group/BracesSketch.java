@@ -18,13 +18,8 @@ package org.cufyplate.sketch.group;
 import org.cufyplate.sketch.anchor.BraceSketch;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractContextSketch;
-import org.jamplate.processor.crawler.ContextCrawler;
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
-import org.jamplate.processor.sketcher.CrawlerSketcher;
-import org.jamplate.processor.sketcher.Sketcher;
-
-import java.util.regex.Pattern;
+import org.jamplate.processor.parser.ContextParser;
+import org.jamplate.processor.parser.Parser;
 
 /**
  * A sketch for brackets context.
@@ -38,36 +33,11 @@ import java.util.regex.Pattern;
  */
 public final class BracesSketch extends AbstractContextSketch implements GroupSketch {
 	/**
-	 * The maker of the context sketch.
+	 * A parser that parses sketches of this sketch kind from a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.02.08
 	 */
-	public static final Maker MAKER = BracesSketch::new;
-	/**
-	 * A pattern that detects the start of a brackets context.
-	 *
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final Pattern PATTERN_END = Pattern.compile("[}]");
-	/**
-	 * A pattern that detects the end of a brackets context.
-	 *
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final Pattern PATTERN_START = Pattern.compile("[{]");
-	/**
-	 * The crawler that crawls for possibly valid braces.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Crawler CRAWLER = new ContextCrawler(BracesSketch.PATTERN_START, BracesSketch.PATTERN_END);
-	/**
-	 * A visitor that makes {@link BracesSketch} when it found available brackets pair in
-	 * a sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.18
-	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(BracesSketch.CRAWLER, BracesSketch.MAKER, BraceSketch.MAKER, BraceSketch.MAKER);
+	public static final Parser PARSER = new ContextParser("[{]", "[}]", BracesSketch::new, BraceSketch::new);
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1738781066145922168L;
@@ -80,7 +50,7 @@ public final class BracesSketch extends AbstractContextSketch implements GroupSk
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	private BracesSketch(Reference reference) {
+	public BracesSketch(Reference reference) {
 		super(reference);
 	}
 }

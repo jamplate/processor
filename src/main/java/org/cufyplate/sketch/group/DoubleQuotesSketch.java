@@ -18,13 +18,8 @@ package org.cufyplate.sketch.group;
 import org.cufyplate.sketch.anchor.DoubleQuoteSketch;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractContextSketch;
-import org.jamplate.processor.crawler.ContextCrawler;
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
-import org.jamplate.processor.sketcher.CrawlerSketcher;
-import org.jamplate.processor.sketcher.Sketcher;
-
-import java.util.regex.Pattern;
+import org.jamplate.processor.parser.ContextParser;
+import org.jamplate.processor.parser.Parser;
 
 /**
  * A sketch that represents {@code ""}. (double quotes context)
@@ -35,36 +30,11 @@ import java.util.regex.Pattern;
  */
 public final class DoubleQuotesSketch extends AbstractContextSketch implements GroupSketch {
 	/**
-	 * The maker of the context sketch.
+	 * A parser that parses sketches of this sketch kind from a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.02.08
 	 */
-	public static final Maker MAKER = DoubleQuotesSketch::new;
-	/**
-	 * The pattern of an ending quote.
-	 *
-	 * @since 0.2.0 ~2021.01.24
-	 */
-	public static final Pattern PATTERN_END = Pattern.compile("(?<!\\\\)[\"]");
-	/**
-	 * The pattern of a starting quote.
-	 *
-	 * @since 0.2.0 ~2021.01.24
-	 */
-	public static final Pattern PATTERN_START = Pattern.compile("(?<!\\\\)[\"]");
-	/**
-	 * The crawler that crawls for possibly valid double quotes.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Crawler CRAWLER = new ContextCrawler(DoubleQuotesSketch.PATTERN_START, DoubleQuotesSketch.PATTERN_END);
-	/**
-	 * A visitor that makes {@link DoubleQuotesSketch} when it found available double
-	 * quotes pair in a sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.24
-	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(DoubleQuotesSketch.CRAWLER, DoubleQuotesSketch.MAKER, DoubleQuoteSketch.MAKER, DoubleQuoteSketch.MAKER);
+	public static final Parser PARSER = new ContextParser("[\"]", "[\"]", DoubleQuotesSketch::new, DoubleQuoteSketch::new);
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3272886549112160976L;
@@ -77,7 +47,7 @@ public final class DoubleQuotesSketch extends AbstractContextSketch implements G
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.24
 	 */
-	private DoubleQuotesSketch(Reference reference) {
+	public DoubleQuotesSketch(Reference reference) {
 		super(reference);
 	}
 }

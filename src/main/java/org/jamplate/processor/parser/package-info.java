@@ -14,7 +14,9 @@
  *	limitations under the License.
  */
 /**
- * A package all about the interface {@link org.jamplate.processor.parser.Parser}.
+ * A package all about the interface {@link org.jamplate.processor.parser.Parser}. This
+ * package is all about generating new {@link org.jamplate.model.sketch.Sketch sketchs}
+ * from existing ones.
  *
  * @author LSafer
  * @version 0.2.0

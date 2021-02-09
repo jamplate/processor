@@ -14,30 +14,8 @@
  *	limitations under the License.
  */
 /**
- * This package is all about converting source code into {@link
- * org.jamplate.model.sketch.Sketch sketches}.
- * <br>
- * Default layout:
- * <ul>
- *     <li>
- *         A {@link org.jamplate.processor.crawler.Crawler} search in a source to find
- *         matching references.
- *     </li>
- *     <li>
- *         A {@link org.jamplate.processor.maker.Maker} takes a reference and convert it
- *         into a sketch.
- *     </li>
- *     <li>
- *         A {@link org.jamplate.processor.sketcher.Sketcher} uses a
- *         {@link org.jamplate.processor.crawler.Crawler} to find references and multiple
- *         {@link org.jamplate.processor.maker.Maker}s to convert them into sketches.
- *         Also, it can be a poll sketcher that generates results using other sketchers.
- *     </li>
- *     <li>
- *         A {@link org.jamplate.processor.parser.Parser} loops on multiple
- *         {@link org.jamplate.processor.sketcher.Sketcher}s to build a sketch hierarchy.
- *     </li>
- * </ul>
+ * All about processors. Processors are functions that processes objects from the {@link
+ * org.jamplate.model} package.
  *
  * @author LSafer
  * @version 0.2.0

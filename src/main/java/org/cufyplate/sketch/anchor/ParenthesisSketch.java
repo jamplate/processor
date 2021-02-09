@@ -17,7 +17,6 @@ package org.cufyplate.sketch.anchor;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.maker.Maker;
 
 /**
  * A sketch for parenthesis (singular) symbol.
@@ -33,13 +32,6 @@ import org.jamplate.processor.maker.Maker;
  * @since 0.2.0 ~2021.01.17
  */
 public final class ParenthesisSketch extends AbstractConcreteSketch implements AnchorSketch {
-	/**
-	 * The maker of the concrete sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Maker MAKER = ParenthesisSketch::new;
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 5687797376406575149L;
 
@@ -51,7 +43,7 @@ public final class ParenthesisSketch extends AbstractConcreteSketch implements A
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	private ParenthesisSketch(Reference reference) {
+	public ParenthesisSketch(Reference reference) {
 		super(reference);
 	}
 }

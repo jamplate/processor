@@ -17,7 +17,6 @@ package org.cufyplate.sketch.anchor;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.maker.Maker;
 
 /**
  * A sketch for bracket symbol.
@@ -33,13 +32,6 @@ import org.jamplate.processor.maker.Maker;
  * @since 0.2.0 ~2021.01.18
  */
 public final class BraceSketch extends AbstractConcreteSketch implements AnchorSketch {
-	/**
-	 * The maker of the concrete sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Maker MAKER = BraceSketch::new;
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3996900909023911874L;
 
@@ -51,7 +43,7 @@ public final class BraceSketch extends AbstractConcreteSketch implements AnchorS
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.18
 	 */
-	private BraceSketch(Reference reference) {
+	public BraceSketch(Reference reference) {
 		super(reference);
 	}
 }

@@ -17,7 +17,6 @@ package org.cufyplate.sketch.anchor;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.maker.Maker;
 
 /**
  * A sketch that represents a {@code '}. (quote)
@@ -27,13 +26,6 @@ import org.jamplate.processor.maker.Maker;
  * @since 0.2.0 ~2021.01.23
  */
 public final class QuoteSketch extends AbstractConcreteSketch implements AnchorSketch {
-	/**
-	 * The maker of the concrete sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Maker MAKER = QuoteSketch::new;
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 777485260949931605L;
 
@@ -45,7 +37,7 @@ public final class QuoteSketch extends AbstractConcreteSketch implements AnchorS
 	 * @throws NullPointerException if the given {@code source} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	private QuoteSketch(Reference reference) {
+	public QuoteSketch(Reference reference) {
 		super(reference);
 	}
 }

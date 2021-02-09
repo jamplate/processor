@@ -20,6 +20,9 @@ import org.jamplate.model.Relation;
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.Sketch;
 
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Objects;
 
 import static org.junit.Assert.assertFalse;
@@ -33,15 +36,18 @@ public final class InternalAssert {
 
 	public static void assertCount(Sketch sketch, int count) {
 		Objects.requireNonNull(sketch, "sketch");
-		int[] sCount = {0};
-		sketch.accept(s -> {
-			sCount[0]++;
-			return null;
-		});
+
+		Deque<Sketch> deque = new LinkedList<>(Collections.singleton(sketch));
+		int c = 0;
+		while (!deque.isEmpty()) {
+			c++;
+			deque.poll().forEach(deque::add);
+		}
+
 		assertSame(
 				sketch + " has an unexpected inner sketches count",
 				count,
-				sCount[0]
+				c
 		);
 	}
 

@@ -1,5 +1,5 @@
 /*
- *	Copyright 2020-2021 Cufy
+ *	Copyright 2021 Cufy
  *
  *	Licensed under the Apache License, Version 2.0 (the "License");
  *	you may not use this file except in compliance with the License.
@@ -14,20 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Jamplate is a java pre-processor.
- * <br>
- * Package layout:
- * <ul>
- *     <li>
- *         Using the package {@link org.jamplate.processor}, source code get converted into
- *         instances of the package {@link org.jamplate.model}
- *     </li>
- * </ul>
- * <br>
- * Complete synchronization support is left for the user to handle it.
+ * A package all about the interface {@link org.jamplate.runtime.compilation.Compilation}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.0.1 ~2020.09.20
+ * @since 0.2.0 ~2021.01.31
  */
-package org.jamplate;
+package org.jamplate.runtime.compilation;

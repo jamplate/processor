@@ -17,13 +17,8 @@ package org.cufyplate.sketch.punctuation;
 
 import org.jamplate.model.reference.Reference;
 import org.jamplate.model.sketch.AbstractConcreteSketch;
-import org.jamplate.processor.crawler.ConcreteCrawler;
-import org.jamplate.processor.crawler.Crawler;
-import org.jamplate.processor.maker.Maker;
-import org.jamplate.processor.sketcher.CrawlerSketcher;
-import org.jamplate.processor.sketcher.Sketcher;
-
-import java.util.regex.Pattern;
+import org.jamplate.processor.parser.Parser;
+import org.jamplate.processor.parser.ConcreteParser;
 
 /**
  * A sketch for semicolon symbol.
@@ -37,30 +32,11 @@ import java.util.regex.Pattern;
  */
 public final class SemicolonSketch extends AbstractConcreteSketch implements PunctuationSketch {
 	/**
-	 * The maker of the sketch.
+	 * A parser that parses sketches of this sketch kind from a sketch.
 	 *
-	 * @since 0.2.0 ~2021.01.30
+	 * @since 0.2.0 ~2021.02.08
 	 */
-	public static final Maker MAKER = SemicolonSketch::new;
-	/**
-	 * A pattern that detects semicolons.
-	 *
-	 * @since 0.2.0 ~2021.01.26
-	 */
-	public static final Pattern PATTERN = Pattern.compile("[;]");
-	/**
-	 * The crawler that crawls for possibly valid semicolons.
-	 *
-	 * @since 0.2.0 ~2021.01.30
-	 */
-	public static final Crawler CRAWLER = new ConcreteCrawler(SemicolonSketch.PATTERN);
-	/**
-	 * A visitor that makes {@link SemicolonSketch} when it found available semicolon in a
-	 * sketch.
-	 *
-	 * @since 0.2.0 ~2021.01.26
-	 */
-	public static final Sketcher SKETCHER = new CrawlerSketcher(SemicolonSketch.CRAWLER, SemicolonSketch.MAKER);
+	public static final Parser PARSER = new ConcreteParser("[;]", SemicolonSketch::new);
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1417694492546192558L;
@@ -73,7 +49,7 @@ public final class SemicolonSketch extends AbstractConcreteSketch implements Pun
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.01.26
 	 */
-	private SemicolonSketch(Reference reference) {
+	public SemicolonSketch(Reference reference) {
 		super(reference);
 	}
 }
