@@ -355,6 +355,16 @@ public final class Diagnostic {
 	}
 
 	/**
+	 * Clear the message stack.
+	 *
+	 * @since 0.2.0 ~2021.02.10
+	 */
+	public static void clear() {
+		Diagnostic.messages.get()
+				.clear();
+	}
+
+	/**
 	 * Return but not remove the last message printed by the caller thread.
 	 *
 	 * @return the last message printed. or null if no such message.
