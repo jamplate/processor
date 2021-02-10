@@ -85,6 +85,8 @@ public interface Compilation {
 	 * After invoking this method. Any non-parsed element that has got appended should be
 	 * parsed.
 	 *
+	 * @throws RuntimeException if any runtime exception occurs.
+	 * @throws Error            if any error occurs.
 	 * @since 0.2.0 ~2021.02.01
 	 */
 	void parse();
