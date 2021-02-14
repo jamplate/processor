@@ -22,6 +22,50 @@ import java.util.Objects;
 
 /**
  * An enumeration of how dominant a relation is over another relation.
+ * <br>
+ * The names is describing the other source.
+ * <pre>
+ * 		EXACT
+ * 			i == s <= j == e
+ * 			...|---|...
+ * 			...|---|...
+ * 		PART | CONTAIN
+ * 			i < s <= e < j
+ * 			.<------->.
+ * 			...|---|...
+ * 			<br>
+ * 			i == s <= e < j
+ * 			.|------->.
+ * 			.|--->.....
+ * 			<br>
+ * 			i < s <= e == j
+ * 			.<-------|.
+ * 			.....<---|.
+ * 		SHARE
+ * 			i < s < j < e
+ * 			.<----|....
+ * 			....|---->.
+ * 			<br>
+ * 			s < i < e < j
+ * 			....|---->.
+ * 			.<----|....
+ * 		NONE
+ * 			i < j == s < e
+ * 			.<---|.....
+ * 			.....|--->.
+ * 			<br>
+ * 			s < e == i < j
+ * 			.....|--->.
+ * 			.<---|.....
+ * 			<br>
+ * 			i <= j < s <= e
+ * 			.<--|......
+ * 			......|-->.
+ * 			<br>
+ * 			s <= e < i <= j
+ * 			......|-->.
+ * 			.<--|......
+ * </pre>
  *
  * @author LSafer
  * @version 0.2.0

@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * An enumeration of possible relations between sources.
  * <br>
- * The names is describing the other source (in THE source perspective.
+ * The names is describing the other source.
  * <pre>
  * 		SAME
  * 			i == s <= j == e

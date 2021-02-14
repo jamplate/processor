@@ -19,12 +19,12 @@
  * <br>
  * The components are processed as follows:
  * <ul>
- *     <li>Source-Code are wrapped with {@link org.jamplate.model.document.Document}s.</li>
- *     <li>Documents get sliced into {@link org.jamplate.model.reference.Reference}s.</li>
- *     <li>References get referenced by {@link org.jamplate.model.sketch.Sketch}s.</li>
- *     <li>Sketches get converted into {@link org.jamplate.model.element.Element}s.</li>
- *     <li>Elements get compiled into {@link org.jamplate.model.instruction.Instruction}s.</li>
- *     <li>Instructions can be executed.</li>
+ *     <li>{@link org.jamplate.model.document.Document}</li>
+ *     <li>{@link org.jamplate.model.reference.Reference}</li>
+ *     <li>{@link org.jamplate.model.sketch.Sketch}</li>
+ *     <li>{@link org.jamplate.model.node.Node}</li>
+ *     <li>{@link org.jamplate.model.element.Element}</li>
+ *     <li>{@link org.jamplate.model.instruction.Instruction}</li>
  * </ul>
  *
  * @author LSafer
