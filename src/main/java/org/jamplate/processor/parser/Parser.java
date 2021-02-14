@@ -68,8 +68,8 @@ public interface Parser {
 	 * @return an unmodifiable non-null set of the sketches parsed from the given {@code
 	 * 		sketch}. Or an empty set if no match was found.
 	 * @throws NullPointerException  if the given {@code sketch} is null.
-	 * @throws IllegalStateException if this sketch is deserialized or has a deserialized
-	 *                               reference or a deserialized document.
+	 * @throws IllegalStateException if the given {@code sketch} is deserialized or has a
+	 *                               deserialized reference or a deserialized document.
 	 * @throws IOError               if any I/O error occur.
 	 * @since 0.2.0 ~2021.01.29
 	 */
