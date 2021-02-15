@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.document;
 
+import org.jamplate.model.Name;
+
 import java.io.*;
 import java.util.Objects;
 
@@ -53,11 +55,11 @@ public class FileDocument extends AbstractDocument {
 	 */
 	public FileDocument(File file) {
 		//noinspection DynamicRegexReplaceableByCompiledPattern
-		super(
+		super(new Name(
 				Objects.requireNonNull(file, "file").toString(),
 				file.getName(),
 				file.getName().replaceAll("[.][^.]*$", "")
-		);
+		));
 		this.file = file;
 	}
 

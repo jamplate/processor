@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.document;
 
+import org.jamplate.model.Name;
+
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -35,19 +37,7 @@ public abstract class AbstractDocument implements Document {
 	 *
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected final String name;
-	/**
-	 * The uniq qualified name of this document.
-	 *
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	protected final String qualifiedName;
-	/**
-	 * The simple name of this document.
-	 *
-	 * @since 0.2.0 ~2021.01.17
-	 */
-	protected final String simpleName;
+	protected final Name name;
 
 	/**
 	 * True, if this document bas been constructed using its constructor. (in other words
@@ -73,35 +63,27 @@ public abstract class AbstractDocument implements Document {
 	protected transient int[] lines;
 
 	/**
-	 * Construct a new document that has the given {@code qualifiedName}, {@code name} and
-	 * {@code simpleName}.
+	 * Construct a new document with the given {@code name}.
 	 *
-	 * @param qualifiedName the uniq name of the constructed document.
-	 * @param name          the name of the constructed document.
-	 * @param simpleName    the simple name of the constructed document.
-	 * @throws NullPointerException if the given {@code qualifiedName} or {@code name} or
-	 *                              {@code simpleName} is null.
+	 * @param name the name of the constructed document.
+	 * @throws NullPointerException if the given {@code name} is null.
 	 * @since 0.2.0 ~2021.01.17
 	 */
-	protected AbstractDocument(String qualifiedName, String name, String simpleName) {
-		Objects.requireNonNull(qualifiedName, "qualifiedName");
+	protected AbstractDocument(Name name) {
 		Objects.requireNonNull(name, "name");
-		Objects.requireNonNull(simpleName, "simpleName");
-		this.qualifiedName = qualifiedName;
 		this.name = name;
-		this.simpleName = simpleName;
 		this.constructed = true;
 	}
 
 	@Override
 	public boolean equals(Object object) {
 		return object instanceof Document &&
-			   Objects.equals(this.qualifiedName, ((Document) object).qualifiedName());
+			   Objects.equals(this.name, ((Document) object).name());
 	}
 
 	@Override
 	public int hashCode() {
-		return this.qualifiedName.hashCode();
+		return this.name.hashCode();
 	}
 
 	@Override
@@ -130,22 +112,12 @@ public abstract class AbstractDocument implements Document {
 	}
 
 	@Override
-	public String name() {
+	public Name name() {
 		return this.name;
 	}
 
 	@Override
-	public String qualifiedName() {
-		return this.qualifiedName;
-	}
-
-	@Override
-	public String simpleName() {
-		return this.simpleName;
-	}
-
-	@Override
 	public String toString() {
-		return this.qualifiedName;
+		return this.name.toQualifiedString();
 	}
 }

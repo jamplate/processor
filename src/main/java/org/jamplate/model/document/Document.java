@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.document;
 
+import org.jamplate.model.Name;
+
 import java.io.*;
 import java.util.Comparator;
 import java.util.stream.IntStream;
@@ -22,8 +24,8 @@ import java.util.stream.IntStream;
 /**
  * An interface that abstracts the functionality required to deal with source-code files.
  * <br>
- * The document should serialize its {@link #qualifiedName()}, {@link #name()} and {@link
- * #simpleName()}. It is not encouraged to serialized additional data.
+ * The document should serialize its {@link #name()}. It is not encouraged to serialized
+ * additional data.
  * <br>
  * If a document is a deserialized document then any method that attempts to read the
  * content or its length will throw an {@link IllegalStateException}.
@@ -39,17 +41,17 @@ public interface Document extends Serializable {
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	Comparator<Document> COMPARATOR = Comparator.comparing(Document::qualifiedName);
+	Comparator<Document> COMPARATOR = Comparator.comparing(Document::name);
 
 	/**
 	 * Determines if the given {@code object} equals this document or not. An object
-	 * equals a document when that object is a document and has the same {@link
-	 * #qualifiedName()} as this document. (regardless of its content, assuming the user
-	 * is honest and does not provide two documents with same qualified name but from
-	 * different origins or have different content)
+	 * equals a document when that object is a document and has the same {@link #name()}
+	 * as this document. (regardless of its content, assuming the user is honest and does
+	 * not provide two documents with same qualified name but from different origins or
+	 * have different content)
 	 * <pre>
 	 *     equals = object instanceof Document &&
-	 *     			this.qualifiedName.equals(object.qualifiedName)
+	 *     			this.name.equals(object.name)
 	 * </pre>
 	 *
 	 * @param object the object to be matched.
@@ -61,9 +63,9 @@ public interface Document extends Serializable {
 
 	/**
 	 * Calculates the hashCode of this document. The hash code of a document is the hash
-	 * code of the {@link #qualifiedName()} of it.
+	 * code of the {@link #name()} of it.
 	 * <pre>
-	 *     hashCode = &lt;QualifiedNameHashCode&gt;
+	 *     hashCode = &lt;NameHashCode&gt;
 	 * </pre>
 	 *
 	 * @return the hash code of this document.
@@ -74,9 +76,9 @@ public interface Document extends Serializable {
 
 	/**
 	 * Returns a string representation of this document. The string representation of a
-	 * document is its {@link #qualifiedName()}.
+	 * document is the qualified form of its {@link #name()}.
 	 * <pre>
-	 *     toString = &lt;QualifiedNameToString&gt;
+	 *     toString = &lt;NameToQualifiedString&gt;
 	 * </pre>
 	 *
 	 * @return a string representation of this document.
@@ -112,7 +114,7 @@ public interface Document extends Serializable {
 	 * @return the name of this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	String name();
+	Name name();
 
 	/**
 	 * Open a new input-stream that reads the content of this document.
@@ -135,15 +137,6 @@ public interface Document extends Serializable {
 	Reader openReader() throws IOException;
 
 	/**
-	 * Return the qualified name of this document. The qualified name usually refers to
-	 * the full path where this document belong.
-	 *
-	 * @return the qualified name of this document.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	String qualifiedName();
-
-	/**
 	 * Read the content of this document. Once the content read, it should be cached. So,
 	 * invoking this method multiple times must be easy to perform.
 	 *
@@ -153,14 +146,4 @@ public interface Document extends Serializable {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	CharSequence readContent();
-
-	/**
-	 * Return the simple name of this document. The simple name usually refers to the name
-	 * but without any extensions (like {@code .class}, {@code .java} and {@code
-	 * .jamplate}).
-	 *
-	 * @return the simple name of this document.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	String simpleName();
 }

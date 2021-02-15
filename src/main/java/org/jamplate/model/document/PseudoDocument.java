@@ -15,6 +15,8 @@
  */
 package org.jamplate.model.document;
 
+import org.jamplate.model.Name;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -50,18 +52,14 @@ public class PseudoDocument extends AbstractDocument {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content) {
-		super(
-				Integer.toHexString(System.identityHashCode(content)),
-				"",
-				""
-		);
+		super(new Name(Integer.toHexString(System.identityHashCode(content))));
 		Objects.requireNonNull(content, "content");
 		this.content = content.toString();
 	}
 
 	/**
 	 * Construct a new pseudo document that have the given {@code content} and have all of
-	 * shapes of its name as the given {@code name}.
+	 * the shapes of its name as the given {@code name}.
 	 *
 	 * @param content the content of the constructed pseudo content.
 	 * @param name    the qualified-name, name and simple-name of the constructed
@@ -70,25 +68,23 @@ public class PseudoDocument extends AbstractDocument {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content, String name) {
-		super(name, name, name);
+		super(new Name(name));
 		Objects.requireNonNull(content, "content");
 		this.content = content.toString();
 	}
 
 	/**
 	 * Construct a new pseudo document that have the given {@code content} and the given
-	 * names.
+	 * name.
 	 *
-	 * @param content       the content of the constructed document.
-	 * @param qualifiedName the qualified name of the constructed document.
-	 * @param name          the name of the constructed document.
-	 * @param simpleName    the simple name of the constructed document.
+	 * @param content the content of the constructed document.
+	 * @param name    the name of the constructed document.
 	 * @throws NullPointerException if the given {@code content} or {@code qualifiedName}
 	 *                              or {@code name} or {@code simpleName} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public PseudoDocument(CharSequence content, String qualifiedName, String name, String simpleName) {
-		super(qualifiedName, name, simpleName);
+	public PseudoDocument(CharSequence content, Name name) {
+		super(name);
 		Objects.requireNonNull(content, "content");
 		this.content = content.toString();
 	}
