@@ -134,25 +134,3 @@ public class PseudoDocument implements Document {
 		return this.identifier;
 	}
 }
-//
-//	/**
-//	 * Construct a new pseudo document that have the given {@code content} and the given
-//	 * name.
-//	 * <br>
-//	 * Important Note: do not provide modifiable content (such as StringBuilder). For the
-//	 * sake of performance and compatibility, this class will simply give its content
-//	 * instance to anyone requests it. So, due to that. The provided content might get
-//	 * changed in value while it suppose to be immutable.
-//	 *
-//	 * @param content the content of the constructed document.
-//	 * @param name    the name of the constructed document.
-//	 * @throws NullPointerException if the given {@code content} or {@code qualifiedName}
-//	 *                              or {@code name} or {@code simpleName} is null.
-//	 * @since 0.2.0 ~2021.01.13
-//	 */
-//	public PseudoDocument(CharSequence content, Name name) {
-//		super(name);
-//		Objects.requireNonNull(content, "content");
-//		this.content = content;
-//	}
-//
