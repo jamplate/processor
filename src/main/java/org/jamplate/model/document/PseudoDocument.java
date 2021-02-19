@@ -15,8 +15,6 @@
  */
 package org.jamplate.model.document;
 
-import org.jamplate.model.Name;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -30,7 +28,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class PseudoDocument extends AbstractDocument {
+public class PseudoDocument implements Document {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 5906973056576376713L;
 
@@ -39,74 +37,122 @@ public class PseudoDocument extends AbstractDocument {
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@SuppressWarnings("TransientFieldNotInitialized")
-	protected final transient String content;
+	protected final CharSequence content;
+	/**
+	 * The identifier of this document.
+	 *
+	 * @since 0.2.0 ~2021.02.17
+	 */
+	protected final String identifier;
 
 	/**
-	 * Construct a new pseudo document that have the given {@code content}. The qualified
-	 * name will be the string in hex of the {@link System#identityHashCode(Object)
-	 * identitiy hash code} of the given content.
+	 * Construct a new pseudo document that has no content neither can be identified.
+	 *
+	 * @since 0.2.0 ~2021.02.19
+	 */
+	public PseudoDocument() {
+		this("");
+	}
+
+	/**
+	 * Construct a new pseudo document that have the given {@code content}. The identifier
+	 * of the constructed document will be the string in hex of the {@link
+	 * System#identityHashCode(Object) identitiy hash code} of the given content.
+	 * <br>
+	 * Important Note: do not provide modifiable content (such as StringBuilder). For the
+	 * sake of performance and compatibility, this class will simply give its content
+	 * instance to anyone requests it. So, due to that. The provided content might get
+	 * changed in value while it suppose to be immutable.
 	 *
 	 * @param content the content of the constructed pseudo content.
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public PseudoDocument(CharSequence content) {
-		super(new Name(Integer.toHexString(System.identityHashCode(content))));
 		Objects.requireNonNull(content, "content");
-		this.content = content.toString();
+		this.content = content;
+		this.identifier = Integer.toHexString(System.identityHashCode(content));
 	}
 
 	/**
-	 * Construct a new pseudo document that have the given {@code content} and have all of
-	 * the shapes of its name as the given {@code name}.
+	 * Construct a new pseudo document that have the given {@code content} and be
+	 * identified with the given {@code identifier}.
+	 * <br>
+	 * Important Note: do not provide modifiable content (such as StringBuilder). For the
+	 * sake of performance and compatibility, this class will simply give its content
+	 * instance to anyone requests it. So, due to that. The provided content might get
+	 * changed in value while it suppose to be immutable.
 	 *
-	 * @param content the content of the constructed pseudo content.
-	 * @param name    the qualified-name, name and simple-name of the constructed
-	 *                document.
-	 * @throws NullPointerException if the given {@code content} or {@code name} is null.
+	 * @param content    the content of the constructed pseudo content.
+	 * @param identifier the identity of the constructed document.
+	 * @throws NullPointerException if the given {@code content} or {@code identifier} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public PseudoDocument(CharSequence content, String name) {
-		super(new Name(name));
+	public PseudoDocument(CharSequence content, String identifier) {
 		Objects.requireNonNull(content, "content");
-		this.content = content.toString();
+		Objects.requireNonNull(identifier, "identifier");
+		this.content = content;
+		this.identifier = identifier;
 	}
 
-	/**
-	 * Construct a new pseudo document that have the given {@code content} and the given
-	 * name.
-	 *
-	 * @param content the content of the constructed document.
-	 * @param name    the name of the constructed document.
-	 * @throws NullPointerException if the given {@code content} or {@code qualifiedName}
-	 *                              or {@code name} or {@code simpleName} is null.
-	 * @since 0.2.0 ~2021.01.13
-	 */
-	public PseudoDocument(CharSequence content, Name name) {
-		super(name);
-		Objects.requireNonNull(content, "content");
-		this.content = content.toString();
+	@Override
+	public boolean equals(Object object) {
+		if (object == this)
+			return true;
+		if (object instanceof Document) {
+			Document document = (Document) object;
+
+			return Objects.equals(document.toString(), this.identifier);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.identifier.hashCode();
 	}
 
 	@Override
 	public InputStream openInputStream() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		return new ByteArrayInputStream(this.content.getBytes());
+		return new ByteArrayInputStream(this.content.toString().getBytes());
 	}
 
 	@Override
 	public Reader openReader() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		return new StringReader(this.content);
+		return new StringReader(this.content.toString());
 	}
 
 	@Override
-	public CharSequence readContent() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
+	public CharSequence read() {
 		return this.content;
 	}
+
+	@Override
+	public String toString() {
+		return this.identifier;
+	}
 }
+//
+//	/**
+//	 * Construct a new pseudo document that have the given {@code content} and the given
+//	 * name.
+//	 * <br>
+//	 * Important Note: do not provide modifiable content (such as StringBuilder). For the
+//	 * sake of performance and compatibility, this class will simply give its content
+//	 * instance to anyone requests it. So, due to that. The provided content might get
+//	 * changed in value while it suppose to be immutable.
+//	 *
+//	 * @param content the content of the constructed document.
+//	 * @param name    the name of the constructed document.
+//	 * @throws NullPointerException if the given {@code content} or {@code qualifiedName}
+//	 *                              or {@code name} or {@code simpleName} is null.
+//	 * @since 0.2.0 ~2021.01.13
+//	 */
+//	public PseudoDocument(CharSequence content, Name name) {
+//		super(name);
+//		Objects.requireNonNull(content, "content");
+//		this.content = content;
+//	}
+//

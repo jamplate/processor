@@ -15,8 +15,6 @@
  */
 package org.jamplate.model.document;
 
-import org.jamplate.model.Name;
-
 import java.io.*;
 import java.util.Objects;
 
@@ -27,7 +25,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.13
  */
-public class FileDocument extends AbstractDocument {
+public class FileDocument implements Document {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -210192396401745547L;
 
@@ -36,15 +34,14 @@ public class FileDocument extends AbstractDocument {
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@SuppressWarnings("TransientFieldNotInitialized")
-	protected final transient File file;
+	protected final File file;
 
 	/**
 	 * The content of this document. (cached, lazily initialized)
 	 *
 	 * @since 0.2.0 ~2021.01.16
 	 */
-	protected transient String content;
+	protected String content;
 
 	/**
 	 * Construct a new document for the given {@code file}.
@@ -54,33 +51,49 @@ public class FileDocument extends AbstractDocument {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	public FileDocument(File file) {
-		//noinspection DynamicRegexReplaceableByCompiledPattern
-		super(new Name(
-				Objects.requireNonNull(file, "file").toString(),
-				file.getName(),
-				file.getName().replaceAll("[.][^.]*$", "")
-		));
 		this.file = file;
 	}
 
 	@Override
+	public boolean equals(Object object) {
+		if (object == this)
+			return true;
+		if (object instanceof Document) {
+			Document document = (Document) object;
+
+			return Objects.equals(document.toString(), this.file.toString());
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.file.hashCode();
+	}
+
+	@Override
 	public InputStream openInputStream() throws FileNotFoundException {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		return new FileInputStream(this.file);
+		if (!this.file.exists())
+			throw new IllegalStateException("Document not available " + this.file);
+		return this.content == null ?
+			   new FileInputStream(this.file) :
+			   new ByteArrayInputStream(this.content.getBytes());
 	}
 
 	@Override
 	public Reader openReader() throws FileNotFoundException {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
-		return new FileReader(this.file);
+		if (!this.file.exists())
+			throw new IllegalStateException("Document not available " + this.file);
+		return this.content == null ?
+			   new FileReader(this.file) :
+			   new StringReader(this.content);
 	}
 
 	@Override
-	public CharSequence readContent() {
-		if (!this.constructed)
-			throw new IllegalStateException("Deserialized Document");
+	public CharSequence read() {
+		if (!this.file.exists())
+			throw new IllegalStateException("Document not available " + this.file);
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {
 				StringBuilder builder = new StringBuilder();
@@ -101,5 +114,10 @@ public class FileDocument extends AbstractDocument {
 			}
 
 		return this.content;
+	}
+
+	@Override
+	public String toString() {
+		return this.file.toString();
 	}
 }
