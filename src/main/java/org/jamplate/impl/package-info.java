@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Jamplate specific implementation of the package {@link org.jamplate.model}.
+ * Jamplate specific implementations.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.17
  */
-package org.cufyplate;
+package org.jamplate.impl;

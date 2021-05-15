@@ -16,16 +16,6 @@
 /**
  * A package that specifies that primary components of a processor that uses the
  * jamplate-style processing.
- * <br>
- * The components are processed as follows:
- * <ul>
- *     <li>{@link org.jamplate.model.document.Document}</li>
- *     <li>{@link org.jamplate.model.reference.Reference}</li>
- *     <li>{@link org.jamplate.model.sketch.Sketch}</li>
- *     <li>{@link org.jamplate.model.node.Node}</li>
- *     <li>{@link org.jamplate.model.element.Element}</li>
- *     <li>{@link org.jamplate.model.instruction.Instruction}</li>
- * </ul>
  *
  * @author LSafer
  * @version 0.2.0
