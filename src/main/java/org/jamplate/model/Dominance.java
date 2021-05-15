@@ -15,8 +15,8 @@
  */
 package org.jamplate.model;
 
-import org.jamplate.model.reference.Reference;
-import org.jamplate.model.sketch.Sketch;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -98,12 +98,20 @@ public enum Dominance {
 	 *     {@code {s < i} & {j == e}}
 	 * </pre>
 	 *
+	 * @see Direction#PARENT
 	 * @see Relation#CONTAINER
 	 * @see Relation#AHEAD
 	 * @see Relation#BEHIND
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	CONTAIN("PART"),
+	@NotNull
+	CONTAIN() {
+		@NotNull
+		@Override
+		public Dominance opposite() {
+			return Dominance.PART;
+		}
+	},
 	/**
 	 * <b>Mirror</b> {@link #EXACT (opposite)}
 	 * <br>
@@ -123,7 +131,14 @@ public enum Dominance {
 	 * @see Relation#SAME
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	EXACT("EXACT"),
+	@NotNull
+	EXACT() {
+		@NotNull
+		@Override
+		public Dominance opposite() {
+			return Dominance.EXACT;
+		}
+	},
 	/**
 	 * <b>Clash</b> {@link #SHARE (opposite)}
 	 * <br>
@@ -149,7 +164,14 @@ public enum Dominance {
 	 * @see Relation#UNDERFLOW
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	SHARE("SHARE"),
+	@NotNull
+	SHARE() {
+		@NotNull
+		@Override
+		public Dominance opposite() {
+			return Dominance.SHARE;
+		}
+	},
 	/**
 	 * <b>Slice</b> {@link #CONTAIN (opposite)}
 	 * <br>
@@ -176,12 +198,20 @@ public enum Dominance {
 	 *     {i < s} & {j == e}
 	 * </pre>
 	 *
+	 * @see Direction#CHILD
 	 * @see Relation#FRAGMENT
 	 * @see Relation#START
 	 * @see Relation#END
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	PART("CONTAIN"),
+	@NotNull
+	PART() {
+		@NotNull
+		@Override
+		public Dominance opposite() {
+			return Dominance.CONTAIN;
+		}
+	},
 	/**
 	 * <b>Stranger</b> {@link #NONE (opposite)}
 	 * <br>
@@ -212,35 +242,22 @@ public enum Dominance {
 	 *     {e < i}
 	 * </pre>
 	 *
+	 * @see Direction#NEXT
+	 * @see Direction#PREVIOUS
 	 * @see Relation#NEXT
 	 * @see Relation#PREVIOUS
 	 * @see Relation#AFTER
 	 * @see Relation#BEFORE
-	 * @see Relation#PARALLEL
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	NONE("NONE"),
-	;
-
-	/**
-	 * The opposite dominance type of this.
-	 *
-	 * @since 0.2.0 ~2021.01.10
-	 */
-	private final String opposite;
-
-	/**
-	 * Construct a new dominance type.
-	 *
-	 * @param opposite the name of the dominance type that is opposite of this dominance
-	 *                 type.
-	 * @throws NullPointerException if the given {@code opposite} is null.
-	 * @since 0.2.0 ~2021.01.10
-	 */
-	Dominance(String opposite) {
-		Objects.requireNonNull(opposite, "opposite");
-		this.opposite = opposite;
-	}
+	@NotNull
+	NONE() {
+		@NotNull
+		@Override
+		public Dominance opposite() {
+			return Dominance.NONE;
+		}
+	};
 
 	/**
 	 * Calculate how much dominant the area [s, e) over the area [i, j).
@@ -250,11 +267,13 @@ public enum Dominance {
 	 * @param s the first index of the second area.
 	 * @param e one past the last index of the second area.
 	 * @return how much dominant the second area over the first area.
-	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j)} or
+	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
 	 *                                  if {@code s} is not in the range {@code [0, e]}.
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@SuppressWarnings("OverlyComplexMethod")
+	@NotNull
+	@Contract(pure = true)
 	public static Dominance compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
@@ -283,7 +302,9 @@ public enum Dominance {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.11
 	 */
-	public static Dominance compute(Reference reference, int s, int e) {
+	@NotNull
+	@Contract(pure = true)
+	public static Dominance compute(@NotNull Reference reference, int s, int e) {
 		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
@@ -302,13 +323,11 @@ public enum Dominance {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	public static Dominance compute(Reference reference, Reference other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Dominance compute(@NotNull Reference reference, @NotNull Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
-
-		if (!reference.document().equals(other.document()))
-			return Dominance.NONE;
-
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();
@@ -329,7 +348,9 @@ public enum Dominance {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Dominance compute(Sketch sketch, int s, int e) {
+	@NotNull
+	@Contract(pure = true)
+	public static Dominance compute(@NotNull Sketch sketch, int s, int e) {
 		Objects.requireNonNull(sketch, "sketch");
 		return Dominance.compute(sketch.reference(), s, e);
 	}
@@ -345,7 +366,9 @@ public enum Dominance {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Dominance compute(Sketch sketch, Reference other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Dominance compute(@NotNull Sketch sketch, @NotNull Reference other) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(other, "other");
 		return Dominance.compute(sketch.reference(), other);
@@ -362,10 +385,19 @@ public enum Dominance {
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Dominance compute(Sketch sketch, Sketch other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Dominance compute(@NotNull Sketch sketch, @NotNull Sketch other) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(other, "other");
 		return Dominance.compute(sketch.reference(), other.reference());
+	}
+
+	@NotNull
+	@Contract(pure = true)
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 
 	/**
@@ -374,7 +406,45 @@ public enum Dominance {
 	 * @return the opposite dominance type.
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	public Dominance opposite() {
-		return Dominance.valueOf(this.opposite);
-	}
+	@NotNull
+	@Contract(pure = true)
+	public abstract Dominance opposite();
 }
+//
+
+//
+
+//
+//	/**
+//	 * Calculate how much dominant the {@code other} node over the given {@code node}.
+//	 *
+//	 * @param node  the first node.
+//	 * @param other the second node.
+//	 * @return how much dominant the second node over the first node.
+//	 * @throws NullPointerException if the given {@code node} or {@code other} or {@code
+//	 *                              node.getReference()} or {@code other.getReference()}
+//	 *                              is null.
+//	 * @see Dominance#compute(int, int, int, int)
+//	 * @since 0.2.0 ~2021.02.15
+//	 */
+//	public static Dominance compute(Node node, Node other) {
+//		Objects.requireNonNull(node, "node");
+//		Objects.requireNonNull(other, "other");
+//		return Dominance.compute(node.getReference(), other.getReference());
+//	}
+//
+//	public static Dominance compute(Node node, int s, int e) {
+//		Objects.requireNonNull(node, "node");
+//		return Dominance.compute(node.reference(), s, e);
+//	}
+//
+//	public static Dominance compute(Node node, Reference reference) {
+//		Objects.requireNonNull(node, "node");
+//		return Dominance.compute(node.reference(), reference);
+//	}
+//
+//	public static Dominance compute(Node node, Node other) {
+//		Objects.requireNonNull(node, "node");
+//		Objects.requireNonNull(other, "other");
+//		return Dominance.compute(node.reference(), other.reference());
+//	}

@@ -15,8 +15,9 @@
  */
 package org.jamplate.model;
 
-import org.jamplate.model.reference.Reference;
-import org.jamplate.model.sketch.Sketch;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -77,9 +78,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
+	 * @see Direction#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	CONTAINER("FRAGMENT", Dominance.CONTAIN),
+	CONTAINER(Dominance.CONTAIN, Direction.PARENT) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.FRAGMENT;
+		}
+	},
 	/**
 	 * <b>This And Ahead</b> {@link #START (opposite)}
 	 * <br>
@@ -96,9 +104,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
+	 * @see Direction#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	AHEAD("START", Dominance.CONTAIN),
+	AHEAD(Dominance.CONTAIN, Direction.PARENT) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.START;
+		}
+	},
 	/**
 	 * <b>This And Behind</b> {@link #END (opposite)}
 	 * <br>
@@ -115,9 +130,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
+	 * @see Direction#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	BEHIND("END", Dominance.CONTAIN),
+	BEHIND(Dominance.CONTAIN, Direction.PARENT) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.END;
+		}
+	},
 
 	/**
 	 * <b>Same Source</b> {@link #SAME (opposite)}
@@ -137,7 +159,13 @@ public enum Relation {
 	 * @see Dominance#EXACT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	SAME("SAME", Dominance.EXACT),
+	SAME(Dominance.EXACT, null) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.SAME;
+		}
+	},
 
 	/**
 	 * <b>Overflowed Slice</b> {@link #UNDERFLOW (opposite)}
@@ -158,7 +186,13 @@ public enum Relation {
 	 * @see Dominance#SHARE
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	OVERFLOW("UNDERFLOW", Dominance.SHARE),
+	OVERFLOW(Dominance.SHARE, null) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.UNDERFLOW;
+		}
+	},
 	/**
 	 * <b>Underflowed Slice</b> {@link #OVERFLOW (opposite)}
 	 * <br>
@@ -178,7 +212,13 @@ public enum Relation {
 	 * @see Dominance#SHARE
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	UNDERFLOW("OVERFLOW", Dominance.SHARE),
+	UNDERFLOW(Dominance.SHARE, null) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.OVERFLOW;
+		}
+	},
 
 	/**
 	 * <b>Fragment Source</b> {@link #CONTAINER (opposite)}
@@ -197,9 +237,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
+	 * @see Direction#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	FRAGMENT("CONTAINER", Dominance.PART),
+	FRAGMENT(Dominance.PART, Direction.CHILD) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.CONTAINER;
+		}
+	},
 	/**
 	 * <b>At The Start</b> {@link #AHEAD (opposite)}
 	 * <br>
@@ -216,9 +263,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
+	 * @see Direction#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	START("AHEAD", Dominance.PART),
+	START(Dominance.PART, Direction.CHILD) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.AHEAD;
+		}
+	},
 	/**
 	 * <b>At The End</b> {@link #BEHIND (opposite)}
 	 * <br>
@@ -235,9 +289,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
+	 * @see Direction#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	END("BEHIND", Dominance.PART),
+	END(Dominance.PART, Direction.CHILD) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.BEHIND;
+		}
+	},
 
 	/**
 	 * <b>Next Source</b> {@link #PREVIOUS (opposite)}
@@ -255,28 +316,16 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
+	 * @see Direction#NEXT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	NEXT("PREVIOUS", Dominance.NONE),
-	/**
-	 * <b>Previous Source</b> {@link #NEXT (opposite)}
-	 * <br>
-	 * When the source has the other source immediately before it.
-	 * <pre>
-	 *     .....|--->.
-	 *     .<---|.....
-	 * </pre>
-	 * <pre>
-	 *     (s < e == i < j)
-	 * </pre>
-	 * <pre>
-	 *     {i == e}
-	 * </pre>
-	 *
-	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.09
-	 */
-	PREVIOUS("NEXT", Dominance.NONE),
+	NEXT(Dominance.NONE, Direction.NEXT) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.PREVIOUS;
+		}
+	},
 	/**
 	 * <b>After The Source</b> {@link #BEFORE opposite}
 	 * <br>
@@ -293,9 +342,43 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
+	 * @see Direction#NEXT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	AFTER("BEFORE", Dominance.NONE),
+	AFTER(Dominance.NONE, Direction.NEXT) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.BEFORE;
+		}
+	},
+
+	/**
+	 * <b>Previous Source</b> {@link #NEXT (opposite)}
+	 * <br>
+	 * When the source has the other source immediately before it.
+	 * <pre>
+	 *     .....|--->.
+	 *     .<---|.....
+	 * </pre>
+	 * <pre>
+	 *     (s < e == i < j)
+	 * </pre>
+	 * <pre>
+	 *     {i == e}
+	 * </pre>
+	 *
+	 * @see Dominance#NONE
+	 * @see Direction#PREVIOUS
+	 * @since 0.2.0 ~2021.01.09
+	 */
+	PREVIOUS(Dominance.NONE, Direction.PREVIOUS) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.NEXT;
+		}
+	},
 	/**
 	 * <b>Before The Source</b> {@link #AFTER opposite}
 	 * <br>
@@ -312,48 +395,45 @@ public enum Relation {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
+	 * @see Direction#PREVIOUS
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	BEFORE("AFTER", Dominance.NONE),
+	BEFORE(Dominance.NONE, Direction.PREVIOUS) {
+		@NotNull
+		@Override
+		public Relation opposite() {
+			return Relation.AFTER;
+		}
+	};
 
 	/**
-	 * <b>Parallel Universe</b> {@link #PARALLEL (opposite)}
-	 * <br>
-	 * When the two source found to be from different document.
+	 * The direction from the opposite relation to this relation.
 	 *
-	 * @see Dominance#NONE
-	 * @since 0.2.0 ~2021.01.26
+	 * @since 0.2.0 ~2021.05.15
 	 */
-	PARALLEL("PARALLEL", Dominance.NONE),
-	;
-
+	@Nullable
+	private final Direction direction;
 	/**
 	 * How dominant this relation over the opposite relation.
 	 *
 	 * @since 0.2.0 ~2021.01.10
 	 */
+	@NotNull
 	private final Dominance dominance;
-	/**
-	 * The name of the opposite enum.
-	 *
-	 * @since 0.2.0 ~2021.01.09
-	 */
-	private final String opposite;
 
 	/**
-	 * Construct a new enum with the given {@code opposite} as the name of the opposite
-	 * enum of it.
+	 * Construct a new enum with the given {@code dominance} and direction.
 	 *
-	 * @param opposite  the name of the opposite enum.
 	 * @param dominance how dominant the constructed relation over its opposite relation.
-	 * @throws NullPointerException if the given {@code opposite} is null.
+	 * @param direction the direction from the opposite of the constructed relation to
+	 *                  itself. (pass {@code null} if undefined)
+	 * @throws NullPointerException if the given {@code dominance} is null.
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	Relation(String opposite, Dominance dominance) {
-		Objects.requireNonNull(opposite, "opposite");
+	Relation(@NotNull Dominance dominance, @Nullable Direction direction) {
 		Objects.requireNonNull(dominance, "dominance");
-		this.opposite = opposite;
 		this.dominance = dominance;
+		this.direction = direction;
 	}
 
 	/**
@@ -378,6 +458,8 @@ public enum Relation {
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@SuppressWarnings("OverlyComplexMethod")
+	@NotNull
+	@Contract(pure = true)
 	public static Relation compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
@@ -423,7 +505,9 @@ public enum Relation {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	public static Relation compute(Reference reference, int s, int e) {
+	@NotNull
+	@Contract(pure = true)
+	public static Relation compute(@NotNull Reference reference, int s, int e) {
 		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
@@ -442,13 +526,11 @@ public enum Relation {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	public static Relation compute(Reference reference, Reference other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Relation compute(@NotNull Reference reference, @NotNull Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
-
-		if (!reference.document().equals(other.document()))
-			return Relation.PARALLEL;
-
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();
@@ -470,7 +552,9 @@ public enum Relation {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Relation compute(Sketch sketch, int s, int e) {
+	@NotNull
+	@Contract(pure = true)
+	public static Relation compute(@NotNull Sketch sketch, int s, int e) {
 		Objects.requireNonNull(sketch, "sketch");
 		return Relation.compute(sketch.reference(), s, e);
 	}
@@ -486,7 +570,9 @@ public enum Relation {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Relation compute(Sketch sketch, Reference other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Relation compute(@NotNull Sketch sketch, @NotNull Reference other) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(other, "other");
 		return Relation.compute(sketch.reference(), other);
@@ -503,18 +589,42 @@ public enum Relation {
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
-	public static Relation compute(Sketch sketch, Sketch other) {
+	@NotNull
+	@Contract(pure = true)
+	public static Relation compute(@NotNull Sketch sketch, @NotNull Sketch other) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(other, "other");
 		return Relation.compute(sketch.reference(), other.reference());
 	}
 
+	@NotNull
+	@Contract(pure = true)
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+	/**
+	 * Returns the direction from this the opposite relation to this relation.
+	 *
+	 * @return the direction of this. Or {@code null} if there cannot be a direction
+	 * 		between them.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Direction direction() {
+		return this.direction;
+	}
+
 	/**
 	 * Returns how dominance this relation over its opposite relation.
 	 *
-	 * @return how dominance this relation.
+	 * @return how dominant this relation.
 	 * @since 0.2.0 ~2021.01.10
 	 */
+	@NotNull
+	@Contract(pure = true)
 	public Dominance dominance() {
 		return this.dominance;
 	}
@@ -525,7 +635,52 @@ public enum Relation {
 	 * @return the opposite relation. Or null if none.
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	public Relation opposite() {
-		return Relation.valueOf(this.opposite);
-	}
+	@NotNull
+	@Contract(pure = true)
+	public abstract Relation opposite();
 }
+//	public static Relation compute(Node node, int s, int e) {
+//		Objects.requireNonNull(node, "node");
+//		return Relation.compute(node.reference(), s, e);
+//	}
+//
+//	public static Relation compute(Node node, Reference reference) {
+//		Objects.requireNonNull(node, "node");
+//		return Relation.compute(node.reference(), reference);
+//	}
+//
+//	public static Relation compute(Node node, Node other) {
+//		Objects.requireNonNull(node, "node");
+//		Objects.requireNonNull(other, "other");
+//		return Relation.compute(node.reference(), other.reference());
+//	}
+
+//
+//	/**
+//	 * <b>Parallel Universe</b> {@link #PARALLEL (opposite)}
+//	 * <br>
+//	 * When the two source found to be from different document.
+//	 *
+//	 * @see Dominance#NONE
+//	 * @since 0.2.0 ~2021.01.26
+//	 */
+//	PARALLEL("PARALLEL", Dominance.NONE),
+//
+//	/**
+//	 * Calculate the relation between the nodes {@code node} and {@code other}.
+//	 *
+//	 * @param node  the first node.
+//	 * @param other the second node.
+//	 * @return the relation constant describing the relation of the second node to the
+//	 * 		first node.
+//	 * @throws NullPointerException if the given {@code node} or {@code other} or {@code
+//	 *                              node.getReference()} or {@code other.getReference()}
+//	 *                              is null.
+//	 * @see Relation#compute(int, int, int, int)
+//	 * @since 0.2.0 ~2021.02.15
+//	 */
+//	public static Relation compute(Node node, Node other) {
+//		Objects.requireNonNull(node, "node");
+//		Objects.requireNonNull(other, "other");
+//		return Relation.compute(node.getReference(), other.getReference());
+//	}
