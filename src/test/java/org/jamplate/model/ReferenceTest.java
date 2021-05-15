@@ -13,51 +13,29 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.reference;
+package org.jamplate.model;
 
-import org.jamplate.model.Relation;
-import org.jamplate.model.document.Document;
-import org.jamplate.model.document.PseudoDocument;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.jamplate.InternalAssert.assertLine;
 import static org.jamplate.InternalAssert.assertRelation;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings({"MigrateAssertToMatcherAssert", "JUnitTestNG"})
 public class ReferenceTest {
 	@Test
-	public void lines() {
-		Document document = new PseudoDocument("ABC\n123\n=+-");
-		Reference reference = new DocumentReference(document);
-		Reference c = reference.subReference(2);
-		Reference ln = reference.subReference(3);
-		Reference n3 = reference.subReference(6);
-		Reference ln2 = reference.subReference(7);
-		Reference eod = reference.subReference(11);
-
-		assertLine(reference, 1);
-		assertLine(c, 1);
-		assertLine(ln, 2);
-		assertLine(n3, 2);
-		assertLine(ln2, 3);
-		assertLine(eod, 3);
-	}
-
-	@Test
 	public void relations() {
-		Reference reference = new DocumentReference("ABC0123");
+		Document document = new PseudoDocument("ABC0123");
+		Reference reference = new Reference(0, document.read().length());
 		Reference letters = reference.subReference(0, 3);
 		Reference numbers = reference.subReference(3, 4);
 		Reference b = reference.subReference(1, 1);
 		Reference bc = letters.subReference(1, 2);
 		Reference c0 = reference.subReference(2, 2);
 
-		assertEquals("Wrong Slice", "ABC", letters.content());
-		assertEquals("Wrong Slice", "0123", numbers.content());
-		assertEquals("Wrong Slice", "B", b.content());
-		assertEquals("Wrong Slice", "BC", bc.content());
-		assertEquals("Wrong Slice", "C0", c0.content());
+		assertEquals("Wrong Slice", "ABC", document.read(letters).toString());
+		assertEquals("Wrong Slice", "0123", document.read(numbers).toString());
+		assertEquals("Wrong Slice", "B", document.read(b).toString());
+		assertEquals("Wrong Slice", "BC", document.read(bc).toString());
+		assertEquals("Wrong Slice", "C0", document.read(c0).toString());
 
 		assertRelation(reference, reference, Relation.SAME);
 		assertRelation(reference, letters, Relation.START);
@@ -87,3 +65,20 @@ public class ReferenceTest {
 		assertRelation(c0, c0, Relation.SAME);
 	}
 }
+//	@Test
+//	public void lines() {
+//		Document document = new PseudoDocument("ABC\n123\n=+-");
+//		Reference reference = new Reference(0, document.read().length());
+//		Reference c = reference.subReference(2);
+//		Reference ln = reference.subReference(3);
+//		Reference n3 = reference.subReference(6);
+//		Reference ln2 = reference.subReference(7);
+//		Reference eod = reference.subReference(11);
+//
+//		assertLine(reference, 1);
+//		assertLine(c, 1);
+//		assertLine(ln, 2);
+//		assertLine(n3, 2);
+//		assertLine(ln2, 3);
+//		assertLine(eod, 3);
+//	}
