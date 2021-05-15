@@ -13,7 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.document;
+package org.jamplate.model;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -114,21 +116,25 @@ public class PseudoDocument implements Document {
 		return this.identifier.hashCode();
 	}
 
+	@NotNull
 	@Override
 	public InputStream openInputStream() {
 		return new ByteArrayInputStream(this.content.toString().getBytes());
 	}
 
+	@NotNull
 	@Override
 	public Reader openReader() {
 		return new StringReader(this.content.toString());
 	}
 
+	@NotNull
 	@Override
 	public CharSequence read() {
 		return this.content;
 	}
 
+	@NotNull
 	@Override
 	public String toString() {
 		return this.identifier;

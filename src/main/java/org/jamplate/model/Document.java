@@ -13,9 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.document;
+package org.jamplate.model;
 
-import org.jamplate.model.Reference;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Objects;
@@ -34,13 +35,12 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return a new input-stream that reads the content of this document.
-	 * @throws IOException           if any I/O exception occurs.
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOException                 if any I/O exception occurs.
+	 * @throws UnreadableDocumentException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@Deprecated
-	default InputStream openInputStream(Reference reference) throws IOException {
+	@NotNull
+	default InputStream openInputStream(@NotNull Reference reference) throws IOException {
 		Objects.requireNonNull(reference, "reference");
 		//noinspection ALL
 		return new InputStream() {
@@ -116,7 +116,6 @@ public interface Document extends Serializable {
 				//reached the start?
 				if (this.i >= this.start) {
 					//read, but stop before the end
-					//noinspection NumericCastThatLosesPrecision
 					int read = this.stream.read(
 							buffer,
 							off,
@@ -184,13 +183,12 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return a new reader that reads the content of this document.
-	 * @throws IOException           if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOException                 if any I/O exception occurs. (optional)
+	 * @throws UnreadableDocumentException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@Deprecated
-	default Reader openReader(Reference reference) throws IOException {
+	@NotNull
+	default Reader openReader(@NotNull Reference reference) throws IOException {
 		Objects.requireNonNull(reference, "reference");
 		//noinspection ALL
 		return new Reader() {
@@ -281,7 +279,6 @@ public interface Document extends Serializable {
 				//reached the start?
 				if (this.i >= this.start) {
 					//read, but stop before the end
-					//noinspection NumericCastThatLosesPrecision
 					int read = this.reader.read(
 							buffer,
 							off,
@@ -327,73 +324,17 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return the content of this document. (unmodifiable view)
-	 * @throws IOError               if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOError                 if any I/O exception occurs. (optional)
+	 * @throws UnreadableDocumentError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@Deprecated
-	default CharSequence read(Reference reference) {
+	@NotNull
+	default CharSequence read(@NotNull Reference reference) {
 		Objects.requireNonNull(reference, "reference");
-		//noinspection ALL
-		return new CharSequence() {
-			/**
-			 * The original sequence.
-			 *
-			 * @since 0.2.0 ~2021.02.17
-			 */
-			private final CharSequence content = Document.this.read();
-			/**
-			 * The position this sequence start at the original sequence.
-			 *
-			 * @since 0.2.0 ~2021.02.17
-			 */
-			private final int position = Math.min(
-					reference.position(),
-					this.content.length()
-			);
-			/**
-			 * The length of this sequence.
-			 *
-			 * @since 0.2.0 ~2021.02.17
-			 */
-			private final int length = Math.min(
-					reference.length(),
-					this.content.length() - this.position
-			);
-
-			@Override
-			public char charAt(int index) {
-				if (index < 0 || index > this.length)
-					//noinspection NewExceptionWithoutArguments
-					throw new IndexOutOfBoundsException();
-
-				return this.content.charAt(this.position + index);
-			}
-
-			@Override
-			public int length() {
-				return this.length;
-			}
-
-			@Override
-			public CharSequence subSequence(int start, int end) {
-				if (start < 0 || end < 0 || start > this.length || end > this.length)
-					//noinspection NewExceptionWithoutArguments
-					throw new IndexOutOfBoundsException();
-
-				//not gonna do everything for you :P
-				return this.content.subSequence(
-						this.position + start, this.position + end);
-			}
-
-			@Override
-			public String toString() {
-				return this.content.subSequence(this.position,
-						this.position + this.length)
-						.toString();
-			}
-		};
+		int p = reference.position();
+		int t = p + reference.length();
+		return this.read()
+				   .subSequence(p, t);
 	}
 
 	/**
@@ -411,7 +352,7 @@ public interface Document extends Serializable {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override
-	boolean equals(Object object);
+	boolean equals(@Nullable Object object);
 
 	/**
 	 * Calculate the hash code of this document. The hash code of a document is the hashes
@@ -439,38 +380,39 @@ public interface Document extends Serializable {
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@Override
+	@NotNull
 	String toString();
 
 	/**
 	 * Open a new input-stream that reads the content of this document.
 	 *
 	 * @return a new input-stream that reads the content of this document.
-	 * @throws IOException           if any I/O exception occurs.
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOException                 if any I/O exception occurs.
+	 * @throws UnreadableDocumentException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@NotNull
 	InputStream openInputStream() throws IOException;
 
 	/**
 	 * Open a new reader that reads the content of this document.
 	 *
 	 * @return a new reader that reads the content of this document.
-	 * @throws IOException           if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOException                 if any I/O exception occurs. (optional)
+	 * @throws UnreadableDocumentException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@NotNull
 	Reader openReader() throws IOException;
 
 	/**
 	 * Read the content of this document.
 	 *
 	 * @return the content of this document. (unmodifiable view)
-	 * @throws IOError               if any I/O exception occurs. (optional)
-	 * @throws IllegalStateException if this document is not available in the current
-	 *                               environment.
+	 * @throws IOError                 if any I/O exception occurs. (optional)
+	 * @throws UnreadableDocumentError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@NotNull
 	CharSequence read();
 }

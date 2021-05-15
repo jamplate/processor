@@ -13,7 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.document;
+package org.jamplate.model;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Objects;
@@ -72,28 +74,33 @@ public class FileDocument implements Document {
 		return this.file.hashCode();
 	}
 
+	@NotNull
 	@Override
-	public InputStream openInputStream() throws FileNotFoundException {
+	public InputStream openInputStream() throws FileNotFoundException, UnreadableDocumentException {
 		if (!this.file.exists())
-			throw new IllegalStateException("Document not available " + this.file);
+			throw new UnreadableDocumentException("Document not available " + this.file);
 		return this.content == null ?
 			   new FileInputStream(this.file) :
 			   new ByteArrayInputStream(this.content.getBytes());
 	}
 
+	@NotNull
 	@Override
-	public Reader openReader() throws FileNotFoundException {
+	public Reader openReader() throws FileNotFoundException, UnreadableDocumentException {
 		if (!this.file.exists())
-			throw new IllegalStateException("Document not available " + this.file);
+			throw new UnreadableDocumentException("Document not available " + this.file);
 		return this.content == null ?
 			   new FileReader(this.file) :
 			   new StringReader(this.content);
 	}
 
+	@NotNull
 	@Override
 	public CharSequence read() {
 		if (!this.file.exists())
-			throw new IllegalStateException("Document not available " + this.file);
+			throw new UnreadableDocumentError(
+					new UnreadableDocumentException("Document not available " + this.file)
+			);
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {
 				StringBuilder builder = new StringBuilder();
@@ -116,6 +123,7 @@ public class FileDocument implements Document {
 		return this.content;
 	}
 
+	@NotNull
 	@Override
 	public String toString() {
 		return this.file.toString();
