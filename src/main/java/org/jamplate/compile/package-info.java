@@ -21,4 +21,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.26
  */
-package org.jamplate.processor;
+package org.jamplate.compile;

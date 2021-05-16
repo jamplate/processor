@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.processor;
+package org.jamplate.compile;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
