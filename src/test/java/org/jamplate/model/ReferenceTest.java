@@ -15,6 +15,7 @@
  */
 package org.jamplate.model;
 
+import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.Test;
 
 import static org.jamplate.InternalAssert.assertRelation;

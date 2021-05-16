@@ -216,7 +216,7 @@ public final class Parsing {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static Set<Set<Reference>> parseAll(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	public static Set<List<Reference>> parseAll(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		//-E--S-S-S-S---E-E-E-S-E-S-E---S---
 		//<>  : : : :   : : : : : : :
 		//    < : : :   > : : : : : :
@@ -236,7 +236,7 @@ public final class Parsing {
 		Matcher startMatcher = Parsing.matcher(sketch, startPattern);
 		Matcher endMatcher = Parsing.matcher(sketch, endPattern);
 
-		Set<Set<Reference>> results = new HashSet<>();
+		Set<List<Reference>> results = new HashSet<>();
 
 		Reference reference = sketch.reference();
 		int p = reference.position();
@@ -273,14 +273,14 @@ public final class Parsing {
 				//if a valid start was found
 				if (i >= 0 && j >= 0) {
 					//bingo!
-					results.add(new HashSet<>(Arrays.asList(
+					results.add(Arrays.asList(
 							//context
 							new Reference(i - p, e - i),
 							//start
 							new Reference(i - p, j - i),
 							//end
 							new Reference(s - p, e - s)
-					)));
+					));
 
 					//make the next rounds search for their start after the end of this match
 					x = e;
@@ -368,7 +368,7 @@ public final class Parsing {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static Set<Reference> parseFirst(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	public static List<Reference> parseFirst(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		Objects.requireNonNull(sketch, "sketch");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
@@ -410,14 +410,14 @@ public final class Parsing {
 				//if a valid start was found
 				if (i >= 0 && j >= 0)
 					//bingo!
-					return new HashSet<>(Arrays.asList(
+					return Arrays.asList(
 							//context
 							new Reference(i - p, e - i),
 							//start
 							new Reference(i - p, j - i),
 							//end
 							new Reference(s - p, e - s)
-					));
+					);
 
 				//No valid start for the end of this round
 			}
@@ -429,7 +429,7 @@ public final class Parsing {
 		}
 
 		//no valid matches
-		return Collections.emptySet();
+		return Collections.emptyList();
 	}
 }
 /*

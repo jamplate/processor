@@ -13,20 +13,22 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.processor;
+package org.jamplate.compile;
 
 import org.jamplate.model.Document;
-import org.jamplate.model.PseudoDocument;
+import org.jamplate.util.model.PseudoDocument;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Sketch;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ParsingTest {
 	//	static Sketch getSketchAt(Sketch sketch, int position) {
@@ -184,24 +186,27 @@ public class ParsingTest {
 				.setDocument(document)
 				.build();
 
-		Set<Reference> firstParse = Parsing.parseFirst(sketch, sp, ep);
+		List<Reference> firstParse = Parsing.parseFirst(sketch, sp, ep);
 
 		assertSame(
 				3,
 				firstParse.size(),
 				"Expected 3 components"
 		);
-		assertTrue(
-				firstParse.contains(new Reference(1, 2)),
-				"True match is missing"
+		assertEquals(
+				new Reference(1, 2),
+				firstParse.get(0),
+				"The match is missing"
 		);
-		assertTrue(
-				firstParse.contains(new Reference(1, 1)),
-				"True opening sketch is missing"
+		assertEquals(
+				new Reference(1, 1),
+				firstParse.get(1),
+				"The opening is missing"
 		);
-		assertTrue(
-				firstParse.contains(new Reference(2, 1)),
-				"True ending sketch is missing"
+		assertEquals(
+				new Reference(2, 1),
+				firstParse.get(2),
+				"True ending is missing"
 		);
 
 		firstParse.stream()
@@ -212,7 +217,7 @@ public class ParsingTest {
 				  )
 				  .forEach(sketch::offer);
 
-		Set<Set<Reference>> remainingParse = Parsing.parseAll(sketch, sp, ep);
+		Set<List<Reference>> remainingParse = Parsing.parseAll(sketch, sp, ep);
 
 		assertSame(
 				2,
@@ -221,28 +226,28 @@ public class ParsingTest {
 		);
 		assertTrue(
 				remainingParse.contains(
-						new HashSet<>(Arrays.asList(
+						Arrays.asList(
 								new Reference(4, 2),
 								new Reference(4, 1),
 								new Reference(5, 1)
-						))
+						)
 				),
 				"Second match is missing"
 		);
 		assertTrue(
 				remainingParse.contains(
-						new HashSet<>(Arrays.asList(
+						Arrays.asList(
 								new Reference(7, 2),
 								new Reference(7, 1),
 								new Reference(8, 1)
-						))
+						)
 				),
 				"Third match is missing"
 		);
 
 		List<Sketch> list = remainingParse
 				.stream()
-				.flatMap(Set::stream)
+				.flatMap(List::stream)
 				.map(r ->
 						new Sketch.Builder(sketch)
 								.setReference(r)
