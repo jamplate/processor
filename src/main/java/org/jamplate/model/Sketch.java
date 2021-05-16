@@ -92,7 +92,7 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
-	private Name name;
+	private String name;
 
 	/**
 	 * Construct a new sketch with the given {@code reference}.
@@ -103,7 +103,7 @@ public final class Sketch implements Serializable {
 	 */
 	public Sketch(@NotNull Reference reference) {
 		Objects.requireNonNull(reference, "reference");
-		this.name = new Name("");
+		this.name = "";
 		this.document = new PseudoDocument("");
 		this.reference = reference;
 		this.properties = new Properties();
@@ -125,7 +125,7 @@ public final class Sketch implements Serializable {
 	public Sketch(@NotNull Reference reference, @NotNull Properties properties) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(properties, "properties");
-		this.name = new Name("");
+		this.name = "";
 		this.document = new PseudoDocument("");
 		this.reference = reference;
 		Properties defaults = new Properties();
@@ -214,7 +214,60 @@ public final class Sketch implements Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Name getName() {
+	public String getName() {
+		int num = 0;
+
+		for (
+				Node<Sketch> n = this.node.get(Tetragon.START);
+				n != null;
+				n = n.get(Tetragon.START)
+		)
+			if (n.get().name.equals(this.name))
+				num++;
+
+		if (num == 0) {
+			for (
+					Node<Sketch> n = this.node.get(Tetragon.END);
+					n != null;
+					n = n.get(Tetragon.END)
+			)
+				if (n.get().name.equals(this.name))
+					//first duplicate
+					return this.name + "$0";
+
+			//no duplicates
+			return this.name;
+		}
+
+		//n(th) duplicate
+		return this.name + "$" + num;
+	}
+
+	/**
+	 * Return the fully qualified name of this sketch.
+	 *
+	 * @return the fully qualified name of this sketch.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public String getQualifiedName() {
+		Sketch parent = this.get(Direction.PARENT);
+
+		return (parent == null ? "" : parent.getQualifiedName()) +
+			   this.getName();
+	}
+
+	/**
+	 * Return the simple name of this sketch. (the last one passed to {@link
+	 * #setName(String)})
+	 *
+	 * @return the simple name of this sketch.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public String getSimpleName() {
 		return this.name;
 	}
 
@@ -403,7 +456,7 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@Contract(mutates = "this")
-	public void setName(@NotNull Name name) {
+	public void setName(@NotNull String name) {
 		Objects.requireNonNull(name, "name");
 		this.name = name;
 	}
@@ -890,7 +943,7 @@ public final class Sketch implements Serializable {
 		 * @since 0.2.0 ~2021.05.15
 		 */
 		@NotNull
-		protected Name name;
+		protected String name;
 		/**
 		 * The properties to be set as the default properties of the next built sketches.
 		 *
@@ -915,7 +968,7 @@ public final class Sketch implements Serializable {
 			this.properties = new Properties();
 			this.reference = new Reference();
 			this.document = new PseudoDocument("");
-			this.name = new Name("");
+			this.name = "";
 		}
 
 		/**
@@ -969,7 +1022,7 @@ public final class Sketch implements Serializable {
 		 *                              {@code reference} or {@code properties} is null.
 		 * @since 0.2.0 ~2021.05.15
 		 */
-		public Builder(@NotNull Name name, @NotNull Document document, @NotNull Reference reference, @NotNull Properties properties) {
+		public Builder(@NotNull String name, @NotNull Document document, @NotNull Reference reference, @NotNull Properties properties) {
 			Objects.requireNonNull(name, "name");
 			Objects.requireNonNull(document, "document");
 			Objects.requireNonNull(reference, "reference");
@@ -1024,7 +1077,7 @@ public final class Sketch implements Serializable {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public Name getName() {
+		public String getName() {
 			return this.name;
 		}
 
@@ -1089,7 +1142,7 @@ public final class Sketch implements Serializable {
 		 */
 		@NotNull
 		@Contract(value = "_->this", mutates = "this")
-		public Builder setName(@NotNull Name name) {
+		public Builder setName(@NotNull String name) {
 			Objects.requireNonNull(name, "name");
 			this.name = name;
 			return this;
