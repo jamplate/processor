@@ -19,6 +19,7 @@ import cufy.util.HashNode;
 import cufy.util.Node;
 import cufy.util.Nodes;
 import cufy.util.polygon.Tetragon;
+import org.jamplate.util.model.PseudoDocument;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
