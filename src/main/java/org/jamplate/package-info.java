@@ -19,7 +19,7 @@
  * Package layout:
  * <ul>
  *     <li>
- *         Using the package {@link org.jamplate.processor}, source code get converted into
+ *         Using the package {@link org.jamplate.compile}, source code get converted into
  *         instances of the package {@link org.jamplate.model}
  *     </li>
  * </ul>
