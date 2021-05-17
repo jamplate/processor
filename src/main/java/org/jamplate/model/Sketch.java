@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOError;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -44,15 +46,20 @@ import java.util.Properties;
  * parent or sketches that breaks the order of their neighboring sketches in it and all
  * the sketches in it will be organized implicitly.
  * <br>
- * The sketch's background structure operations are thread safe. But, other sketch
- * operations are not.
+ * The sketch class is not thead safe and multiple threads modifying the same sketch
+ * structure can make that structure corrupted. The corruption due to two thread modifying
+ * the same sketch structure is undefined. Aside from that, two or more threads just
+ * reading the sketch structure is totally fine. Also, one thread modifying a sketch
+ * structure while the other threads just reading it will not corrupt the structure and
+ * will only confuse the other threads because random sketches will be moved around while
+ * those threads are reading.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2020.12.25
  */
 @SuppressWarnings("OverlyComplexClass")
-public final class Sketch implements Serializable {
+public final class Sketch implements Iterable<Sketch>, Serializable {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3068214324610853826L;
 
@@ -148,52 +155,96 @@ public final class Sketch implements Serializable {
 		return super.hashCode();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @implNote the returned iterator will iterate over the current known children. Any
+	 * 		changes to the children will make the iterator's behaviour undefined.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@NotNull
+	@Override
+	public Iterator<Sketch> iterator() {
+		//noinspection ReturnOfInnerClass
+		return new Iterator<Sketch>() {
+			/**
+			 * The next sketch to be returned.
+			 *
+			 * @since 0.2.0 ~2021.05.17
+			 */
+			@Nullable
+			private Sketch next = Sketch.this.getChild();
+			/**
+			 * The previous sketch that has been returned.
+			 *
+			 * @since 0.2.0 ~2021.05.17
+			 */
+			@Nullable
+			private Sketch previous;
+
+			@Override
+			public boolean hasNext() {
+				return this.next != null;
+			}
+
+			@Override
+			public Sketch next() {
+				Sketch next = this.next;
+
+				if (next == null)
+					throw new NoSuchElementException("next");
+
+				this.previous = next;
+				this.next = next.getNext();
+				return next;
+			}
+
+			@Override
+			public void remove() {
+				Sketch previous = this.previous;
+
+				if (previous == null)
+					throw new IllegalStateException("remove");
+
+				previous.remove();
+				this.previous = null;
+			}
+		};
+	}
+
 	@NotNull
 	@Override
 	public String toString() {
 		return this.name + " " + this.document + "[" + this.reference + "]";
 	}
 
-	//public get
+	//fields
 
 	/**
-	 * Get the sketch at the given {@code direction} from this sketch.
+	 * Set the document of this sketch to be the given {@code document}.
 	 *
-	 * @param direction the direction.
-	 * @return the sketch at the given {@code direction} form this sketch. Or {@code null}
-	 * 		if no such sketch.
-	 * @throws NullPointerException if the given {@code sketch} is null.
-	 * @since 0.2.0 ~2021.05.15
+	 * @param document the document to be set.
+	 * @throws NullPointerException if the given {@code document} is null.
+	 * @since 0.2.0 ~2021.05.14
 	 */
-	@Nullable
-	@Contract(pure = true)
-	public Sketch get(@NotNull Direction direction) {
-		Objects.requireNonNull(direction, "direction");
-		switch (direction) {
-			case PARENT:
-				Node<Sketch> headTop = Nodes
-						.tail(Tetragon.START, this.node)
-						.get(Tetragon.TOP);
-
-				return headTop == null ? null : headTop.get();
-			case CHILD:
-				Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
-
-				return bottom == null ? null : bottom.get();
-			case NEXT:
-				Node<Sketch> end = this.node.get(Tetragon.END);
-
-				return end == null ? null : end.get();
-			case PREVIOUS:
-				Node<Sketch> start = this.node.get(Tetragon.START);
-
-				return start == null ? null : start.get();
-			default:
-				throw new InternalError();
-		}
+	@Contract(mutates = "this")
+	public void setDocument(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		this.document = document;
 	}
 
-	//getters
+	/**
+	 * Set the name of this sketch to be the given {@code name}.
+	 *
+	 * @param name the name to be set.
+	 * @throws NullPointerException if the given {@code name} is null.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@Contract(mutates = "this")
+	public void setName(@NotNull String name) {
+		Objects.requireNonNull(name, "name");
+		this.name = name;
+	}
 
 	/**
 	 * Get the document of this sketch.
@@ -253,8 +304,7 @@ public final class Sketch implements Serializable {
 	@NotNull
 	@Contract(pure = true)
 	public String getQualifiedName() {
-		Sketch parent = this.get(Direction.PARENT);
-
+		Sketch parent = this.getParent();
 		return (parent == null ? "" : parent.getQualifiedName()) +
 			   this.getName();
 	}
@@ -272,7 +322,92 @@ public final class Sketch implements Serializable {
 		return this.name;
 	}
 
-	//public offer
+	/**
+	 * Return the properties of this sketch.
+	 *
+	 * @return the properties of this sketch.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Properties properties() {
+		//noinspection AssignmentOrReturnOfFieldWithMutableType
+		return this.properties;
+	}
+
+	/**
+	 * Get the reference of this sketch.
+	 *
+	 * @return the reference of this sketch.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Reference reference() {
+		return this.reference;
+	}
+
+	//get
+
+	/**
+	 * Get the sketch after this sketch.
+	 *
+	 * @return the sketch after this sketch. Or {@code null} if this sketch is the last
+	 * 		sketch.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Sketch getNext() {
+		Node<Sketch> end = this.node.get(Tetragon.END);
+		return end == null ? null : end.get();
+	}
+
+	/**
+	 * Get the sketch containing this sketch.
+	 *
+	 * @return the parent sketch of this sketch. Or {@code null} if this sketch has no
+	 * 		parent.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Sketch getParent() {
+		Node<Sketch> headTop = Nodes
+				.tail(Tetragon.START, this.node)
+				.get(Tetragon.TOP);
+		return headTop == null ? null : headTop.get();
+	}
+
+	/**
+	 * Get the sketch before this sketch.
+	 *
+	 * @return the sketch before this sketch. Or {@code null} if this sketch is the first
+	 * 		sketch.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Sketch getPrevious() {
+		Node<Sketch> start = this.node.get(Tetragon.START);
+		return start == null ? null : start.get();
+	}
+
+	/**
+	 * Get the first child sketch of this sketch.
+	 *
+	 * @return the first sketch in this sketch. Or {@code null} if this sketch has no
+	 * 		children.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Sketch getChild() {
+		Node<Sketch> child = this.node.get(Tetragon.BOTTOM);
+		return child == null ? null : child.get();
+	}
+
+	//add
 
 	/**
 	 * Offer the given {@code sketch} to the structure of this sketch. The given {@code
@@ -293,7 +428,7 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@Contract(mutates = "this,param")
-	public synchronized void offer(@NotNull Sketch sketch) {
+	public void offer(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		switch (Relation.compute(this, sketch)) {
 			case AHEAD:
@@ -324,146 +459,6 @@ public final class Sketch implements Serializable {
 		}
 	}
 
-	//constant getters
-
-	/**
-	 * Return the properties of this sketch.
-	 *
-	 * @return the properties of this sketch.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Properties properties() {
-		//noinspection AssignmentOrReturnOfFieldWithMutableType
-		return this.properties;
-	}
-
-	/**
-	 * Get the reference of this sketch.
-	 *
-	 * @return the reference of this sketch.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Reference reference() {
-		return this.reference;
-	}
-
-	//remove
-
-	/**
-	 * Cleanly remove this sketch from the structure it is on.
-	 *
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public synchronized void remove() {
-		Node<Sketch> top = this.node.get(Tetragon.TOP);
-		Node<Sketch> start = this.node.get(Tetragon.START);
-		Node<Sketch> end = this.node.get(Tetragon.END);
-		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
-
-		if (bottom != null)
-			if (start != null)
-				//start -> bottom
-				start.put(Tetragon.END, bottom);
-			else if (top != null)
-				//top |> bottom
-				top.put(Tetragon.BOTTOM, bottom);
-
-		if (end != null)
-			if (bottom != null)
-				//bottomTail -> end
-				Nodes.tail(Tetragon.END, bottom)
-					 .put(Tetragon.END, end);
-			else if (start != null)
-				//start -> end
-				start.put(Tetragon.END, end);
-			else if (top != null)
-				//top |> next
-				top.put(Tetragon.BOTTOM, end);
-	}
-
-	/**
-	 * Cleanly remove the sketches at the given {@code direction} of this sketch.
-	 * <br><br>
-	 * Behaviour list:
-	 * <ul>
-	 *     <li>{@link Direction#PARENT}: remove the parent of this sketch and its brothers.</li>
-	 *     <li>{@link Direction#PREVIOUS}: remove the sketches previous to this from the parent.</li>
-	 *     <li>{@link Direction#NEXT}: remove the sketches next to this from the parent.</li>
-	 *     <li>{@link Direction#CHILD}: remove the children sketches of this from this.</li>
-	 * </ul>
-	 *
-	 * @param direction the direction where to remove the node at.
-	 * @throws NullPointerException if the given {@code direction} is null.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public synchronized void remove(@NotNull Direction direction) {
-		Objects.requireNonNull(direction, "direction");
-		switch (direction) {
-			case PARENT:
-				//look for the most previous sketch and remove its parent
-				Nodes.tail(Tetragon.START, this.node)
-					 .remove(Tetragon.TOP);
-				break;
-			case PREVIOUS:
-				//look for the most previous sketch and steal its parent
-				Node<Sketch> headTop = Nodes
-						.tail(Tetragon.START, this.node)
-						.get(Tetragon.TOP);
-
-				//steal the parent
-				if (headTop != null)
-					headTop.put(Tetragon.BOTTOM, this.node);
-
-				//cut the previous
-				this.node.remove(Tetragon.START);
-				break;
-			case NEXT:
-				//just remove the next
-				this.node.remove(Tetragon.END);
-				break;
-			case CHILD:
-				//just remove the child
-				this.node.remove(Tetragon.BOTTOM);
-				break;
-		}
-	}
-
-	//setters
-
-	/**
-	 * Set the document of this sketch to be the given {@code document}.
-	 *
-	 * @param document the document to be set.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public void setDocument(@NotNull Document document) {
-		Objects.requireNonNull(document, "document");
-		this.document = document;
-	}
-
-	/**
-	 * Set the name of this sketch to be the given {@code name}.
-	 *
-	 * @param name the name to be set.
-	 * @throws NullPointerException if the given {@code name} is null.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public void setName(@NotNull String name) {
-		Objects.requireNonNull(name, "name");
-		this.name = name;
-	}
-
-	//private offer
-
 	/**
 	 * Try to place the given {@code sketch} in the proper place between the children of
 	 * this sketch.
@@ -481,8 +476,9 @@ public final class Sketch implements Serializable {
 	 *                                    sketch in the structure of this sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
-	private synchronized void offerChild(@NotNull Sketch sketch) {
+	@SuppressWarnings("OverlyLongMethod")
+	@Contract(mutates = "this,param")
+	private void offerChild(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		switch (Dominance.compute(this, sketch)) {
 			case PART:
@@ -491,7 +487,7 @@ public final class Sketch implements Serializable {
 				//case no children
 				if (bottom == null) {
 					//clean
-					sketch.remove();
+					sketch.pop();
 
 					//this |> sketch
 					this.node.put(Tetragon.BOTTOM, sketch.node);
@@ -503,7 +499,7 @@ public final class Sketch implements Serializable {
 					case BEFORE:
 					case PREVIOUS:
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//this |> sketch -> bottom
 						this.node.put(Tetragon.BOTTOM, sketch.node);
@@ -565,7 +561,8 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
-	private synchronized void offerNext(@NotNull Sketch sketch) {
+	@Contract(mutates = "this,param")
+	private void offerNext(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		switch (Relation.compute(this, sketch)) {
 			case AFTER:
@@ -574,11 +571,11 @@ public final class Sketch implements Serializable {
 
 				//case at the end
 				if (end == null) {
-					Sketch parent = this.get(Direction.PARENT);
+					Sketch parent = this.getParent();
 
 					if (parent == null) {
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//this -> sketch
 						this.node.put(Tetragon.END, sketch.node);
@@ -589,7 +586,7 @@ public final class Sketch implements Serializable {
 					switch (Dominance.compute(parent, sketch)) {
 						case PART:
 							//clean
-							sketch.remove();
+							sketch.pop();
 
 							//this -> sketch
 							this.node.put(Tetragon.END, sketch.node);
@@ -628,7 +625,7 @@ public final class Sketch implements Serializable {
 					case BEFORE:
 					case PREVIOUS:
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//this -> sketch -> end
 						this.node.put(Tetragon.END, sketch.node);
@@ -683,7 +680,8 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"DuplicatedCode", "OverlyComplexMethod", "OverlyLongMethod"})
-	private synchronized void offerParent(@NotNull Sketch sketch) {
+	@Contract(mutates = "this,param")
+	private void offerParent(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		//noinspection SwitchStatementDensity
 		switch (Dominance.compute(this, sketch)) {
@@ -742,14 +740,13 @@ public final class Sketch implements Serializable {
 							throw new InternalError();
 					}
 
-				if (previous != null && top != null)
-					//if this happened, then the structure is corrupted
-					throw new InternalError();
+				//if this happened, then the structure is corrupted
+				assert previous == null || top == null;
 
 				if (previous == null) {
 					if (top == null) {
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//sketch |> bottom; sketch -> next
 						bottom.put(Tetragon.TOP, sketch.node);
@@ -762,7 +759,7 @@ public final class Sketch implements Serializable {
 					switch (Dominance.compute(top.get(), sketch)) {
 						case PART:
 							//clean
-							sketch.remove();
+							sketch.pop();
 
 							//top |> sketch |> bottom; sketch -> next
 							top.put(Tetragon.BOTTOM, sketch.node);
@@ -783,7 +780,7 @@ public final class Sketch implements Serializable {
 				}
 
 				//clean
-				sketch.remove();
+				sketch.pop();
 
 				//previous -> sketch |> bottom; sketch -> next
 				previous.put(Tetragon.END, sketch.node);
@@ -822,7 +819,8 @@ public final class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
-	private synchronized void offerPrevious(@NotNull Sketch sketch) {
+	@Contract(mutates = "this,param")
+	private void offerPrevious(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		switch (Relation.compute(this, sketch)) {
 			case BEFORE:
@@ -831,11 +829,11 @@ public final class Sketch implements Serializable {
 
 				//case at the start
 				if (start == null) {
-					Sketch parent = this.get(Direction.PARENT);
+					Sketch parent = this.getParent();
 
 					if (parent == null) {
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//sketch -> this
 						this.node.put(Tetragon.START, sketch.node);
@@ -846,7 +844,7 @@ public final class Sketch implements Serializable {
 					switch (Dominance.compute(parent, sketch)) {
 						case PART:
 							//clean
-							sketch.remove();
+							sketch.pop();
 
 							//parent |> sketch -> this
 							parent.node.put(Tetragon.BOTTOM, sketch.node);
@@ -886,7 +884,7 @@ public final class Sketch implements Serializable {
 					case AFTER:
 					case NEXT:
 						//clean
-						sketch.remove();
+						sketch.pop();
 
 						//start -> sketch -> this
 						start.put(Tetragon.END, sketch.node);
@@ -919,6 +917,91 @@ public final class Sketch implements Serializable {
 			default:
 				throw new InternalError();
 		}
+	}
+
+	//remove
+
+	/**
+	 * Cleanly remove this sketch from the structure it is on.
+	 *
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@Contract(mutates = "this")
+	public void pop() {
+		Node<Sketch> top = this.node.get(Tetragon.TOP);
+		Node<Sketch> start = this.node.get(Tetragon.START);
+		Node<Sketch> end = this.node.get(Tetragon.END);
+		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+
+		assert top == null || start == null;
+
+		if (bottom != null)
+			if (start != null)
+				//start -> bottom
+				start.put(Tetragon.END, bottom);
+			else if (top != null)
+				//top |> bottom
+				top.put(Tetragon.BOTTOM, bottom);
+
+		if (end != null)
+			if (bottom != null)
+				//bottomTail -> end
+				Nodes.tail(Tetragon.END, bottom)
+					 .put(Tetragon.END, end);
+			else if (start != null)
+				//start -> end
+				start.put(Tetragon.END, end);
+			else if (top != null)
+				//top |> next
+				top.put(Tetragon.BOTTOM, end);
+	}
+
+	/**
+	 * Remove this sketch from its parent, the sketch before it and the sketch after it.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Contract(mutates = "this")
+	public void remove() {
+		Node<Sketch> top = this.node.get(Tetragon.TOP);
+		Node<Sketch> start = this.node.get(Tetragon.START);
+		Node<Sketch> end = this.node.get(Tetragon.END);
+
+		assert top == null || start == null;
+
+		if (start != null)
+			if (end != null)
+				//start -> end
+				start.put(Tetragon.END, end);
+			else
+				//start
+				start.remove(Tetragon.END);
+		else if (top != null)
+			if (end != null)
+				//top |> end
+				top.put(Tetragon.BOTTOM, end);
+			else
+				//top
+				top.remove(Tetragon.BOTTOM);
+		else if (end != null)
+			//end
+			end.remove(Tetragon.START);
+	}
+
+	/**
+	 * Remove all the children of this sketch without removing the structure between
+	 * them.
+	 * <br>
+	 * This method will unlink the link between this sketch and its first child. With
+	 * that, the first child and the other children will have no parent. But, the links
+	 * between the children will not be broken nor the links between the children and the
+	 * grand children.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Contract(mutates = "this")
+	public void clear() {
+		this.node.remove(Tetragon.BOTTOM);
 	}
 
 	//builder
@@ -1213,3 +1296,309 @@ public final class Sketch implements Serializable {
 		}
 	}
 }
+//	/ **
+//	 * Get the sketch at the given {@code direction} from this sketch.
+//	 * <br><br>
+//	 * Behaviour list:
+//	 * <ul>
+//	 *     <li>{@link Direction#PARENT}: return the parent of this sketch.</li>
+//	 *     <li>{@link Direction#PREVIOUS}: return the sketch before this sketch on the parent.</li>
+//	 *     <li>{@link Direction#NEXT}: return the sketch after this sketch on the parent.</li>
+//	 *     <li>{@link Direction#CHILD}: return the first child of this sketch.</li>
+//	 * </ul>
+//	 *
+//	 * @param direction the direction.
+//	 * @return the sketch at the given {@code direction} form this sketch. Or {@code null}
+//	 * 		if no such sketch.
+//	 * @throws NullPointerException if the given {@code sketch} is null.
+//	 * @since 0.2.0 ~2021.05.15
+//	 * /
+//	@Nullable
+//	@Contract(pure = true)
+//	public Sketch get(@NotNull Direction direction) {
+//		Objects.requireNonNull(direction, "direction");
+//		switch (direction) {
+//			case PARENT:
+//				Node<Sketch> headTop = Nodes
+//						.tail(Tetragon.START, this.node)
+//						.get(Tetragon.TOP);
+//
+//				return headTop == null ? null : headTop.get();
+//			case CHILD:
+//				Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+//
+//				return bottom == null ? null : bottom.get();
+//			case NEXT:
+//				Node<Sketch> end = this.node.get(Tetragon.END);
+//
+//				return end == null ? null : end.get();
+//			case PREVIOUS:
+//				Node<Sketch> start = this.node.get(Tetragon.START);
+//
+//				return start == null ? null : start.get();
+//			default:
+//				throw new InternalError();
+//		}
+//	}
+//
+//	/**
+//	 * Cleanly remove the sketches at the given {@code direction} of this sketch.
+//	 * <br><br>
+//	 * Behaviour list:
+//	 * <ul>
+//	 *     <li>{@link Direction#PARENT}: remove this sketch from its parent. (this will also remove it from its brothers)</li>
+//	 *     <li>{@link Direction#PREVIOUS}: remove the sketch previous to this from the parent.</li>
+//	 *     <li>{@link Direction#NEXT}: remove the sketch next to this from the parent.</li>
+//	 *     <li>{@link Direction#CHILD}: remove all the children sketches of this from this.</li>
+//	 * </ul>
+//	 *
+//	 * @param direction the direction where to remove the node at.
+//	 * @throws NullPointerException if the given {@code direction} is null.
+//	 * @since 0.2.0 ~2021.05.14
+//	 */
+//	@Contract(mutates = "this")
+//	public synchronized void remove(@NotNull Direction direction) {
+//		Objects.requireNonNull(direction, "direction");
+//		switch (direction) {
+//			case PARENT:
+//				//remove from `start`, `top` and `end` cleanly
+//				Nodes.tail(Tetragon.START, this.node)
+//					 .remove(Tetragon.TOP);
+//				break;
+//			case PREVIOUS:
+//				//remove the previous and steal the one next to it or the parent
+//				Node<Sketch> start = this.node.remove(Tetragon.START);
+//
+//				if (start != null) {
+//					Node<Sketch> parent = start.get(Tetragon.TOP);
+//					Node<Sketch> previous = start.get(Tetragon.START);
+//
+//					if (previous != null)
+//						this.node.put(Tetragon.START, previous);
+//					else if (parent != null)
+//						this.node.put(Tetragon.TOP, parent);
+//				}
+//
+//				break;
+//			case NEXT:
+//				//remove the next and steal the one next to it
+//				Node<Sketch> end = this.node.remove(Tetragon.END);
+//
+//				if (end != null) {
+//					Node<Sketch> next = end.get(Tetragon.END);
+//
+//					if (next != null)
+//						this.node.put(Tetragon.END, next);
+//				}
+//
+//				break;
+//			case CHILD:
+//				//just remove the child
+//				this.node.remove(Tetragon.BOTTOM);
+//				break;
+//		}
+//	}
+//
+//	/**
+//	 * Remove the parent sketch from its parent. (I hate you grandpa)
+//	 *
+//	 * @since 0.2.0 ~2021.05.17
+//	 */
+//	@Contract(mutates = "this")
+//	public synchronized void removeParent() {
+//		//no special logic can be applied -_-"
+//		Sketch parent = this.getParent();
+//		if (parent != null)
+//			parent.remove();
+//	}
+//
+//	/**
+//	 * Remove the first child from being a child to this sketch.
+//	 * <br>
+//	 * This method will set the first child to the child after the current first child (or
+//	 * just remove it if no sketch was after it). With that, the first child will no
+//	 * longer be a child to this sketch and will no longer have any connection to the
+//	 * other children. But, the links between it and its own children will not be
+//	 * touched.
+//	 *
+//	 * @since 0.2.0 ~2021.05.17
+//	 */
+//	@Contract(mutates = "this")
+//	public synchronized void removeChild() {
+//		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+//
+//		if (bottom != null) {
+//			Node<Sketch> bottomEnd = bottom.get(Tetragon.END);
+//
+//			if (bottomEnd == null)
+//				this.node.remove(Tetragon.BOTTOM);
+//			else
+//				this.node.put(Tetragon.BOTTOM, bottomEnd);
+//		}
+//	}
+//
+//	@Contract(mutates = "this")
+//	public synchronized void popChild() {
+//		//this |> childHead...childTail -> childNext
+//		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+//
+//		if (bottom != null) {
+//			Node<Sketch> bottomEnd = bottom.get(Tetragon.END);
+//			Node<Sketch> head = bottom.get(Tetragon.BOTTOM);
+//
+//			if (head == null)
+//				if (bottomEnd == null)
+//					//remove the only child
+//					this.node.remove(Tetragon.BOTTOM);
+//				else
+//					//skip to the second child, first child has nothing
+//					this.node.put(Tetragon.BOTTOM, bottomEnd);
+//			else {
+//				//skip to the first child of the first child
+//				this.node.put(Tetragon.BOTTOM, head);
+//
+//				if (bottomEnd != null) {
+//					Node<Sketch> tail = Nodes.tail(Tetragon.END, head);
+//
+//					//link the second child to be after the last child of the first child
+//					tail.put(Tetragon.END, bottomEnd);
+//				}
+//			}
+//		}
+//	}
+//
+//	@Contract(mutates = "this")
+//	public synchronized void popChildren() {
+//		//childHead...childTail1 -> childNextHead...childNextTail -> ...
+//		Node<Sketch> firstHead = null;
+//		for (
+//				Node<Sketch>
+//				child = this.node.get(Tetragon.BOTTOM), //the child of the iteration
+//				tail = null //the tail of the previous child
+//				;
+//				child != null;
+//				child = child.get(Tetragon.END)
+//		) {
+//			Node<Sketch> head = child.get(Tetragon.BOTTOM); //the head of the current child
+//
+//			if (head != null) {
+//				head.remove(Tetragon.TOP); //remove it from its parent
+//
+//				if (firstHead == null)
+//					firstHead = head; //to be the first child of this
+//				else
+//					tail.put(Tetragon.END, head); //join to the previous
+//
+//				//noinspection AssignmentToForLoopParameter
+//				tail = Nodes.tail(Tetragon.END, head); //to be before the next head
+//			}
+//		}
+//
+//		if (firstHead != null)
+//			this.node.put(Tetragon.BOTTOM, firstHead);
+//		else
+//			this.node.remove(Tetragon.BOTTOM);
+//	}
+//
+//	@Contract(mutates = "this")
+//	public synchronized void popParent() {
+//		//why rewriting the `pop` algorithm when we can just do this??
+//		Sketch parent = this.getParent();
+//		if (parent != null)
+//			parent.pop();
+//	}
+//
+//	@Contract(mutates = "this")
+//	public synchronized void popPrevious() {
+//		//previousTop or previousPrevious |> previousHead...previousTail -> this
+//		Sketch previous = this.getPrevious();
+//		if (previous != null)
+//			previous.pop();
+//	}
+//
+//	@Contract(mutates = "this")
+//	public synchronized void popNext() {
+//		//this -> nextHead...nextTail -> nextNext
+//		Node<Sketch> end = this.node.get(Tetragon.END);
+//
+//		if (end != null) {
+//			Node<Sketch> endEnd = end.get(Tetragon.END);
+//			Node<Sketch> head = end.get(Tetragon.BOTTOM);
+//
+//			if (head == null)
+//				if (endEnd == null)
+//					//be the tail
+//					this.node.remove(Tetragon.END);
+//				else
+//					//skip to the sketch after the next sketch
+//					this.node.put(Tetragon.END, endEnd);
+//			else {
+//				//skip to the first child of the next sketch
+//				this.node.put(Tetragon.END, head);
+//
+//				if (endEnd != null) {
+//					Node<Sketch> tail = Nodes.tail(Tetragon.END, head);
+//
+//					//link the sketch after the next sketch to be after the tail of the next sketch
+//					tail.put(Tetragon.END, endEnd);
+//				}
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * Remove the sketch before this from the parent.
+//	 * <br>
+//	 * If the previous sketch was the first child in the parent, this method will make
+//	 * this sketch the first child. Otherwise, this method will make this sketch the
+//	 * sketch after the sketch before the previous sketch. With that, the previous sketch
+//	 * will no longer have any connection to the other children nor to the parent. But,
+//	 * the connections between it and its children will not be touched.
+//	 *
+//	 * @since 0.2.0 ~2021.05.17
+//	 */
+//	@Contract(mutates = "this")
+//	public synchronized void removePrevious() {
+//		Node<Sketch> start = this.node.get(Tetragon.START);
+//
+//		if (start != null) {
+//			Node<Sketch> startTop = start.get(Tetragon.TOP);
+//			Node<Sketch> startStart = start.get(Tetragon.START);
+//
+//			assert startTop == null || startStart == null;
+//
+//			if (startStart != null)
+//				this.node.put(Tetragon.START, startStart);
+//			else {
+//				this.node.remove(Tetragon.START);
+//
+//				if (startTop != null)
+//					this.node.put(Tetragon.TOP, startTop);
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * Remove the sketch after this sketch from the parent.
+//	 * <br>
+//	 * This method will replace the sketch after this sketch with the one after it (or
+//	 * just remove it if  no sketch was after it). With that, the next sketch will no
+//	 * longer have any connection with this sketch nor with the sketch after it nor with
+//	 * the parent sketch. But, the connections between the next sketch and its children
+//	 * will not be touched.
+//	 *
+//	 * @since 0.2.0 ~2021.05.17
+//	 */
+//	@Contract(mutates = "this")
+//	public synchronized void removeNext() {
+//		Node<Sketch> end = this.node.get(Tetragon.END);
+//
+//		if (end != null) {
+//			Node<Sketch> endEnd = end.get(Tetragon.END);
+//
+//			if (endEnd == null)
+//				this.node.remove(Tetragon.END);
+//			else
+//				this.node.put(Tetragon.END, endEnd);
+//		}
+//	}
