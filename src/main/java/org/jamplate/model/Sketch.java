@@ -141,8 +141,6 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		this.properties = new Properties(defaults);
 	}
 
-	//object
-
 	@Contract(value = "null->false", pure = true)
 	@Override
 	public boolean equals(@Nullable Object object) {
@@ -218,32 +216,34 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		return this.name + " " + this.document + "[" + this.reference + "]";
 	}
 
-	//fields
-
 	/**
-	 * Set the document of this sketch to be the given {@code document}.
+	 * Remove all the children of this sketch without removing the structure between
+	 * them.
+	 * <br>
+	 * This method will unlink the link between this sketch and its first child. With
+	 * that, the first child and the other children will have no parent. But, the links
+	 * between the children will not be broken nor the links between the children and the
+	 * grand children.
 	 *
-	 * @param document the document to be set.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.14
+	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Contract(mutates = "this")
-	public void setDocument(@NotNull Document document) {
-		Objects.requireNonNull(document, "document");
-		this.document = document;
+	public void clear() {
+		this.node.remove(Tetragon.BOTTOM);
 	}
 
 	/**
-	 * Set the name of this sketch to be the given {@code name}.
+	 * Get the first child sketch of this sketch.
 	 *
-	 * @param name the name to be set.
-	 * @throws NullPointerException if the given {@code name} is null.
-	 * @since 0.2.0 ~2021.05.14
+	 * @return the first sketch in this sketch. Or {@code null} if this sketch has no
+	 * 		children.
+	 * @since 0.2.0 ~2021.05.17
 	 */
-	@Contract(mutates = "this")
-	public void setName(@NotNull String name) {
-		Objects.requireNonNull(name, "name");
-		this.name = name;
+	@Nullable
+	@Contract(pure = true)
+	public Sketch getChild() {
+		Node<Sketch> child = this.node.get(Tetragon.BOTTOM);
+		return child == null ? null : child.get();
 	}
 
 	/**
@@ -296,60 +296,6 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Return the fully qualified name of this sketch.
-	 *
-	 * @return the fully qualified name of this sketch.
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public String getQualifiedName() {
-		Sketch parent = this.getParent();
-		return (parent == null ? "" : parent.getQualifiedName()) +
-			   this.getName();
-	}
-
-	/**
-	 * Return the simple name of this sketch. (the last one passed to {@link
-	 * #setName(String)})
-	 *
-	 * @return the simple name of this sketch.
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public String getSimpleName() {
-		return this.name;
-	}
-
-	/**
-	 * Return the properties of this sketch.
-	 *
-	 * @return the properties of this sketch.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Properties properties() {
-		//noinspection AssignmentOrReturnOfFieldWithMutableType
-		return this.properties;
-	}
-
-	/**
-	 * Get the reference of this sketch.
-	 *
-	 * @return the reference of this sketch.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Reference reference() {
-		return this.reference;
-	}
-
-	//get
-
-	/**
 	 * Get the sketch after this sketch.
 	 *
 	 * @return the sketch after this sketch. Or {@code null} if this sketch is the last
@@ -394,20 +340,31 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Get the first child sketch of this sketch.
+	 * Return the fully qualified name of this sketch.
 	 *
-	 * @return the first sketch in this sketch. Or {@code null} if this sketch has no
-	 * 		children.
-	 * @since 0.2.0 ~2021.05.17
+	 * @return the fully qualified name of this sketch.
+	 * @since 0.2.0 ~2021.05.16
 	 */
-	@Nullable
+	@NotNull
 	@Contract(pure = true)
-	public Sketch getChild() {
-		Node<Sketch> child = this.node.get(Tetragon.BOTTOM);
-		return child == null ? null : child.get();
+	public String getQualifiedName() {
+		Sketch parent = this.getParent();
+		return (parent == null ? "" : parent.getQualifiedName()) +
+			   this.getName();
 	}
 
-	//add
+	/**
+	 * Return the simple name of this sketch. (the last one passed to {@link
+	 * #setName(String)})
+	 *
+	 * @return the simple name of this sketch.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public String getSimpleName() {
+		return this.name;
+	}
 
 	/**
 	 * Offer the given {@code sketch} to the structure of this sketch. The given {@code
@@ -457,6 +414,124 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 			default:
 				throw new InternalError();
 		}
+	}
+
+	/**
+	 * Cleanly remove this sketch from the structure it is on.
+	 *
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@Contract(mutates = "this")
+	public void pop() {
+		Node<Sketch> top = this.node.get(Tetragon.TOP);
+		Node<Sketch> start = this.node.get(Tetragon.START);
+		Node<Sketch> end = this.node.get(Tetragon.END);
+		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+
+		assert top == null || start == null;
+
+		if (bottom != null)
+			if (start != null)
+				//start -> bottom
+				start.put(Tetragon.END, bottom);
+			else if (top != null)
+				//top |> bottom
+				top.put(Tetragon.BOTTOM, bottom);
+
+		if (end != null)
+			if (bottom != null)
+				//bottomTail -> end
+				Nodes.tail(Tetragon.END, bottom)
+					 .put(Tetragon.END, end);
+			else if (start != null)
+				//start -> end
+				start.put(Tetragon.END, end);
+			else if (top != null)
+				//top |> next
+				top.put(Tetragon.BOTTOM, end);
+	}
+
+	/**
+	 * Return the properties of this sketch.
+	 *
+	 * @return the properties of this sketch.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Properties properties() {
+		//noinspection AssignmentOrReturnOfFieldWithMutableType
+		return this.properties;
+	}
+
+	/**
+	 * Get the reference of this sketch.
+	 *
+	 * @return the reference of this sketch.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Reference reference() {
+		return this.reference;
+	}
+
+	/**
+	 * Remove this sketch from its parent, the sketch before it and the sketch after it.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Contract(mutates = "this")
+	public void remove() {
+		Node<Sketch> top = this.node.get(Tetragon.TOP);
+		Node<Sketch> start = this.node.get(Tetragon.START);
+		Node<Sketch> end = this.node.get(Tetragon.END);
+
+		assert top == null || start == null;
+
+		if (start != null)
+			if (end != null)
+				//start -> end
+				start.put(Tetragon.END, end);
+			else
+				//start
+				start.remove(Tetragon.END);
+		else if (top != null)
+			if (end != null)
+				//top |> end
+				top.put(Tetragon.BOTTOM, end);
+			else
+				//top
+				top.remove(Tetragon.BOTTOM);
+		else if (end != null)
+			//end
+			end.remove(Tetragon.START);
+	}
+
+	/**
+	 * Set the document of this sketch to be the given {@code document}.
+	 *
+	 * @param document the document to be set.
+	 * @throws NullPointerException if the given {@code document} is null.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@Contract(mutates = "this")
+	public void setDocument(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		this.document = document;
+	}
+
+	/**
+	 * Set the name of this sketch to be the given {@code name}.
+	 *
+	 * @param name the name to be set.
+	 * @throws NullPointerException if the given {@code name} is null.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@Contract(mutates = "this")
+	public void setName(@NotNull String name) {
+		Objects.requireNonNull(name, "name");
+		this.name = name;
 	}
 
 	/**
@@ -918,93 +993,6 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				throw new InternalError();
 		}
 	}
-
-	//remove
-
-	/**
-	 * Cleanly remove this sketch from the structure it is on.
-	 *
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public void pop() {
-		Node<Sketch> top = this.node.get(Tetragon.TOP);
-		Node<Sketch> start = this.node.get(Tetragon.START);
-		Node<Sketch> end = this.node.get(Tetragon.END);
-		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
-
-		assert top == null || start == null;
-
-		if (bottom != null)
-			if (start != null)
-				//start -> bottom
-				start.put(Tetragon.END, bottom);
-			else if (top != null)
-				//top |> bottom
-				top.put(Tetragon.BOTTOM, bottom);
-
-		if (end != null)
-			if (bottom != null)
-				//bottomTail -> end
-				Nodes.tail(Tetragon.END, bottom)
-					 .put(Tetragon.END, end);
-			else if (start != null)
-				//start -> end
-				start.put(Tetragon.END, end);
-			else if (top != null)
-				//top |> next
-				top.put(Tetragon.BOTTOM, end);
-	}
-
-	/**
-	 * Remove this sketch from its parent, the sketch before it and the sketch after it.
-	 *
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@Contract(mutates = "this")
-	public void remove() {
-		Node<Sketch> top = this.node.get(Tetragon.TOP);
-		Node<Sketch> start = this.node.get(Tetragon.START);
-		Node<Sketch> end = this.node.get(Tetragon.END);
-
-		assert top == null || start == null;
-
-		if (start != null)
-			if (end != null)
-				//start -> end
-				start.put(Tetragon.END, end);
-			else
-				//start
-				start.remove(Tetragon.END);
-		else if (top != null)
-			if (end != null)
-				//top |> end
-				top.put(Tetragon.BOTTOM, end);
-			else
-				//top
-				top.remove(Tetragon.BOTTOM);
-		else if (end != null)
-			//end
-			end.remove(Tetragon.START);
-	}
-
-	/**
-	 * Remove all the children of this sketch without removing the structure between
-	 * them.
-	 * <br>
-	 * This method will unlink the link between this sketch and its first child. With
-	 * that, the first child and the other children will have no parent. But, the links
-	 * between the children will not be broken nor the links between the children and the
-	 * grand children.
-	 *
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@Contract(mutates = "this")
-	public void clear() {
-		this.node.remove(Tetragon.BOTTOM);
-	}
-
-	//builder
 
 	/**
 	 * A builder that makes building sketches much easier.
