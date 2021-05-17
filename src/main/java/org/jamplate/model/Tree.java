@@ -105,7 +105,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		Objects.requireNonNull(document, "document");
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
-		this.sketch = new Sketch();
+		this.sketch = new Sketch(this);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		Objects.requireNonNull(reference, "reference");
 		this.document = document;
 		this.reference = reference;
-		this.sketch = new Sketch();
+		this.sketch = new Sketch(this);
 	}
 
 	/**
