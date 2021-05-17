@@ -78,10 +78,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @see Direction#PARENT
+	 * @see Relation#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	CONTAINER(Dominance.CONTAIN, Direction.PARENT) {
+	CONTAINER(Dominance.CONTAIN, Relation.PARENT) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -104,10 +104,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @see Direction#PARENT
+	 * @see Relation#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	AHEAD(Dominance.CONTAIN, Direction.PARENT) {
+	AHEAD(Dominance.CONTAIN, Relation.PARENT) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -130,10 +130,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @see Direction#PARENT
+	 * @see Relation#PARENT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	BEHIND(Dominance.CONTAIN, Direction.PARENT) {
+	BEHIND(Dominance.CONTAIN, Relation.PARENT) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -237,10 +237,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @see Direction#CHILD
+	 * @see Relation#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	FRAGMENT(Dominance.PART, Direction.CHILD) {
+	FRAGMENT(Dominance.PART, Relation.CHILD) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -263,10 +263,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @see Direction#CHILD
+	 * @see Relation#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	START(Dominance.PART, Direction.CHILD) {
+	START(Dominance.PART, Relation.CHILD) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -289,10 +289,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @see Direction#CHILD
+	 * @see Relation#CHILD
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	END(Dominance.PART, Direction.CHILD) {
+	END(Dominance.PART, Relation.CHILD) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -316,10 +316,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Direction#NEXT
+	 * @see Relation#NEXT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	NEXT(Dominance.NONE, Direction.NEXT) {
+	NEXT(Dominance.NONE, Relation.NEXT) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -342,10 +342,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Direction#NEXT
+	 * @see Relation#NEXT
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	AFTER(Dominance.NONE, Direction.NEXT) {
+	AFTER(Dominance.NONE, Relation.NEXT) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -369,10 +369,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Direction#PREVIOUS
+	 * @see Relation#PREVIOUS
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	PREVIOUS(Dominance.NONE, Direction.PREVIOUS) {
+	PREVIOUS(Dominance.NONE, Relation.PREVIOUS) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -395,10 +395,10 @@ public enum Intersection {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Direction#PREVIOUS
+	 * @see Relation#PREVIOUS
 	 * @since 0.2.0 ~2021.01.09
 	 */
-	BEFORE(Dominance.NONE, Direction.PREVIOUS) {
+	BEFORE(Dominance.NONE, Relation.PREVIOUS) {
 		@NotNull
 		@Override
 		public Intersection opposite() {
@@ -412,7 +412,7 @@ public enum Intersection {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	private final Direction direction;
+	private final Relation relation;
 	/**
 	 * How dominant this intersection over the opposite intersection.
 	 *
@@ -425,15 +425,15 @@ public enum Intersection {
 	 * Construct a new enum with the given {@code dominance} and direction.
 	 *
 	 * @param dominance how dominant the constructed intersection over its opposite intersection.
-	 * @param direction the direction from the opposite of the constructed intersection to
+	 * @param relation the direction from the opposite of the constructed intersection to
 	 *                  itself. (pass {@code null} if undefined)
 	 * @throws NullPointerException if the given {@code dominance} is null.
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	Intersection(@NotNull Dominance dominance, @Nullable Direction direction) {
+	Intersection(@NotNull Dominance dominance, @Nullable Relation relation) {
 		Objects.requireNonNull(dominance, "dominance");
 		this.dominance = dominance;
-		this.direction = direction;
+		this.relation = relation;
 	}
 
 	/**
@@ -613,8 +613,8 @@ public enum Intersection {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Direction direction() {
-		return this.direction;
+	public Relation direction() {
+		return this.relation;
 	}
 
 	/**

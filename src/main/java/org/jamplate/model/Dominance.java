@@ -98,7 +98,7 @@ public enum Dominance {
 	 *     {@code {s < i} & {j == e}}
 	 * </pre>
 	 *
-	 * @see Direction#PARENT
+	 * @see Relation#PARENT
 	 * @see Intersection#CONTAINER
 	 * @see Intersection#AHEAD
 	 * @see Intersection#BEHIND
@@ -195,7 +195,7 @@ public enum Dominance {
 	 *     {i < s} & {j == e}
 	 * </pre>
 	 *
-	 * @see Direction#CHILD
+	 * @see Relation#CHILD
 	 * @see Intersection#FRAGMENT
 	 * @see Intersection#START
 	 * @see Intersection#END
@@ -238,8 +238,8 @@ public enum Dominance {
 	 *     {e < i}
 	 * </pre>
 	 *
-	 * @see Direction#NEXT
-	 * @see Direction#PREVIOUS
+	 * @see Relation#NEXT
+	 * @see Relation#PREVIOUS
 	 * @see Intersection#NEXT
 	 * @see Intersection#PREVIOUS
 	 * @see Intersection#AFTER

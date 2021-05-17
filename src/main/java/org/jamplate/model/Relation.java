@@ -28,7 +28,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.14
  */
-public enum Direction {
+public enum Relation {
 	/**
 	 * <b>Parent</b> {@link #CHILD (opposite)}
 	 * <br>
@@ -63,8 +63,8 @@ public enum Direction {
 	PARENT(Dominance.CONTAIN) {
 		@NotNull
 		@Override
-		public Direction opposite() {
-			return Direction.CHILD;
+		public Relation opposite() {
+			return Relation.CHILD;
 		}
 	},
 	/**
@@ -101,8 +101,8 @@ public enum Direction {
 	CHILD(Dominance.PART) {
 		@NotNull
 		@Override
-		public Direction opposite() {
-			return Direction.PARENT;
+		public Relation opposite() {
+			return Relation.PARENT;
 		}
 	},
 	/**
@@ -133,8 +133,8 @@ public enum Direction {
 	PREVIOUS(Dominance.NONE) {
 		@NotNull
 		@Override
-		public Direction opposite() {
-			return Direction.NEXT;
+		public Relation opposite() {
+			return Relation.NEXT;
 		}
 	},
 	/**
@@ -165,8 +165,8 @@ public enum Direction {
 	NEXT(Dominance.NONE) {
 		@NotNull
 		@Override
-		public Direction opposite() {
-			return Direction.PREVIOUS;
+		public Relation opposite() {
+			return Relation.PREVIOUS;
 		}
 	};
 
@@ -186,7 +186,7 @@ public enum Direction {
 	 * @throws NullPointerException if the given {@code dominance} is null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	Direction(@NotNull Dominance dominance) {
+	Relation(@NotNull Dominance dominance) {
 		Objects.requireNonNull(dominance, "dominance");
 		this.dominance = dominance;
 	}
@@ -198,7 +198,7 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param i the first index of the first area.
 	 * @param j one past the last index of the first area.
@@ -212,21 +212,21 @@ public enum Direction {
 	@SuppressWarnings("OverlyComplexMethod")
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(int i, int j, int s, int e) {
+	public static Relation compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
 		return j <= s ?
-			   Direction.NEXT :
+			   Relation.NEXT :
 			   e <= i ?
-			   Direction.PREVIOUS :
+			   Relation.PREVIOUS :
 			   s < i && j < e ||
 			   s == i && j < e ||
 			   s < i && j == e ?
-			   Direction.PARENT :
+			   Relation.PARENT :
 			   i < s && e < j ||
 			   i == s && e < j ||
 			   i < s && j == e ?
-			   Direction.CHILD :
+			   Relation.CHILD :
 			   null;
 	}
 
@@ -238,7 +238,7 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param reference the reference (first area).
 	 * @param s         the first index of the second area.
@@ -246,16 +246,16 @@ public enum Direction {
 	 * @return the direction from the given {@code reference} to the second area given.
 	 * @throws NullPointerException     if the given {@code reference} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
-	 * @see Direction#compute(int, int, int, int)
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Reference reference, int s, int e) {
+	public static Relation compute(@NotNull Reference reference, int s, int e) {
 		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
-		return Direction.compute(i, j, s, e);
+		return Relation.compute(i, j, s, e);
 	}
 
 	/**
@@ -265,26 +265,26 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param reference the first reference.
 	 * @param other     the second reference.
 	 * @return the direction from the given {@code reference} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code reference} or {@code other} is
 	 *                              null.
-	 * @see Direction#compute(int, int, int, int)
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Reference reference, @NotNull Reference other) {
+	public static Relation compute(@NotNull Reference reference, @NotNull Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();
 		int e = s + other.length();
-		return Direction.compute(i, j, s, e);
+		return Relation.compute(i, j, s, e);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param tree the sketch (first area).
 	 * @param s      the first index of the second area.
@@ -302,14 +302,14 @@ public enum Direction {
 	 * @return the direction from the given {@code sketch} to the second area given.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
-	 * @see Direction#compute(int, int, int, int)
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Tree tree, int s, int e) {
+	public static Relation compute(@NotNull Tree tree, int s, int e) {
 		Objects.requireNonNull(tree, "sketch");
-		return Direction.compute(tree.reference(), s, e);
+		return Relation.compute(tree.reference(), s, e);
 	}
 
 	/**
@@ -319,21 +319,21 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Direction#compute(int, int, int, int)
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Tree tree, @NotNull Reference other) {
+	public static Relation compute(@NotNull Tree tree, @NotNull Reference other) {
 		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Direction.compute(tree.reference(), other);
+		return Relation.compute(tree.reference(), other);
 	}
 
 	/**
@@ -343,21 +343,21 @@ public enum Direction {
 	 * area.
 	 * <br>
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
-	 * {@code B} will be {@link Direction#PARENT}.
+	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Direction#compute(int, int, int, int)
+	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Tree tree, @NotNull Tree other) {
+	public static Relation compute(@NotNull Tree tree, @NotNull Tree other) {
 		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Direction.compute(tree.reference(), other.reference());
+		return Relation.compute(tree.reference(), other.reference());
 	}
 
 	@NotNull
@@ -387,5 +387,5 @@ public enum Direction {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public abstract Direction opposite();
+	public abstract Relation opposite();
 }
