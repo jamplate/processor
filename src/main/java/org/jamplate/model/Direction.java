@@ -55,9 +55,9 @@ public enum Direction {
 	 * </pre>
 	 *
 	 * @see Dominance#CONTAIN
-	 * @see Relation#CONTAINER
-	 * @see Relation#AHEAD
-	 * @see Relation#BEHIND
+	 * @see Intersection#CONTAINER
+	 * @see Intersection#AHEAD
+	 * @see Intersection#BEHIND
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	PARENT(Dominance.CONTAIN) {
@@ -93,9 +93,9 @@ public enum Direction {
 	 * </pre>
 	 *
 	 * @see Dominance#PART
-	 * @see Relation#FRAGMENT
-	 * @see Relation#START
-	 * @see Relation#END
+	 * @see Intersection#FRAGMENT
+	 * @see Intersection#START
+	 * @see Intersection#END
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	CHILD(Dominance.PART) {
@@ -126,8 +126,8 @@ public enum Direction {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Relation#PREVIOUS
-	 * @see Relation#BEFORE
+	 * @see Intersection#PREVIOUS
+	 * @see Intersection#BEFORE
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	PREVIOUS(Dominance.NONE) {
@@ -158,8 +158,8 @@ public enum Direction {
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
-	 * @see Relation#NEXT
-	 * @see Relation#AFTER
+	 * @see Intersection#NEXT
+	 * @see Intersection#AFTER
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	NEXT(Dominance.NONE) {

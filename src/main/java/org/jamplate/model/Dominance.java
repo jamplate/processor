@@ -99,9 +99,9 @@ public enum Dominance {
 	 * </pre>
 	 *
 	 * @see Direction#PARENT
-	 * @see Relation#CONTAINER
-	 * @see Relation#AHEAD
-	 * @see Relation#BEHIND
+	 * @see Intersection#CONTAINER
+	 * @see Intersection#AHEAD
+	 * @see Intersection#BEHIND
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	CONTAIN() {
@@ -127,7 +127,7 @@ public enum Dominance {
 	 *     {i == s} & {j == e}
 	 * </pre>
 	 *
-	 * @see Relation#SAME
+	 * @see Intersection#SAME
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	EXACT() {
@@ -158,8 +158,8 @@ public enum Dominance {
 	 *     {s < i} & {i < e} & {e < j}
 	 * </pre>
 	 *
-	 * @see Relation#OVERFLOW
-	 * @see Relation#UNDERFLOW
+	 * @see Intersection#OVERFLOW
+	 * @see Intersection#UNDERFLOW
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	SHARE() {
@@ -196,9 +196,9 @@ public enum Dominance {
 	 * </pre>
 	 *
 	 * @see Direction#CHILD
-	 * @see Relation#FRAGMENT
-	 * @see Relation#START
-	 * @see Relation#END
+	 * @see Intersection#FRAGMENT
+	 * @see Intersection#START
+	 * @see Intersection#END
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	PART() {
@@ -240,10 +240,10 @@ public enum Dominance {
 	 *
 	 * @see Direction#NEXT
 	 * @see Direction#PREVIOUS
-	 * @see Relation#NEXT
-	 * @see Relation#PREVIOUS
-	 * @see Relation#AFTER
-	 * @see Relation#BEFORE
+	 * @see Intersection#NEXT
+	 * @see Intersection#PREVIOUS
+	 * @see Intersection#AFTER
+	 * @see Intersection#BEFORE
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	NONE() {

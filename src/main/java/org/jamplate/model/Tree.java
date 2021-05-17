@@ -387,7 +387,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(mutates = "this,param")
 	public void offer(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		switch (Relation.compute(this, tree)) {
+		switch (Intersection.compute(this, tree)) {
 			case AHEAD:
 			case BEHIND:
 			case CONTAINER:
@@ -570,7 +570,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				}
 
 				//compare to the first
-				switch (Relation.compute(bottom.get(), tree)) {
+				switch (Intersection.compute(bottom.get(), tree)) {
 					case BEFORE:
 					case PREVIOUS:
 						//clean
@@ -639,7 +639,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(mutates = "this,param")
 	private void offerNext(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		switch (Relation.compute(this, tree)) {
+		switch (Intersection.compute(this, tree)) {
 			case AFTER:
 			case NEXT:
 				Node<Tree> end = this.node.get(Tetragon.END);
@@ -679,7 +679,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				}
 
 				//compare to the next
-				switch (Relation.compute(end.get(), tree)) {
+				switch (Intersection.compute(end.get(), tree)) {
 					case NEXT:
 					case AFTER:
 						//this -> end -> tree
@@ -897,7 +897,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(mutates = "this,param")
 	private void offerPrevious(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		switch (Relation.compute(this, tree)) {
+		switch (Intersection.compute(this, tree)) {
 			case BEFORE:
 			case PREVIOUS:
 				Node<Tree> start = this.node.get(Tetragon.START);
@@ -938,7 +938,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				}
 
 				//compare to the previous
-				switch (Relation.compute(start.get(), tree)) {
+				switch (Intersection.compute(start.get(), tree)) {
 					case PREVIOUS:
 					case BEFORE:
 						//tree -> start -> this

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * An enumeration of possible relations between sources.
+ * An enumeration of possible intersections between sources.
  * <br>
  * The names is describing the other source.
  * <pre>
@@ -60,7 +60,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.01.09
  */
-public enum Relation {
+public enum Intersection {
 	/**
 	 * <b>Containing Source</b> {@link #FRAGMENT (opposite)}
 	 * <br>
@@ -84,8 +84,8 @@ public enum Relation {
 	CONTAINER(Dominance.CONTAIN, Direction.PARENT) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.FRAGMENT;
+		public Intersection opposite() {
+			return Intersection.FRAGMENT;
 		}
 	},
 	/**
@@ -110,8 +110,8 @@ public enum Relation {
 	AHEAD(Dominance.CONTAIN, Direction.PARENT) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.START;
+		public Intersection opposite() {
+			return Intersection.START;
 		}
 	},
 	/**
@@ -136,8 +136,8 @@ public enum Relation {
 	BEHIND(Dominance.CONTAIN, Direction.PARENT) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.END;
+		public Intersection opposite() {
+			return Intersection.END;
 		}
 	},
 
@@ -162,8 +162,8 @@ public enum Relation {
 	SAME(Dominance.EXACT, null) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.SAME;
+		public Intersection opposite() {
+			return Intersection.SAME;
 		}
 	},
 
@@ -189,8 +189,8 @@ public enum Relation {
 	OVERFLOW(Dominance.SHARE, null) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.UNDERFLOW;
+		public Intersection opposite() {
+			return Intersection.UNDERFLOW;
 		}
 	},
 	/**
@@ -215,8 +215,8 @@ public enum Relation {
 	UNDERFLOW(Dominance.SHARE, null) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.OVERFLOW;
+		public Intersection opposite() {
+			return Intersection.OVERFLOW;
 		}
 	},
 
@@ -243,8 +243,8 @@ public enum Relation {
 	FRAGMENT(Dominance.PART, Direction.CHILD) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.CONTAINER;
+		public Intersection opposite() {
+			return Intersection.CONTAINER;
 		}
 	},
 	/**
@@ -269,8 +269,8 @@ public enum Relation {
 	START(Dominance.PART, Direction.CHILD) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.AHEAD;
+		public Intersection opposite() {
+			return Intersection.AHEAD;
 		}
 	},
 	/**
@@ -295,8 +295,8 @@ public enum Relation {
 	END(Dominance.PART, Direction.CHILD) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.BEHIND;
+		public Intersection opposite() {
+			return Intersection.BEHIND;
 		}
 	},
 
@@ -322,8 +322,8 @@ public enum Relation {
 	NEXT(Dominance.NONE, Direction.NEXT) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.PREVIOUS;
+		public Intersection opposite() {
+			return Intersection.PREVIOUS;
 		}
 	},
 	/**
@@ -348,8 +348,8 @@ public enum Relation {
 	AFTER(Dominance.NONE, Direction.NEXT) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.BEFORE;
+		public Intersection opposite() {
+			return Intersection.BEFORE;
 		}
 	},
 
@@ -375,8 +375,8 @@ public enum Relation {
 	PREVIOUS(Dominance.NONE, Direction.PREVIOUS) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.NEXT;
+		public Intersection opposite() {
+			return Intersection.NEXT;
 		}
 	},
 	/**
@@ -401,20 +401,20 @@ public enum Relation {
 	BEFORE(Dominance.NONE, Direction.PREVIOUS) {
 		@NotNull
 		@Override
-		public Relation opposite() {
-			return Relation.AFTER;
+		public Intersection opposite() {
+			return Intersection.AFTER;
 		}
 	};
 
 	/**
-	 * The direction from the opposite relation to this relation.
+	 * The direction from the opposite intersection to this intersection.
 	 *
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
 	private final Direction direction;
 	/**
-	 * How dominant this relation over the opposite relation.
+	 * How dominant this intersection over the opposite intersection.
 	 *
 	 * @since 0.2.0 ~2021.01.10
 	 */
@@ -424,34 +424,34 @@ public enum Relation {
 	/**
 	 * Construct a new enum with the given {@code dominance} and direction.
 	 *
-	 * @param dominance how dominant the constructed relation over its opposite relation.
-	 * @param direction the direction from the opposite of the constructed relation to
+	 * @param dominance how dominant the constructed intersection over its opposite intersection.
+	 * @param direction the direction from the opposite of the constructed intersection to
 	 *                  itself. (pass {@code null} if undefined)
 	 * @throws NullPointerException if the given {@code dominance} is null.
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	Relation(@NotNull Dominance dominance, @Nullable Direction direction) {
+	Intersection(@NotNull Dominance dominance, @Nullable Direction direction) {
 		Objects.requireNonNull(dominance, "dominance");
 		this.dominance = dominance;
 		this.direction = direction;
 	}
 
 	/**
-	 * Calculate what is the relation between the areas {@code [i, j)} and {@code [s,
+	 * Calculate what is the intersection between the areas {@code [i, j)} and {@code [s,
 	 * e)}.
 	 * <br>
-	 * The first area is the area to compare the second area with. The returned relation
-	 * will be the relation describing the feelings of the first area about the second
+	 * The first area is the area to compare the second area with. The returned intersection
+	 * will be the intersection describing the feelings of the first area about the second
 	 * area.
 	 * <br>
 	 * For example: if the second area is contained in the middle of first area, then the
-	 * retaliation {@link Relation#FRAGMENT fragmnet} will be returned.
+	 * retaliation {@link Intersection#FRAGMENT fragmnet} will be returned.
 	 *
 	 * @param i the first index of the first area.
 	 * @param j one past the last index of the first area.
 	 * @param s the first index of the second area.
 	 * @param e one past the last index of the second area.
-	 * @return the relation constant describing the relation of the second area to the
+	 * @return the intersection constant describing the intersection of the second area to the
 	 * 		first area.
 	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
 	 *                                  if {@code s} is not in the range {@code [0, e]}.
@@ -460,141 +460,141 @@ public enum Relation {
 	@SuppressWarnings("OverlyComplexMethod")
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(int i, int j, int s, int e) {
+	public static Intersection compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
 		return j == s ?
-			   Relation.NEXT :
+			   Intersection.NEXT :
 			   i == e ?
-			   Relation.PREVIOUS :
+			   Intersection.PREVIOUS :
 			   j < s ?
-			   Relation.AFTER :
+			   Intersection.AFTER :
 			   e < i ?
-			   Relation.BEFORE :
+			   Intersection.BEFORE :
 			   s < i && j < e ?
-			   Relation.CONTAINER :
+			   Intersection.CONTAINER :
 			   i == s && j < e ?
-			   Relation.AHEAD :
+			   Intersection.AHEAD :
 			   s < i && j == e ?
-			   Relation.BEHIND :
+			   Intersection.BEHIND :
 			   i == s && j == e ?
-			   Relation.SAME :
+			   Intersection.SAME :
 			   i < s && e < j ?
-			   Relation.FRAGMENT :
+			   Intersection.FRAGMENT :
 			   i == s /*&& e < j*/ ?
-			   Relation.START :
+			   Intersection.START :
 			   i < s && j == e ?
-			   Relation.END :
+			   Intersection.END :
 			   i < s /*&& s < j && j < e*/ ?
-			   Relation.OVERFLOW :
+			   Intersection.OVERFLOW :
 			   //s < i && i < e && e < j ?
-			   Relation.UNDERFLOW;
+			   Intersection.UNDERFLOW;
 	}
 
 	/**
-	 * Calculate what is the relation between the given {@code reference} and the given
+	 * Calculate what is the intersection between the given {@code reference} and the given
 	 * area {@code [s, e)}.
 	 *
 	 * @param reference the reference (first area).
 	 * @param s         the first index of the second area.
 	 * @param e         one past the last index of the second area.
-	 * @return the relation constant describing the relation of the second area to the
+	 * @return the intersection constant describing the intersection of the second area to the
 	 * 		reference.
 	 * @throws NullPointerException     if the given {@code reference} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
-	 * @see Relation#compute(int, int, int, int)
+	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Reference reference, int s, int e) {
+	public static Intersection compute(@NotNull Reference reference, int s, int e) {
 		Objects.requireNonNull(reference, "reference");
 		int i = reference.position();
 		int j = i + reference.length();
-		return Relation.compute(i, j, s, e);
+		return Intersection.compute(i, j, s, e);
 	}
 
 	/**
-	 * Calculate the relation between the references {@code reference} and {@code other}.
+	 * Calculate the intersection between the references {@code reference} and {@code other}.
 	 *
 	 * @param reference the first reference.
 	 * @param other     the second reference.
-	 * @return the relation constant describing the relation of the second reference to
+	 * @return the intersection constant describing the intersection of the second reference to
 	 * 		the first reference.
 	 * @throws NullPointerException if the given {@code reference} or {@code other} is
 	 *                              null.
-	 * @see Relation#compute(int, int, int, int)
+	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Reference reference, @NotNull Reference other) {
+	public static Intersection compute(@NotNull Reference reference, @NotNull Reference other) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(other, "other");
 		int i = reference.position();
 		int j = i + reference.length();
 		int s = other.position();
 		int e = s + other.length();
-		return Relation.compute(i, j, s, e);
+		return Intersection.compute(i, j, s, e);
 	}
 
 	/**
-	 * Calculate what is the relation between the given {@code sketch} and the given area
+	 * Calculate what is the intersection between the given {@code sketch} and the given area
 	 * {@code [s, e)}.
 	 *
 	 * @param tree the sketch (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
-	 * @return the relation constant describing the relation of the second area to the
+	 * @return the intersection constant describing the intersection of the second area to the
 	 * 		sketch.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
-	 * @see Relation#compute(int, int, int, int)
+	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Tree tree, int s, int e) {
+	public static Intersection compute(@NotNull Tree tree, int s, int e) {
 		Objects.requireNonNull(tree, "sketch");
-		return Relation.compute(tree.reference(), s, e);
+		return Intersection.compute(tree.reference(), s, e);
 	}
 
 	/**
-	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
+	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
 	 *
 	 * @param tree the first sketch.
 	 * @param other  the second sketch.
-	 * @return the relation constant describing the relation of the second sketch to the
+	 * @return the intersection constant describing the intersection of the second sketch to the
 	 * 		first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Relation#compute(int, int, int, int)
+	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Tree tree, @NotNull Reference other) {
+	public static Intersection compute(@NotNull Tree tree, @NotNull Reference other) {
 		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(tree.reference(), other);
+		return Intersection.compute(tree.reference(), other);
 	}
 
 	/**
-	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
+	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
 	 *
 	 * @param tree the first sketch.
 	 * @param other  the second sketch.
-	 * @return the relation constant describing the relation of the second sketch to the
+	 * @return the intersection constant describing the intersection of the second sketch to the
 	 * 		first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
-	 * @see Relation#compute(int, int, int, int)
+	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Tree tree, @NotNull Tree other) {
+	public static Intersection compute(@NotNull Tree tree, @NotNull Tree other) {
 		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(tree.reference(), other.reference());
+		return Intersection.compute(tree.reference(), other.reference());
 	}
 
 	@NotNull
@@ -605,7 +605,7 @@ public enum Relation {
 	}
 
 	/**
-	 * Returns the direction from this the opposite relation to this relation.
+	 * Returns the direction from this the opposite intersection to this intersection.
 	 *
 	 * @return the direction of this. Or {@code null} if there cannot be a direction
 	 * 		between them.
@@ -618,9 +618,9 @@ public enum Relation {
 	}
 
 	/**
-	 * Returns how dominance this relation over its opposite relation.
+	 * Returns how dominance this intersection over its opposite intersection.
 	 *
-	 * @return how dominant this relation.
+	 * @return how dominant this intersection.
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@NotNull
@@ -630,29 +630,29 @@ public enum Relation {
 	}
 
 	/**
-	 * Get the opposite relation of this relation.
+	 * Get the opposite intersection of this intersection.
 	 *
-	 * @return the opposite relation. Or null if none.
+	 * @return the opposite intersection. Or null if none.
 	 * @since 0.2.0 ~2021.01.09
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public abstract Relation opposite();
+	public abstract Intersection opposite();
 }
-//	public static Relation compute(Node node, int s, int e) {
+//	public static intersection compute(Node node, int s, int e) {
 //		Objects.requireNonNull(node, "node");
-//		return Relation.compute(node.reference(), s, e);
+//		return intersection.compute(node.reference(), s, e);
 //	}
 //
-//	public static Relation compute(Node node, Reference reference) {
+//	public static intersection compute(Node node, Reference reference) {
 //		Objects.requireNonNull(node, "node");
-//		return Relation.compute(node.reference(), reference);
+//		return intersection.compute(node.reference(), reference);
 //	}
 //
-//	public static Relation compute(Node node, Node other) {
+//	public static intersection compute(Node node, Node other) {
 //		Objects.requireNonNull(node, "node");
 //		Objects.requireNonNull(other, "other");
-//		return Relation.compute(node.reference(), other.reference());
+//		return intersection.compute(node.reference(), other.reference());
 //	}
 
 //
@@ -667,20 +667,20 @@ public enum Relation {
 //	PARALLEL("PARALLEL", Dominance.NONE),
 //
 //	/**
-//	 * Calculate the relation between the nodes {@code node} and {@code other}.
+//	 * Calculate the intersection between the nodes {@code node} and {@code other}.
 //	 *
 //	 * @param node  the first node.
 //	 * @param other the second node.
-//	 * @return the relation constant describing the relation of the second node to the
+//	 * @return the intersection constant describing the intersection of the second node to the
 //	 * 		first node.
 //	 * @throws NullPointerException if the given {@code node} or {@code other} or {@code
 //	 *                              node.getReference()} or {@code other.getReference()}
 //	 *                              is null.
-//	 * @see Relation#compute(int, int, int, int)
+//	 * @see intersection#compute(int, int, int, int)
 //	 * @since 0.2.0 ~2021.02.15
 //	 */
-//	public static Relation compute(Node node, Node other) {
+//	public static intersection compute(Node node, Node other) {
 //		Objects.requireNonNull(node, "node");
 //		Objects.requireNonNull(other, "other");
-//		return Relation.compute(node.getReference(), other.getReference());
+//		return intersection.compute(node.getReference(), other.getReference());
 //	}
