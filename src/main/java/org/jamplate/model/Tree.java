@@ -91,6 +91,43 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private Sketch sketch;
 
 	/**
+	 * Construct a new tree for the whole given {@code document}.
+	 *
+	 * @param document the document the constructed tree is for.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws java.io.IOError       if any I/O error occurred while reading the given
+	 *                               {@code document} to get its length.
+	 * @throws DocumentNotFoundError if the given {@code document} is not available for
+	 *                               reading.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public Tree(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		this.document = document;
+		this.reference = new Reference(0, document.read().length());
+		this.sketch = new Sketch();
+	}
+
+	/**
+	 * Construct a new tree for the whole given {@code document}.
+	 *
+	 * @param document the document the constructed tree is for.
+	 * @param sketch   the initial sketch set to this tree.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws java.io.IOError       if any I/O error occurred while reading the given
+	 *                               {@code document} to get its length.
+	 * @throws DocumentNotFoundError if the given {@code document} is not available for
+	 *                               reading.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public Tree(@NotNull Document document, @NotNull Sketch sketch) {
+		Objects.requireNonNull(document, "document");
+		this.document = document;
+		this.reference = new Reference(0, document.read().length());
+		this.sketch = sketch;
+	}
+
+	/**
 	 * Construct a new tree with the given {@code reference}.
 	 *
 	 * @param document  the document of the constructed tree.
