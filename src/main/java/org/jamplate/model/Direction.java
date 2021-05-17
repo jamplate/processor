@@ -296,7 +296,7 @@ public enum Direction {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Direction#PARENT}.
 	 *
-	 * @param sketch the sketch (first area).
+	 * @param tree the sketch (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
 	 * @return the direction from the given {@code sketch} to the second area given.
@@ -307,9 +307,9 @@ public enum Direction {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Sketch sketch, int s, int e) {
-		Objects.requireNonNull(sketch, "sketch");
-		return Direction.compute(sketch.reference(), s, e);
+	public static Direction compute(@NotNull Tree tree, int s, int e) {
+		Objects.requireNonNull(tree, "sketch");
+		return Direction.compute(tree.reference(), s, e);
 	}
 
 	/**
@@ -321,7 +321,7 @@ public enum Direction {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Direction#PARENT}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
@@ -330,10 +330,10 @@ public enum Direction {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Sketch sketch, @NotNull Reference other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Direction compute(@NotNull Tree tree, @NotNull Reference other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Direction.compute(sketch.reference(), other);
+		return Direction.compute(tree.reference(), other);
 	}
 
 	/**
@@ -345,7 +345,7 @@ public enum Direction {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Direction#PARENT}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
@@ -354,10 +354,10 @@ public enum Direction {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public static Direction compute(@NotNull Sketch sketch, @NotNull Sketch other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Direction compute(@NotNull Tree tree, @NotNull Tree other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Direction.compute(sketch.reference(), other.reference());
+		return Direction.compute(tree.reference(), other.reference());
 	}
 
 	@NotNull

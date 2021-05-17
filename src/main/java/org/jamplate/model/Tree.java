@@ -32,24 +32,24 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * A sketch is a point in a background structure of sketches that hold the variables of a
+ * A tree is a point in a background structure of sketches that hold the variables of a
  * runtime or a text component.
  * <br>
  * The background structure is working like magic and the user cannot interact directly
  * with it.
  * <br>
- * A sketch structure can only be modified throw the {@link #offer(Sketch)} method ony any
- * sketch in it. Any sketch that get {@link #offer(Sketch) offered} into a structure of
- * another sketch will be removed from its previous structure.
+ * A tree structure can only be modified throw the {@link #offer(Tree)} method ony any
+ * tree in it. Any tree that get {@link #offer(Tree) offered} into a structure of
+ * another tree will be removed from its previous structure.
  * <br>
  * A structure cannot have any clashing sketches or sketches that does not fit their
  * parent or sketches that breaks the order of their neighboring sketches in it and all
  * the sketches in it will be organized implicitly.
  * <br>
- * The sketch class is not thead safe and multiple threads modifying the same sketch
+ * The tree class is not thead safe and multiple threads modifying the same tree
  * structure can make that structure corrupted. The corruption due to two thread modifying
- * the same sketch structure is undefined. Aside from that, two or more threads just
- * reading the sketch structure is totally fine. Also, one thread modifying a sketch
+ * the same tree structure is undefined. Aside from that, two or more threads just
+ * reading the tree structure is totally fine. Also, one thread modifying a tree
  * structure while the other threads just reading it will not corrupt the structure and
  * will only confuse the other threads because random sketches will be moved around while
  * those threads are reading.
@@ -59,28 +59,28 @@ import java.util.Properties;
  * @since 0.2.0 ~2020.12.25
  */
 @SuppressWarnings("OverlyComplexClass")
-public final class Sketch implements Iterable<Sketch>, Serializable {
+public final class Tree implements Iterable<Tree>, Serializable {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3068214324610853826L;
 
 	/**
-	 * The node representing this sketch in an absolute relationships (based on the
-	 * reference of this sketch).
+	 * The node representing this tree in an absolute relationships (based on the
+	 * reference of this tree).
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
-	private final Node<Sketch> node = new HashNode<>(this);
+	private final Node<Tree> node = new HashNode<>(this);
 
 	/**
-	 * The properties of this sketch.
+	 * The properties of this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
 	private final Properties properties;
 	/**
-	 * The reference of this sketch.
+	 * The reference of this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
@@ -88,14 +88,14 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	private final Reference reference;
 
 	/**
-	 * The current document of this sketch.
+	 * The current document of this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
 	private Document document;
 	/**
-	 * The current name of this sketch.
+	 * The current name of this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
@@ -103,13 +103,13 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	private String name;
 
 	/**
-	 * Construct a new sketch with the given {@code reference}.
+	 * Construct a new tree with the given {@code reference}.
 	 *
-	 * @param reference the reference of the constructed sketch.
+	 * @param reference the reference of the constructed tree.
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public Sketch(@NotNull Reference reference) {
+	public Tree(@NotNull Reference reference) {
 		Objects.requireNonNull(reference, "reference");
 		this.name = "";
 		this.document = new PseudoDocument("");
@@ -118,19 +118,19 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Construct a new sketch with the given {@code reference} and the given {@code
+	 * Construct a new tree with the given {@code reference} and the given {@code
 	 * properties}.
 	 * <br>
 	 * A clone of the given {@code properties} will be the default properties of the
-	 * constructed sketch.
+	 * constructed tree.
 	 *
-	 * @param reference  the reference of the contracted sketch.
-	 * @param properties the default properties of the constructed sketch.
+	 * @param reference  the reference of the contracted tree.
+	 * @param properties the default properties of the constructed tree.
 	 * @throws NullPointerException if the given {@code reference} or {@code properties}
 	 *                              is null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public Sketch(@NotNull Reference reference, @NotNull Properties properties) {
+	public Tree(@NotNull Reference reference, @NotNull Properties properties) {
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(properties, "properties");
 		this.name = "";
@@ -162,23 +162,23 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	 */
 	@NotNull
 	@Override
-	public Iterator<Sketch> iterator() {
+	public Iterator<Tree> iterator() {
 		//noinspection ReturnOfInnerClass
-		return new Iterator<Sketch>() {
+		return new Iterator<Tree>() {
 			/**
-			 * The next sketch to be returned.
+			 * The next tree to be returned.
 			 *
 			 * @since 0.2.0 ~2021.05.17
 			 */
 			@Nullable
-			private Sketch next = Sketch.this.getChild();
+			private Tree next = Tree.this.getChild();
 			/**
-			 * The previous sketch that has been returned.
+			 * The previous tree that has been returned.
 			 *
 			 * @since 0.2.0 ~2021.05.17
 			 */
 			@Nullable
-			private Sketch previous;
+			private Tree previous;
 
 			@Override
 			public boolean hasNext() {
@@ -186,8 +186,8 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 			}
 
 			@Override
-			public Sketch next() {
-				Sketch next = this.next;
+			public Tree next() {
+				Tree next = this.next;
 
 				if (next == null)
 					throw new NoSuchElementException("next");
@@ -199,7 +199,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 
 			@Override
 			public void remove() {
-				Sketch previous = this.previous;
+				Tree previous = this.previous;
 
 				if (previous == null)
 					throw new IllegalStateException("remove");
@@ -217,10 +217,10 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Remove all the children of this sketch without removing the structure between
+	 * Remove all the children of this tree without removing the structure between
 	 * them.
 	 * <br>
-	 * This method will unlink the link between this sketch and its first child. With
+	 * This method will unlink the link between this tree and its first child. With
 	 * that, the first child and the other children will have no parent. But, the links
 	 * between the children will not be broken nor the links between the children and the
 	 * grand children.
@@ -233,23 +233,23 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Get the first child sketch of this sketch.
+	 * Get the first child tree of this tree.
 	 *
-	 * @return the first sketch in this sketch. Or {@code null} if this sketch has no
+	 * @return the first tree in this tree. Or {@code null} if this tree has no
 	 * 		children.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getChild() {
-		Node<Sketch> child = this.node.get(Tetragon.BOTTOM);
+	public Tree getChild() {
+		Node<Tree> child = this.node.get(Tetragon.BOTTOM);
 		return child == null ? null : child.get();
 	}
 
 	/**
-	 * Get the document of this sketch.
+	 * Get the document of this tree.
 	 *
-	 * @return the document of this sketch.
+	 * @return the document of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
@@ -259,9 +259,9 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Get the name of this sketch.
+	 * Get the name of this tree.
 	 *
-	 * @return the name of this sketch.
+	 * @return the name of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
@@ -270,7 +270,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		int num = 0;
 
 		for (
-				Node<Sketch> n = this.node.get(Tetragon.START);
+				Node<Tree> n = this.node.get(Tetragon.START);
 				n != null;
 				n = n.get(Tetragon.START)
 		)
@@ -279,7 +279,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 
 		if (num == 0) {
 			for (
-					Node<Sketch> n = this.node.get(Tetragon.END);
+					Node<Tree> n = this.node.get(Tetragon.END);
 					n != null;
 					n = n.get(Tetragon.END)
 			)
@@ -296,68 +296,68 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Get the sketch after this sketch.
+	 * Get the tree after this tree.
 	 *
-	 * @return the sketch after this sketch. Or {@code null} if this sketch is the last
-	 * 		sketch.
+	 * @return the tree after this tree. Or {@code null} if this tree is the last
+	 * 		tree.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getNext() {
-		Node<Sketch> end = this.node.get(Tetragon.END);
+	public Tree getNext() {
+		Node<Tree> end = this.node.get(Tetragon.END);
 		return end == null ? null : end.get();
 	}
 
 	/**
-	 * Get the sketch containing this sketch.
+	 * Get the tree containing this tree.
 	 *
-	 * @return the parent sketch of this sketch. Or {@code null} if this sketch has no
+	 * @return the parent tree of this tree. Or {@code null} if this tree has no
 	 * 		parent.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getParent() {
-		Node<Sketch> headTop = Nodes
+	public Tree getParent() {
+		Node<Tree> headTop = Nodes
 				.tail(Tetragon.START, this.node)
 				.get(Tetragon.TOP);
 		return headTop == null ? null : headTop.get();
 	}
 
 	/**
-	 * Get the sketch before this sketch.
+	 * Get the tree before this tree.
 	 *
-	 * @return the sketch before this sketch. Or {@code null} if this sketch is the first
-	 * 		sketch.
+	 * @return the tree before this tree. Or {@code null} if this tree is the first
+	 * 		tree.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getPrevious() {
-		Node<Sketch> start = this.node.get(Tetragon.START);
+	public Tree getPrevious() {
+		Node<Tree> start = this.node.get(Tetragon.START);
 		return start == null ? null : start.get();
 	}
 
 	/**
-	 * Return the fully qualified name of this sketch.
+	 * Return the fully qualified name of this tree.
 	 *
-	 * @return the fully qualified name of this sketch.
+	 * @return the fully qualified name of this tree.
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
 	@Contract(pure = true)
 	public String getQualifiedName() {
-		Sketch parent = this.getParent();
+		Tree parent = this.getParent();
 		return (parent == null ? "" : parent.getQualifiedName()) +
 			   this.getName();
 	}
 
 	/**
-	 * Return the simple name of this sketch. (the last one passed to {@link
+	 * Return the simple name of this tree. (the last one passed to {@link
 	 * #setName(String)})
 	 *
-	 * @return the simple name of this sketch.
+	 * @return the simple name of this tree.
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
@@ -367,66 +367,66 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Offer the given {@code sketch} to the structure of this sketch. The given {@code
-	 * sketch} will be removed from its structure then put to the proper place in the
-	 * structure of this sketch.
+	 * Offer the given {@code tree} to the structure of this tree. The given {@code
+	 * tree} will be removed from its structure then put to the proper place in the
+	 * structure of this tree.
 	 * <br>
-	 * If failed to insert the given {@code sketch} because of an {@link
-	 * IllegalSketchException}, then the method will exit without anything changed.
+	 * If failed to insert the given {@code tree} because of an {@link
+	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
-	 * @param sketch the sketch to be added.
-	 * @throws NullPointerException       if the given {@code sketch} is null.
-	 * @throws SketchOutOfBoundsException if the given {@code sketch} does not fit in the
-	 *                                    parent of this sketch.
-	 * @throws SketchTakeoverException    if the given {@code sketch} has the same range
-	 *                                    as a sketch in the structure of this sketch.
-	 * @throws SketchClashException       if the given {@code sketch} clashes with another
-	 *                                    sketch in the structure of this sketch.
+	 * @param tree the tree to be added.
+	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                    parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
+	 *                                    as a tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                    tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@Contract(mutates = "this,param")
-	public void offer(@NotNull Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
-		switch (Relation.compute(this, sketch)) {
+	public void offer(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Relation.compute(this, tree)) {
 			case AHEAD:
 			case BEHIND:
 			case CONTAINER:
-				this.offerParent(sketch);
+				this.offerParent(tree);
 				return;
 			case START:
 			case FRAGMENT:
 			case END:
-				this.offerChild(sketch);
+				this.offerChild(tree);
 				return;
 			case AFTER:
 			case NEXT:
-				this.offerNext(sketch);
+				this.offerNext(tree);
 				return;
 			case BEFORE:
 			case PREVIOUS:
-				this.offerPrevious(sketch);
+				this.offerPrevious(tree);
 				return;
 			case SAME:
-				throw new SketchTakeoverException("Sketch takeover");
+				throw new TreeTakeoverException("Sketch takeover");
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new SketchClashException("Sketch clash");
+				throw new TreeClashException("Sketch clash");
 			default:
 				throw new InternalError();
 		}
 	}
 
 	/**
-	 * Cleanly remove this sketch from the structure it is on.
+	 * Cleanly remove this tree from the structure it is on.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@Contract(mutates = "this")
 	public void pop() {
-		Node<Sketch> top = this.node.get(Tetragon.TOP);
-		Node<Sketch> start = this.node.get(Tetragon.START);
-		Node<Sketch> end = this.node.get(Tetragon.END);
-		Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+		Node<Tree> top = this.node.get(Tetragon.TOP);
+		Node<Tree> start = this.node.get(Tetragon.START);
+		Node<Tree> end = this.node.get(Tetragon.END);
+		Node<Tree> bottom = this.node.get(Tetragon.BOTTOM);
 
 		assert top == null || start == null;
 
@@ -452,9 +452,9 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Return the properties of this sketch.
+	 * Return the properties of this tree.
 	 *
-	 * @return the properties of this sketch.
+	 * @return the properties of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
@@ -465,9 +465,9 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Get the reference of this sketch.
+	 * Get the reference of this tree.
 	 *
-	 * @return the reference of this sketch.
+	 * @return the reference of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
@@ -477,15 +477,15 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Remove this sketch from its parent, the sketch before it and the sketch after it.
+	 * Remove this tree from its parent, the tree before it and the tree after it.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Contract(mutates = "this")
 	public void remove() {
-		Node<Sketch> top = this.node.get(Tetragon.TOP);
-		Node<Sketch> start = this.node.get(Tetragon.START);
-		Node<Sketch> end = this.node.get(Tetragon.END);
+		Node<Tree> top = this.node.get(Tetragon.TOP);
+		Node<Tree> start = this.node.get(Tetragon.START);
+		Node<Tree> end = this.node.get(Tetragon.END);
 
 		assert top == null || start == null;
 
@@ -509,7 +509,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Set the document of this sketch to be the given {@code document}.
+	 * Set the document of this tree to be the given {@code document}.
 	 *
 	 * @param document the document to be set.
 	 * @throws NullPointerException if the given {@code document} is null.
@@ -522,7 +522,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Set the name of this sketch to be the given {@code name}.
+	 * Set the name of this tree to be the given {@code name}.
 	 *
 	 * @param name the name to be set.
 	 * @throws NullPointerException if the given {@code name} is null.
@@ -535,141 +535,141 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 	}
 
 	/**
-	 * Try to place the given {@code sketch} in the proper place between the children of
-	 * this sketch.
+	 * Try to place the given {@code tree} in the proper place between the children of
+	 * this tree.
 	 * <br>
-	 * If failed to insert the given {@code sketch} because of an {@link
-	 * IllegalSketchException}, then the method will exit without anything changed.
+	 * If failed to insert the given {@code tree} because of an {@link
+	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
-	 * @param sketch the offered sketch.
-	 * @throws NullPointerException       if the given {@code sketch} is null.
-	 * @throws SketchOutOfBoundsException if the given {@code sketch} does not fit in this
-	 *                                    sketch.
-	 * @throws SketchTakeoverException    if the given {@code sketch} has the same range
-	 *                                    as a sketch in the structure of this sketch.
-	 * @throws SketchClashException       if the given {@code sketch} clashes with another
-	 *                                    sketch in the structure of this sketch.
+	 * @param tree the offered tree.
+	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in this
+	 *                                    tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
+	 *                                    as a tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                    tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings("OverlyLongMethod")
 	@Contract(mutates = "this,param")
-	private void offerChild(@NotNull Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
-		switch (Dominance.compute(this, sketch)) {
+	private void offerChild(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Dominance.compute(this, tree)) {
 			case PART:
-				Node<Sketch> bottom = this.node.get(Tetragon.BOTTOM);
+				Node<Tree> bottom = this.node.get(Tetragon.BOTTOM);
 
 				//case no children
 				if (bottom == null) {
 					//clean
-					sketch.pop();
+					tree.pop();
 
-					//this |> sketch
-					this.node.put(Tetragon.BOTTOM, sketch.node);
+					//this |> tree
+					this.node.put(Tetragon.BOTTOM, tree.node);
 					return;
 				}
 
 				//compare to the first
-				switch (Relation.compute(bottom.get(), sketch)) {
+				switch (Relation.compute(bottom.get(), tree)) {
 					case BEFORE:
 					case PREVIOUS:
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//this |> sketch -> bottom
-						this.node.put(Tetragon.BOTTOM, sketch.node);
-						bottom.put(Tetragon.START, sketch.node);
+						//this |> tree -> bottom
+						this.node.put(Tetragon.BOTTOM, tree.node);
+						bottom.put(Tetragon.START, tree.node);
 						return;
 					case BEHIND:
 					case CONTAINER:
 					case AHEAD:
-						//this |> sketch |> bottom
-						bottom.get().offerParent(sketch);
+						//this |> tree |> bottom
+						bottom.get().offerParent(tree);
 						return;
 					case START:
 					case FRAGMENT:
 					case END:
-						//this |> bottom |> sketch
-						bottom.get().offerChild(sketch);
+						//this |> bottom |> tree
+						bottom.get().offerChild(tree);
 						return;
 					case AFTER:
 					case NEXT:
-						//this |> bottom -> sketch
-						bottom.get().offerNext(sketch);
+						//this |> bottom -> tree
+						bottom.get().offerNext(tree);
 						return;
 					case SAME:
-						throw new SketchTakeoverException("Exact child bounds", bottom.get(), sketch);
+						throw new TreeTakeoverException("Exact child bounds", bottom.get(), tree);
 					case OVERFLOW:
 					case UNDERFLOW:
-						throw new SketchClashException("Clash with child", bottom.get(), sketch);
+						throw new TreeClashException("Clash with child", bottom.get(), tree);
 					default:
 						throw new InternalError();
 				}
 			case CONTAIN:
 			case NONE:
-				throw new SketchOutOfBoundsException("Out of the bounds", this, sketch);
+				throw new TreeOutOfBoundsException("Out of the bounds", this, tree);
 			case EXACT:
-				throw new SketchTakeoverException("Exact bounds", this, sketch);
+				throw new TreeTakeoverException("Exact bounds", this, tree);
 			case SHARE:
-				throw new SketchClashException("Clash with", this, sketch);
+				throw new TreeClashException("Clash with", this, tree);
 			default:
 				throw new InternalError();
 		}
 	}
 
 	/**
-	 * Try to place the given {@code sketch} somewhere after this sketch.
+	 * Try to place the given {@code tree} somewhere after this tree.
 	 * <br>
-	 * If failed to insert the given {@code sketch} because of an {@link
-	 * IllegalSketchException}, then the method will exit without anything changed.
+	 * If failed to insert the given {@code tree} because of an {@link
+	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
-	 * @param sketch the offered sketch.
-	 * @throws NullPointerException       if the given {@code sketch} is null.
-	 * @throws IllegalSketchException     if the given {@code sketch} is not after this
-	 *                                    sketch.
-	 * @throws SketchOutOfBoundsException if the given {@code sketch} does not fit in the
-	 *                                    parent of this sketch.
-	 * @throws SketchTakeoverException    if the given {@code sketch} has the same range
-	 *                                    as a sketch in the structure of this sketch.
-	 * @throws SketchClashException       if the given {@code sketch} clashes with another
-	 *                                    sketch in the structure of this sketch.
+	 * @param tree the offered tree.
+	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not after this
+	 *                                    tree.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                    parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
+	 *                                    as a tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                    tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
 	@Contract(mutates = "this,param")
-	private void offerNext(@NotNull Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
-		switch (Relation.compute(this, sketch)) {
+	private void offerNext(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Relation.compute(this, tree)) {
 			case AFTER:
 			case NEXT:
-				Node<Sketch> end = this.node.get(Tetragon.END);
+				Node<Tree> end = this.node.get(Tetragon.END);
 
 				//case at the end
 				if (end == null) {
-					Sketch parent = this.getParent();
+					Tree parent = this.getParent();
 
 					if (parent == null) {
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//this -> sketch
-						this.node.put(Tetragon.END, sketch.node);
+						//this -> tree
+						this.node.put(Tetragon.END, tree.node);
 						return;
 					}
 
 					//validate compared to parent bounds
-					switch (Dominance.compute(parent, sketch)) {
+					switch (Dominance.compute(parent, tree)) {
 						case PART:
 							//clean
-							sketch.pop();
+							tree.pop();
 
-							//this -> sketch
-							this.node.put(Tetragon.END, sketch.node);
+							//this -> tree
+							this.node.put(Tetragon.END, tree.node);
 							return;
 						case SHARE:
-							throw new SketchClashException("Clash with parent", parent, sketch);
+							throw new TreeClashException("Clash with parent", parent, tree);
 						case NONE:
-							throw new SketchOutOfBoundsException("Out of the bounds of the parent", parent, sketch);
+							throw new TreeOutOfBoundsException("Out of the bounds of the parent", parent, tree);
 						case EXACT:
 						case CONTAIN:
 							//actually, this must not happen, never!!!
@@ -679,38 +679,38 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				}
 
 				//compare to the next
-				switch (Relation.compute(end.get(), sketch)) {
+				switch (Relation.compute(end.get(), tree)) {
 					case NEXT:
 					case AFTER:
-						//this -> end -> sketch
-						end.get().offerNext(sketch);
+						//this -> end -> tree
+						end.get().offerNext(tree);
 						return;
 					case BEHIND:
 					case CONTAINER:
 					case AHEAD:
-						//this -> sketch |> end
-						end.get().offerParent(sketch);
+						//this -> tree |> end
+						end.get().offerParent(tree);
 						return;
 					case START:
 					case FRAGMENT:
 					case END:
-						//this -> end |> sketch
-						end.get().offerChild(sketch);
+						//this -> end |> tree
+						end.get().offerChild(tree);
 						return;
 					case BEFORE:
 					case PREVIOUS:
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//this -> sketch -> end
-						this.node.put(Tetragon.END, sketch.node);
-						end.put(Tetragon.START, sketch.node);
+						//this -> tree -> end
+						this.node.put(Tetragon.END, tree.node);
+						end.put(Tetragon.START, tree.node);
 						return;
 					case SAME:
-						throw new SketchTakeoverException("Exact bounds", end.get(), sketch);
+						throw new TreeTakeoverException("Exact bounds", end.get(), tree);
 					case OVERFLOW:
 					case UNDERFLOW:
-						throw new SketchClashException("Clash with next", end.get(), sketch);
+						throw new TreeClashException("Clash with next", end.get(), tree);
 					default:
 						throw new InternalError();
 				}
@@ -724,59 +724,59 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				//
 			case PREVIOUS:
 			case BEFORE:
-				throw new IllegalSketchException("Must be after", sketch);
+				throw new IllegalTreeException("Must be after", tree);
 			case SAME:
-				throw new SketchTakeoverException("Exact bounds", this, sketch);
+				throw new TreeTakeoverException("Exact bounds", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new SketchClashException("Clash with", this, sketch);
+				throw new TreeClashException("Clash with", this, tree);
 			default:
 				throw new InternalError();
 		}
 	}
 
 	/**
-	 * Try to place the given {@code sketch} as the parent of this sketch and its brothers
-	 * that the given {@code sketch} fits as their parent.
+	 * Try to place the given {@code tree} as the parent of this tree and its brothers
+	 * that the given {@code tree} fits as their parent.
 	 * <br>
-	 * If failed to insert the given {@code sketch} because of an {@link
-	 * IllegalSketchException}, then the method will exit without anything changed.
+	 * If failed to insert the given {@code tree} because of an {@link
+	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
-	 * @param sketch the offered sketch.
-	 * @throws NullPointerException       if the given {@code sketch} is null.
-	 * @throws IllegalSketchException     if the given {@code sketch} is not valid as a
-	 *                                    parent for this sketch.
-	 * @throws SketchOutOfBoundsException if the given {@code sketch} does not fit in the
-	 *                                    parent of this sketch.
-	 * @throws SketchTakeoverException    if the given {@code sketch} has the same range
-	 *                                    as a sketch in the structure of this sketch.
-	 * @throws SketchClashException       if the given {@code sketch} clashes with another
-	 *                                    sketch in the structure of this sketch.
+	 * @param tree the offered tree.
+	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not valid as a
+	 *                                    parent for this tree.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                    parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
+	 *                                    as a tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                    tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"DuplicatedCode", "OverlyComplexMethod", "OverlyLongMethod"})
 	@Contract(mutates = "this,param")
-	private void offerParent(@NotNull Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
+	private void offerParent(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
 		//noinspection SwitchStatementDensity
-		switch (Dominance.compute(this, sketch)) {
+		switch (Dominance.compute(this, tree)) {
 			case CONTAIN:
-				Node<Sketch> bottom = this.node;
-				Node<Sketch> top;
-				Node<Sketch> previous = null;
-				Node<Sketch> next = null;
+				Node<Tree> bottom = this.node;
+				Node<Tree> top;
+				Node<Tree> previous = null;
+				Node<Tree> next = null;
 
 				//backwards (collecting `bottom` and `previous`)
 				while0:
 				while (true) {
-					Node<Sketch> n = bottom.get(Tetragon.START);
+					Node<Tree> n = bottom.get(Tetragon.START);
 
 					if (n == null) {
 						top = bottom.get(Tetragon.TOP);
 						break;
 					}
 
-					switch (Dominance.compute(n.get(), sketch)) {
+					switch (Dominance.compute(n.get(), tree)) {
 						case CONTAIN:
 							bottom = n;
 							break;
@@ -785,7 +785,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 							top = bottom.get(Tetragon.TOP);
 							break while0;
 						case SHARE:
-							throw new SketchClashException("Clash with neighbor", n.get(), sketch);
+							throw new TreeClashException("Clash with neighbor", n.get(), tree);
 						case EXACT:
 						case PART:
 							//actually, this must not happen, never!!!
@@ -796,18 +796,18 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				//forward (collecting `next`)
 				for0:
 				for (
-						Node<Sketch> n = this.node;
+						Node<Tree> n = this.node;
 						n != null;
 						n = n.get(Tetragon.END)
 				)
-					switch (Dominance.compute(n.get(), sketch)) {
+					switch (Dominance.compute(n.get(), tree)) {
 						case CONTAIN:
 							break;
 						case NONE:
 							next = n;
 							break for0;
 						case SHARE:
-							throw new SketchClashException("Clash with neighbor", n.get(), sketch);
+							throw new TreeClashException("Clash with neighbor", n.get(), tree);
 						case EXACT:
 						case PART:
 							//actually, this must not happen, never!!!
@@ -821,114 +821,114 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				if (previous == null) {
 					if (top == null) {
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//sketch |> bottom; sketch -> next
-						bottom.put(Tetragon.TOP, sketch.node);
+						//tree |> bottom; tree -> next
+						bottom.put(Tetragon.TOP, tree.node);
 						if (next != null)
-							next.put(Tetragon.START, sketch.node);
+							next.put(Tetragon.START, tree.node);
 						return;
 					}
 
 					//compare to the top
-					switch (Dominance.compute(top.get(), sketch)) {
+					switch (Dominance.compute(top.get(), tree)) {
 						case PART:
 							//clean
-							sketch.pop();
+							tree.pop();
 
-							//top |> sketch |> bottom; sketch -> next
-							top.put(Tetragon.BOTTOM, sketch.node);
-							bottom.put(Tetragon.TOP, sketch.node);
+							//top |> tree |> bottom; tree -> next
+							top.put(Tetragon.BOTTOM, tree.node);
+							bottom.put(Tetragon.TOP, tree.node);
 							if (next != null)
-								next.put(Tetragon.START, sketch.node);
+								next.put(Tetragon.START, tree.node);
 							return;
 						case CONTAIN:
 						case NONE:
-							throw new SketchOutOfBoundsException("Out of the bounds of the parent", top.get(), sketch);
+							throw new TreeOutOfBoundsException("Out of the bounds of the parent", top.get(), tree);
 						case EXACT:
-							throw new SketchTakeoverException("Exact parent bounds", top.get(), sketch);
+							throw new TreeTakeoverException("Exact parent bounds", top.get(), tree);
 						case SHARE:
-							throw new SketchClashException("Clash with parent", top.get(), sketch);
+							throw new TreeClashException("Clash with parent", top.get(), tree);
 						default:
 							throw new InternalError();
 					}
 				}
 
 				//clean
-				sketch.pop();
+				tree.pop();
 
-				//previous -> sketch |> bottom; sketch -> next
-				previous.put(Tetragon.END, sketch.node);
-				bottom.put(Tetragon.TOP, sketch.node);
+				//previous -> tree |> bottom; tree -> next
+				previous.put(Tetragon.END, tree.node);
+				bottom.put(Tetragon.TOP, tree.node);
 				if (next != null)
-					next.put(Tetragon.START, sketch.node);
+					next.put(Tetragon.START, tree.node);
 				return;
 			case SHARE:
-				throw new SketchClashException("Clash with", this, sketch);
+				throw new TreeClashException("Clash with", this, tree);
 			case NONE:
 			case PART:
-				throw new IllegalSketchException("Must fit", sketch);
+				throw new IllegalTreeException("Must fit", tree);
 			case EXACT:
-				throw new SketchTakeoverException("Exact bounds", this, sketch);
+				throw new TreeTakeoverException("Exact bounds", this, tree);
 			default:
 				throw new InternalError();
 		}
 	}
 
 	/**
-	 * Try to place the given {@code sketch} somewhere before this sketch.
+	 * Try to place the given {@code tree} somewhere before this tree.
 	 * <br>
-	 * If failed to insert the given {@code sketch} because of an {@link
-	 * IllegalSketchException}, then the method will exit without anything changed.
+	 * If failed to insert the given {@code tree} because of an {@link
+	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
-	 * @param sketch the offered sketch.
-	 * @throws NullPointerException       if the given {@code sketch} is null.
-	 * @throws IllegalSketchException     if the given {@code sketch} is not before this
-	 *                                    sketch.
-	 * @throws SketchOutOfBoundsException if the given {@code sketch} does not fit in the
-	 *                                    parent of this sketch.
-	 * @throws SketchTakeoverException    if the given {@code sketch} has the same range
-	 *                                    as a sketch in the structure of this sketch.
-	 * @throws SketchClashException       if the given {@code sketch} clashes with another
-	 *                                    sketch in the structure of this sketch.
+	 * @param tree the offered tree.
+	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not before this
+	 *                                    tree.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                    parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
+	 *                                    as a tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                    tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
 	@Contract(mutates = "this,param")
-	private void offerPrevious(@NotNull Sketch sketch) {
-		Objects.requireNonNull(sketch, "sketch");
-		switch (Relation.compute(this, sketch)) {
+	private void offerPrevious(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Relation.compute(this, tree)) {
 			case BEFORE:
 			case PREVIOUS:
-				Node<Sketch> start = this.node.get(Tetragon.START);
+				Node<Tree> start = this.node.get(Tetragon.START);
 
 				//case at the start
 				if (start == null) {
-					Sketch parent = this.getParent();
+					Tree parent = this.getParent();
 
 					if (parent == null) {
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//sketch -> this
-						this.node.put(Tetragon.START, sketch.node);
+						//tree -> this
+						this.node.put(Tetragon.START, tree.node);
 						return;
 					}
 
 					//validate compared to parent bounds
-					switch (Dominance.compute(parent, sketch)) {
+					switch (Dominance.compute(parent, tree)) {
 						case PART:
 							//clean
-							sketch.pop();
+							tree.pop();
 
-							//parent |> sketch -> this
-							parent.node.put(Tetragon.BOTTOM, sketch.node);
-							this.node.put(Tetragon.START, sketch.node);
+							//parent |> tree -> this
+							parent.node.put(Tetragon.BOTTOM, tree.node);
+							this.node.put(Tetragon.START, tree.node);
 							return;
 						case SHARE:
-							throw new SketchClashException("Clash with parent", parent, sketch);
+							throw new TreeClashException("Clash with parent", parent, tree);
 						case NONE:
-							throw new SketchOutOfBoundsException("Out of the bounds of the parent", parent, sketch);
+							throw new TreeOutOfBoundsException("Out of the bounds of the parent", parent, tree);
 						case EXACT:
 						case CONTAIN:
 							//actually, this must not happen, never!!!
@@ -938,38 +938,38 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				}
 
 				//compare to the previous
-				switch (Relation.compute(start.get(), sketch)) {
+				switch (Relation.compute(start.get(), tree)) {
 					case PREVIOUS:
 					case BEFORE:
-						//sketch -> start -> this
-						start.get().offerPrevious(sketch);
+						//tree -> start -> this
+						start.get().offerPrevious(tree);
 						return;
 					case BEHIND:
 					case CONTAINER:
 					case AHEAD:
-						//sketch |> start; sketch -> this
-						start.get().offerParent(sketch);
+						//tree |> start; tree -> this
+						start.get().offerParent(tree);
 						return;
 					case START:
 					case FRAGMENT:
 					case END:
-						//start |> sketch; start -> this
-						start.get().offerChild(sketch);
+						//start |> tree; start -> this
+						start.get().offerChild(tree);
 						return;
 					case AFTER:
 					case NEXT:
 						//clean
-						sketch.pop();
+						tree.pop();
 
-						//start -> sketch -> this
-						start.put(Tetragon.END, sketch.node);
-						this.node.put(Tetragon.START, sketch.node);
+						//start -> tree -> this
+						start.put(Tetragon.END, tree.node);
+						this.node.put(Tetragon.START, tree.node);
 						return;
 					case SAME:
-						throw new SketchTakeoverException("Exact bounds", start.get(), sketch);
+						throw new TreeTakeoverException("Exact bounds", start.get(), tree);
 					case OVERFLOW:
 					case UNDERFLOW:
-						throw new SketchClashException("Clash with previous", start.get(), sketch);
+						throw new TreeClashException("Clash with previous", start.get(), tree);
 					default:
 						throw new InternalError();
 				}
@@ -983,12 +983,12 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 				//
 			case NEXT:
 			case AFTER:
-				throw new IllegalSketchException("Must be before", sketch);
+				throw new IllegalTreeException("Must be before", tree);
 			case SAME:
-				throw new SketchTakeoverException("Exact bounds", this, sketch);
+				throw new TreeTakeoverException("Exact bounds", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new SketchClashException("Clash with", this, sketch);
+				throw new TreeClashException("Clash with", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -1064,22 +1064,22 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Construct a new builder copying the given {@code sketch}.
+		 * Construct a new builder copying the given {@code tree}.
 		 * <br>
-		 * A clone of the properties of the given {@code sketch} will be the default
+		 * A clone of the properties of the given {@code tree} will be the default
 		 * properties of the properties of this builder.
 		 *
-		 * @param sketch the sketch to be copied.
-		 * @throws NullPointerException if the given {@code sketch} is null.
+		 * @param tree the tree to be copied.
+		 * @throws NullPointerException if the given {@code tree} is null.
 		 * @since 0.2.0 ~2021.05.15
 		 */
-		public Builder(@NotNull Sketch sketch) {
-			Objects.requireNonNull(sketch, "sketch");
-			this.name = sketch.name;
-			this.document = sketch.document;
-			this.reference = sketch.reference;
+		public Builder(@NotNull Tree tree) {
+			Objects.requireNonNull(tree, "tree");
+			this.name = tree.name;
+			this.document = tree.document;
+			this.reference = tree.reference;
 			Properties defaults = new Properties();
-			defaults.putAll(sketch.properties);
+			defaults.putAll(tree.properties);
 			this.properties = new Properties(defaults);
 		}
 
@@ -1107,22 +1107,22 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Build a sketch with the variables currently set in this builder.
+		 * Build a tree with the variables currently set in this builder.
 		 * <br>
-		 * The returned sketch will not be affected by any changes done to this builder.
+		 * The returned tree will not be affected by any changes done to this builder.
 		 * <br>
-		 * This method will not return the same sketch twice.
+		 * This method will not return the same tree twice.
 		 *
-		 * @return a new sketch with the current variables in this builder.
+		 * @return a new tree with the current variables in this builder.
 		 * @since 0.2.0 ~2021.05.15
 		 */
 		@NotNull
 		@Contract(value = "->new", pure = true)
-		public Sketch build() {
-			Sketch sketch = new Sketch(this.reference, this.properties);
-			sketch.setName(this.name);
-			sketch.setDocument(this.document);
-			return sketch;
+		public Tree build() {
+			Tree tree = new Tree(this.reference, this.properties);
+			tree.setName(this.name);
+			tree.setDocument(this.document);
+			return tree;
 		}
 
 		//getters
@@ -1183,11 +1183,11 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		//setters
 
 		/**
-		 * Set the initial document of the sketch to be built to the given {@code
+		 * Set the initial document of the tree to be built to the given {@code
 		 * document}.
 		 *
 		 * @param document the document to be the initial document of the next built
-		 *                 sketch.
+		 *                 tree.
 		 * @return this.
 		 * @throws NullPointerException     if the given {@code document} is null.
 		 * @throws IllegalArgumentException if this builder rejected the given {@code
@@ -1203,9 +1203,9 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Set the initial name of the sketch to be built to the given {@code name}.
+		 * Set the initial name of the tree to be built to the given {@code name}.
 		 *
-		 * @param name the name to be the initial name of the next built sketch.
+		 * @param name the name to be the initial name of the next built tree.
 		 * @return this.
 		 * @throws NullPointerException     if the given {@code name} is null.
 		 * @throws IllegalArgumentException if this builder rejected the given {@code
@@ -1221,11 +1221,11 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Set the default properties of the sketch to be built to the given {@code
+		 * Set the default properties of the tree to be built to the given {@code
 		 * properties}.
 		 *
 		 * @param properties the default properties to be the properties of the next built
-		 *                   sketch.
+		 *                   tree.
 		 * @return this.
 		 * @throws NullPointerException     if the given {@code properties} is null.
 		 * @throws IllegalArgumentException if this builder rejected the given {@code
@@ -1242,9 +1242,9 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Set the reference of the sketch to be built to the given {@code reference}.
+		 * Set the reference of the tree to be built to the given {@code reference}.
 		 *
-		 * @param reference the reference to be the reference of the next built sketch.
+		 * @param reference the reference to be the reference of the next built tree.
 		 * @return this.
 		 * @throws NullPointerException     if the given {@code reference} is null.
 		 * @throws IllegalArgumentException if this builder rejected the given {@code
@@ -1260,7 +1260,7 @@ public final class Sketch implements Iterable<Sketch>, Serializable {
 		}
 
 		/**
-		 * Set the reference of the sketch to be built to cover the whole given {@code
+		 * Set the reference of the tree to be built to cover the whole given {@code
 		 * document}.
 		 * <br>
 		 * Note: this method detect the length of the given {@code document} by reading

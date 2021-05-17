@@ -542,7 +542,7 @@ public enum Relation {
 	 * Calculate what is the relation between the given {@code sketch} and the given area
 	 * {@code [s, e)}.
 	 *
-	 * @param sketch the sketch (first area).
+	 * @param tree the sketch (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
 	 * @return the relation constant describing the relation of the second area to the
@@ -554,15 +554,15 @@ public enum Relation {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Sketch sketch, int s, int e) {
-		Objects.requireNonNull(sketch, "sketch");
-		return Relation.compute(sketch.reference(), s, e);
+	public static Relation compute(@NotNull Tree tree, int s, int e) {
+		Objects.requireNonNull(tree, "sketch");
+		return Relation.compute(tree.reference(), s, e);
 	}
 
 	/**
 	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the relation constant describing the relation of the second sketch to the
 	 * 		first sketch.
@@ -572,16 +572,16 @@ public enum Relation {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Sketch sketch, @NotNull Reference other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Relation compute(@NotNull Tree tree, @NotNull Reference other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(sketch.reference(), other);
+		return Relation.compute(tree.reference(), other);
 	}
 
 	/**
 	 * Calculate the relation between the sketches {@code sketch} and {@code other}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return the relation constant describing the relation of the second sketch to the
 	 * 		first sketch.
@@ -591,10 +591,10 @@ public enum Relation {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Relation compute(@NotNull Sketch sketch, @NotNull Sketch other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Relation compute(@NotNull Tree tree, @NotNull Tree other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(sketch.reference(), other.reference());
+		return Relation.compute(tree.reference(), other.reference());
 	}
 
 	@NotNull

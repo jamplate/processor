@@ -334,7 +334,7 @@ public enum Dominance {
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
 	 * sketch}.
 	 *
-	 * @param sketch the sketch (first area).
+	 * @param tree the sketch (first area).
 	 * @param s      the first index of the second area.
 	 * @param e      one past the last index of the second area.
 	 * @return how much dominant the second area over the given {@code sketch}.
@@ -345,16 +345,16 @@ public enum Dominance {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Dominance compute(@NotNull Sketch sketch, int s, int e) {
-		Objects.requireNonNull(sketch, "sketch");
-		return Dominance.compute(sketch.reference(), s, e);
+	public static Dominance compute(@NotNull Tree tree, int s, int e) {
+		Objects.requireNonNull(tree, "sketch");
+		return Dominance.compute(tree.reference(), s, e);
 	}
 
 	/**
 	 * Calculate how much dominant the {@code other} reference over the given {@code
 	 * sketch}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second reference.
 	 * @return how much dominant the second reference over the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
@@ -363,17 +363,17 @@ public enum Dominance {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Dominance compute(@NotNull Sketch sketch, @NotNull Reference other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Dominance compute(@NotNull Tree tree, @NotNull Reference other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(sketch.reference(), other);
+		return Dominance.compute(tree.reference(), other);
 	}
 
 	/**
 	 * Calculate how much dominant the {@code other} sketch over the given {@code
 	 * sketch}.
 	 *
-	 * @param sketch the first sketch.
+	 * @param tree the first sketch.
 	 * @param other  the second sketch.
 	 * @return how much dominant the second sketch over the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
@@ -382,10 +382,10 @@ public enum Dominance {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static Dominance compute(@NotNull Sketch sketch, @NotNull Sketch other) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Dominance compute(@NotNull Tree tree, @NotNull Tree other) {
+		Objects.requireNonNull(tree, "sketch");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(sketch.reference(), other.reference());
+		return Dominance.compute(tree.reference(), other.reference());
 	}
 
 	@NotNull

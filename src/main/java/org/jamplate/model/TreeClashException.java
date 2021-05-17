@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.14
  */
-public class SketchClashException extends IllegalSketchException {
+public class TreeClashException extends IllegalTreeException {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -7585834524850028148L;
 
@@ -36,7 +36,7 @@ public class SketchClashException extends IllegalSketchException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	private Sketch primary;
+	private Tree primary;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -45,7 +45,7 @@ public class SketchClashException extends IllegalSketchException {
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchClashException() {
+	public TreeClashException() {
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class SketchClashException extends IllegalSketchException {
 	 *                by the {@link #getMessage()} method.
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchClashException(@Nullable String message) {
+	public TreeClashException(@Nullable String message) {
 		super(message);
 	}
 
@@ -72,7 +72,7 @@ public class SketchClashException extends IllegalSketchException {
 	 *                indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchClashException(@Nullable String message, @Nullable Throwable cause) {
+	public TreeClashException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
@@ -88,7 +88,7 @@ public class SketchClashException extends IllegalSketchException {
 	 *              indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchClashException(@Nullable Throwable cause) {
+	public TreeClashException(@Nullable Throwable cause) {
 		super(cause);
 	}
 
@@ -100,7 +100,7 @@ public class SketchClashException extends IllegalSketchException {
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchClashException(@Nullable Sketch primary, @Nullable Sketch illegal) {
+	public TreeClashException(@Nullable Tree primary, @Nullable Tree illegal) {
 		super(illegal);
 		this.primary = primary;
 	}
@@ -114,7 +114,7 @@ public class SketchClashException extends IllegalSketchException {
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchClashException(@Nullable String message, @Nullable Sketch primary, @Nullable Sketch illegal) {
+	public TreeClashException(@Nullable String message, @Nullable Tree primary, @Nullable Tree illegal) {
 		super(message, illegal);
 		this.primary = primary;
 	}
@@ -127,7 +127,7 @@ public class SketchClashException extends IllegalSketchException {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getPrimarySketch() {
+	public Tree getPrimarySketch() {
 		return this.primary;
 	}
 }

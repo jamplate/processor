@@ -15,29 +15,20 @@
  */
 package org.jamplate.model;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An exception to indicate that a provided sketch is out of the expected bounds. Usually,
- * this exception is raised when a sketch is about to be put into a place where that
- * sketch's reference is not contained on.
+ * This exception is a more specific exception of the {@link TreeClashException}. This
+ * exception indicates that a sketch is clashing with another sketch by having the same
+ * bounds as that other sketch.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.14
  */
-public class SketchOutOfBoundsException extends IllegalSketchException {
+public class TreeTakeoverException extends TreeClashException {
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -2054859355256526113L;
-
-	/**
-	 * The sketch that defines the bounds.
-	 *
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	private Sketch bounds;
+	private static final long serialVersionUID = 8588246254984927923L;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -46,7 +37,7 @@ public class SketchOutOfBoundsException extends IllegalSketchException {
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchOutOfBoundsException() {
+	public TreeTakeoverException() {
 	}
 
 	/**
@@ -57,7 +48,7 @@ public class SketchOutOfBoundsException extends IllegalSketchException {
 	 *                by the {@link #getMessage()} method.
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchOutOfBoundsException(@Nullable String message) {
+	public TreeTakeoverException(@Nullable String message) {
 		super(message);
 	}
 
@@ -73,7 +64,7 @@ public class SketchOutOfBoundsException extends IllegalSketchException {
 	 *                indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchOutOfBoundsException(@Nullable String message, @Nullable Throwable cause) {
+	public TreeTakeoverException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
@@ -89,46 +80,32 @@ public class SketchOutOfBoundsException extends IllegalSketchException {
 	 *              indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchOutOfBoundsException(@Nullable Throwable cause) {
+	public TreeTakeoverException(@Nullable Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
-	 * {@code illegal} sketches.
+	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
+	 * illegal} sketches.
 	 *
-	 * @param bounds  the sketch that defines the bounds.
+	 * @param primary the primary sketch.
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchOutOfBoundsException(@Nullable Sketch bounds, @Nullable Sketch illegal) {
-		super(illegal);
-		this.bounds = bounds;
+	public TreeTakeoverException(@Nullable Tree primary, @Nullable Tree illegal) {
+		super(primary, illegal);
 	}
 
 	/**
-	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
-	 * {@code illegal} sketches.
+	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
+	 * illegal} sketches and the given {@code message}.
 	 *
 	 * @param message the message.
-	 * @param bounds  the sketch that defines the bounds.
+	 * @param primary the primary sketch.
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchOutOfBoundsException(@Nullable String message, @Nullable Sketch bounds, @Nullable Sketch illegal) {
-		super(message, illegal);
-		this.bounds = bounds;
-	}
-
-	/**
-	 * Return the sketch that defines the bounds.
-	 *
-	 * @return the bounds sketch.
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	@Contract(pure = true)
-	public Sketch getBoundsSketch() {
-		return this.bounds;
+	public TreeTakeoverException(@Nullable String message, @Nullable Tree primary, @Nullable Tree illegal) {
+		super(message, primary, illegal);
 	}
 }

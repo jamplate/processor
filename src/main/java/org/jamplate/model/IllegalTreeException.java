@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.14
  */
-public class IllegalSketchException extends IllegalArgumentException {
+public class IllegalTreeException extends IllegalArgumentException {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -5393956633280978236L;
 
@@ -35,7 +35,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	protected Sketch illegal;
+	protected Tree illegal;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -44,7 +44,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public IllegalSketchException() {
+	public IllegalTreeException() {
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 *                by the {@link #getMessage()} method.
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public IllegalSketchException(@Nullable String message) {
+	public IllegalTreeException(@Nullable String message) {
 		super(message);
 	}
 
@@ -71,7 +71,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 *                indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public IllegalSketchException(@Nullable String message, @Nullable Throwable cause) {
+	public IllegalTreeException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
@@ -87,7 +87,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 *              indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public IllegalSketchException(@Nullable Throwable cause) {
+	public IllegalTreeException(@Nullable Throwable cause) {
 		super(cause);
 	}
 
@@ -97,7 +97,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public IllegalSketchException(@Nullable Sketch illegal) {
+	public IllegalTreeException(@Nullable Tree illegal) {
 		this.illegal = illegal;
 	}
 
@@ -109,7 +109,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public IllegalSketchException(@Nullable String message, @Nullable Sketch illegal) {
+	public IllegalTreeException(@Nullable String message, @Nullable Tree illegal) {
 		this(message);
 		this.illegal = illegal;
 	}
@@ -122,7 +122,7 @@ public class IllegalSketchException extends IllegalArgumentException {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Sketch getIllegalSketch() {
+	public Tree getIllegalSketch() {
 		return this.illegal;
 	}
 }

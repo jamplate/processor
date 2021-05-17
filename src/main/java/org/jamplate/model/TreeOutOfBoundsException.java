@@ -15,20 +15,29 @@
  */
 package org.jamplate.model;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This exception is a more specific exception of the {@link SketchClashException}. This
- * exception indicates that a sketch is clashing with another sketch by having the same
- * bounds as that other sketch.
+ * An exception to indicate that a provided sketch is out of the expected bounds. Usually,
+ * this exception is raised when a sketch is about to be put into a place where that
+ * sketch's reference is not contained on.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.14
  */
-public class SketchTakeoverException extends SketchClashException {
+public class TreeOutOfBoundsException extends IllegalTreeException {
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 8588246254984927923L;
+	private static final long serialVersionUID = -2054859355256526113L;
+
+	/**
+	 * The sketch that defines the bounds.
+	 *
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Nullable
+	private Tree bounds;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -37,7 +46,7 @@ public class SketchTakeoverException extends SketchClashException {
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchTakeoverException() {
+	public TreeOutOfBoundsException() {
 	}
 
 	/**
@@ -48,7 +57,7 @@ public class SketchTakeoverException extends SketchClashException {
 	 *                by the {@link #getMessage()} method.
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchTakeoverException(@Nullable String message) {
+	public TreeOutOfBoundsException(@Nullable String message) {
 		super(message);
 	}
 
@@ -64,7 +73,7 @@ public class SketchTakeoverException extends SketchClashException {
 	 *                indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchTakeoverException(@Nullable String message, @Nullable Throwable cause) {
+	public TreeOutOfBoundsException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
@@ -80,32 +89,46 @@ public class SketchTakeoverException extends SketchClashException {
 	 *              indicates that the cause is nonexistent or unknown.)
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	public SketchTakeoverException(@Nullable Throwable cause) {
+	public TreeOutOfBoundsException(@Nullable Throwable cause) {
 		super(cause);
 	}
 
 	/**
-	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
-	 * illegal} sketches.
+	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} sketches.
 	 *
-	 * @param primary the primary sketch.
+	 * @param bounds  the sketch that defines the bounds.
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchTakeoverException(@Nullable Sketch primary, @Nullable Sketch illegal) {
-		super(primary, illegal);
+	public TreeOutOfBoundsException(@Nullable Tree bounds, @Nullable Tree illegal) {
+		super(illegal);
+		this.bounds = bounds;
 	}
 
 	/**
-	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
-	 * illegal} sketches and the given {@code message}.
+	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} sketches.
 	 *
 	 * @param message the message.
-	 * @param primary the primary sketch.
+	 * @param bounds  the sketch that defines the bounds.
 	 * @param illegal the illegal sketch.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public SketchTakeoverException(@Nullable String message, @Nullable Sketch primary, @Nullable Sketch illegal) {
-		super(message, primary, illegal);
+	public TreeOutOfBoundsException(@Nullable String message, @Nullable Tree bounds, @Nullable Tree illegal) {
+		super(message, illegal);
+		this.bounds = bounds;
+	}
+
+	/**
+	 * Return the sketch that defines the bounds.
+	 *
+	 * @return the bounds sketch.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Tree getBoundsSketch() {
+		return this.bounds;
 	}
 }

@@ -44,31 +44,27 @@ public final class Parsing {
 	}
 
 	/**
-	 * Check if the given range fits in the given {@code sketch} and does not clash and is
-	 * not taken by any child in the given {@code sketch}.
+	 * Check if the given range fits in the given {@code tree} and does not clash and is
+	 * not taken by any child in the given {@code tree}.
 	 *
-	 * @param sketch the sketch to be checked.
+	 * @param tree the tree to be checked.
 	 * @param i      the first index in the range to be checked.
 	 * @param j      one past the last index in range to be checked.
-	 * @return true, if the given range is within the given {@code sketch} and does not
-	 * 		clash and is not taken by any sketch in it.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
+	 * @return true, if the given range is within the given {@code tree} and does not
+	 * 		clash and is not taken by any tree in it.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws IllegalArgumentException if {@code i < 0} or {@code j < i}.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public static boolean check(@NotNull Sketch sketch, int i, int j) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static boolean check(@NotNull Tree tree, int i, int j) {
+		Objects.requireNonNull(tree, "tree");
 		if (i < 0 || j < i)
 			throw new IllegalArgumentException("i=" + i + " j=" + j);
 
-		switch (Dominance.compute(sketch, i, j)) {
+		switch (Dominance.compute(tree, i, j)) {
 			case PART:
-				//if the range is within `sketch`
-				for (
-						Sketch s = sketch.get(Direction.CHILD);
-						s != null;
-						s = s.get(Direction.NEXT)
-				)
+				//if the range is within `tree`
+				for (Tree s : tree)
 					switch (Dominance.compute(s, i, j)) {
 						case CONTAIN:
 						case NONE:
@@ -95,30 +91,30 @@ public final class Parsing {
 
 	/**
 	 * Construct a new matcher over the current content of the document of the given
-	 * {@code sketch} with the range of the reference of the given {@code sketch} as the
+	 * {@code tree} with the range of the reference of the given {@code tree} as the
 	 * region of it.
 	 *
-	 * @param sketch  the sketch to get a matcher over its current content.
+	 * @param tree  the tree to get a matcher over its current content.
 	 * @param pattern the pattern of the returned matcher.
 	 * @return a matcher from the given {@code pattern} over the current content of the
-	 * 		given {@code sketch}.
-	 * @throws NullPointerException    if the given {@code sketch} or {@code pattern} is
+	 * 		given {@code tree}.
+	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
 	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code sketch} is out
+	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code sketch}.
-	 * @throws UnreadableDocumentError if the document of the given {@code sketch} is not
+	 *                                 the document of the given {@code tree}.
+	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static Matcher matcher(@NotNull Sketch sketch, @NotNull Pattern pattern) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Matcher matcher(@NotNull Tree tree, @NotNull Pattern pattern) {
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
-		Reference reference = sketch.reference();
-		Document document = sketch.getDocument();
+		Reference reference = tree.reference();
+		Document document = tree.getDocument();
 
 		CharSequence content = document.read();
 		int l = content.length();
@@ -136,35 +132,35 @@ public final class Parsing {
 
 	/**
 	 * Parse all the ranges matching the given {@code pattern} in the given {@code
-	 * sketch}.
+	 * tree}.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE NONE}
-	 * between them and the children of the given {@code sketch} and will all have a
+	 * between them and the children of the given {@code tree} and will all have a
 	 * dominance of {@link Dominance#NONE NONE} between another.
 	 * <br>
 	 * The returned set is not guaranteed to be mutable nor immutable.
 	 *
-	 * @param sketch  the sketch to parse in.
+	 * @param tree  the tree to parse in.
 	 * @param pattern the pattern to look for.
 	 * @return a set of references that matches the given {@code pattern} in the given
-	 *        {@code sketch}.
-	 * @throws NullPointerException    if the given {@code sketch} or {@code pattern} is
+	 *        {@code tree}.
+	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
 	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code sketch} is out
+	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code sketch}.
-	 * @throws UnreadableDocumentError if the document of the given {@code sketch} is not
+	 *                                 the document of the given {@code tree}.
+	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static Set<Reference> parseAll(@NotNull Sketch sketch, @NotNull Pattern pattern) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Set<Reference> parseAll(@NotNull Tree tree, @NotNull Pattern pattern) {
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
 
-		Matcher matcher = Parsing.matcher(sketch, pattern);
+		Matcher matcher = Parsing.matcher(tree, pattern);
 
 		//search for a valid match
 		Set<Reference> results = new HashSet<>();
@@ -174,7 +170,7 @@ public final class Parsing {
 			int j = matcher.end();
 
 			//validate match
-			if (Parsing.check(sketch, i, j))
+			if (Parsing.check(tree, i, j))
 				//bingo!
 				results.add(
 						new Reference(i, j - i)
@@ -186,37 +182,37 @@ public final class Parsing {
 
 	/**
 	 * Parse all the ranges starting with the given {@code startPattern} and ending with
-	 * the given {@code endPattern} in the given {@code sketch}.
+	 * the given {@code endPattern} in the given {@code tree}.
 	 * <br>
 	 * The returned set will be a set containing sets with each set having three
 	 * references: one for the match, another for the starting sequence and a third for
 	 * the ending sequence.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE} between
-	 * them and the children of the given {@code sketch} and will have a dominance of
+	 * them and the children of the given {@code tree} and will have a dominance of
 	 * {@link Dominance#NONE NONE} between each set of ranges.
 	 * <br>
 	 * The returned set and its inner sets are not guaranteed to be mutable nor
 	 * immutable.
 	 *
-	 * @param sketch       the sketch to parse in.
+	 * @param tree       the tree to parse in.
 	 * @param startPattern the pattern matching the start of the ranges to look for.
 	 * @param endPattern   the pattern matching the end of the ranges to look for.
 	 * @return a set of sets of ranges that matches the given {@code pattern} in the given
-	 *        {@code sketch}.
-	 * @throws NullPointerException    if the given {@code sketch} or {@code startPattern}
+	 *        {@code tree}.
+	 * @throws NullPointerException    if the given {@code tree} or {@code startPattern}
 	 *                                 or {@code endPattern} is null.
-	 * @throws IllegalStateException   if the reference of the given {@code sketch} is out
+	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code sketch}.
-	 * @throws UnreadableDocumentError if the document of the given {@code sketch} is not
+	 *                                 the document of the given {@code tree}.
+	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static Set<List<Reference>> parseAll(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	public static Set<List<Reference>> parseAll(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		//-E--S-S-S-S---E-E-E-S-E-S-E---S---
 		//<>  : : : :   : : : : : : :
 		//    < : : :   > : : : : : :
@@ -229,16 +225,16 @@ public final class Parsing {
 		//                    <#> : :
 		//                      < : >
 		//                        <#>
-		Objects.requireNonNull(sketch, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
 
-		Matcher startMatcher = Parsing.matcher(sketch, startPattern);
-		Matcher endMatcher = Parsing.matcher(sketch, endPattern);
+		Matcher startMatcher = Parsing.matcher(tree, startPattern);
+		Matcher endMatcher = Parsing.matcher(tree, endPattern);
 
 		Set<List<Reference>> results = new HashSet<>();
 
-		Reference reference = sketch.reference();
+		Reference reference = tree.reference();
 		int p = reference.position();
 		int t = p + reference.length();
 		int x = p;
@@ -249,7 +245,7 @@ public final class Parsing {
 			int e = endMatcher.end();
 
 			//validate the range of the end
-			if (Parsing.check(sketch, s, e)) {
+			if (Parsing.check(tree, s, e)) {
 				//the range of the last found start
 				int i = -1;
 				int j = -1;
@@ -264,7 +260,7 @@ public final class Parsing {
 						break;
 
 					//validate the range of the start
-					if (Parsing.check(sketch, ii, jj)) {
+					if (Parsing.check(tree, ii, jj)) {
 						i = ii;
 						j = jj;
 					}
@@ -298,38 +294,38 @@ public final class Parsing {
 
 	/**
 	 * Parse the first range matching the given {@code pattern} in the given {@code
-	 * sketch}.
+	 * tree}.
 	 * <br>
 	 * The returned range will all have a dominance of {@link Dominance#NONE NONE} between
-	 * it and the children of the given {@code sketch}.
+	 * it and the children of the given {@code tree}.
 	 *
-	 * @param sketch  the sketch to parse in.
+	 * @param tree  the tree to parse in.
 	 * @param pattern the pattern to look for.
 	 * @return a reference that matches the given {@code pattern} in the given {@code
-	 * 		sketch}. Or {@code null} if no match was found.
-	 * @throws NullPointerException    if the given {@code sketch} or {@code pattern} is
+	 * 		tree}. Or {@code null} if no match was found.
+	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
 	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code sketch} is out
+	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code sketch}.
-	 * @throws UnreadableDocumentError if the document of the given {@code sketch} is not
+	 *                                 the document of the given {@code tree}.
+	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
 	@Contract(value = "_,_->new", pure = true)
-	public static Reference parseFirst(@NotNull Sketch sketch, @NotNull Pattern pattern) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static Reference parseFirst(@NotNull Tree tree, @NotNull Pattern pattern) {
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
 
-		Matcher matcher = Parsing.matcher(sketch, pattern);
+		Matcher matcher = Parsing.matcher(tree, pattern);
 
 		while (matcher.find()) {
 			int i = matcher.start();
 			int j = matcher.end();
 
-			if (Parsing.check(sketch, i, j))
+			if (Parsing.check(tree, i, j))
 				//bingo!
 				return new Reference(i, j - i);
 		}
@@ -340,43 +336,43 @@ public final class Parsing {
 
 	/**
 	 * Parse all the ranges starting with the given {@code startPattern} and ending with
-	 * the given {@code endPattern} in the given {@code sketch}.
+	 * the given {@code endPattern} in the given {@code tree}.
 	 * <br>
 	 * The returned set will be having three references: one for the match, another for
 	 * the starting sequence and a third for the ending sequence.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE} between
-	 * them and the children of the given {@code sketch}.
+	 * them and the children of the given {@code tree}.
 	 * <br>
 	 * The returned set and its inner sets are not guaranteed to be mutable nor
 	 * immutable.
 	 *
-	 * @param sketch       the sketch to parse in.
+	 * @param tree       the tree to parse in.
 	 * @param startPattern the pattern matching the start of the range to look for.
 	 * @param endPattern   the pattern matching the end of the range to look for.
 	 * @return a set of the references matching the given {@code pattern} in the given
-	 *        {@code sketch}.
-	 * @throws NullPointerException    if the given {@code sketch} or {@code startPattern}
+	 *        {@code tree}.
+	 * @throws NullPointerException    if the given {@code tree} or {@code startPattern}
 	 *                                 or {@code endPattern} is null.
-	 * @throws IllegalStateException   if the reference of the given {@code sketch} is out
+	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code sketch}.
-	 * @throws UnreadableDocumentError if the document of the given {@code sketch} is not
+	 *                                 the document of the given {@code tree}.
+	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static List<Reference> parseFirst(@NotNull Sketch sketch, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
-		Objects.requireNonNull(sketch, "sketch");
+	public static List<Reference> parseFirst(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
 
-		Matcher startMatcher = Parsing.matcher(sketch, startPattern);
-		Matcher endMatcher = Parsing.matcher(sketch, endPattern);
+		Matcher startMatcher = Parsing.matcher(tree, startPattern);
+		Matcher endMatcher = Parsing.matcher(tree, endPattern);
 
-		Reference reference = sketch.reference();
+		Reference reference = tree.reference();
 		int p = reference.position();
 		int t = p + reference.length();
 
@@ -386,7 +382,7 @@ public final class Parsing {
 			int e = endMatcher.end();
 
 			//validate the range of the end
-			if (Parsing.check(sketch, s, e)) {
+			if (Parsing.check(tree, s, e)) {
 				//the range of the last found start
 				int i = -1;
 				int j = -1;
@@ -401,7 +397,7 @@ public final class Parsing {
 						break;
 
 					//validate the range of the start
-					if (Parsing.check(sketch, ii, jj)) {
+					if (Parsing.check(tree, ii, jj)) {
 						i = ii;
 						j = jj;
 					}
