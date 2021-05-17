@@ -396,25 +396,38 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 		assert top == null || start == null;
 
-		if (bottom != null)
-			if (start != null)
-				//start -> bottom
-				start.put(Tetragon.END, bottom);
-			else if (top != null)
-				//top |> bottom
-				top.put(Tetragon.BOTTOM, bottom);
-
-		if (end != null)
+		if (top != null)
 			if (bottom != null)
-				//bottomTail -> end
-				Nodes.tail(Tetragon.END, bottom)
-					 .put(Tetragon.END, end);
-			else if (start != null)
-				//start -> end
-				start.put(Tetragon.END, end);
-			else if (top != null)
-				//top |> next
+				//top |> bottom...tail -> end [!start]
+				top.put(Tetragon.BOTTOM, bottom);
+			else if (end != null) {
+				//top |> end [!start !bottom]
 				top.put(Tetragon.BOTTOM, end);
+				end.remove(Tetragon.START);
+			} else
+				//top [!start !bottom !end]
+				top.remove(Tetragon.BOTTOM);
+		else if (start != null)
+			if (bottom != null) {
+				//start -> bottom...tail -> end [!top]
+				start.put(Tetragon.END, bottom);
+				bottom.remove(Tetragon.TOP);
+			} else if (end != null)
+				//start -> end [!top !bottom]
+				start.put(Tetragon.END, end);
+			else
+				//start [!top !bottom !end]
+				start.remove(Tetragon.END);
+		else if (bottom != null)
+			//bottom -> end [!top !start]
+			bottom.remove(Tetragon.TOP);
+		else if (end != null)
+			//end [!top !start !bottom]
+			end.remove(Tetragon.START);
+
+		if (bottom != null && end != null)
+			Nodes.tail(Tetragon.END, bottom)
+				 .put(Tetragon.END, end);
 	}
 
 	/**
@@ -442,22 +455,23 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 		assert top == null || start == null;
 
-		if (start != null)
+		if (top != null)
+			if (end != null) {
+				//top |> end [!start]
+				top.put(Tetragon.BOTTOM, end);
+				end.remove(Tetragon.START);
+			} else
+				//top [!start !end]
+				top.remove(Tetragon.BOTTOM);
+		else if (start != null)
 			if (end != null)
-				//start -> end
+				//start -> end [!top]
 				start.put(Tetragon.END, end);
 			else
-				//start
+				//start [!top !end]
 				start.remove(Tetragon.END);
-		else if (top != null)
-			if (end != null)
-				//top |> end
-				top.put(Tetragon.BOTTOM, end);
-			else
-				//top
-				top.remove(Tetragon.BOTTOM);
 		else if (end != null)
-			//end
+			//end [!top !start]
 			end.remove(Tetragon.START);
 	}
 
