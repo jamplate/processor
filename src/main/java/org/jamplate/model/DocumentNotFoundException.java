@@ -24,14 +24,14 @@ import java.io.IOException;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.15
  */
-public class UnreadableDocumentException extends IOException {
+public class DocumentNotFoundException extends IOException {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8457937376257256913L;
 
 	/**
 	 * Constructs an {@code IOException} with {@code null} as its error detail message.
 	 */
-	public UnreadableDocumentException() {
+	public DocumentNotFoundException() {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class UnreadableDocumentException extends IOException {
 	 * @param message The detail message (which is saved for later retrieval by the {@link
 	 *                #getMessage()} method)
 	 */
-	public UnreadableDocumentException(String message) {
+	public DocumentNotFoundException(String message) {
 		super(message);
 	}
 
@@ -57,7 +57,7 @@ public class UnreadableDocumentException extends IOException {
 	 *                that the cause is nonexistent or unknown.)
 	 * @since 1.6
 	 */
-	public UnreadableDocumentException(String message, Throwable cause) {
+	public DocumentNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -72,7 +72,7 @@ public class UnreadableDocumentException extends IOException {
 	 *              the cause is nonexistent or unknown.)
 	 * @since 1.6
 	 */
-	public UnreadableDocumentException(Throwable cause) {
+	public DocumentNotFoundException(Throwable cause) {
 		super(cause);
 	}
 }

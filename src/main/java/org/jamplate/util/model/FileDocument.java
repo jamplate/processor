@@ -16,8 +16,8 @@
 package org.jamplate.util.model;
 
 import org.jamplate.model.Document;
-import org.jamplate.model.UnreadableDocumentError;
-import org.jamplate.model.UnreadableDocumentException;
+import org.jamplate.model.DocumentNotFoundError;
+import org.jamplate.model.DocumentNotFoundException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -79,9 +79,9 @@ public class FileDocument implements Document {
 
 	@NotNull
 	@Override
-	public InputStream openInputStream() throws FileNotFoundException, UnreadableDocumentException {
+	public InputStream openInputStream() throws FileNotFoundException, DocumentNotFoundException {
 		if (!this.file.exists())
-			throw new UnreadableDocumentException("Document not available " + this.file);
+			throw new DocumentNotFoundException("Document not available " + this.file);
 		return this.content == null ?
 			   new FileInputStream(this.file) :
 			   new ByteArrayInputStream(this.content.getBytes());
@@ -89,9 +89,9 @@ public class FileDocument implements Document {
 
 	@NotNull
 	@Override
-	public Reader openReader() throws FileNotFoundException, UnreadableDocumentException {
+	public Reader openReader() throws FileNotFoundException, DocumentNotFoundException {
 		if (!this.file.exists())
-			throw new UnreadableDocumentException("Document not available " + this.file);
+			throw new DocumentNotFoundException("Document not available " + this.file);
 		return this.content == null ?
 			   new FileReader(this.file) :
 			   new StringReader(this.content);
@@ -101,8 +101,8 @@ public class FileDocument implements Document {
 	@Override
 	public CharSequence read() {
 		if (!this.file.exists())
-			throw new UnreadableDocumentError(
-					new UnreadableDocumentException("Document not available " + this.file)
+			throw new DocumentNotFoundError(
+					new DocumentNotFoundException("Document not available " + this.file)
 			);
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {

@@ -1261,11 +1261,11 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		 *
 		 * @param document the document to calculate the reference from.
 		 * @return this.
-		 * @throws NullPointerException    if the given {@code document} is null.
-		 * @throws IOError                 if an I/O exception occurred while trying to
-		 *                                 read the given {@code document}.
-		 * @throws UnreadableDocumentError if the given {@code document} is not available
-		 *                                 for reading.
+		 * @throws NullPointerException  if the given {@code document} is null.
+		 * @throws IOError               if an I/O exception occurred while trying to read
+		 *                               the given {@code document}.
+		 * @throws DocumentNotFoundError if the given {@code document} is not available
+		 *                               for reading.
 		 * @since 0.2.0 ~2021.05.15
 		 */
 		@NotNull

@@ -36,7 +36,7 @@ public interface Document extends Serializable {
 	 * @param reference the range to be read.
 	 * @return a new input-stream that reads the content of this document.
 	 * @throws IOException                 if any I/O exception occurs.
-	 * @throws UnreadableDocumentException if this document is not available for reading.
+	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
@@ -184,7 +184,7 @@ public interface Document extends Serializable {
 	 * @param reference the range to be read.
 	 * @return a new reader that reads the content of this document.
 	 * @throws IOException                 if any I/O exception occurs. (optional)
-	 * @throws UnreadableDocumentException if this document is not available for reading.
+	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
@@ -325,7 +325,7 @@ public interface Document extends Serializable {
 	 * @param reference the range to be read.
 	 * @return the content of this document. (unmodifiable view)
 	 * @throws IOError                 if any I/O exception occurs. (optional)
-	 * @throws UnreadableDocumentError if this document is not available for reading.
+	 * @throws DocumentNotFoundError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
@@ -388,7 +388,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return a new input-stream that reads the content of this document.
 	 * @throws IOException                 if any I/O exception occurs.
-	 * @throws UnreadableDocumentException if this document is not available for reading.
+	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
@@ -399,7 +399,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return a new reader that reads the content of this document.
 	 * @throws IOException                 if any I/O exception occurs. (optional)
-	 * @throws UnreadableDocumentException if this document is not available for reading.
+	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
@@ -410,7 +410,7 @@ public interface Document extends Serializable {
 	 *
 	 * @return the content of this document. (unmodifiable view)
 	 * @throws IOError                 if any I/O exception occurs. (optional)
-	 * @throws UnreadableDocumentError if this document is not available for reading.
+	 * @throws DocumentNotFoundError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull

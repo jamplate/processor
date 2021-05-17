@@ -18,13 +18,13 @@ package org.jamplate.model;
 import java.io.IOError;
 
 /**
- * An unchecked throwable equivalent to {@link UnreadableDocumentError}.
+ * An unchecked throwable equivalent to {@link DocumentNotFoundError}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.15
  */
-public class UnreadableDocumentError extends IOError {
+public class DocumentNotFoundError extends IOError {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3082811406541644283L;
 
@@ -36,7 +36,7 @@ public class UnreadableDocumentError extends IOError {
 	 *
 	 * @param cause The cause of this error, or <tt>null</tt> if the cause is not known
 	 */
-	public UnreadableDocumentError(Throwable cause) {
+	public DocumentNotFoundError(Throwable cause) {
 		super(cause);
 	}
 }

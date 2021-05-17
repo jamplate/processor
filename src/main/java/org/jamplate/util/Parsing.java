@@ -104,7 +104,7 @@ public final class Parsing {
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
 	 *                                 the document of the given {@code tree}.
-	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
@@ -150,7 +150,7 @@ public final class Parsing {
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
 	 *                                 the document of the given {@code tree}.
-	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
@@ -206,7 +206,7 @@ public final class Parsing {
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
 	 *                                 the document of the given {@code tree}.
-	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
@@ -309,7 +309,7 @@ public final class Parsing {
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
 	 *                                 the document of the given {@code tree}.
-	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
@@ -358,7 +358,7 @@ public final class Parsing {
 	 *                                 of the bounds of its document.
 	 * @throws IOError                 if an I/O exception occurred while trying to read
 	 *                                 the document of the given {@code tree}.
-	 * @throws UnreadableDocumentError if the document of the given {@code tree} is not
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
 	 *                                 available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
