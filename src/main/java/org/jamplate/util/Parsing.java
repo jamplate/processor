@@ -48,8 +48,8 @@ public final class Parsing {
 	 * not taken by any child in the given {@code tree}.
 	 *
 	 * @param tree the tree to be checked.
-	 * @param i      the first index in the range to be checked.
-	 * @param j      one past the last index in range to be checked.
+	 * @param i    the first index in the range to be checked.
+	 * @param j    one past the last index in range to be checked.
 	 * @return true, if the given range is within the given {@code tree} and does not
 	 * 		clash and is not taken by any tree in it.
 	 * @throws NullPointerException     if the given {@code tree} is null.
@@ -94,18 +94,18 @@ public final class Parsing {
 	 * {@code tree} with the range of the reference of the given {@code tree} as the
 	 * region of it.
 	 *
-	 * @param tree  the tree to get a matcher over its current content.
+	 * @param tree    the tree to get a matcher over its current content.
 	 * @param pattern the pattern of the returned matcher.
 	 * @return a matcher from the given {@code pattern} over the current content of the
 	 * 		given {@code tree}.
-	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
-	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
-	 *                                 of the bounds of its document.
-	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} or {@code pattern} is
+	 *                               null.
+	 * @throws IllegalStateException if the reference of the given {@code tree} is out of
+	 *                               the bounds of its document.
+	 * @throws IOError               if an I/O exception occurred while trying to read the
+	 *                               document of the given {@code tree}.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
-	 *                                 available for reading.
+	 *                               available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
@@ -114,7 +114,7 @@ public final class Parsing {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
 		Reference reference = tree.reference();
-		Document document = tree.getDocument();
+		Document document = tree.document();
 
 		CharSequence content = document.read();
 		int l = content.length();
@@ -131,8 +131,7 @@ public final class Parsing {
 	}
 
 	/**
-	 * Parse all the ranges matching the given {@code pattern} in the given {@code
-	 * tree}.
+	 * Parse all the ranges matching the given {@code pattern} in the given {@code tree}.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE NONE}
 	 * between them and the children of the given {@code tree} and will all have a
@@ -140,18 +139,18 @@ public final class Parsing {
 	 * <br>
 	 * The returned set is not guaranteed to be mutable nor immutable.
 	 *
-	 * @param tree  the tree to parse in.
+	 * @param tree    the tree to parse in.
 	 * @param pattern the pattern to look for.
 	 * @return a set of references that matches the given {@code pattern} in the given
 	 *        {@code tree}.
-	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
-	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
-	 *                                 of the bounds of its document.
-	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} or {@code pattern} is
+	 *                               null.
+	 * @throws IllegalStateException if the reference of the given {@code tree} is out of
+	 *                               the bounds of its document.
+	 * @throws IOError               if an I/O exception occurred while trying to read the
+	 *                               document of the given {@code tree}.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
-	 *                                 available for reading.
+	 *                               available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
@@ -189,25 +188,25 @@ public final class Parsing {
 	 * the ending sequence.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE} between
-	 * them and the children of the given {@code tree} and will have a dominance of
-	 * {@link Dominance#NONE NONE} between each set of ranges.
+	 * them and the children of the given {@code tree} and will have a dominance of {@link
+	 * Dominance#NONE NONE} between each set of ranges.
 	 * <br>
 	 * The returned set and its inner sets are not guaranteed to be mutable nor
 	 * immutable.
 	 *
-	 * @param tree       the tree to parse in.
+	 * @param tree         the tree to parse in.
 	 * @param startPattern the pattern matching the start of the ranges to look for.
 	 * @param endPattern   the pattern matching the end of the ranges to look for.
 	 * @return a set of sets of ranges that matches the given {@code pattern} in the given
 	 *        {@code tree}.
-	 * @throws NullPointerException    if the given {@code tree} or {@code startPattern}
-	 *                                 or {@code endPattern} is null.
-	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
-	 *                                 of the bounds of its document.
-	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} or {@code startPattern} or
+	 *                               {@code endPattern} is null.
+	 * @throws IllegalStateException if the reference of the given {@code tree} is out of
+	 *                               the bounds of its document.
+	 * @throws IOError               if an I/O exception occurred while trying to read the
+	 *                               document of the given {@code tree}.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
-	 *                                 available for reading.
+	 *                               available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
@@ -299,18 +298,18 @@ public final class Parsing {
 	 * The returned range will all have a dominance of {@link Dominance#NONE NONE} between
 	 * it and the children of the given {@code tree}.
 	 *
-	 * @param tree  the tree to parse in.
+	 * @param tree    the tree to parse in.
 	 * @param pattern the pattern to look for.
 	 * @return a reference that matches the given {@code pattern} in the given {@code
 	 * 		tree}. Or {@code null} if no match was found.
-	 * @throws NullPointerException    if the given {@code tree} or {@code pattern} is
-	 *                                 null.
-	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
-	 *                                 of the bounds of its document.
-	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} or {@code pattern} is
+	 *                               null.
+	 * @throws IllegalStateException if the reference of the given {@code tree} is out of
+	 *                               the bounds of its document.
+	 * @throws IOError               if an I/O exception occurred while trying to read the
+	 *                               document of the given {@code tree}.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
-	 *                                 available for reading.
+	 *                               available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
@@ -347,19 +346,19 @@ public final class Parsing {
 	 * The returned set and its inner sets are not guaranteed to be mutable nor
 	 * immutable.
 	 *
-	 * @param tree       the tree to parse in.
+	 * @param tree         the tree to parse in.
 	 * @param startPattern the pattern matching the start of the range to look for.
 	 * @param endPattern   the pattern matching the end of the range to look for.
 	 * @return a set of the references matching the given {@code pattern} in the given
 	 *        {@code tree}.
-	 * @throws NullPointerException    if the given {@code tree} or {@code startPattern}
-	 *                                 or {@code endPattern} is null.
-	 * @throws IllegalStateException   if the reference of the given {@code tree} is out
-	 *                                 of the bounds of its document.
-	 * @throws IOError                 if an I/O exception occurred while trying to read
-	 *                                 the document of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} or {@code startPattern} or
+	 *                               {@code endPattern} is null.
+	 * @throws IllegalStateException if the reference of the given {@code tree} is out of
+	 *                               the bounds of its document.
+	 * @throws IOError               if an I/O exception occurred while trying to read the
+	 *                               document of the given {@code tree}.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is not
-	 *                                 available for reading.
+	 *                               available for reading.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull

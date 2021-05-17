@@ -19,17 +19,14 @@ import cufy.util.HashNode;
 import cufy.util.Node;
 import cufy.util.Nodes;
 import cufy.util.polygon.Tetragon;
-import org.jamplate.util.model.PseudoDocument;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOError;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Properties;
 
 /**
  * A tree is a point in a background structure of sketches that hold the variables of a
@@ -63,6 +60,13 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private static final long serialVersionUID = 3068214324610853826L;
 
 	/**
+	 * The document this tree is from.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@NotNull
+	private final Document document;
+	/**
 	 * The node representing this tree in an absolute relationships (based on the
 	 * reference of this tree).
 	 *
@@ -70,14 +74,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 */
 	@NotNull
 	private final Node<Tree> node = new HashNode<>(this);
-
-	/**
-	 * The properties of this tree.
-	 *
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	private final Properties properties;
 	/**
 	 * The reference of this tree.
 	 *
@@ -87,57 +83,48 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private final Reference reference;
 
 	/**
-	 * The current document of this tree.
+	 * The sketch set to this tree.
 	 *
-	 * @since 0.2.0 ~2021.05.14
+	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	private Document document;
-	/**
-	 * The current name of this tree.
-	 *
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	private String name;
+	private Sketch sketch;
 
 	/**
 	 * Construct a new tree with the given {@code reference}.
 	 *
+	 * @param document  the document of the constructed tree.
 	 * @param reference the reference of the constructed tree.
-	 * @throws NullPointerException if the given {@code reference} is null.
+	 * @throws NullPointerException if the given {@code document} or {@code reference} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public Tree(@NotNull Reference reference) {
+	public Tree(@NotNull Document document, @NotNull Reference reference) {
+		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(reference, "reference");
-		this.name = "";
-		this.document = new PseudoDocument("");
+		this.document = document;
 		this.reference = reference;
-		this.properties = new Properties();
+		this.sketch = new Sketch();
 	}
 
 	/**
 	 * Construct a new tree with the given {@code reference} and the given {@code
-	 * properties}.
-	 * <br>
-	 * A clone of the given {@code properties} will be the default properties of the
-	 * constructed tree.
+	 * sketch}.
 	 *
-	 * @param reference  the reference of the contracted tree.
-	 * @param properties the default properties of the constructed tree.
-	 * @throws NullPointerException if the given {@code reference} or {@code properties}
-	 *                              is null.
+	 * @param document  the document of the constructed tree.
+	 * @param reference the reference of the contracted tree.
+	 * @param sketch    the initial sketch set to this tree.
+	 * @throws NullPointerException if the given {@code document} or {@code reference} or
+	 *                              {@code sketch} is null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public Tree(@NotNull Reference reference, @NotNull Properties properties) {
+	public Tree(@NotNull Document document, @NotNull Reference reference, @NotNull Sketch sketch) {
+		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(reference, "reference");
-		Objects.requireNonNull(properties, "properties");
-		this.name = "";
-		this.document = new PseudoDocument("");
+		Objects.requireNonNull(sketch, "sketch");
+		this.document = document;
 		this.reference = reference;
-		Properties defaults = new Properties();
-		defaults.putAll(properties);
-		this.properties = new Properties(defaults);
+		this.sketch = sketch;
 	}
 
 	@Contract(value = "null->false", pure = true)
@@ -212,7 +199,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@NotNull
 	@Override
 	public String toString() {
-		return this.name + " " + this.document + "[" + this.reference + "]";
+		return this.sketch + " " + this.reference;
 	}
 
 	/**
@@ -231,6 +218,18 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
+	 * Get the document of this tree.
+	 *
+	 * @return the document of this tree.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Document document() {
+		return this.document;
+	}
+
+	/**
 	 * Get the first child tree of this tree.
 	 *
 	 * @return the first tree in this tree. Or {@code null} if this tree has no children.
@@ -241,55 +240,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	public Tree getChild() {
 		Node<Tree> child = this.node.get(Tetragon.BOTTOM);
 		return child == null ? null : child.get();
-	}
-
-	/**
-	 * Get the document of this tree.
-	 *
-	 * @return the document of this tree.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Document getDocument() {
-		return this.document;
-	}
-
-	/**
-	 * Get the name of this tree.
-	 *
-	 * @return the name of this tree.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public String getName() {
-		int num = 0;
-
-		for (
-				Node<Tree> n = this.node.get(Tetragon.START);
-				n != null;
-				n = n.get(Tetragon.START)
-		)
-			if (n.get().name.equals(this.name))
-				num++;
-
-		if (num == 0) {
-			for (
-					Node<Tree> n = this.node.get(Tetragon.END);
-					n != null;
-					n = n.get(Tetragon.END)
-			)
-				if (n.get().name.equals(this.name))
-					//first duplicate
-					return this.name + "$0";
-
-			//no duplicates
-			return this.name;
-		}
-
-		//n(th) duplicate
-		return this.name + "$" + num;
 	}
 
 	/**
@@ -334,30 +284,15 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Return the fully qualified name of this tree.
+	 * Return the sketch assigned to this tree.
 	 *
-	 * @return the fully qualified name of this tree.
-	 * @since 0.2.0 ~2021.05.16
+	 * @return the sketch of this tree.
+	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public String getQualifiedName() {
-		Tree parent = this.getParent();
-		return (parent == null ? "" : parent.getQualifiedName()) +
-			   this.getName();
-	}
-
-	/**
-	 * Return the simple name of this tree. (the last one passed to {@link
-	 * #setName(String)})
-	 *
-	 * @return the simple name of this tree.
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public String getSimpleName() {
-		return this.name;
+	public Sketch getSketch() {
+		return this.sketch;
 	}
 
 	/**
@@ -446,19 +381,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Return the properties of this tree.
-	 *
-	 * @return the properties of this tree.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Properties properties() {
-		//noinspection AssignmentOrReturnOfFieldWithMutableType
-		return this.properties;
-	}
-
-	/**
 	 * Get the reference of this tree.
 	 *
 	 * @return the reference of this tree.
@@ -503,29 +425,16 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Set the document of this tree to be the given {@code document}.
+	 * Set the sketch of this tree to be the given {@code sketch}. The previous tree of
+	 * the given {@code sketch} will have a new sketch set to it.
 	 *
-	 * @param document the document to be set.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.14
+	 * @param sketch the sketch to be set.
+	 * @since 0.2.0 ~2021.05.17
 	 */
-	@Contract(mutates = "this")
-	public void setDocument(@NotNull Document document) {
-		Objects.requireNonNull(document, "document");
-		this.document = document;
-	}
-
-	/**
-	 * Set the name of this tree to be the given {@code name}.
-	 *
-	 * @param name the name to be set.
-	 * @throws NullPointerException if the given {@code name} is null.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@Contract(mutates = "this")
-	public void setName(@NotNull String name) {
-		Objects.requireNonNull(name, "name");
-		this.name = name;
+	@Contract(mutates = "this,param")
+	public void setSketch(@NotNull Sketch sketch) {
+		Objects.requireNonNull(sketch, "sketch");
+		this.sketch = sketch;
 	}
 
 	/**
@@ -984,296 +893,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				throw new TreeClashException("Clash with", this, tree);
 			default:
 				throw new InternalError();
-		}
-	}
-
-	/**
-	 * A builder that makes building sketches much easier.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	public static class Builder {
-		/**
-		 * The document to be set as the initial document of the next built sketches.
-		 *
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		protected Document document;
-		/**
-		 * The name to be set as the initial name of the next built sketches.
-		 *
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		protected String name;
-		/**
-		 * The properties to be set as the default properties of the next built sketches.
-		 *
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		protected Properties properties;
-		/**
-		 * The reference to be set as the reference of the next built sketches.
-		 *
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		protected Reference reference;
-
-		/**
-		 * Construct a new builder with the default variables.
-		 *
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		public Builder() {
-			this.properties = new Properties();
-			this.reference = new Reference();
-			this.document = new PseudoDocument("");
-			this.name = "";
-		}
-
-		/**
-		 * Construct a new builder copying the given {@code builder}.
-		 * <br>
-		 * A clone of the properties of the given {@code builder} will be the default
-		 * properties of the properties of this builder.
-		 *
-		 * @param builder the builder to be copied.
-		 * @throws NullPointerException if the given {@code builder} is null.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		public Builder(@NotNull Builder builder) {
-			Objects.requireNonNull(builder, "builder");
-			this.name = builder.name;
-			this.document = builder.document;
-			this.reference = builder.reference;
-			Properties defaults = new Properties();
-			defaults.putAll(builder.properties);
-			this.properties = new Properties(defaults);
-		}
-
-		/**
-		 * Construct a new builder copying the given {@code tree}.
-		 * <br>
-		 * A clone of the properties of the given {@code tree} will be the default
-		 * properties of the properties of this builder.
-		 *
-		 * @param tree the tree to be copied.
-		 * @throws NullPointerException if the given {@code tree} is null.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		public Builder(@NotNull Tree tree) {
-			Objects.requireNonNull(tree, "tree");
-			this.name = tree.name;
-			this.document = tree.document;
-			this.reference = tree.reference;
-			Properties defaults = new Properties();
-			defaults.putAll(tree.properties);
-			this.properties = new Properties(defaults);
-		}
-
-		/**
-		 * Construct a new builder with the given parameters.
-		 *
-		 * @param name       the initial name set to the constructed builder.
-		 * @param document   the initial document set to the constructed builder.
-		 * @param reference  the initial reference set to the constructed builder.
-		 * @param properties the initial properties set to the constructed builder.
-		 * @throws NullPointerException if the given {@code name} or {@code document} or
-		 *                              {@code reference} or {@code properties} is null.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		public Builder(@NotNull String name, @NotNull Document document, @NotNull Reference reference, @NotNull Properties properties) {
-			Objects.requireNonNull(name, "name");
-			Objects.requireNonNull(document, "document");
-			Objects.requireNonNull(reference, "reference");
-			Objects.requireNonNull(properties, "properties");
-			this.name = name;
-			this.document = document;
-			this.reference = reference;
-			//noinspection AssignmentOrReturnOfFieldWithMutableType
-			this.properties = properties;
-		}
-
-		/**
-		 * Build a tree with the variables currently set in this builder.
-		 * <br>
-		 * The returned tree will not be affected by any changes done to this builder.
-		 * <br>
-		 * This method will not return the same tree twice.
-		 *
-		 * @return a new tree with the current variables in this builder.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "->new", pure = true)
-		public Tree build() {
-			Tree tree = new Tree(this.reference, this.properties);
-			tree.setName(this.name);
-			tree.setDocument(this.document);
-			return tree;
-		}
-
-		//getters
-
-		/**
-		 * Return the current set document. Unless changed, the returned document will be
-		 * the initial document of the next built sketches by this builder.
-		 *
-		 * @return the current set document.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(pure = true)
-		public Document getDocument() {
-			return this.document;
-		}
-
-		/**
-		 * Return the current set name. Unless changed, the returned name will be the
-		 * initial name of the next built sketches by this builder.
-		 *
-		 * @return the current set name.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(pure = true)
-		public String getName() {
-			return this.name;
-		}
-
-		/**
-		 * Return the current set properties. Unless changed, the returned properties will
-		 * be the default properties of the next built sketches by this builder.
-		 *
-		 * @return the current set properties.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(pure = true)
-		public Properties getProperties() {
-			//noinspection AssignmentOrReturnOfFieldWithMutableType
-			return this.properties;
-		}
-
-		/**
-		 * Return the current set reference. Unless changed, the returned reference will
-		 * be the reference of the next built sketches by this builder.
-		 *
-		 * @return the current set reference.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(pure = true)
-		public Reference getReference() {
-			return this.reference;
-		}
-
-		//setters
-
-		/**
-		 * Set the initial document of the tree to be built to the given {@code
-		 * document}.
-		 *
-		 * @param document the document to be the initial document of the next built
-		 *                 tree.
-		 * @return this.
-		 * @throws NullPointerException     if the given {@code document} is null.
-		 * @throws IllegalArgumentException if this builder rejected the given {@code
-		 *                                  document}. (optional)
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "_->this", mutates = "this")
-		public Builder setDocument(@NotNull Document document) {
-			Objects.requireNonNull(document, "document");
-			this.document = document;
-			return this;
-		}
-
-		/**
-		 * Set the initial name of the tree to be built to the given {@code name}.
-		 *
-		 * @param name the name to be the initial name of the next built tree.
-		 * @return this.
-		 * @throws NullPointerException     if the given {@code name} is null.
-		 * @throws IllegalArgumentException if this builder rejected the given {@code
-		 *                                  name}. (optional)
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "_->this", mutates = "this")
-		public Builder setName(@NotNull String name) {
-			Objects.requireNonNull(name, "name");
-			this.name = name;
-			return this;
-		}
-
-		/**
-		 * Set the default properties of the tree to be built to the given {@code
-		 * properties}.
-		 *
-		 * @param properties the default properties to be the properties of the next built
-		 *                   tree.
-		 * @return this.
-		 * @throws NullPointerException     if the given {@code properties} is null.
-		 * @throws IllegalArgumentException if this builder rejected the given {@code
-		 *                                  properties}. (optional)
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "_->this", mutates = "this")
-		public Builder setProperties(@NotNull Properties properties) {
-			Objects.requireNonNull(properties, "properties");
-			//noinspection AssignmentOrReturnOfFieldWithMutableType
-			this.properties = properties;
-			return this;
-		}
-
-		/**
-		 * Set the reference of the tree to be built to the given {@code reference}.
-		 *
-		 * @param reference the reference to be the reference of the next built tree.
-		 * @return this.
-		 * @throws NullPointerException     if the given {@code reference} is null.
-		 * @throws IllegalArgumentException if this builder rejected the given {@code
-		 *                                  reference}. (optional)
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "_->this", mutates = "this")
-		public Builder setReference(@NotNull Reference reference) {
-			Objects.requireNonNull(reference, "reference");
-			this.reference = reference;
-			return this;
-		}
-
-		/**
-		 * Set the reference of the tree to be built to cover the whole given {@code
-		 * document}.
-		 * <br>
-		 * Note: this method detect the length of the given {@code document} by reading
-		 * it.
-		 *
-		 * @param document the document to calculate the reference from.
-		 * @return this.
-		 * @throws NullPointerException  if the given {@code document} is null.
-		 * @throws IOError               if an I/O exception occurred while trying to read
-		 *                               the given {@code document}.
-		 * @throws DocumentNotFoundError if the given {@code document} is not available
-		 *                               for reading.
-		 * @since 0.2.0 ~2021.05.15
-		 */
-		@NotNull
-		@Contract(value = "_->this", mutates = "this")
-		public Builder setReference(@NotNull Document document) {
-			Objects.requireNonNull(document, "document");
-			this.reference = new Reference(0, document.read().length());
-			return this;
 		}
 	}
 }
