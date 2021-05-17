@@ -335,8 +335,8 @@ public enum Dominance {
 	 * sketch}.
 	 *
 	 * @param tree the sketch (first area).
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
 	 * @return how much dominant the second area over the given {@code sketch}.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
@@ -354,8 +354,8 @@ public enum Dominance {
 	 * Calculate how much dominant the {@code other} reference over the given {@code
 	 * sketch}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second reference.
+	 * @param tree  the first sketch.
+	 * @param other the second reference.
 	 * @return how much dominant the second reference over the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
@@ -373,8 +373,8 @@ public enum Dominance {
 	 * Calculate how much dominant the {@code other} sketch over the given {@code
 	 * sketch}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second sketch.
+	 * @param tree  the first sketch.
+	 * @param other the second sketch.
 	 * @return how much dominant the second sketch over the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)

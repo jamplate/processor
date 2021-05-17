@@ -297,8 +297,8 @@ public enum Relation {
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
 	 * @param tree the sketch (first area).
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
 	 * @return the direction from the given {@code sketch} to the second area given.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
@@ -321,8 +321,8 @@ public enum Relation {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second sketch.
+	 * @param tree  the first sketch.
+	 * @param other the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Relation#compute(int, int, int, int)
@@ -345,8 +345,8 @@ public enum Relation {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second sketch.
+	 * @param tree  the first sketch.
+	 * @param other the second sketch.
 	 * @return the direction from the given {@code sketch} to the given {@code other}.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Relation#compute(int, int, int, int)

@@ -39,20 +39,19 @@ import java.util.Properties;
  * with it.
  * <br>
  * A tree structure can only be modified throw the {@link #offer(Tree)} method ony any
- * tree in it. Any tree that get {@link #offer(Tree) offered} into a structure of
- * another tree will be removed from its previous structure.
+ * tree in it. Any tree that get {@link #offer(Tree) offered} into a structure of another
+ * tree will be removed from its previous structure.
  * <br>
  * A structure cannot have any clashing sketches or sketches that does not fit their
  * parent or sketches that breaks the order of their neighboring sketches in it and all
  * the sketches in it will be organized implicitly.
  * <br>
- * The tree class is not thead safe and multiple threads modifying the same tree
- * structure can make that structure corrupted. The corruption due to two thread modifying
- * the same tree structure is undefined. Aside from that, two or more threads just
- * reading the tree structure is totally fine. Also, one thread modifying a tree
- * structure while the other threads just reading it will not corrupt the structure and
- * will only confuse the other threads because random sketches will be moved around while
- * those threads are reading.
+ * The tree class is not thead safe and multiple threads modifying the same tree structure
+ * can make that structure corrupted. The corruption due to two thread modifying the same
+ * tree structure is undefined. Aside from that, two or more threads just reading the tree
+ * structure is totally fine. Also, one thread modifying a tree structure while the other
+ * threads just reading it will not corrupt the structure and will only confuse the other
+ * threads because random sketches will be moved around while those threads are reading.
  *
  * @author LSafer
  * @version 0.2.0
@@ -217,13 +216,12 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Remove all the children of this tree without removing the structure between
-	 * them.
+	 * Remove all the children of this tree without removing the structure between them.
 	 * <br>
-	 * This method will unlink the link between this tree and its first child. With
-	 * that, the first child and the other children will have no parent. But, the links
-	 * between the children will not be broken nor the links between the children and the
-	 * grand children.
+	 * This method will unlink the link between this tree and its first child. With that,
+	 * the first child and the other children will have no parent. But, the links between
+	 * the children will not be broken nor the links between the children and the grand
+	 * children.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
@@ -235,8 +233,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	/**
 	 * Get the first child tree of this tree.
 	 *
-	 * @return the first tree in this tree. Or {@code null} if this tree has no
-	 * 		children.
+	 * @return the first tree in this tree. Or {@code null} if this tree has no children.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
@@ -298,8 +295,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	/**
 	 * Get the tree after this tree.
 	 *
-	 * @return the tree after this tree. Or {@code null} if this tree is the last
-	 * 		tree.
+	 * @return the tree after this tree. Or {@code null} if this tree is the last tree.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
@@ -312,8 +308,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	/**
 	 * Get the tree containing this tree.
 	 *
-	 * @return the parent tree of this tree. Or {@code null} if this tree has no
-	 * 		parent.
+	 * @return the parent tree of this tree. Or {@code null} if this tree has no parent.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
@@ -328,8 +323,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	/**
 	 * Get the tree before this tree.
 	 *
-	 * @return the tree before this tree. Or {@code null} if this tree is the first
-	 * 		tree.
+	 * @return the tree before this tree. Or {@code null} if this tree is the first tree.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Nullable
@@ -367,21 +361,21 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Offer the given {@code tree} to the structure of this tree. The given {@code
-	 * tree} will be removed from its structure then put to the proper place in the
-	 * structure of this tree.
+	 * Offer the given {@code tree} to the structure of this tree. The given {@code tree}
+	 * will be removed from its structure then put to the proper place in the structure of
+	 * this tree.
 	 * <br>
 	 * If failed to insert the given {@code tree} because of an {@link
 	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
 	 * @param tree the tree to be added.
-	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
-	 *                                    parent of this tree.
-	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
-	 *                                    as a tree in the structure of this tree.
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
 	 * @throws TreeClashException       if the given {@code tree} clashes with another
-	 *                                    tree in the structure of this tree.
+	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@Contract(mutates = "this,param")
@@ -542,13 +536,13 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
 	 * @param tree the offered tree.
-	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in this
-	 *                                    tree.
-	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
-	 *                                    as a tree in the structure of this tree.
+	 *                                  tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
 	 * @throws TreeClashException       if the given {@code tree} clashes with another
-	 *                                    tree in the structure of this tree.
+	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings("OverlyLongMethod")
@@ -624,15 +618,14 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
 	 * @param tree the offered tree.
-	 * @throws NullPointerException       if the given {@code tree} is null.
-	 * @throws IllegalTreeException     if the given {@code tree} is not after this
-	 *                                    tree.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not after this tree.
 	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
-	 *                                    parent of this tree.
-	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
-	 *                                    as a tree in the structure of this tree.
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
 	 * @throws TreeClashException       if the given {@code tree} clashes with another
-	 *                                    tree in the structure of this tree.
+	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
@@ -743,15 +736,15 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
 	 * @param tree the offered tree.
-	 * @throws NullPointerException       if the given {@code tree} is null.
-	 * @throws IllegalTreeException     if the given {@code tree} is not valid as a
-	 *                                    parent for this tree.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not valid as a parent
+	 *                                  for this tree.
 	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
-	 *                                    parent of this tree.
-	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
-	 *                                    as a tree in the structure of this tree.
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
 	 * @throws TreeClashException       if the given {@code tree} clashes with another
-	 *                                    tree in the structure of this tree.
+	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"DuplicatedCode", "OverlyComplexMethod", "OverlyLongMethod"})
@@ -882,15 +875,15 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * IllegalTreeException}, then the method will exit without anything changed.
 	 *
 	 * @param tree the offered tree.
-	 * @throws NullPointerException       if the given {@code tree} is null.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws IllegalTreeException     if the given {@code tree} is not before this
-	 *                                    tree.
+	 *                                  tree.
 	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
-	 *                                    parent of this tree.
-	 * @throws TreeTakeoverException    if the given {@code tree} has the same range
-	 *                                    as a tree in the structure of this tree.
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
 	 * @throws TreeClashException       if the given {@code tree} clashes with another
-	 *                                    tree in the structure of this tree.
+	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})

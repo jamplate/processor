@@ -407,25 +407,26 @@ public enum Intersection {
 	};
 
 	/**
-	 * The direction from the opposite intersection to this intersection.
-	 *
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	private final Relation relation;
-	/**
 	 * How dominant this intersection over the opposite intersection.
 	 *
 	 * @since 0.2.0 ~2021.01.10
 	 */
 	@NotNull
 	private final Dominance dominance;
+	/**
+	 * The direction from the opposite intersection to this intersection.
+	 *
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Nullable
+	private final Relation relation;
 
 	/**
 	 * Construct a new enum with the given {@code dominance} and direction.
 	 *
-	 * @param dominance how dominant the constructed intersection over its opposite intersection.
-	 * @param relation the direction from the opposite of the constructed intersection to
+	 * @param dominance how dominant the constructed intersection over its opposite
+	 *                  intersection.
+	 * @param relation  the direction from the opposite of the constructed intersection to
 	 *                  itself. (pass {@code null} if undefined)
 	 * @throws NullPointerException if the given {@code dominance} is null.
 	 * @since 0.2.0 ~2021.01.10
@@ -440,9 +441,9 @@ public enum Intersection {
 	 * Calculate what is the intersection between the areas {@code [i, j)} and {@code [s,
 	 * e)}.
 	 * <br>
-	 * The first area is the area to compare the second area with. The returned intersection
-	 * will be the intersection describing the feelings of the first area about the second
-	 * area.
+	 * The first area is the area to compare the second area with. The returned
+	 * intersection will be the intersection describing the feelings of the first area
+	 * about the second area.
 	 * <br>
 	 * For example: if the second area is contained in the middle of first area, then the
 	 * retaliation {@link Intersection#FRAGMENT fragmnet} will be returned.
@@ -451,8 +452,8 @@ public enum Intersection {
 	 * @param j one past the last index of the first area.
 	 * @param s the first index of the second area.
 	 * @param e one past the last index of the second area.
-	 * @return the intersection constant describing the intersection of the second area to the
-	 * 		first area.
+	 * @return the intersection constant describing the intersection of the second area to
+	 * 		the first area.
 	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
 	 *                                  if {@code s} is not in the range {@code [0, e]}.
 	 * @since 0.2.0 ~2021.01.10
@@ -492,14 +493,14 @@ public enum Intersection {
 	}
 
 	/**
-	 * Calculate what is the intersection between the given {@code reference} and the given
-	 * area {@code [s, e)}.
+	 * Calculate what is the intersection between the given {@code reference} and the
+	 * given area {@code [s, e)}.
 	 *
 	 * @param reference the reference (first area).
 	 * @param s         the first index of the second area.
 	 * @param e         one past the last index of the second area.
-	 * @return the intersection constant describing the intersection of the second area to the
-	 * 		reference.
+	 * @return the intersection constant describing the intersection of the second area to
+	 * 		the reference.
 	 * @throws NullPointerException     if the given {@code reference} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Intersection#compute(int, int, int, int)
@@ -515,12 +516,13 @@ public enum Intersection {
 	}
 
 	/**
-	 * Calculate the intersection between the references {@code reference} and {@code other}.
+	 * Calculate the intersection between the references {@code reference} and {@code
+	 * other}.
 	 *
 	 * @param reference the first reference.
 	 * @param other     the second reference.
-	 * @return the intersection constant describing the intersection of the second reference to
-	 * 		the first reference.
+	 * @return the intersection constant describing the intersection of the second
+	 * 		reference to the first reference.
 	 * @throws NullPointerException if the given {@code reference} or {@code other} is
 	 *                              null.
 	 * @see Intersection#compute(int, int, int, int)
@@ -539,14 +541,14 @@ public enum Intersection {
 	}
 
 	/**
-	 * Calculate what is the intersection between the given {@code sketch} and the given area
-	 * {@code [s, e)}.
+	 * Calculate what is the intersection between the given {@code sketch} and the given
+	 * area {@code [s, e)}.
 	 *
 	 * @param tree the sketch (first area).
-	 * @param s      the first index of the second area.
-	 * @param e      one past the last index of the second area.
-	 * @return the intersection constant describing the intersection of the second area to the
-	 * 		sketch.
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
+	 * @return the intersection constant describing the intersection of the second area to
+	 * 		the sketch.
 	 * @throws NullPointerException     if the given {@code sketch} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Intersection#compute(int, int, int, int)
@@ -562,10 +564,10 @@ public enum Intersection {
 	/**
 	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second sketch.
-	 * @return the intersection constant describing the intersection of the second sketch to the
-	 * 		first sketch.
+	 * @param tree  the first sketch.
+	 * @param other the second sketch.
+	 * @return the intersection constant describing the intersection of the second sketch
+	 * 		to the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
@@ -581,10 +583,10 @@ public enum Intersection {
 	/**
 	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
 	 *
-	 * @param tree the first sketch.
-	 * @param other  the second sketch.
-	 * @return the intersection constant describing the intersection of the second sketch to the
-	 * 		first sketch.
+	 * @param tree  the first sketch.
+	 * @param other the second sketch.
+	 * @return the intersection constant describing the intersection of the second sketch
+	 * 		to the first sketch.
 	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
 	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
