@@ -60,7 +60,6 @@ public enum Direction {
 	 * @see Relation#BEHIND
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	@NotNull
 	PARENT(Dominance.CONTAIN) {
 		@NotNull
 		@Override
@@ -99,7 +98,6 @@ public enum Direction {
 	 * @see Relation#END
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	@NotNull
 	CHILD(Dominance.PART) {
 		@NotNull
 		@Override
@@ -132,7 +130,6 @@ public enum Direction {
 	 * @see Relation#BEFORE
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	@NotNull
 	PREVIOUS(Dominance.NONE) {
 		@NotNull
 		@Override
@@ -165,7 +162,6 @@ public enum Direction {
 	 * @see Relation#AFTER
 	 * @since 0.2.0 ~2021.05.14
 	 */
-	@NotNull
 	NEXT(Dominance.NONE) {
 		@NotNull
 		@Override

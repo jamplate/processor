@@ -104,7 +104,6 @@ public enum Dominance {
 	 * @see Relation#BEHIND
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	@NotNull
 	CONTAIN() {
 		@NotNull
 		@Override
@@ -131,7 +130,6 @@ public enum Dominance {
 	 * @see Relation#SAME
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	@NotNull
 	EXACT() {
 		@NotNull
 		@Override
@@ -164,7 +162,6 @@ public enum Dominance {
 	 * @see Relation#UNDERFLOW
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	@NotNull
 	SHARE() {
 		@NotNull
 		@Override
@@ -204,7 +201,6 @@ public enum Dominance {
 	 * @see Relation#END
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	@NotNull
 	PART() {
 		@NotNull
 		@Override
@@ -250,7 +246,6 @@ public enum Dominance {
 	 * @see Relation#BEFORE
 	 * @since 0.2.0 ~2021.01.10
 	 */
-	@NotNull
 	NONE() {
 		@NotNull
 		@Override
