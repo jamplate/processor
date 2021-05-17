@@ -17,6 +17,7 @@ package org.jamplate.model;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -38,14 +39,42 @@ public class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	private String kind = "";
+	protected String kind = "";
 	/**
 	 * The current name of this sketch.
 	 *
 	 * @since 0.2.0 ~2021.05.14
 	 */
 	@NotNull
-	private String name = "";
+	protected String name = "";
+
+	/**
+	 * The tree this sketch is from.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	protected Tree tree;
+
+	/**
+	 * Construct a new sketch.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public Sketch() {
+	}
+
+	/**
+	 * Construct a new sketch that references the given {@code tree} as its tree.
+	 *
+	 * @param tree the tree the constructed sketch will be pointing to.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public Sketch(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		this.tree = tree;
+	}
 
 	@NotNull
 	@Contract(pure = true)
@@ -79,6 +108,18 @@ public class Sketch implements Serializable {
 	}
 
 	/**
+	 * Return the tree of this sketch.
+	 *
+	 * @return the tree of this sketch.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Tree getTree() {
+		return this.tree;
+	}
+
+	/**
 	 * Set the kind of this sketch to be the given {@code kind}.
 	 *
 	 * @param kind the kind of this sketch.
@@ -96,8 +137,25 @@ public class Sketch implements Serializable {
 	 * @param name the name of this sketch.
 	 * @since 0.2.0 ~2021.05.17
 	 */
+	@Contract(mutates = "this")
 	public void setName(@NotNull String name) {
 		Objects.requireNonNull(name, "name");
 		this.name = name;
+	}
+
+	/**
+	 * Set the tree this sketch is from to be the given {@code tree}.
+	 *
+	 * @param tree the tree to be set.
+	 * @throws NullPointerException  if the given {@code tree} is null.
+	 * @throws IllegalStateException if this sketch already have a tree set.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public void setTree(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		if (this.tree != null)
+			throw new IllegalStateException("Sketch already have a tree set");
+
+		this.tree = tree;
 	}
 }
