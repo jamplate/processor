@@ -80,7 +80,7 @@ public class Sketch implements Serializable {
 	@Contract(pure = true)
 	@Override
 	public String toString() {
-		return this.name + " (" + this.getClass().getSimpleName() + ")";
+		return this.name + " (" + this.kind + " " + this.getClass().getSimpleName() + ")";
 	}
 
 	/**
