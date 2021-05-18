@@ -373,10 +373,10 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				this.offerPrevious(tree);
 				return;
 			case SAME:
-				throw new TreeTakeoverException("Sketch takeover");
+				throw new TreeTakeoverException("Sketch takeover", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new TreeClashException("Sketch clash");
+				throw new TreeClashException("Sketch clash", this, tree);
 			default:
 				throw new InternalError();
 		}
