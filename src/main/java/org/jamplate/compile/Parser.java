@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A function that takes a compilation and a sketch and parses new sketches from them.
@@ -37,6 +38,31 @@ import java.util.stream.Collectors;
  */
 @FunctionalInterface
 public interface Parser {
+	/**
+	 * Return a parser that uses this parser to parse and then add to the result the
+	 * result of parsing each one of them using the given {@code parser}.
+	 *
+	 * @param parser the parser to be used on the results of this parser.
+	 * @return a parser that uses this parser then uses the given {@code parser}.
+	 * @throws NullPointerException if the given {@code parser} is null.
+	 * @since 0.2.0 ~2021.05.18
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	default Parser also(@NotNull Parser parser) {
+		return (compilation, tree) ->
+				this.parse(compilation, tree)
+					.parallelStream()
+					.flatMap(t ->
+							Stream.concat(
+									Stream.of(t),
+									parser.parse(compilation, t)
+										  .stream()
+							)
+					)
+					.collect(Collectors.toSet());
+	}
+
 	/**
 	 * Return a new parser that uses this parser for parsing only if the given {@code
 	 * predicate} returned {@code true} on the compilation and the tree to be parsed.
