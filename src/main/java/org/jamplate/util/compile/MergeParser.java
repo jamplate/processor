@@ -17,35 +17,34 @@ package org.jamplate.util.compile;
 
 import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
-import org.jamplate.model.Intersection;
+import org.jamplate.model.Dominance;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * A parser that merges the clashing sketches resulting from another parser.
+ * A parser that merges the clashing sketches resulting from another parser going from the
+ * first to the last tree sequentially.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.17
+ * @since 0.2.0 ~2021.05.18
  */
 public class MergeParser implements Parser {
 	/**
 	 * The parser this parser is wrapping.
 	 *
-	 * @since 0.2.0 ~2021.05.17
+	 * @since 0.2.0 ~2021.05.18
 	 */
 	@NotNull
-	protected final Parser parser;
+	protected Parser parser;
 
 	/**
-	 * Construct a clash merging parser merging the results of invoking the given {@code
-	 * parser}.
+	 * Construct a sequential clash merging parser merging the results of invoking the
+	 * given {@code parser}.
 	 *
 	 * @param parser the parser the constructed parser is wrapping.
 	 * @throws NullPointerException if the given {@code parser} is null.
@@ -61,76 +60,77 @@ public class MergeParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
+		List<Tree> list = this.parser
+				.parse(compilation, tree)
+				.stream()
+				.sorted(Comparator.comparing(Tree::reference))
+				.collect(Collectors.toList());
 
-		Set<Tree> set = new HashSet<>(this.parser.parse(compilation, tree));
-
-		Iterator<Tree> iterator = set.iterator();
+		ListIterator<Tree> iterator = list.listIterator();
 		while (iterator.hasNext()) {
-			Tree nextTree = iterator.next();
+			Tree previousTree = iterator.next();
+			int nextIndex = iterator.nextIndex();
 
-			//if any clash, remove the tree
-			set.parallelStream()
-			   .filter(otherTree -> otherTree != nextTree)
-			   .filter(otherTree -> !this.check(nextTree, otherTree))
-			   .findAny()
-			   .ifPresent(other ->
-					   iterator.remove()
-			   );
+			while (iterator.hasNext()) {
+				Tree nextTree = iterator.next();
+
+				if (!this.check(previousTree, nextTree))
+					iterator.remove();
+			}
+
+			iterator = list.listIterator(nextIndex);
 		}
 
-		return set;
+		return new HashSet<>(list);
 	}
 
 	/**
-	 * Check if the given {@code tree} clashes with the given {@code other} tree and
-	 * should be removed.
+	 * Check if the down-structure of the given {@code next} can be alongside with the
+	 * given {@code previous} in its structure.
 	 *
-	 * @param tree  the tree to be checked.
-	 * @param other the other tree to be checked.
-	 * @return true, if no need to remove the given {@code tree} because either it does
-	 * 		not clash with the other tree or if it came first.
-	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @param previous the previous tree that is always wins.
+	 * @param next     the slave tree that might win or might lose depending on if it
+	 *                 clashes with the previous or not.
+	 * @return true, if the given {@code next} can be with the given {@code previous}.
+	 * @throws NullPointerException if the given {@code previous} or {@code next} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.18
 	 */
 	@Contract(pure = true)
-	protected boolean check(@NotNull Tree tree, @NotNull Tree other) {
-		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(other, "other");
-		switch (Intersection.compute(tree, other)) {
-			case AHEAD:
-			case BEHIND:
-			case CONTAINER:
-				//the tree can fit in the other, check if the tree clashes with any other children
-				for (Tree otherChild : other)
-					//check if the tree clashes with any child in the other
-					if (!this.check(tree, otherChild))
-						//the tree clashes with a child in the other and has not won the clash, tree lose
+	protected boolean check(@NotNull Tree previous, @NotNull Tree next) {
+		Objects.requireNonNull(previous, "previous");
+		Objects.requireNonNull(next, "next");
+		//noinspection DuplicatedCode
+		switch (Dominance.compute(previous, next)) {
+			case CONTAIN:
+				//the previous fits on the next
+				for (Tree secondChild : next)
+					//check if the previous does clash with any of the children of the next
+					if (!this.check(previous, secondChild))
+						//the previous clashes with a child in the next, the next must be removed
 						return false;
 
-				//the tree can fit no problem in the other
+				//the previous fits perfectly in the next
 				return true;
-			case END:
-			case START:
-			case FRAGMENT:
-				//parents always win the argument :)
+			case PART:
+				//the previous can contain the next
+				for (Tree primaryChild : previous)
+					//check if the next does clash with any of the children of the previous
+					if (!this.check(primaryChild, next))
+						//the next clashes with a child in the previous, the next must be removed
+						return false;
+
+				//the next fits perfectly in the previous
 				return true;
-			case NEXT:
-			case AFTER:
-			case PREVIOUS:
-			case BEFORE:
-				//neighbors = OK
+			case NONE:
+				//the two trees do not intersect
 				return true;
-			case UNDERFLOW:
-				//the other came first
-				return false;
-			case OVERFLOW:
-				//the tree came first
-				return true;
-			case SAME:
-				//make the other win
+			case SHARE:
+			case EXACT:
+				//the next cannot be with the previous, the next must be removed
 				return false;
 			default:
-				//unknown relation
+				//unexpected
 				throw new InternalError();
 		}
 	}

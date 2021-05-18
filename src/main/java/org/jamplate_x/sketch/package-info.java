@@ -14,7 +14,7 @@
  *	limitations under the License.
  */
 /**
- * A package for the interface {@link org.jamplate.model.Sketch}.
+ * A package for the interface {@link org.jamplate.model.Tree}.
  *
  * @author LSafer
  * @version 0.2.0

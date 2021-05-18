@@ -15,7 +15,7 @@
  */
 /**
  * A package all about the interface {@link org.jamplate_x.parser.Parser}. This
- * package is all about generating new {@link org.jamplate.model.Sketch sketchs}
+ * package is all about generating new {@link org.jamplate.model.Tree sketchs}
  * from existing ones.
  *
  * @author LSafer

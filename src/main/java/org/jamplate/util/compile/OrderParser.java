@@ -131,6 +131,7 @@ public class OrderParser implements Parser {
 	protected boolean check(@NotNull Tree primary, @NotNull Tree secondary) {
 		Objects.requireNonNull(primary, "primary");
 		Objects.requireNonNull(secondary, "secondary");
+		//noinspection DuplicatedCode
 		switch (Dominance.compute(primary, secondary)) {
 			case CONTAIN:
 				//the primary fits on the secondary
