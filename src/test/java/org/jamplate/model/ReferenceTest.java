@@ -18,10 +18,33 @@ package org.jamplate.model;
 import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.InternalAssert.assertRelation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ReferenceTest {
+	public static void assertRelation(Reference reference, Reference other, Intersection intersection) {
+		assertSame(
+				intersection,
+				Intersection.compute(reference, other),
+				"Relation of " + other + " to " + reference
+		);
+		assertSame(
+				intersection.opposite(),
+				Intersection.compute(other, reference),
+				"Relation of " + reference + " to " + other
+		);
+		assertSame(
+				intersection.dominance(),
+				Dominance.compute(reference, other),
+				"Dominance of " + other + " over " + reference
+		);
+		assertSame(
+				intersection.dominance().opposite(),
+				Dominance.compute(other, reference),
+				"Dominance of " + reference + " over " + other
+		);
+	}
+
 	@Test
 	public void relations() {
 		Document document = new PseudoDocument("ABC0123");
@@ -38,32 +61,32 @@ public class ReferenceTest {
 		assertEquals("Wrong Slice", "BC", document.read(bc).toString());
 		assertEquals("Wrong Slice", "C0", document.read(c0).toString());
 
-		assertRelation(reference, reference, Relation.SAME);
-		assertRelation(reference, letters, Relation.START);
-		assertRelation(reference, numbers, Relation.END);
-		assertRelation(reference, b, Relation.FRAGMENT);
-		assertRelation(reference, bc, Relation.FRAGMENT);
-		assertRelation(reference, c0, Relation.FRAGMENT);
+		assertRelation(reference, reference, Intersection.SAME);
+		assertRelation(reference, letters, Intersection.START);
+		assertRelation(reference, numbers, Intersection.END);
+		assertRelation(reference, b, Intersection.FRAGMENT);
+		assertRelation(reference, bc, Intersection.FRAGMENT);
+		assertRelation(reference, c0, Intersection.FRAGMENT);
 
-		assertRelation(letters, letters, Relation.SAME);
-		assertRelation(letters, numbers, Relation.NEXT);
-		assertRelation(letters, b, Relation.FRAGMENT);
-		assertRelation(letters, bc, Relation.END);
-		assertRelation(letters, c0, Relation.OVERFLOW);
+		assertRelation(letters, letters, Intersection.SAME);
+		assertRelation(letters, numbers, Intersection.NEXT);
+		assertRelation(letters, b, Intersection.FRAGMENT);
+		assertRelation(letters, bc, Intersection.END);
+		assertRelation(letters, c0, Intersection.OVERFLOW);
 
-		assertRelation(numbers, numbers, Relation.SAME);
-		assertRelation(numbers, b, Relation.BEFORE);
-		assertRelation(numbers, bc, Relation.PREVIOUS);
-		assertRelation(numbers, c0, Relation.UNDERFLOW);
+		assertRelation(numbers, numbers, Intersection.SAME);
+		assertRelation(numbers, b, Intersection.BEFORE);
+		assertRelation(numbers, bc, Intersection.PREVIOUS);
+		assertRelation(numbers, c0, Intersection.UNDERFLOW);
 
-		assertRelation(b, b, Relation.SAME);
-		assertRelation(b, bc, Relation.AHEAD);
-		assertRelation(b, c0, Relation.NEXT);
+		assertRelation(b, b, Intersection.SAME);
+		assertRelation(b, bc, Intersection.AHEAD);
+		assertRelation(b, c0, Intersection.NEXT);
 
-		assertRelation(bc, bc, Relation.SAME);
-		assertRelation(bc, c0, Relation.OVERFLOW);
+		assertRelation(bc, bc, Intersection.SAME);
+		assertRelation(bc, c0, Intersection.OVERFLOW);
 
-		assertRelation(c0, c0, Relation.SAME);
+		assertRelation(c0, c0, Intersection.SAME);
 	}
 }
 //	@Test
