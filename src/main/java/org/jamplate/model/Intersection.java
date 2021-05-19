@@ -464,61 +464,44 @@ public enum Intersection {
 	public static Intersection compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
-
-		if (e < i)
-			// e < i
-			return Intersection.BEFORE;
-		if (j < s)
-			// j < s
-			return Intersection.AFTER;
-
-		if (i == s)
-			return j == e ?
-				   //i == s && j == e
-				   Intersection.SAME :
-				   j < e ?
-				   //i == s && j < e
-				   Intersection.AHEAD :
-				   //i == s && e < j
-				   Intersection.START;
-		if (j == e)
-			return s < i ?
-				   //s < i && j == e
-				   Intersection.BEHIND :
-				   //i < s && j == e
-				   Intersection.END;
-
-		if (e == i)
-			//s < e && e == i && i < j
-			//if s == e and e == i then s == i
-			//if i == j and e == i then j == e
-			return Intersection.PREVIOUS;
-
-		if (j == s)
-			//i < j && j == s && s < e
-			//if i == j and j == s then i == s
-			//if s == e and j == s then e == j
-			return Intersection.NEXT;
-
-		if (s < i) {
-			if (s < i && j < e)
-				//s < i && j < e
-				return Intersection.CONTAINER;
-
-			if (s < i && i < e && e < j)
-				//s < i && i < e && e < j
-				return Intersection.UNDERFLOW;
-		}
-
-		if (i < s && e < j)
-			//i < s && e < j
-			return Intersection.FRAGMENT;
-
-		if (i < s && s < j && j < e)
-			//i < s && s < j && j < e
-			return Intersection.OVERFLOW;
-
-		return null;
+		return e < i ?
+			   // e < i
+			   Intersection.BEFORE :
+			   j < s ?
+			   // j < s
+			   Intersection.AFTER :
+			   i == s ?
+			   j == e ?
+			   // i == s && j == e
+			   Intersection.SAME :
+			   j < e ?
+			   // i == s && j < e
+			   Intersection.AHEAD :
+			   // i == s && e < j
+			   Intersection.START :
+			   j == e ?
+			   s < i ?
+			   // s < i && j == e
+			   Intersection.BEHIND :
+			   // i < s && j == e
+			   Intersection.END :
+			   e == i ?
+			   // s < e && e == i && i < j
+			   Intersection.PREVIOUS :
+			   j == s ?
+			   // i < j && j == s && s < e
+			   Intersection.NEXT :
+			   s < i ?
+			   j < e ?
+			   // s < i && j < e
+			   Intersection.CONTAINER :
+			   // s < i && i < e && e < j
+			   Intersection.UNDERFLOW :
+			   e < j ?
+			   // i < s && e < j
+			   Intersection.FRAGMENT :
+			   // i < s && s < j && j < e
+			   Intersection.OVERFLOW;
 	}
 
 	/**
