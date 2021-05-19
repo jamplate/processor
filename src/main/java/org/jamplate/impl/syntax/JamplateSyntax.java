@@ -44,7 +44,9 @@ public final class JamplateSyntax {
 							SyntaxParser.CURLY,
 							SyntaxParser.SQUARE,
 							SyntaxParser.ROUND
-					))
+					)),
+					TransientParser.INJECTION,
+					TransientParser.COMMAND
 			));
 
 	/**
