@@ -17,13 +17,15 @@ package org.jamplate.util.model;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.model.Compilation;
+import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A basic implementation of the interface {@link Environment}.
@@ -39,30 +41,40 @@ public class EnvironmentImpl implements Environment {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	protected Set<Compilation> compilations = new HashSet<>();
+	protected final Map<Document, Compilation> compilations = new HashMap<>();
 	/**
 	 * The diagnostic manager in this enlivenment.
 	 *
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	protected Diagnostic diagnostic = new DiagnosticImpl();
+	protected final Diagnostic diagnostic = new DiagnosticImpl();
 
 	@NotNull
 	@Override
-	public Set<Compilation> compilations() {
-		return Collections.unmodifiableSet(this.compilations);
+	public Compilation getCompilation(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		return this.compilations.computeIfAbsent(document,
+				k -> new CompilationImpl(this, new Tree(document))
+		);
 	}
 
 	@NotNull
 	@Override
-	public Diagnostic diagnostic() {
+	public Map<Document, Compilation> getCompilations() {
+		return Collections.unmodifiableMap(this.compilations);
+	}
+
+	@NotNull
+	@Override
+	public Diagnostic getDiagnostic() {
 		return this.diagnostic;
 	}
 
-	@NotNull
 	@Override
-	public Iterator<Compilation> iterator() {
-		return Collections.unmodifiableSet(this.compilations).iterator();
+	public void setCompilation(@NotNull Document document, @NotNull Compilation compilation) {
+		Objects.requireNonNull(document, "document");
+		Objects.requireNonNull(compilation, "compilation");
+		this.compilations.put(document, compilation);
 	}
 }

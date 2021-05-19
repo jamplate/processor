@@ -55,7 +55,7 @@ public class ParserProcessor implements Processor {
 	@Override
 	public boolean process(@NotNull Compilation compilation) {
 		Objects.requireNonNull(compilation, "compilation");
-		Tree root = compilation.root();
+		Tree root = compilation.getRootTree();
 
 		boolean modified = false;
 		while (true) {

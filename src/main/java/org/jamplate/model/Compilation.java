@@ -35,7 +35,7 @@ public interface Compilation {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	Environment environment();
+	Environment getEnvironment();
 
 	/**
 	 * Return the root tree of this compilation.
@@ -45,5 +45,5 @@ public interface Compilation {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	Tree root();
+	Tree getRootTree();
 }

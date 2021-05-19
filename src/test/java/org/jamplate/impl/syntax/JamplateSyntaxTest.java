@@ -23,8 +23,12 @@ public class JamplateSyntaxTest {
 	public void axe() {
 		Environment environment = new EnvironmentImpl();
 		Document document = new FileDocument("test_input/axe.jamplate");
-		Tree tree = new Tree(document);
-		Compilation compilation = new CompilationImpl(environment, tree);
+		Compilation compilation = environment.getCompilation(document);
+
+		while (JamplateSyntax.PARSER_PROCESSOR.process(compilation))
+			;
+
+		int i = 0;
 	}
 
 	@RepeatedTest(50)
@@ -77,7 +81,7 @@ public class JamplateSyntaxTest {
 
 		assertEquals(
 				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
-				Trees.collect(compilation.root()).size(),
+				Trees.collect(compilation.getRootTree()).size(),
 				"Wrong number of trees"
 		);
 	}
@@ -91,11 +95,11 @@ public class JamplateSyntaxTest {
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
-				Trees.collect(compilation.root()).size(),
+				Trees.collect(compilation.getRootTree()).size(),
 				"Unexpected number of trees after parsing"
 		);
 
-		for (Tree tree : compilation.root())
+		for (Tree tree : compilation.getRootTree())
 			assertEquals(
 					4,
 					tree.reference().length(),
@@ -113,11 +117,11 @@ public class JamplateSyntaxTest {
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
-				Trees.collect(compilation.root()).size(),
+				Trees.collect(compilation.getRootTree()).size(),
 				"Unexpected number of trees after parsing"
 		);
 
-		for (Tree tree : compilation.root()) {
+		for (Tree tree : compilation.getRootTree()) {
 			assertEquals(
 					3,
 					tree.reference().length(),

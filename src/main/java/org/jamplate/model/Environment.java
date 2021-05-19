@@ -18,8 +18,9 @@ package org.jamplate.model;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
@@ -29,16 +30,34 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public interface Environment extends Iterable<Compilation> {
+public interface Environment {
 	/**
-	 * Return all the compilations in this environment.
+	 * If this environment has a compilation for the given {@code document}. Then this
+	 * method will return that compilation. Otherwise, this method will created a new
+	 * compilation for the given {@code document} and add it to this environment then
+	 * return it.
 	 *
-	 * @return the compilations in this environment.
+	 * @param document the document to get a compilation for.
+	 * @return the compilation for the given {@code document} in this environment. Or the
+	 * 		newly created compilation if this environment was not already having a
+	 * 		compilation for the given {@code document}.
+	 * @throws NullPointerException if the given {@code document} is null.
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	@Contract(mutates = "this")
+	Compilation getCompilation(@NotNull Document document);
+
+	/**
+	 * Return an unmodifiable view of the compilations in this environment.
+	 *
+	 * @return an unmodifiable view of the compilations in this environment.
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
+	@UnmodifiableView
 	@Contract(pure = true)
-	Set<Compilation> compilations();
+	Map<Document, Compilation> getCompilations();
 
 	/**
 	 * Return the diagnostic manager in this environment.
@@ -48,5 +67,21 @@ public interface Environment extends Iterable<Compilation> {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	Diagnostic diagnostic();
+	Diagnostic getDiagnostic();
+
+	/**
+	 * Set the compilation for the given {@code document} to be the given {@code
+	 * compilation}.
+	 * <br>
+	 * If this environment already has a compilation for the given {@code document}, this
+	 * environment will replace that compilation with the given {@code compilation}.
+	 *
+	 * @param document    the document to set its compilation.
+	 * @param compilation the compilation to be set.
+	 * @throws NullPointerException if the given {@code document} or {@code compilation}
+	 *                              is null.
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@Contract(mutates = "this")
+	void setCompilation(@NotNull Document document, @NotNull Compilation compilation);
 }

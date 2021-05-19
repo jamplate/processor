@@ -62,13 +62,13 @@ public class CompilationImpl implements Compilation {
 
 	@NotNull
 	@Override
-	public Environment environment() {
+	public Environment getEnvironment() {
 		return this.environment;
 	}
 
 	@NotNull
 	@Override
-	public Tree root() {
+	public Tree getRootTree() {
 		return this.root;
 	}
 }
