@@ -16,6 +16,7 @@
 package org.jamplate.impl.syntax.compile;
 
 import org.jamplate.compile.Parser;
+import org.jamplate.impl.syntax.model.SyntaxLiteral;
 import org.jamplate.model.*;
 import org.jamplate.util.Parsing;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +84,7 @@ public class LiteralParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  Sketch s = new Sketch();
+						  SyntaxLiteral s = new SyntaxLiteral();
 						  Tree t = new Tree(d, m, s);
 						  s.setTree(t);
 						  return t;
