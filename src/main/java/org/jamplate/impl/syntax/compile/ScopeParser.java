@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl.syntax.compile;
 
-import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
 import org.jamplate.impl.syntax.model.SyntaxScope;
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
 import org.jamplate.util.Parsing;

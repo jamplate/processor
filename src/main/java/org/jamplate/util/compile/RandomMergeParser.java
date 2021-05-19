@@ -15,8 +15,8 @@
  */
 package org.jamplate.util.compile;
 
-import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Intersection;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
@@ -29,8 +29,8 @@ import java.util.Set;
 
 /**
  * A parser that merges the clashing sketches resulting from another parser randomly. This
- * parser is made just to avoid the sorting cost of {@link MergeParser}. So, use
- * this class only if sure no complex clashing might occur in the results.
+ * parser is made just to avoid the sorting cost of {@link MergeParser}. So, use this
+ * class only if sure no complex clashing might occur in the results.
  * <br>
  * The "complex clashes" include (but not limited to) a scope clashes with another scope
  * that should lose but won just because there was another scope won against it. This

@@ -15,8 +15,6 @@
  */
 package org.jamplate.diagnostic;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * An interface to store and print notes, warnings and errors to the console.
  *
@@ -25,18 +23,4 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.2.0 ~2021.05.16
  */
 public interface Diagnostic {
-	/**
-	 * Print all the held messages.
-	 *
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	void flush();
-
-	/**
-	 * Add the given message to be printed.
-	 *
-	 * @param message the message to be printed.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	void print(@Nullable Message message);
 }

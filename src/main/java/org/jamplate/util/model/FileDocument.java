@@ -19,6 +19,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.DocumentNotFoundError;
 import org.jamplate.model.DocumentNotFoundException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Objects;
@@ -39,6 +40,7 @@ public class FileDocument implements Document {
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@NotNull
 	protected final File file;
 
 	/**
@@ -46,7 +48,20 @@ public class FileDocument implements Document {
 	 *
 	 * @since 0.2.0 ~2021.01.16
 	 */
+	@Nullable
 	protected String content;
+
+	/**
+	 * Construct a new document for the file with the given {@code filename}.
+	 *
+	 * @param filename the name of the file for the constructed document.
+	 * @throws NullPointerException if the given {@code filename} is null.
+	 * @since 0.2.0 ~2021.01.13
+	 */
+	public FileDocument(@NotNull String filename) {
+		Objects.requireNonNull(filename, "filename");
+		this.file = new File(filename);
+	}
 
 	/**
 	 * Construct a new document for the given {@code file}.
@@ -55,12 +70,13 @@ public class FileDocument implements Document {
 	 * @throws NullPointerException if the given {@code file} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public FileDocument(File file) {
+	public FileDocument(@NotNull File file) {
+		Objects.requireNonNull(file, "file");
 		this.file = file;
 	}
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(@Nullable Object object) {
 		if (object == this)
 			return true;
 		if (object instanceof Document) {
@@ -81,7 +97,7 @@ public class FileDocument implements Document {
 	@Override
 	public InputStream openInputStream() throws FileNotFoundException, DocumentNotFoundException {
 		if (!this.file.exists())
-			throw new DocumentNotFoundException("Document not available " + this.file);
+			throw new DocumentNotFoundException("Corresponding file does not exist", this);
 		return this.content == null ?
 			   new FileInputStream(this.file) :
 			   new ByteArrayInputStream(this.content.getBytes());
@@ -91,7 +107,7 @@ public class FileDocument implements Document {
 	@Override
 	public Reader openReader() throws FileNotFoundException, DocumentNotFoundException {
 		if (!this.file.exists())
-			throw new DocumentNotFoundException("Document not available " + this.file);
+			throw new DocumentNotFoundException("Corresponding file does not exist", this);
 		return this.content == null ?
 			   new FileReader(this.file) :
 			   new StringReader(this.content);
@@ -102,7 +118,7 @@ public class FileDocument implements Document {
 	public CharSequence read() {
 		if (!this.file.exists())
 			throw new DocumentNotFoundError(
-					new DocumentNotFoundException("Document not available " + this.file)
+					new DocumentNotFoundException("Corresponding file does not exist", this)
 			);
 		if (this.content == null)
 			try (Reader reader = new FileReader(this.file)) {

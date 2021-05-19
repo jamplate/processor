@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * This exception is a more specific exception of the {@link TreeClashException}. This
- * exception indicates that a sketch is clashing with another sketch by having the same
- * bounds as that other sketch.
+ * exception indicates that a tree is clashing with another tree by having the same bounds
+ * as that other tree.
  *
  * @author LSafer
  * @version 0.2.0
@@ -85,11 +85,11 @@ public class TreeTakeoverException extends TreeClashException {
 	}
 
 	/**
-	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
-	 * illegal} sketches.
+	 * Construct a new tree takeover exception with the given {@code primary} and {@code
+	 * illegal} trees.
 	 *
-	 * @param primary the primary sketch.
-	 * @param illegal the illegal sketch.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeTakeoverException(@Nullable Tree primary, @Nullable Tree illegal) {
@@ -97,15 +97,42 @@ public class TreeTakeoverException extends TreeClashException {
 	}
 
 	/**
-	 * Construct a new sketch takeover exception with the given {@code primary} and {@code
-	 * illegal} sketches and the given {@code message}.
+	 * Construct a new tree takeover exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
 	 *
 	 * @param message the message.
-	 * @param primary the primary sketch.
-	 * @param illegal the illegal sketch.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeTakeoverException(@Nullable String message, @Nullable Tree primary, @Nullable Tree illegal) {
 		super(message, primary, illegal);
+	}
+
+	/**
+	 * Construct a new tree takeover exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
+	 *
+	 * @param message the message.
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeTakeoverException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
+		super(message, cause, primary, illegal);
+	}
+
+	/**
+	 * Construct a new tree takeover exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
+	 *
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeTakeoverException(@Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
+		super(cause, primary, illegal);
 	}
 }

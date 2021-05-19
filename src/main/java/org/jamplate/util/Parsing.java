@@ -44,52 +44,6 @@ public final class Parsing {
 	}
 
 	/**
-	 * Check if the given range fits in the given {@code tree} and does not clash and is
-	 * not taken by any child in the given {@code tree}.
-	 *
-	 * @param tree the tree to be checked.
-	 * @param i    the first index in the range to be checked.
-	 * @param j    one past the last index in range to be checked.
-	 * @return true, if the given range is within the given {@code tree} and does not
-	 * 		clash and is not taken by any tree in it.
-	 * @throws NullPointerException     if the given {@code tree} is null.
-	 * @throws IllegalArgumentException if {@code i < 0} or {@code j < i}.
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	public static boolean check(@NotNull Tree tree, int i, int j) {
-		Objects.requireNonNull(tree, "tree");
-		if (i < 0 || j < i)
-			throw new IllegalArgumentException("i=" + i + " j=" + j);
-
-		switch (Dominance.compute(tree, i, j)) {
-			case PART:
-				//if the range is within `tree`
-				for (Tree s : tree)
-					switch (Dominance.compute(s, i, j)) {
-						case CONTAIN:
-						case NONE:
-							//if the range does not clash with `n`
-							continue;
-						case PART:
-						case EXACT:
-						case SHARE:
-							return false;
-						default:
-							throw new InternalError();
-					}
-
-				return true;
-			case NONE:
-			case EXACT:
-			case SHARE:
-			case CONTAIN:
-				return false;
-			default:
-				throw new InternalError();
-		}
-	}
-
-	/**
 	 * Construct a new matcher over the current content of the document of the given
 	 * {@code tree} with the range of the reference of the given {@code tree} as the
 	 * region of it.
@@ -425,5 +379,52 @@ public final class Parsing {
 
 		//no valid matches
 		return Collections.emptyList();
+	}
+
+	/**
+	 * Check if the given range fits in the given {@code tree} and does not clash and is
+	 * not taken by any child in the given {@code tree}.
+	 *
+	 * @param tree the tree to be checked.
+	 * @param i    the first index in the range to be checked.
+	 * @param j    one past the last index in range to be checked.
+	 * @return true, if the given range is within the given {@code tree} and does not
+	 * 		clash and is not taken by any tree in it.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalArgumentException if {@code i < 0} or {@code j < i}.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Contract(pure = true)
+	private static boolean check(@NotNull Tree tree, int i, int j) {
+		Objects.requireNonNull(tree, "tree");
+		if (i < 0 || j < i)
+			throw new IllegalArgumentException("i=" + i + " j=" + j);
+
+		switch (Dominance.compute(tree, i, j)) {
+			case PART:
+				//if the range is within `tree`
+				for (Tree s : tree)
+					switch (Dominance.compute(s, i, j)) {
+						case CONTAIN:
+						case NONE:
+							//if the range does not clash with `n`
+							continue;
+						case PART:
+						case EXACT:
+						case SHARE:
+							return false;
+						default:
+							throw new InternalError();
+					}
+
+				return true;
+			case NONE:
+			case EXACT:
+			case SHARE:
+			case CONTAIN:
+				return false;
+			default:
+				throw new InternalError();
+		}
 	}
 }

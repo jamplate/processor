@@ -15,8 +15,8 @@
  */
 package org.jamplate.util.compile;
 
-import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

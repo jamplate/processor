@@ -15,6 +15,7 @@
  */
 package org.jamplate.compile;
 
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -65,8 +65,8 @@ public interface Parser {
 
 	/**
 	 * Return a new parser that uses this parser for parsing only if the given {@code
-	 * predicate} returned {@code true} on the compilation and the tree to be parsed.
-	 * Otherwise, returns an empty set.
+	 * predicate} returned {@code true} on the tree to be parsed. Otherwise, returns an
+	 * empty set.
 	 *
 	 * @param predicate the predicate to be used.
 	 * @return a parser that uses this parser and only parses if the given {@code
@@ -76,10 +76,10 @@ public interface Parser {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	default Parser condition(@NotNull BiPredicate<Compilation, Tree> predicate) {
+	default Parser condition(@NotNull Predicate<Tree> predicate) {
 		Objects.requireNonNull(predicate, "predicate");
 		return (compilation, tree) ->
-				predicate.test(compilation, tree) ?
+				predicate.test(tree) ?
 				this.parse(compilation, tree) :
 				Collections.emptySet();
 	}
@@ -95,7 +95,7 @@ public interface Parser {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	@Contract(pure = true)
+	@Contract(value = "_->new", pure = true)
 	default Parser filter(@NotNull Predicate<Tree> predicate) {
 		Objects.requireNonNull(predicate, "predicate");
 		return (compilation, tree) ->
@@ -179,6 +179,6 @@ public interface Parser {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	@Contract(pure = true)
+	@Contract(value = "_,_->new", pure = true)
 	Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree);
 }

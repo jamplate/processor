@@ -55,11 +55,11 @@ public class ReferenceTest {
 		Reference bc = letters.subReference(1, 2);
 		Reference c0 = reference.subReference(2, 2);
 
-		assertEquals("Wrong Slice", "ABC", document.read(letters).toString());
-		assertEquals("Wrong Slice", "0123", document.read(numbers).toString());
-		assertEquals("Wrong Slice", "B", document.read(b).toString());
-		assertEquals("Wrong Slice", "BC", document.read(bc).toString());
-		assertEquals("Wrong Slice", "C0", document.read(c0).toString());
+		assertEquals("ABC", document.read(letters).toString(), "Wrong Slice");
+		assertEquals("0123", document.read(numbers).toString(), "Wrong Slice");
+		assertEquals("B", document.read(b).toString(), "Wrong Slice");
+		assertEquals("BC", document.read(bc).toString(), "Wrong Slice");
+		assertEquals("C0", document.read(c0).toString(), "Wrong Slice");
 
 		assertRelation(reference, reference, Intersection.SAME);
 		assertRelation(reference, letters, Intersection.START);
@@ -89,20 +89,3 @@ public class ReferenceTest {
 		assertRelation(c0, c0, Intersection.SAME);
 	}
 }
-//	@Test
-//	public void lines() {
-//		Document document = new PseudoDocument("ABC\n123\n=+-");
-//		Reference reference = new Reference(0, document.read().length());
-//		Reference c = reference.subReference(2);
-//		Reference ln = reference.subReference(3);
-//		Reference n3 = reference.subReference(6);
-//		Reference ln2 = reference.subReference(7);
-//		Reference eod = reference.subReference(11);
-//
-//		assertLine(reference, 1);
-//		assertLine(c, 1);
-//		assertLine(ln, 2);
-//		assertLine(n3, 2);
-//		assertLine(ln2, 3);
-//		assertLine(eod, 3);
-//	}

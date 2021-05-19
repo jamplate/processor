@@ -15,12 +15,8 @@
  */
 package org.jamplate.impl.syntax.compile;
 
-import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
-import org.jamplate.model.Document;
-import org.jamplate.model.Reference;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
+import org.jamplate.model.*;
 import org.jamplate.util.Parsing;
 import org.jetbrains.annotations.NotNull;
 

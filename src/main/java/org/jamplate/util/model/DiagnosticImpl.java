@@ -13,11 +13,16 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
+package org.jamplate.util.model;
+
+import org.jamplate.diagnostic.Diagnostic;
+
 /**
- * Sketches for punctuation marks.
+ * A basic implementation of the interface {@link Diagnostic}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.01.31
+ * @since 0.2.0 ~2021.05.19
  */
-package org.jamplate_x.sketch.punctuation;
+public class DiagnosticImpl implements Diagnostic {
+}

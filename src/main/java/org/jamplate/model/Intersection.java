@@ -607,19 +607,6 @@ public enum Intersection {
 	}
 
 	/**
-	 * Returns the direction from this the opposite intersection to this intersection.
-	 *
-	 * @return the direction of this. Or {@code null} if there cannot be a direction
-	 * 		between them.
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	@Contract(pure = true)
-	public Relation direction() {
-		return this.relation;
-	}
-
-	/**
 	 * Returns how dominance this intersection over its opposite intersection.
 	 *
 	 * @return how dominant this intersection.
@@ -632,6 +619,19 @@ public enum Intersection {
 	}
 
 	/**
+	 * Returns the relation from this the opposite intersection to this intersection.
+	 *
+	 * @return the direction of this. Or {@code null} if there cannot be a direction
+	 * 		between them.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public Relation relation() {
+		return this.relation;
+	}
+
+	/**
 	 * Get the opposite intersection of this intersection.
 	 *
 	 * @return the opposite intersection. Or null if none.
@@ -641,48 +641,3 @@ public enum Intersection {
 	@Contract(pure = true)
 	public abstract Intersection opposite();
 }
-//	public static intersection compute(Node node, int s, int e) {
-//		Objects.requireNonNull(node, "node");
-//		return intersection.compute(node.reference(), s, e);
-//	}
-//
-//	public static intersection compute(Node node, Reference reference) {
-//		Objects.requireNonNull(node, "node");
-//		return intersection.compute(node.reference(), reference);
-//	}
-//
-//	public static intersection compute(Node node, Node other) {
-//		Objects.requireNonNull(node, "node");
-//		Objects.requireNonNull(other, "other");
-//		return intersection.compute(node.reference(), other.reference());
-//	}
-
-//
-//	/**
-//	 * <b>Parallel Universe</b> {@link #PARALLEL (opposite)}
-//	 * <br>
-//	 * When the two source found to be from different document.
-//	 *
-//	 * @see Dominance#NONE
-//	 * @since 0.2.0 ~2021.01.26
-//	 */
-//	PARALLEL("PARALLEL", Dominance.NONE),
-//
-//	/**
-//	 * Calculate the intersection between the nodes {@code node} and {@code other}.
-//	 *
-//	 * @param node  the first node.
-//	 * @param other the second node.
-//	 * @return the intersection constant describing the intersection of the second node to the
-//	 * 		first node.
-//	 * @throws NullPointerException if the given {@code node} or {@code other} or {@code
-//	 *                              node.getReference()} or {@code other.getReference()}
-//	 *                              is null.
-//	 * @see intersection#compute(int, int, int, int)
-//	 * @since 0.2.0 ~2021.02.15
-//	 */
-//	public static intersection compute(Node node, Node other) {
-//		Objects.requireNonNull(node, "node");
-//		Objects.requireNonNull(other, "other");
-//		return intersection.compute(node.getReference(), other.getReference());
-//	}

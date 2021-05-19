@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An exception to indicate that a provided sketch is out of the expected bounds. Usually,
- * this exception is raised when a sketch is about to be put into a place where that
- * sketch's reference is not contained on.
+ * An exception to indicate that a provided tree is out of the expected bounds. Usually,
+ * this exception is raised when a tree is about to be put into a place where that tree's
+ * reference is not contained on.
  *
  * @author LSafer
  * @version 0.2.0
@@ -32,12 +32,12 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	private static final long serialVersionUID = -2054859355256526113L;
 
 	/**
-	 * The sketch that defines the bounds.
+	 * The tree that defines the bounds.
 	 *
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	private Tree bounds;
+	protected Tree bounds;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -94,11 +94,11 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	}
 
 	/**
-	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
-	 * {@code illegal} sketches.
+	 * Construct a new tree out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} trees.
 	 *
-	 * @param bounds  the sketch that defines the bounds.
-	 * @param illegal the illegal sketch.
+	 * @param bounds  the tree that defines the bounds.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeOutOfBoundsException(@Nullable Tree bounds, @Nullable Tree illegal) {
@@ -107,12 +107,12 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	}
 
 	/**
-	 * Construct a new sketch out of bounds exception with the given {@code bounds} and
-	 * {@code illegal} sketches.
+	 * Construct a new tree out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} trees.
 	 *
 	 * @param message the message.
-	 * @param bounds  the sketch that defines the bounds.
-	 * @param illegal the illegal sketch.
+	 * @param bounds  the tree that defines the bounds.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeOutOfBoundsException(@Nullable String message, @Nullable Tree bounds, @Nullable Tree illegal) {
@@ -121,9 +121,38 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	}
 
 	/**
-	 * Return the sketch that defines the bounds.
+	 * Construct a new tree out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} trees.
 	 *
-	 * @return the bounds sketch.
+	 * @param message the message.
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param bounds  the tree that defines the bounds.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeOutOfBoundsException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree bounds, @Nullable Tree illegal) {
+		super(message, cause, illegal);
+		this.bounds = bounds;
+	}
+
+	/**
+	 * Construct a new tree out of bounds exception with the given {@code bounds} and
+	 * {@code illegal} trees.
+	 *
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param bounds  the tree that defines the bounds.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeOutOfBoundsException(@Nullable Throwable cause, @Nullable Tree bounds, @Nullable Tree illegal) {
+		super(cause, illegal);
+		this.bounds = bounds;
+	}
+
+	/**
+	 * Return the tree that defines the bounds.
+	 *
+	 * @return the bounds tree. Or {@code null} if unknown or non-existing.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable

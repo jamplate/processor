@@ -1,9 +1,13 @@
 package org.jamplate.impl.syntax;
 
-import org.jamplate.compile.Compilation;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Document;
+import org.jamplate.model.Environment;
 import org.jamplate.model.Tree;
 import org.jamplate.util.Trees;
-import org.jamplate.util.compile.BaseCompilation;
+import org.jamplate.util.model.CompilationImpl;
+import org.jamplate.util.model.EnvironmentImpl;
+import org.jamplate.util.model.FileDocument;
 import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.RepeatedTest;
 
@@ -14,10 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class JamplateSyntaxTest {
+	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
+	@RepeatedTest(1)
+	public void axe() {
+		Environment environment = new EnvironmentImpl();
+		Document document = new FileDocument("test_input/axe.jamplate");
+		Tree tree = new Tree(document);
+		Compilation compilation = new CompilationImpl(environment, tree);
+	}
+
 	@RepeatedTest(50)
 	public void parse() {
-		Tree tree = new Tree(new PseudoDocument("{\"name\":\"\\\"Sula{i}man\\\"{](\\\"\", \"ag}e\":\"\\\\\"}"));
-		Compilation compilation = new BaseCompilation(tree);
+		Environment environment = new EnvironmentImpl();
+		Document document = new PseudoDocument("{\"name\":\"\\\"Sula{i}man\\\"{](\\\"\", \"ag}e\":\"\\\\\"}");
+		Tree tree = new Tree(document);
+		Compilation compilation = new CompilationImpl(environment, tree);
 
 		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
 
@@ -56,7 +71,7 @@ public class JamplateSyntaxTest {
 	public void parseNested() {
 		String value = String.join("", Collections.nCopies(50, "{")) +
 					   String.join("", Collections.nCopies(50, "}[")) + "]";
-		Compilation compilation = new BaseCompilation(new Tree(new PseudoDocument(value)));
+		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
 
@@ -70,7 +85,7 @@ public class JamplateSyntaxTest {
 	@RepeatedTest(50)
 	public void parseRepeated() {
 		String value = String.join("", Collections.nCopies(50, "{][}"));
-		Compilation compilation = new BaseCompilation(new Tree(new PseudoDocument(value)));
+		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
 
@@ -91,7 +106,7 @@ public class JamplateSyntaxTest {
 	@RepeatedTest(50)
 	public void parseRepeatedIdentical() {
 		String value = String.join("", Collections.nCopies(50, "\"'\""));
-		Compilation compilation = new BaseCompilation(new Tree(new PseudoDocument(value)));
+		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		//I am actually stunned to see that this works with RandomMergeParser!!!
 		JamplateSyntax.PARSER_PROCESSOR.process(compilation);

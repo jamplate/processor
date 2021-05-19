@@ -17,6 +17,7 @@ package org.jamplate.util.model;
 
 import org.jamplate.model.Document;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -40,12 +41,14 @@ public class PseudoDocument implements Document {
 	 *
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@NotNull
 	protected final CharSequence content;
 	/**
 	 * The identifier of this document.
 	 *
 	 * @since 0.2.0 ~2021.02.17
 	 */
+	@NotNull
 	protected final String identifier;
 
 	/**
@@ -71,7 +74,7 @@ public class PseudoDocument implements Document {
 	 * @throws NullPointerException if the given {@code content} is null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public PseudoDocument(CharSequence content) {
+	public PseudoDocument(@NotNull CharSequence content) {
 		Objects.requireNonNull(content, "content");
 		this.content = content;
 		this.identifier = Integer.toHexString(System.identityHashCode(content));
@@ -92,7 +95,7 @@ public class PseudoDocument implements Document {
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public PseudoDocument(CharSequence content, String identifier) {
+	public PseudoDocument(@NotNull CharSequence content, @NotNull String identifier) {
 		Objects.requireNonNull(content, "content");
 		Objects.requireNonNull(identifier, "identifier");
 		this.content = content;
@@ -100,7 +103,7 @@ public class PseudoDocument implements Document {
 	}
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(@Nullable Object object) {
 		if (object == this)
 			return true;
 		if (object instanceof Document) {

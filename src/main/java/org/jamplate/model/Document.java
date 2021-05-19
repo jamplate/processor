@@ -15,6 +15,7 @@
  */
 package org.jamplate.model;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,11 +36,12 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return a new input-stream that reads the content of this document.
-	 * @throws IOException                 if any I/O exception occurs.
+	 * @throws IOException               if any I/O exception occurs.
 	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	default InputStream openInputStream(@NotNull Reference reference) throws IOException {
 		Objects.requireNonNull(reference, "reference");
 		//noinspection ALL
@@ -183,11 +185,12 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return a new reader that reads the content of this document.
-	 * @throws IOException                 if any I/O exception occurs. (optional)
+	 * @throws IOException               if any I/O exception occurs. (optional)
 	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	default Reader openReader(@NotNull Reference reference) throws IOException {
 		Objects.requireNonNull(reference, "reference");
 		//noinspection ALL
@@ -324,11 +327,12 @@ public interface Document extends Serializable {
 	 *
 	 * @param reference the range to be read.
 	 * @return the content of this document. (unmodifiable view)
-	 * @throws IOError                 if any I/O exception occurs. (optional)
+	 * @throws IOError               if any I/O exception occurs. (optional)
 	 * @throws DocumentNotFoundError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	default CharSequence read(@NotNull Reference reference) {
 		Objects.requireNonNull(reference, "reference");
 		int p = reference.position();
@@ -351,6 +355,7 @@ public interface Document extends Serializable {
 	 * @return true, if the given {@code object} is a document and equals this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@Contract(value = "null->false", pure = true)
 	@Override
 	boolean equals(@Nullable Object object);
 
@@ -366,6 +371,7 @@ public interface Document extends Serializable {
 	 * @return the hash code of this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
+	@Contract(pure = true)
 	@Override
 	int hashCode();
 
@@ -379,40 +385,44 @@ public interface Document extends Serializable {
 	 * @return a string representation of this document.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	@Override
 	@NotNull
+	@Contract(pure = true)
+	@Override
 	String toString();
 
 	/**
 	 * Open a new input-stream that reads the content of this document.
 	 *
 	 * @return a new input-stream that reads the content of this document.
-	 * @throws IOException                 if any I/O exception occurs.
+	 * @throws IOException               if any I/O exception occurs.
 	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	InputStream openInputStream() throws IOException;
 
 	/**
 	 * Open a new reader that reads the content of this document.
 	 *
 	 * @return a new reader that reads the content of this document.
-	 * @throws IOException                 if any I/O exception occurs. (optional)
+	 * @throws IOException               if any I/O exception occurs. (optional)
 	 * @throws DocumentNotFoundException if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	Reader openReader() throws IOException;
 
 	/**
 	 * Read the content of this document.
 	 *
 	 * @return the content of this document. (unmodifiable view)
-	 * @throws IOError                 if any I/O exception occurs. (optional)
+	 * @throws IOError               if any I/O exception occurs. (optional)
 	 * @throws DocumentNotFoundError if this document is not available for reading.
 	 * @since 0.2.0 ~2021.01.13
 	 */
 	@NotNull
+	@Contract(pure = true)
 	CharSequence read();
 }

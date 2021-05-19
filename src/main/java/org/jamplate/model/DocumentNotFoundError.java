@@ -15,6 +15,8 @@
  */
 package org.jamplate.model;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOError;
 
 /**
@@ -29,14 +31,15 @@ public class DocumentNotFoundError extends IOError {
 	private static final long serialVersionUID = -3082811406541644283L;
 
 	/**
-	 * Constructs a new instance of IOError with the specified cause. The IOError is
-	 * created with the detail message of
+	 * Constructs a new instance of DocumentNotFoundError with the specified cause. The
+	 * DocumentNotFoundError is created with the detail message of
 	 * <tt>(cause==null ? null : cause.toString())</tt> (which typically
 	 * contains the class and detail message of cause).
 	 *
 	 * @param cause The cause of this error, or <tt>null</tt> if the cause is not known
+	 * @since 0.2.0 ~2021.05.19
 	 */
-	public DocumentNotFoundError(Throwable cause) {
+	public DocumentNotFoundError(@Nullable Throwable cause) {
 		super(cause);
 	}
 }

@@ -15,6 +15,7 @@
  */
 package org.jamplate.compile;
 
+import org.jamplate.model.Compilation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

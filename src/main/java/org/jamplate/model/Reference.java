@@ -15,6 +15,10 @@
  */
 package org.jamplate.model;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -97,8 +101,9 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @throws NullPointerException if the given {@code reference} is null.
 	 * @since 0.2.0 ~2021.02.17
 	 */
+	@Contract(pure = true)
 	@Override
-	public int compareTo(Reference reference) {
+	public int compareTo(@NotNull Reference reference) {
 		Objects.requireNonNull(reference, "reference");
 		return reference.position < this.position ?
 			   1 :
@@ -120,8 +125,9 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @return if the given object is a reference and equals this reference.
 	 * @since 0.2.0 ~2021.01.07
 	 */
+	@Contract(value = "null->false", pure = true)
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(@Nullable Object object) {
 		if (object == this)
 			return true;
 		if (object instanceof Reference) {
@@ -143,6 +149,7 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @return the hash code of this reference.
 	 * @since 0.2.0 ~2021.01.07
 	 */
+	@Contract(pure = true)
 	@Override
 	public int hashCode() {
 		return this.position + this.length;
@@ -157,6 +164,8 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @return a string representation of this reference.
 	 * @since 0.2.0 ~2021.01.06
 	 */
+	@NotNull
+	@Contract(pure = true)
 	@Override
 	public String toString() {
 		return "(" + this.position + ", " + this.length + ")";
@@ -169,6 +178,7 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @return the length of the content of this reference.
 	 * @since 0.2.0 ~2021.01.10
 	 */
+	@Contract(pure = true)
 	public int length() {
 		return this.length;
 	}
@@ -179,6 +189,7 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @return the position of this reference.
 	 * @since 0.2.0 ~2021.01.04
 	 */
+	@Contract(pure = true)
 	public int position() {
 		return this.position;
 	}
@@ -195,11 +206,15 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @throws IllegalStateException     if this reference is a deserialized reference.
 	 * @since 0.2.0 ~2021.01.06
 	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
 	public Reference subReference(int position) {
 		if (position < 0)
 			throw new IllegalArgumentException("negative position");
 		if (position > this.length)
 			throw new IndexOutOfBoundsException("position > this.length");
+		if (position == 0)
+			return this;
 		return new Reference(
 				this.position + position,
 				this.length - position
@@ -221,6 +236,8 @@ public final class Reference implements Serializable, Comparable<Reference> {
 	 * @throws IllegalStateException     if this reference is a deserialized reference.
 	 * @since 0.2.0 ~2021.01.06
 	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
 	public Reference subReference(int position, int length) {
 		if (position < 0)
 			throw new IllegalArgumentException("negative position");
@@ -228,62 +245,11 @@ public final class Reference implements Serializable, Comparable<Reference> {
 			throw new IllegalArgumentException("negative length");
 		if (position + length > this.length)
 			throw new IndexOutOfBoundsException("position + length > this.length");
+		if (position == 0 && length == this.length)
+			return this;
 		return new Reference(
 				this.position + position,
 				length
 		);
 	}
 }
-//	/**
-//	 * Return the line number of this reference.
-//	 *
-//	 * @return the line number of this reference.
-//	 * @since 0.2.0 ~2021.01.26
-//	 */
-//	int line();
-//
-//	/**
-//	 * Return a reference for the whole line this reference has occurred at.
-//	 *
-//	 * @return a reference of the whole line of this.
-//	 * @throws IllegalStateException if this reference is a deserialized reference.
-//	 * @since 0.2.0 ~2021.01.27
-//	 */
-//	Reference lineReference();
-//
-//	/**
-//	 * Return the content of this reference as a string. This method should always return
-//	 * the same value.
-//	 *
-//	 * @return the content of this reference. (unmodifiable)
-//	 * @throws IllegalStateException if this reference is a deserialized reference.
-//	 * @throws IOError               if any I/O exception occurs.
-//	 * @since 0.2.0 ~2021.01.08
-//	 */
-//	CharSequence content();
-//
-//	/**
-//	 * The document that this reference is from.
-//	 *
-//	 * @return the document of this reference.
-//	 * @since 0.2.0 ~2021.01.07
-//	 */
-//	Document document();
-//
-//	/**
-//	 * Return a reference for the whole document this reference has occurred at.
-//	 *
-//	 * @return a reference of the whole document of this.
-//	 * @throws IllegalStateException if this reference is a deserialized reference.
-//	 * @since 0.2.0 ~2021.01.31
-//	 */
-//	Reference documentReference();
-
-//	/**
-//	 * The standard reference comparator. This comparator is sorting references from the
-//	 * first to the last and from the longest to the shortest.
-//	 *
-//	 * @since 0.2.0 ~2021.01.09
-//	 */
-//	public static final Comparator<Reference> COMPARATOR = Comparator.comparingInt(Reference::position)
-//			.thenComparing(Comparator.comparingInt(Reference::length).reversed());

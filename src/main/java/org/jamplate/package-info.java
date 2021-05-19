@@ -14,17 +14,7 @@
  *	limitations under the License.
  */
 /**
- * Jamplate is a java pre-processor.
- * <br>
- * Package layout:
- * <ul>
- *     <li>
- *         Using the package {@link org.jamplate.compile}, source code get converted into
- *         instances of the package {@link org.jamplate.model}
- *     </li>
- * </ul>
- * <br>
- * Complete synchronization support is left for the user to handle it.
+ * This is the top package of the jamplate preprocessor.
  *
  * @author LSafer
  * @version 0.2.0

@@ -184,6 +184,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
+	@Contract(value = "->new", pure = true)
 	@Override
 	public Iterator<Tree> iterator() {
 		//noinspection ReturnOfInnerClass
@@ -234,6 +235,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	@NotNull
+	@Contract(pure = true)
 	@Override
 	public String toString() {
 		return this.sketch + " " + this.reference;
@@ -482,7 +484,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * @param sketch the sketch to be set.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	@Contract(mutates = "this,param")
+	@Contract(mutates = "this")
 	public void setSketch(@NotNull Sketch sketch) {
 		Objects.requireNonNull(sketch, "sketch");
 		this.sketch = sketch;

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An exception indicating that an illegal sketch was provided.
+ * An exception indicating that an illegal tree was provided.
  *
  * @author LSafer
  * @version 0.2.0
@@ -30,7 +30,7 @@ public class IllegalTreeException extends IllegalArgumentException {
 	private static final long serialVersionUID = -5393956633280978236L;
 
 	/**
-	 * The illegal sketch.
+	 * The illegal tree.
 	 *
 	 * @since 0.2.0 ~2021.05.15
 	 */
@@ -92,9 +92,9 @@ public class IllegalTreeException extends IllegalArgumentException {
 	}
 
 	/**
-	 * Construct a new illegal sketch exception with the given {@code illegal} sketch.
+	 * Construct a new illegal tree exception with the given {@code illegal} tree.
 	 *
-	 * @param illegal the illegal sketch.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public IllegalTreeException(@Nullable Tree illegal) {
@@ -102,11 +102,11 @@ public class IllegalTreeException extends IllegalArgumentException {
 	}
 
 	/**
-	 * Construct a new illegal sketch exception with the given {@code illegal} sketch and
-	 * the given {@code message}.
+	 * Construct a new illegal tree exception with the given {@code illegal} tree and the
+	 * given {@code message}.
 	 *
 	 * @param message the message of the exception.
-	 * @param illegal the illegal sketch.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public IllegalTreeException(@Nullable String message, @Nullable Tree illegal) {
@@ -115,9 +115,36 @@ public class IllegalTreeException extends IllegalArgumentException {
 	}
 
 	/**
-	 * Return the illegal sketch.
+	 * Construct a new illegal tree exception with the given {@code illegal} tree and the
+	 * given {@code message} and {@code cause}.
 	 *
-	 * @return the illegal sketch.
+	 * @param message the message of the exception.
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public IllegalTreeException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree illegal) {
+		this(message, cause);
+		this.illegal = illegal;
+	}
+
+	/**
+	 * Construct a new illegal tree exception with the given {@code illegal} tree and the
+	 * given {@code cause}.
+	 *
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public IllegalTreeException(@Nullable Throwable cause, @Nullable Tree illegal) {
+		this(cause);
+		this.illegal = illegal;
+	}
+
+	/**
+	 * Return the illegal tree that caused this exception to be thrown.
+	 *
+	 * @return the illegal tree. Or {@code null} if unknown or non-existing.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable

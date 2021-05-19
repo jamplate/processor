@@ -151,6 +151,7 @@ public class Sketch implements Serializable {
 	 * @throws IllegalStateException if this sketch already have a tree set.
 	 * @since 0.2.0 ~2021.05.17
 	 */
+	@Contract(mutates = "this")
 	public void setTree(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		if (this.tree != null)

@@ -16,9 +16,9 @@
 package org.jamplate.impl.syntax;
 
 import org.jamplate.compile.Parser;
-import org.jamplate.impl.syntax.model.SyntaxScope;
 import org.jamplate.impl.syntax.compile.LiteralParser;
 import org.jamplate.impl.syntax.compile.ScopeParser;
+import org.jamplate.impl.syntax.model.SyntaxScope;
 import org.jetbrains.annotations.NotNull;
 
 /**

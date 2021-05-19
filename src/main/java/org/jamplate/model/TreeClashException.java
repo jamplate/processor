@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An exception to indicate that a provided sketch is clashing with another sketch and the
+ * An exception to indicate that a provided tree is clashing with another tree and the
  * operation cannot continue because of that.
  *
  * @author LSafer
@@ -31,12 +31,12 @@ public class TreeClashException extends IllegalTreeException {
 	private static final long serialVersionUID = -7585834524850028148L;
 
 	/**
-	 * The primary sketch.
+	 * The primary tree.
 	 *
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	private Tree primary;
+	protected Tree primary;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -93,11 +93,11 @@ public class TreeClashException extends IllegalTreeException {
 	}
 
 	/**
-	 * Construct a new sketch clash exception with the given {@code primary} and {@code
-	 * illegal} sketches.
+	 * Construct a new tree clash exception with the given {@code primary} and {@code
+	 * illegal} trees.
 	 *
-	 * @param primary the primary sketch.
-	 * @param illegal the illegal sketch.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable Tree primary, @Nullable Tree illegal) {
@@ -106,12 +106,12 @@ public class TreeClashException extends IllegalTreeException {
 	}
 
 	/**
-	 * Construct a new sketch clash exception with the given {@code primary} and {@code
-	 * illegal} sketches and the given {@code message}.
+	 * Construct a new tree clash exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
 	 *
 	 * @param message the message.
-	 * @param primary the primary sketch.
-	 * @param illegal the illegal sketch.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable String message, @Nullable Tree primary, @Nullable Tree illegal) {
@@ -120,9 +120,38 @@ public class TreeClashException extends IllegalTreeException {
 	}
 
 	/**
-	 * Return the primary sketch that the illegal sketch clashed with.
+	 * Construct a new tree clash exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
 	 *
-	 * @return the primary sketch.
+	 * @param message the message.
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeClashException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
+		super(message, cause, illegal);
+		this.primary = primary;
+	}
+
+	/**
+	 * Construct a new tree clash exception with the given {@code primary} and {@code
+	 * illegal} trees and the given {@code message}.
+	 *
+	 * @param cause   the throwable that caused to the construction of this exception.
+	 * @param primary the primary tree.
+	 * @param illegal the illegal tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public TreeClashException(@Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
+		super(cause, illegal);
+		this.primary = primary;
+	}
+
+	/**
+	 * Return the primary tree that the illegal tree clashed with.
+	 *
+	 * @return the primary tree. Or {@code null} if unknown or non-existing.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
