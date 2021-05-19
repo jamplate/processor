@@ -121,7 +121,7 @@ public enum Relation {
 	 *     (s <= e < i <= j)
 	 * </pre>
 	 * <pre>
-	 *     {i == e}
+	 *     {s < e} & {e == i} & {i < j}
 	 *     {e < i}
 	 * </pre>
 	 *
@@ -153,7 +153,7 @@ public enum Relation {
 	 *     (i <= j < s <= e)
 	 * </pre>
 	 * <pre>
-	 *     {j == s}
+	 *     {i < j} & {j == s} & {s < e}
 	 *     {j < s}
 	 * </pre>
 	 *
@@ -215,17 +215,17 @@ public enum Relation {
 	public static Relation compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
-		return j <= s ?
-			   Relation.NEXT :
-			   e <= i ?
+		return e < i ||
+			   e == i && s < e && i < j ?
 			   Relation.PREVIOUS :
-			   s < i && j < e ||
-			   s == i && j < e ||
-			   s < i && j == e ?
+			   j < s ||
+			   j == s && i < j && s < e ?
+			   Relation.NEXT :
+			   j < e && s <= i ||
+			   j == e && s < i ?
 			   Relation.PARENT :
-			   i < s && e < j ||
-			   i == s && e < j ||
-			   i < s && j == e ?
+			   e < j && i <= s ||
+			   j == e && i < s ?
 			   Relation.CHILD :
 			   null;
 	}
