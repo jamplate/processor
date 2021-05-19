@@ -312,7 +312,7 @@ public enum Intersection {
 	 *     (i < j == s < e)
 	 * </pre>
 	 * <pre>
-	 *     {j == s}
+	 *     {i < j} & {j == s} & {s < e}
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
@@ -365,7 +365,7 @@ public enum Intersection {
 	 *     (s < e == i < j)
 	 * </pre>
 	 * <pre>
-	 *     {i == e}
+	 *     {s < e} & {e == i} & {i < j}
 	 * </pre>
 	 *
 	 * @see Dominance#NONE
@@ -464,32 +464,61 @@ public enum Intersection {
 	public static Intersection compute(int i, int j, int s, int e) {
 		if (i < 0 && s < 0 && i > j && s > e)
 			throw new IllegalArgumentException("Illegal Indices");
-		return j == s ?
-			   Intersection.NEXT :
-			   i == e ?
-			   Intersection.PREVIOUS :
-			   j < s ?
-			   Intersection.AFTER :
-			   e < i ?
-			   Intersection.BEFORE :
-			   s < i && j < e ?
-			   Intersection.CONTAINER :
-			   i == s && j < e ?
-			   Intersection.AHEAD :
-			   s < i && j == e ?
-			   Intersection.BEHIND :
-			   i == s && j == e ?
-			   Intersection.SAME :
-			   i < s && e < j ?
-			   Intersection.FRAGMENT :
-			   i == s /*&& e < j*/ ?
-			   Intersection.START :
-			   i < s && j == e ?
-			   Intersection.END :
-			   i < s /*&& s < j && j < e*/ ?
-			   Intersection.OVERFLOW :
-			   //s < i && i < e && e < j ?
-			   Intersection.UNDERFLOW;
+
+		if (e < i)
+			// e < i
+			return Intersection.BEFORE;
+		if (j < s)
+			// j < s
+			return Intersection.AFTER;
+
+		if (i == s)
+			return j == e ?
+				   //i == s && j == e
+				   Intersection.SAME :
+				   j < e ?
+				   //i == s && j < e
+				   Intersection.AHEAD :
+				   //i == s && e < j
+				   Intersection.START;
+		if (j == e)
+			return s < i ?
+				   //s < i && j == e
+				   Intersection.BEHIND :
+				   //i < s && j == e
+				   Intersection.END;
+
+		if (e == i)
+			//s < e && e == i && i < j
+			//if s == e and e == i then s == i
+			//if i == j and e == i then j == e
+			return Intersection.PREVIOUS;
+
+		if (j == s)
+			//i < j && j == s && s < e
+			//if i == j and j == s then i == s
+			//if s == e and j == s then e == j
+			return Intersection.NEXT;
+
+		if (s < i) {
+			if (s < i && j < e)
+				//s < i && j < e
+				return Intersection.CONTAINER;
+
+			if (s < i && i < e && e < j)
+				//s < i && i < e && e < j
+				return Intersection.UNDERFLOW;
+		}
+
+		if (i < s && e < j)
+			//i < s && e < j
+			return Intersection.FRAGMENT;
+
+		if (i < s && s < j && j < e)
+			//i < s && s < j && j < e
+			return Intersection.OVERFLOW;
+
+		return null;
 	}
 
 	/**
