@@ -127,7 +127,7 @@ public class TreeClashException extends IllegalTreeException {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Tree getPrimarySketch() {
+	public Tree getPrimaryTree() {
 		return this.primary;
 	}
 }

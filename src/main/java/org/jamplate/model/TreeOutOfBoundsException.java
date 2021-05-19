@@ -128,7 +128,7 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Tree getBoundsSketch() {
+	public Tree getBoundsTree() {
 		return this.bounds;
 	}
 }

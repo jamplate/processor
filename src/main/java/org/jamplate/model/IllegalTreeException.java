@@ -122,7 +122,7 @@ public class IllegalTreeException extends IllegalArgumentException {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	public Tree getIllegalSketch() {
+	public Tree getIllegalTree() {
 		return this.illegal;
 	}
 }
