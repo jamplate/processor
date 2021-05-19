@@ -232,8 +232,8 @@ public enum Dominance {
 	 *     (s <= e < i <= j)
 	 * </pre>
 	 * <pre>
-	 *     {j == s}
-	 *     {i == e}
+	 *     {i < j} & {j == s} & {s < e}
+	 *     {s < e} & {e == i} & {i < j}
 	 *     {j < s}
 	 *     {e < i}
 	 * </pre>
@@ -274,14 +274,18 @@ public enum Dominance {
 			throw new IllegalArgumentException("Illegal Indices");
 		return i == s && j == e ?
 			   Dominance.EXACT :
-			   j == s || i == e || j < s || e < i ?
-			   Dominance.NONE :
-			   i < s && e < j || i == s && e < j || i < s && j == e ?
-			   Dominance.PART :
-			   s < i && j < e || i == s /*&& j < e*/ || s < i && j == e ?
+			   s < i && j < e ||
+			   i == s && j < e ||
+			   s < i && j == e ?
 			   Dominance.CONTAIN :
-			   //i < s && s < j && j < e || s < i && i < e && e < j ?
-			   Dominance.SHARE;
+			   i < s && e < j ||
+			   i == s /*&& e < j*/ ||
+			   i < s && j == e ?
+			   Dominance.PART :
+			   i < s && s < j /*&& j < e*/ ||
+			   s < i && i < e /*&& e < j*/ ?
+			   Dominance.SHARE :
+			   Dominance.NONE;
 	}
 
 	/**
