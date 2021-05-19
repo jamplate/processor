@@ -14,7 +14,7 @@
  *	limitations under the License.
  */
 /**
- * A package specialized for syntax level processing.
+ * Syntax compiling utilities for the default jamplate implementation.
  *
  * @author LSafer
  * @version 0.2.0

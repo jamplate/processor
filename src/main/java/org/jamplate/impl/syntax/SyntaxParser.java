@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.syntax.compile;
+package org.jamplate.impl.syntax;
 
 import org.jamplate.compile.Parser;
 import org.jamplate.impl.syntax.model.SyntaxScope;
-import org.jamplate.impl.syntax.util.compile.LiteralParser;
-import org.jamplate.impl.syntax.util.compile.ScopeParser;
+import org.jamplate.impl.syntax.compile.LiteralParser;
+import org.jamplate.impl.syntax.compile.ScopeParser;
 import org.jetbrains.annotations.NotNull;
 
 /**

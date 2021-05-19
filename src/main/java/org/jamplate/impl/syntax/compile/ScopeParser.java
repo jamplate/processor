@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.syntax.util.compile;
+package org.jamplate.impl.syntax.compile;
 
 import org.jamplate.compile.Compilation;
 import org.jamplate.compile.Parser;
