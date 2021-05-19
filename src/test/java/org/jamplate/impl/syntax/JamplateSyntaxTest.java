@@ -1,7 +1,6 @@
 package org.jamplate.impl.syntax;
 
 import org.jamplate.compile.Compilation;
-import org.jamplate.impl.syntax.compile.SyntaxKind;
 import org.jamplate.model.Tree;
 import org.jamplate.util.Trees;
 import org.jamplate.util.compile.BaseCompilation;

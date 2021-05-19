@@ -17,7 +17,6 @@ package org.jamplate.impl.syntax;
 
 import org.jamplate.compile.Parser;
 import org.jamplate.compile.Processor;
-import org.jamplate.impl.syntax.compile.SyntaxParser;
 import org.jamplate.util.compile.*;
 import org.jetbrains.annotations.NotNull;
 
