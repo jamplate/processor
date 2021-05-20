@@ -63,11 +63,11 @@ public final class TransientParser {
 		Tree t = new Tree(document, new Reference(
 				position,
 				middle == -1 ? length : middle
-		));
+		), sketch.getType());
 		Tree p = new Tree(document, new Reference(
-				middle == -1 ? position + length : middle + 1,
-				middle == -1 ? 0 : length - middle
-		));
+				middle == -1 ? position + length : position + middle + 1,
+				middle == -1 ? 0 : length - middle - 1
+		), sketch.getParameter());
 
 		sketch.getType().setTree(t);
 		sketch.getParameter().setTree(p);
