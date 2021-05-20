@@ -63,7 +63,7 @@ public final class JamplateSyntax {
 	 * @since 0.2.0 ~2021.05.18
 	 */
 	@NotNull
-	public static final Processor PARSER_PROCESSOR =
+	public static final Processor PROCESSOR =
 			new ParserProcessor(JamplateSyntax.PARSER);
 
 	/**
