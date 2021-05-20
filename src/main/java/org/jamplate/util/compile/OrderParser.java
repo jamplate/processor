@@ -42,7 +42,7 @@ public class OrderParser implements Parser {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected List<Parser> parsers;
+	protected final List<Parser> parsers;
 
 	/**
 	 * Construct a new parser that uses the given {@code parsers} preferring the results
