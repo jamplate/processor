@@ -7,9 +7,9 @@ import org.jamplate.model.Tree;
 import org.jamplate.util.Trees;
 import org.jamplate.util.model.CompilationImpl;
 import org.jamplate.util.model.EnvironmentImpl;
-import org.jamplate.util.model.FileDocument;
 import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Set;
@@ -18,17 +18,57 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class JamplateSyntaxTest {
-	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 	@RepeatedTest(1)
 	public void axe() {
+		Document document = new PseudoDocument(
+				"#DEFINE SpecialInteger (\"10 + 5\") + [(5 + 10), \".01\"]\n" +
+				"import java.util.*; //#Define /*Blocky Block*/\n" +
+				"/*\n" +
+				"              #{SpecialInteger}#\n" +
+				"   */\n" +
+				"#{SpecialInteger + \"But\"}#Float\n" +
+				"//#ifdef string.h\n" +
+				"/*#include <string.h>*/\n" +
+				"//#endif\n"
+		);
+
 		Environment environment = new EnvironmentImpl();
-		Document document = new FileDocument("test_input/axe.jamplate");
 		Compilation compilation = environment.getCompilation(document);
 
 		while (JamplateSyntax.PARSER_PROCESSOR.process(compilation))
 			;
 
-		int i = 0;
+		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
+
+		assertEquals(
+				TransientKind.COMMAND,
+				hashDefine.getSketch().getKind(),
+				"expected #Define"
+		);
+
+		Tree type = hashDefine.getChild().getNext(); //DEFINE
+
+		Tree parameter = type.getNext(); //("10 + 5") + [(5 + 10), ".01"]
+
+		Tree round = parameter.getChild(); //("10 + 5")
+
+		assertEquals(
+				SyntaxKind.ROUND,
+				round.getSketch().getKind(),
+				"(\"10 + 5\") is expected"
+		);
+
+		Tree tenPlusFive = round.getChild().getNext(); //"10 + 5"
+
+		assertEquals(
+				SyntaxKind.DQUOTE,
+				tenPlusFive.getSketch().getKind(),
+				"\"10 + 5\" is expected"
+		);
+
+		Tree square = round.getNext(); //[(5 + 10), ".01"]
+
+		//todo the rest
 	}
 
 	@RepeatedTest(50)
@@ -133,5 +173,28 @@ public class JamplateSyntaxTest {
 					"Expected all to be double quotes"
 			);
 		}
+	}
+
+	@Test
+	public void x() {
+//		Parser parser = new CollectParser(new CommandParser(
+//				Pattern.compile("#"),
+//				Pattern.compile("\n|$"),
+//				Pattern.compile("include"),
+//				Pattern.compile("<string\\.h>")
+//		));
+//		Processor processor = new ParserProcessor(parser);
+//
+//		Document document = new PseudoDocument(
+//				"#include <string.h>\n#outclude <math.h>"
+//		);
+//
+//		Environment environment = new EnvironmentImpl();
+//		Compilation compilation = environment.getCompilation(document);
+//
+//		while (processor.process(compilation))
+//			;
+//
+//		int i = 0;
 	}
 }
