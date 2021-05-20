@@ -16,7 +16,7 @@
 package org.jamplate.impl.syntax.compile;
 
 import org.jamplate.compile.Parser;
-import org.jamplate.impl.syntax.model.SyntaxScope;
+import org.jamplate.impl.model.Scope;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,13 @@ import java.util.stream.Collectors;
  * @since 0.2.0 ~2021.05.16
  */
 public class ScopeParser implements Parser {
+	/**
+	 * The constructor to be used to constructed new sketches.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	protected final Supplier<Scope> constructor;
 	/**
 	 * A pattern matching the closing sequence.
 	 *
@@ -62,6 +70,27 @@ public class ScopeParser implements Parser {
 	 */
 	public ScopeParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
+		this.constructor = Scope::new;
+		this.startPattern = pattern;
+		this.endPattern = pattern;
+	}
+
+	/**
+	 * Construct a new scope parser that parses the sketches looking for areas that starts
+	 * with the given {@code pattern} and ends with the given {@code pattern}.
+	 *
+	 * @param constructor the constructor to be used by the constructed parser to
+	 *                    constructed the sketches of the matches.
+	 * @param pattern     the pattern matching the start and the end of the areas the
+	 *                    constructed parser will be looking for.
+	 * @throws NullPointerException if the given {@code constructor} or {@code pattern} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	public ScopeParser(@NotNull Supplier<Scope> constructor, @NotNull Pattern pattern) {
+		Objects.requireNonNull(constructor, "constructor");
+		Objects.requireNonNull(pattern, "pattern");
+		this.constructor = constructor;
 		this.startPattern = pattern;
 		this.endPattern = pattern;
 	}
@@ -81,6 +110,30 @@ public class ScopeParser implements Parser {
 	public ScopeParser(@NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
+		this.constructor = Scope::new;
+		this.startPattern = startPattern;
+		this.endPattern = endPattern;
+	}
+
+	/**
+	 * Construct a new scope parser that parses the sketches looking for areas that starts
+	 * with the given {@code startPattern} and ends with the given {@code endPattern}.
+	 *
+	 * @param constructor  the constructor to be used by the constructed parser to
+	 *                     constructed the sketches of the matches.
+	 * @param startPattern the pattern matching the start of the areas the constructed
+	 *                     parser will be looking for.
+	 * @param endPattern   the pattern matching the end of the areas the constructed
+	 *                     parser will be looking for.
+	 * @throws NullPointerException if the given {@code startPattern} or {@code
+	 *                              endPattern} is null.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	public ScopeParser(@NotNull Supplier<Scope> constructor, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+		Objects.requireNonNull(constructor, "constructor");
+		Objects.requireNonNull(startPattern, "startPattern");
+		Objects.requireNonNull(endPattern, "endPattern");
+		this.constructor = constructor;
 		this.startPattern = startPattern;
 		this.endPattern = endPattern;
 	}
@@ -95,12 +148,14 @@ public class ScopeParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  SyntaxScope s = new SyntaxScope();
+						  Scope s = this.constructor.get();
 						  Tree t = new Tree(d, m.get(0), s);
 						  Tree o = new Tree(d, m.get(1), s.getOpenAnchor());
 						  Tree c = new Tree(d, m.get(2), s.getCloseAnchor());
-						  t.offer(o);
-						  t.offer(c);
+						  if (o.reference().length() != 0)
+							  t.offer(o);
+						  if (c.reference().length() != 0)
+							  t.offer(c);
 						  s.setTree(t);
 						  s.getOpenAnchor().setTree(o);
 						  s.getCloseAnchor().setTree(c);

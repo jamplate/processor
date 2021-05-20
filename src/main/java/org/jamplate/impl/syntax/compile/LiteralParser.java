@@ -16,14 +16,16 @@
 package org.jamplate.impl.syntax.compile;
 
 import org.jamplate.compile.Parser;
-import org.jamplate.impl.syntax.model.SyntaxLiteral;
-import org.jamplate.model.*;
+import org.jamplate.impl.model.Literal;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Document;
+import org.jamplate.model.Tree;
 import org.jamplate.util.Parsing;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,13 @@ import java.util.stream.Collectors;
  * @since 0.2.0 ~2021.04.28
  */
 public class LiteralParser implements Parser {
+	/**
+	 * The constructor to be used to construct new sketches.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	protected final Supplier<Literal> constructor;
 	/**
 	 * A pattern matching the literal.
 	 *
@@ -54,6 +63,7 @@ public class LiteralParser implements Parser {
 	 */
 	public LiteralParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
+		this.constructor = Literal::new;
 		this.pattern = pattern;
 	}
 
@@ -61,17 +71,18 @@ public class LiteralParser implements Parser {
 	 * Construct a new literal parser that parses the sketches looking for areas that
 	 * matches the given {@code pattern}.
 	 *
-	 * @param constructor a function to be used to create new sketches for the parsed
-	 *                    trees.
+	 * @param constructor the constructor to be used by the constructed parser to
+	 *                    constructed the sketches of the matches.
 	 * @param pattern     the pattern matching the areas the constructed parser will be
 	 *                    looking for.
 	 * @throws NullPointerException if the given {@code constructor} or {@code pattern} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public LiteralParser(@NotNull Function<Reference, Sketch> constructor, @NotNull Pattern pattern) {
+	public LiteralParser(@NotNull Supplier<Literal> constructor, @NotNull Pattern pattern) {
 		Objects.requireNonNull(constructor, "constructor");
 		Objects.requireNonNull(pattern, "pattern");
+		this.constructor = constructor;
 		this.pattern = pattern;
 	}
 
@@ -84,7 +95,7 @@ public class LiteralParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  SyntaxLiteral s = new SyntaxLiteral();
+						  Literal s = this.constructor.get();
 						  Tree t = new Tree(d, m, s);
 						  s.setTree(t);
 						  return t;
