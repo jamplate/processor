@@ -1,5 +1,7 @@
 package org.jamplate.impl.syntax;
 
+import org.jamplate.impl.analyze.CommandKind;
+import org.jamplate.impl.analyze.JamplateAnalyze;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
@@ -35,7 +37,7 @@ public class JamplateSyntaxTest {
 		Environment environment = new EnvironmentImpl();
 		Compilation compilation = environment.getCompilation(document);
 
-		while (JamplateSyntax.PARSER_PROCESSOR.process(compilation))
+		while (JamplateSyntax.PROCESSOR.process(compilation))
 			;
 
 		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
@@ -71,6 +73,52 @@ public class JamplateSyntaxTest {
 		//todo the rest
 	}
 
+	@Test
+	public void include() {
+		Document document = new PseudoDocument(
+				"#include <string.h>\n#outclude <math.h>"
+		);
+
+		Environment environment = new EnvironmentImpl();
+		Compilation compilation = environment.getCompilation(document);
+
+		while (JamplateSyntax.PROCESSOR.process(compilation))
+			;
+
+		int i = 0;
+
+		Tree root = compilation.getRootTree();
+		Tree command1 = root.getChild();
+
+		assertEquals(
+				TransientKind.COMMAND,
+				command1.getSketch().getKind(),
+				"Expected the command being parsed"
+		);
+
+		Tree command2 = command1.getNext().getNext();
+
+		assertEquals(
+				TransientKind.COMMAND,
+				command2.getSketch().getKind(),
+				"Expected the other command being parsed"
+		);
+
+		while (JamplateAnalyze.PROCESSOR.process(compilation))
+			;
+
+		assertEquals(
+				CommandKind.INCLUDE,
+				command1.getSketch().getKind(),
+				"Expected the command being recognized as an include command"
+		);
+		assertEquals(
+				TransientKind.COMMAND,
+				command2.getSketch().getKind(),
+				"Expected the other command not being recognized as any command"
+		);
+	}
+
 	@RepeatedTest(50)
 	public void parse() {
 		Environment environment = new EnvironmentImpl();
@@ -78,7 +126,7 @@ public class JamplateSyntaxTest {
 		Tree tree = new Tree(document);
 		Compilation compilation = new CompilationImpl(environment, tree);
 
-		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
+		JamplateSyntax.PROCESSOR.process(compilation);
 
 		Set<Tree> trees = Trees.collect(tree);
 
@@ -117,7 +165,7 @@ public class JamplateSyntaxTest {
 					   String.join("", Collections.nCopies(50, "}[")) + "]";
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
+		JamplateSyntax.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
@@ -131,7 +179,7 @@ public class JamplateSyntaxTest {
 		String value = String.join("", Collections.nCopies(50, "{][}"));
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
+		JamplateSyntax.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -153,7 +201,7 @@ public class JamplateSyntaxTest {
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		//I am actually stunned to see that this works with RandomMergeParser!!!
-		JamplateSyntax.PARSER_PROCESSOR.process(compilation);
+		JamplateSyntax.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -173,28 +221,5 @@ public class JamplateSyntaxTest {
 					"Expected all to be double quotes"
 			);
 		}
-	}
-
-	@Test
-	public void x() {
-//		Parser parser = new CollectParser(new CommandParser(
-//				Pattern.compile("#"),
-//				Pattern.compile("\n|$"),
-//				Pattern.compile("include"),
-//				Pattern.compile("<string\\.h>")
-//		));
-//		Processor processor = new ParserProcessor(parser);
-//
-//		Document document = new PseudoDocument(
-//				"#include <string.h>\n#outclude <math.h>"
-//		);
-//
-//		Environment environment = new EnvironmentImpl();
-//		Compilation compilation = environment.getCompilation(document);
-//
-//		while (processor.process(compilation))
-//			;
-//
-//		int i = 0;
 	}
 }
