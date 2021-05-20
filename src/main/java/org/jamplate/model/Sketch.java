@@ -39,7 +39,7 @@ public class Sketch implements Serializable {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected String kind = "";
+	protected String kind = "sketch";
 	/**
 	 * The current name of this sketch.
 	 *
@@ -80,7 +80,7 @@ public class Sketch implements Serializable {
 	@Contract(pure = true)
 	@Override
 	public String toString() {
-		return this.name + " (" + this.kind + " " + this.getClass().getSimpleName() + ")";
+		return this.kind + (this.name.isEmpty() ? "" : " ") + this.name;
 	}
 
 	/**
