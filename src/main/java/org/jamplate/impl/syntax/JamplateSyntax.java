@@ -36,17 +36,24 @@ public final class JamplateSyntax {
 	@NotNull
 	public static final Parser PARSER =
 			new CollectParser(new OrderParser(
+					SyntaxParser.LN,
+					TransientParser.COMMENT_LINE,
 					new MergeParser(new CombineParser(
-							SyntaxParser.QUOTE,
-							SyntaxParser.DQUOTE
-					)).also(SyntaxParser.ESCAPE),
+							TransientParser.COMMENT_BLOCK,
+							new CombineParser(
+									SyntaxParser.QUOTE,
+									SyntaxParser.DQUOTE
+							).also(SyntaxParser.ESCAPE)
+					)),
+					new FlatOrderParser(
+							TransientParser.INJECTION,
+							TransientParser.COMMAND
+					),
 					new MergeParser(new CombineParser(
 							SyntaxParser.CURLY,
 							SyntaxParser.SQUARE,
 							SyntaxParser.ROUND
-					)),
-					TransientParser.INJECTION,
-					TransientParser.COMMAND
+					))
 			));
 
 	/**

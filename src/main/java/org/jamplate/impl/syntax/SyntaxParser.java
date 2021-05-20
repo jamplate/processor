@@ -18,7 +18,7 @@ package org.jamplate.impl.syntax;
 import org.jamplate.compile.Parser;
 import org.jamplate.impl.syntax.compile.LiteralParser;
 import org.jamplate.impl.syntax.compile.ScopeParser;
-import org.jamplate.impl.syntax.model.SyntaxScope;
+import org.jamplate.impl.model.Scope;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -49,8 +49,8 @@ public final class SyntaxParser {
 			SyntaxPattern.CURLY_OPEN, SyntaxPattern.CURLY_CLOSE
 	).peek(tree -> {
 		tree.getSketch().setKind(SyntaxKind.CURLY);
-		((SyntaxScope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.CURLY_OPEN);
-		((SyntaxScope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.CURLY_CLOSE);
+		((Scope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.CURLY_OPEN);
+		((Scope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.CURLY_CLOSE);
 	});
 
 	/**
@@ -63,8 +63,8 @@ public final class SyntaxParser {
 			SyntaxPattern.DQUOTE
 	).peek(tree -> {
 		tree.getSketch().setKind(SyntaxKind.DQUOTE);
-		((SyntaxScope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.DQUOTE_OPEN);
-		((SyntaxScope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.DQUOTE_CLOSE);
+		((Scope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.DQUOTE_OPEN);
+		((Scope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.DQUOTE_CLOSE);
 	});
 
 	/**
@@ -78,6 +78,16 @@ public final class SyntaxParser {
 	).peek(tree -> tree.getSketch().setKind(SyntaxKind.ESCAPE));
 
 	/**
+	 * A parser parsing line separators ({@code \n} or {@code \r} or {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Parser LN = new LiteralParser(
+			SyntaxPattern.LN
+	).peek(tree -> tree.getSketch().setKind(SyntaxKind.LN));
+
+	/**
 	 * A parser parsing quotes.
 	 *
 	 * @since 0.2.0 ~2021.05.16
@@ -87,8 +97,8 @@ public final class SyntaxParser {
 			SyntaxPattern.QUOTE
 	).peek(tree -> {
 		tree.getSketch().setKind(SyntaxKind.QUOTE);
-		((SyntaxScope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.QUOTE_OPEN);
-		((SyntaxScope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.QUOTE_CLOSE);
+		((Scope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.QUOTE_OPEN);
+		((Scope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.QUOTE_CLOSE);
 	});
 
 	/**
@@ -101,8 +111,8 @@ public final class SyntaxParser {
 			SyntaxPattern.ROUND_OPEN, SyntaxPattern.ROUND_CLOSE
 	).peek(tree -> {
 		tree.getSketch().setKind(SyntaxKind.ROUND);
-		((SyntaxScope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.ROUND_OPEN);
-		((SyntaxScope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.ROUND_CLOSE);
+		((Scope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.ROUND_OPEN);
+		((Scope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.ROUND_CLOSE);
 	});
 
 	/**
@@ -115,8 +125,8 @@ public final class SyntaxParser {
 			SyntaxPattern.SQUARE_OPEN, SyntaxPattern.SQUARE_CLOSE
 	).peek(tree -> {
 		tree.getSketch().setKind(SyntaxKind.SQUARE);
-		((SyntaxScope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.SQUARE_OPEN);
-		((SyntaxScope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.SQUARE_CLOSE);
+		((Scope) tree.getSketch()).getOpenAnchor().setKind(SyntaxKind.SQUARE_OPEN);
+		((Scope) tree.getSketch()).getCloseAnchor().setKind(SyntaxKind.SQUARE_CLOSE);
 	});
 
 	/**

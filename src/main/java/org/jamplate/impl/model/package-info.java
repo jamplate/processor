@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Jamplate syntax level models.
+ * The jamplate specific models.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.17
+ * @since 0.2.0 ~2021.05.20
  */
-package org.jamplate.impl.syntax.model;
+package org.jamplate.impl.model;

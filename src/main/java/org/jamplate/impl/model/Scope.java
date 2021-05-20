@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.syntax.model;
+package org.jamplate.impl.model;
 
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.17
  */
-public class SyntaxScope extends Sketch {
+public class Scope extends Sketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3006066369136395993L;
 
@@ -39,23 +39,23 @@ public class SyntaxScope extends Sketch {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final SyntaxScope.SyntaxAnchor closeAnchor;
+	protected final Scope.Anchor closeAnchor;
 	/**
 	 * The opening anchor of this scope.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final SyntaxScope.SyntaxAnchor openAnchor;
+	protected final Scope.Anchor openAnchor;
 
 	/**
 	 * Construct a new scope.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public SyntaxScope() {
-		this.openAnchor = new SyntaxAnchor();
-		this.closeAnchor = new SyntaxAnchor();
+	public Scope() {
+		this.openAnchor = new Anchor();
+		this.closeAnchor = new Anchor();
 	}
 
 	/**
@@ -65,10 +65,10 @@ public class SyntaxScope extends Sketch {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public SyntaxScope(@NotNull Tree tree) {
+	public Scope(@NotNull Tree tree) {
 		super(tree);
-		this.openAnchor = new SyntaxAnchor();
-		this.closeAnchor = new SyntaxAnchor();
+		this.openAnchor = new Anchor();
+		this.closeAnchor = new Anchor();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class SyntaxScope extends Sketch {
 	 *                              is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	protected SyntaxScope(@NotNull SyntaxScope.SyntaxAnchor openAnchor, @NotNull SyntaxScope.SyntaxAnchor closeAnchor) {
+	protected Scope(@NotNull Scope.Anchor openAnchor, @NotNull Scope.Anchor closeAnchor) {
 		Objects.requireNonNull(openAnchor, "openAnchor");
 		Objects.requireNonNull(closeAnchor, "closeAnchor");
 		this.openAnchor = openAnchor;
@@ -95,7 +95,7 @@ public class SyntaxScope extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final SyntaxScope.SyntaxAnchor getCloseAnchor() {
+	public final Scope.Anchor getCloseAnchor() {
 		return this.closeAnchor;
 	}
 
@@ -107,7 +107,7 @@ public class SyntaxScope extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final SyntaxScope.SyntaxAnchor getOpenAnchor() {
+	public final Scope.Anchor getOpenAnchor() {
 		return this.openAnchor;
 	}
 
@@ -118,7 +118,7 @@ public class SyntaxScope extends Sketch {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public class SyntaxAnchor extends Sketch {
+	public class Anchor extends Sketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = -3412465985053992082L;
 
@@ -130,8 +130,8 @@ public class SyntaxScope extends Sketch {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public final SyntaxScope getScope() {
-			return SyntaxScope.this;
+		public final Scope getScope() {
+			return Scope.this;
 		}
 	}
 }

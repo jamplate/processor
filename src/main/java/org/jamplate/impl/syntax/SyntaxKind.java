@@ -87,6 +87,14 @@ public final class SyntaxKind {
 	public static final String ESCAPE = "escape";
 
 	/**
+	 * The kind for line separators ({@code \n} or {@code \r} or {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String LN = "ln";
+
+	/**
 	 * The kind for quotes.
 	 *
 	 * @since 0.2.0 ~2021.05.16

@@ -46,6 +46,64 @@ public final class TransientKind {
 	 */
 	@NotNull
 	public static final String COMMAND_OPEN = "command-open";
+	/**
+	 * The kind of the parameter of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	public static final String COMMAND_PARAMETER = "command-parameter";
+	/**
+	 * The kind of the type of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	public static final String COMMAND_TYPE = "command-type";
+
+	/**
+	 * The kind of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK = "comment-block";
+	/**
+	 * The kind of the closing anchor of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK_CLOSE = "comment-block-close";
+	/**
+	 * The kind of the opening anchor of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK_OPEN = "comment-block-open";
+
+	/**
+	 * The kind of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE = "comment-line";
+	/**
+	 * The kind of the closing anchor of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE_CLOSE = "comment-line-close";
+	/**
+	 * The kind of the opening anchor of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE_OPEN = "comment-line-open";
 
 	/**
 	 * The kind of an injection sequence.

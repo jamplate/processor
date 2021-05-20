@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.syntax.model;
+package org.jamplate.impl.model;
 
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.19
  */
-public class SyntaxLiteral extends Sketch {
+public class Literal extends Sketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8126285691779567203L;
 
@@ -36,7 +36,7 @@ public class SyntaxLiteral extends Sketch {
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public SyntaxLiteral() {
+	public Literal() {
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class SyntaxLiteral extends Sketch {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.19
 	 */
-	public SyntaxLiteral(@NotNull Tree tree) {
+	public Literal(@NotNull Tree tree) {
 		super(tree);
 	}
 }

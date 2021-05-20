@@ -43,6 +43,36 @@ public final class TransientPattern {
 	public static final Pattern COMMAND_OPEN = Pattern.compile("(?<=^|[\n\r])#");
 
 	/**
+	 * A pattern that matches the opening of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Pattern COMMENT_BLOCK_CLOSE = Pattern.compile("\\*/");
+	/**
+	 * A pattern that matches the closing of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Pattern COMMENT_BLOCK_OPEN = Pattern.compile("/\\*");
+
+	/**
+	 * A pattern that matches the closing of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Pattern COMMENT_LINE_CLOSE = Pattern.compile("(?=[\r\n]|$)");
+	/**
+	 * A pattern that matches the opening of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Pattern COMMENT_LINE_OPEN = Pattern.compile("//");
+
+	/**
 	 * A pattern matching the ending anchor of an injection sequence.
 	 *
 	 * @since 0.2.0 ~2021.05.19

@@ -67,6 +67,14 @@ public final class SyntaxPattern {
 	public static final Pattern ESCAPE = Pattern.compile("\\\\.");
 
 	/**
+	 * A pattern matching line separators ({@code \n} or {@code \r} or {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Pattern LN = Pattern.compile("\r\n|\r|\n");
+
+	/**
 	 * A pattern matching quotes.
 	 *
 	 * @since 0.2.0 ~2021.05.16
