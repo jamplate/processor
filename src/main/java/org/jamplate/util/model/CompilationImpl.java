@@ -33,6 +33,9 @@ import java.util.Objects;
  * @since 0.2.0 ~2021.05.17
  */
 public class CompilationImpl implements Compilation {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 7506240715961471670L;
+
 	/**
 	 * The environment this compilation is from.
 	 *

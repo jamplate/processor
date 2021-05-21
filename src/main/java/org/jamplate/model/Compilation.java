@@ -18,17 +18,20 @@ package org.jamplate.model;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * A compilation is a structure holding the variables for a single compilation unit (like
  * a file).
+ * <br>
+ * The implementing class must support serialization.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.04.28
  */
-public interface Compilation {
+public interface Compilation extends Serializable {
 	/**
 	 * Return the environment this compilation is on.
 	 *

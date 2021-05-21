@@ -35,6 +35,9 @@ import java.util.Objects;
  * @since 0.2.0 ~2021.05.19
  */
 public class EnvironmentImpl implements Environment {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = -1644390742511931321L;
+
 	/**
 	 * The compilations in this environment.
 	 *

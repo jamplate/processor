@@ -20,17 +20,20 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
  * process.
+ * <br>
+ * The subclasses must support serialization.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public interface Environment {
+public interface Environment extends Serializable {
 	/**
 	 * If this environment has a compilation for the given {@code document}. Then this
 	 * method will return that compilation. Otherwise, this method will created a new
