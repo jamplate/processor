@@ -70,6 +70,19 @@ public interface Environment {
 	Diagnostic getDiagnostic();
 
 	/**
+	 * Returns the meta-data map of this environment.
+	 * <br>
+	 * By default, the returned map will be a modifiable checked map. Unless, the class of
+	 * this said otherwise.
+	 *
+	 * @return the meta-data map of this.
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	@Contract(pure = true)
+	Map<String, Object> getMeta();
+
+	/**
 	 * Set the compilation for the given {@code document} to be the given {@code
 	 * compilation}.
 	 * <br>

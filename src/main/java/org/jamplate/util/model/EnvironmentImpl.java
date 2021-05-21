@@ -49,6 +49,13 @@ public class EnvironmentImpl implements Environment {
 	 */
 	@NotNull
 	protected final Diagnostic diagnostic = new DiagnosticImpl();
+	/**
+	 * The additional meta-data of this sketch.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	protected final Map<String, Object> meta = new HashMap<>();
 
 	@NotNull
 	@Override
@@ -69,6 +76,12 @@ public class EnvironmentImpl implements Environment {
 	@Override
 	public Diagnostic getDiagnostic() {
 		return this.diagnostic;
+	}
+
+	@NotNull
+	@Override
+	public Map<String, Object> getMeta() {
+		return Collections.checkedMap(this.meta, String.class, Object.class);
 	}
 
 	@Override

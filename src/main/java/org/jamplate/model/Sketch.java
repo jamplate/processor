@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -32,6 +35,14 @@ import java.util.Objects;
 public class Sketch implements Serializable {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -7132338777576310144L;
+
+	/**
+	 * The additional meta-data of this sketch.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	protected final Map<String, Object> meta = new HashMap<>();
 
 	/**
 	 * The kind name of this sketch.
@@ -47,7 +58,6 @@ public class Sketch implements Serializable {
 	 */
 	@NotNull
 	protected String name = "";
-
 	/**
 	 * The tree this sketch is from.
 	 *
@@ -93,6 +103,21 @@ public class Sketch implements Serializable {
 	@Contract(pure = true)
 	public String getKind() {
 		return this.kind;
+	}
+
+	/**
+	 * Get the meta-data map of this sketch.
+	 * <br>
+	 * By default, the returned map will be a modifiable checked map. Unless, the class of
+	 * this said otherwise.
+	 *
+	 * @return the meta-data map of this.
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Map<String, Object> getMeta() {
+		return Collections.checkedMap(this.meta, String.class, Object.class);
 	}
 
 	/**

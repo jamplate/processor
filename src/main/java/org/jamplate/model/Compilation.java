@@ -18,6 +18,8 @@ package org.jamplate.model;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 /**
  * A compilation is a structure holding the variables for a single compilation unit (like
  * a file).
@@ -36,6 +38,19 @@ public interface Compilation {
 	@NotNull
 	@Contract(pure = true)
 	Environment getEnvironment();
+
+	/**
+	 * Returns the meta-data map of this compilation.
+	 * <br>
+	 * By default, the returned map will be a modifiable checked map. Unless, the class of
+	 * this said otherwise.
+	 *
+	 * @return the meta-data map of this.
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	@Contract(pure = true)
+	Map<String, Object> getMeta();
 
 	/**
 	 * Return the root tree of this compilation.

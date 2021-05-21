@@ -20,6 +20,9 @@ import org.jamplate.model.Environment;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -37,6 +40,13 @@ public class CompilationImpl implements Compilation {
 	 */
 	@NotNull
 	protected final Environment environment;
+	/**
+	 * The additional meta-data of this compilation.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	protected final Map<String, Object> meta = new HashMap<>();
 	/**
 	 * The root tree of this compilation.
 	 *
@@ -64,6 +74,12 @@ public class CompilationImpl implements Compilation {
 	@Override
 	public Environment getEnvironment() {
 		return this.environment;
+	}
+
+	@NotNull
+	@Override
+	public Map<String, Object> getMeta() {
+		return Collections.checkedMap(this.meta, String.class, Object.class);
 	}
 
 	@NotNull
