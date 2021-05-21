@@ -7,14 +7,13 @@ version '0.2.0'
 
 repositories {
 	mavenCentral()
-	jcenter()
 	maven {
 		url 'https://jitpack.io'
 	}
 }
 
 dependencies {
-	implementation 'org.cufy:nodes:0.0.8'
+	implementation 'org.cufy:nodes:0.0.9'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
 	implementation 'org.jetbrains:annotations:20.1.0'
