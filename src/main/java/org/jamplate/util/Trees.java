@@ -46,6 +46,24 @@ public final class Trees {
 	}
 
 	/**
+	 * Collect all the children of the given {@code tree} and add them to the given {@code
+	 * result}.
+	 *
+	 * @param tree the tree to get its children.
+	 * @return a set containing all the children of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Set<Tree> children(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Set<Tree> result = new HashSet<>();
+		Trees.children(result, tree);
+		return result;
+	}
+
+	/**
 	 * Collect all the relatives to the given {@code tree} (including the tree itself).
 	 *
 	 * @param tree the tree to collect its relatives.
@@ -53,6 +71,7 @@ public final class Trees {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
+	@NotNull
 	@Contract(value = "_->new", pure = true)
 	public static Set<Tree> collect(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
@@ -78,6 +97,25 @@ public final class Trees {
 		Document document = tree.document();
 		Reference reference = tree.reference();
 		return document.read(reference);
+	}
+
+	/**
+	 * Collect all the children of the given {@code tree} and add them to the given {@code
+	 * result}.
+	 *
+	 * @param result a set to add the results to.
+	 * @param tree   the tree to get its children.
+	 * @throws NullPointerException if the given {@code result} or {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Contract(mutates = "param1")
+	private static void children(@NotNull Set<Tree> result, @NotNull Tree tree) {
+		Objects.requireNonNull(result, "result");
+		Objects.requireNonNull(tree, "tree");
+		for (Tree t : tree) {
+			result.add(t);
+			Trees.children(result, t);
+		}
 	}
 
 	/**
