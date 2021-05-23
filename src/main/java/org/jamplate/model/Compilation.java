@@ -17,6 +17,7 @@ package org.jamplate.model;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -43,6 +44,16 @@ public interface Compilation extends Serializable {
 	Environment getEnvironment();
 
 	/**
+	 * Return the instruction set for this compilation.
+	 *
+	 * @return the instruction of this compilation.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Nullable
+	@Contract(pure = true)
+	Instruction getInstruction();
+
+	/**
 	 * Returns the meta-data map of this compilation.
 	 * <br>
 	 * By default, the returned map will be a modifiable checked map. Unless, the class of
@@ -64,4 +75,17 @@ public interface Compilation extends Serializable {
 	@NotNull
 	@Contract(pure = true)
 	Tree getRootTree();
+
+	/**
+	 * Set the intrusion of the compilation to be the given {@code instruction}. It is
+	 * expected pass an instruction resultant from compiling this compilation with a real
+	 * compiler. But, there is no additional checks to validate that. So, be nice and
+	 * follow the rules. Please?
+	 *
+	 * @param instruction the instruction to be set for this compilation.
+	 * @throws NullPointerException if the given {@code instruction} is null.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Contract(mutates = "this")
+	void setInstruction(@NotNull Instruction instruction);
 }

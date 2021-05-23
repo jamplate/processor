@@ -17,8 +17,10 @@ package org.jamplate.util.model;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Environment;
+import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,6 +61,15 @@ public class CompilationImpl implements Compilation {
 	protected final Tree root;
 
 	/**
+	 * The instruction of this compilation. This is the results of compiling this
+	 * compilation.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Nullable
+	protected Instruction instruction;
+
+	/**
 	 * Construct a new compilation with the given {@code root} tree to be its root tree.
 	 *
 	 * @param environment the environment for the constructed compilation.
@@ -79,6 +90,12 @@ public class CompilationImpl implements Compilation {
 		return this.environment;
 	}
 
+	@Nullable
+	@Override
+	public Instruction getInstruction() {
+		return this.instruction;
+	}
+
 	@NotNull
 	@Override
 	public Map<String, Object> getMeta() {
@@ -89,5 +106,11 @@ public class CompilationImpl implements Compilation {
 	@Override
 	public Tree getRootTree() {
 		return this.root;
+	}
+
+	@Override
+	public void setInstruction(@NotNull Instruction instruction) {
+		Objects.requireNonNull(instruction, "instruction");
+		this.instruction = instruction;
 	}
 }
