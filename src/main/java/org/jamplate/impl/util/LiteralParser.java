@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.syntax.compile;
+package org.jamplate.impl.util;
 
-import org.jamplate.compile.Parser;
+import org.jamplate.model.function.Parser;
 import org.jamplate.impl.model.Literal;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
