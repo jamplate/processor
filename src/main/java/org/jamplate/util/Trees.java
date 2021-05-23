@@ -15,10 +15,14 @@
  */
 package org.jamplate.util;
 
+import org.jamplate.model.Document;
+import org.jamplate.model.DocumentNotFoundError;
+import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOError;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -55,6 +59,25 @@ public final class Trees {
 		Set<Tree> result = new HashSet<>();
 		Trees.collect(result, tree);
 		return result;
+	}
+
+	/**
+	 * Read the source-code of the given {@code tree}.
+	 *
+	 * @param tree the tree to read its source-code.
+	 * @return the source code of the given {@code tree}.
+	 * @throws IOError               if any I/O error occurred while reading.
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
+	 *                               unavailable.
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static CharSequence read(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Document document = tree.document();
+		Reference reference = tree.reference();
+		return document.read(reference);
 	}
 
 	/**
