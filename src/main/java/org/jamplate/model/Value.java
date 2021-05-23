@@ -13,41 +13,40 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.analyze;
+package org.jamplate.model;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
- * A utility class containing the kinds of commands.
+ * The value function is a function that evaluates to a value depending on the state of
+ * the memory given to it.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.20
+ * @since 0.2.0 ~2021.05.21
  */
-public final class CommandKind {
+@FunctionalInterface
+public interface Value extends Serializable {
 	/**
-	 * The command kind of the {@code #include} command.
+	 * The {@code null} value.
 	 *
-	 * @since 0.2.0 ~2021.05.20
+	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	public static final String INCLUDE = "command/include";
+	Value NULL = memory -> "null";
 
 	/**
-	 * The command kind of the {@code #include} command type.
+	 * Evaluate this value with the given {@code memory}.
 	 *
-	 * @since 0.2.0 ~2021.05.20
+	 * @param memory the memory to evaluate this value with.
+	 * @return the evaluated value.
+	 * @throws NullPointerException if the given {@code memory} is null.
+	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	public static final String INCLUDE_TYPE = "command-type/include";
-
-	/**
-	 * Utility classes must not be initialized.
-	 *
-	 * @throws AssertionError when called.
-	 * @since 0.2.0 ~2021.05.20
-	 */
-	private CommandKind() {
-		throw new AssertionError("No instance for you");
-	}
+	@Contract(pure = true)
+	String evaluate(@NotNull Memory memory);
 }
