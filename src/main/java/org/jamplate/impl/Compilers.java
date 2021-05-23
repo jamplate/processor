@@ -13,9 +13,8 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.process;
+package org.jamplate.impl;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.impl.util.model.*;
 import org.jamplate.impl.util.model.function.StrictCompiler;
 import org.jamplate.model.*;
@@ -34,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
-public final class JCompilers {
+public final class Compilers {
 	/**
 	 * The default jamplate compiler.
 	 *
@@ -43,13 +42,13 @@ public final class JCompilers {
 	@NotNull
 	public static final Compiler COMPILER =
 			new OrderCompiler(
-					JSyntax.LN_SUPPRESSED,
-					JCommand.CONSOLE,
-					JCommand.INCLUDE,
-					JCommand.DECLARE,
-					JCommand.DEFINE,
-					JValue.COMPILER,
-					JSyntax.TEXT
+					Syntax.LN_SUPPRESSED,
+					Commands.CONSOLE,
+					Commands.INCLUDE,
+					Commands.DECLARE,
+					Commands.DEFINE,
+					Values.COMPILER,
+					Syntax.TEXT
 			);
 
 	/**
@@ -60,7 +59,7 @@ public final class JCompilers {
 	 */
 	@NotNull
 	public static final Processor PROCESSOR =
-			new CompilerProcessor(JCompilers.COMPILER);
+			new CompilerProcessor(Compilers.COMPILER);
 
 	/**
 	 * Utility classes must not be initialized.
@@ -68,7 +67,7 @@ public final class JCompilers {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.05.21
 	 */
-	private JCompilers() {
+	private Compilers() {
 		throw new AssertionError("No instance for you");
 	}
 
@@ -79,7 +78,7 @@ public final class JCompilers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.21
 	 */
-	public static final class JCommand {
+	public static final class Commands {
 		/**
 		 * A compiler that compiles console commands.
 		 *
@@ -207,7 +206,7 @@ public final class JCompilers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.21
 		 */
-		private JCommand() {
+		private Commands() {
 			throw new AssertionError("No instance for you");
 		}
 	}
@@ -219,7 +218,7 @@ public final class JCompilers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public static final class JSyntax {
+	public static final class Syntax {
 		/**
 		 * A compiler that compiles suppressed line separators.
 		 *
@@ -249,7 +248,7 @@ public final class JCompilers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.23
 		 */
-		private JSyntax() {
+		private Syntax() {
 			throw new AssertionError("No instance for you");
 		}
 	}
@@ -261,7 +260,7 @@ public final class JCompilers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public static final class JValue {
+	public static final class Values {
 		/**
 		 * A compiler that compiles strings.
 		 *
@@ -321,7 +320,7 @@ public final class JCompilers {
 					 */
 					@NotNull
 					private final Compiler value =
-							new OrderCompiler(JValue.STRING);
+							new OrderCompiler(Values.STRING);
 
 					/**
 					 * The fallback compiler.
@@ -357,7 +356,7 @@ public final class JCompilers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.23
 		 */
-		private JValue() {
+		private Values() {
 			throw new AssertionError("No instance for you");
 		}
 	}

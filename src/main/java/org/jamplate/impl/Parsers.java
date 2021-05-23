@@ -13,9 +13,8 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.process;
+package org.jamplate.impl;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.impl.util.model.CommandSketch;
 import org.jamplate.impl.util.model.ScopeSketch;
 import org.jamplate.impl.util.model.function.LiteralParser;
@@ -38,7 +37,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
-public final class JParsers {
+public final class Parsers {
 	/**
 	 * An all-in-one parser used by the jamplate default implementation.
 	 *
@@ -47,23 +46,23 @@ public final class JParsers {
 	@NotNull
 	public static final Parser PARSER =
 			new CollectParser(new OrderParser(
-					JSyntax.LN,
-					JTransient.COMMENT_LINE,
+					Syntax.LN,
+					Transients.COMMENT_LINE,
 					new MergeParser(new CombineParser(
-							JTransient.COMMENT_BLOCK,
+							Transients.COMMENT_BLOCK,
 							new CombineParser(
-									JSyntax.QUOTE,
-									JSyntax.DQUOTE
-							).also(JSyntax.ESCAPE)
+									Syntax.QUOTE,
+									Syntax.DQUOTE
+							).also(Syntax.ESCAPE)
 					)),
 					new FlatOrderParser(
-							JTransient.INJECTION,
-							JTransient.COMMAND
+							Transients.INJECTION,
+							Transients.COMMAND
 					),
 					new MergeParser(new CombineParser(
-							JSyntax.CURLY,
-							JSyntax.SQUARE,
-							JSyntax.ROUND
+							Syntax.CURLY,
+							Syntax.SQUARE,
+							Syntax.ROUND
 					))
 			));
 
@@ -75,7 +74,7 @@ public final class JParsers {
 	 */
 	@NotNull
 	public static final Processor PROCESSOR =
-			new ParserProcessor(JParsers.PARSER);
+			new ParserProcessor(Parsers.PARSER);
 
 	/**
 	 * Utility classes must not be initialized.
@@ -83,7 +82,7 @@ public final class JParsers {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	private JParsers() {
+	private Parsers() {
 		throw new AssertionError("No instance for you");
 	}
 
@@ -94,7 +93,7 @@ public final class JParsers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public static final class JSyntax {
+	public static final class Syntax {
 		/**
 		 * A parser parsing commas.
 		 *
@@ -201,7 +200,7 @@ public final class JParsers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.16
 		 */
-		private JSyntax() {
+		private Syntax() {
 			throw new AssertionError("No instance for you");
 		}
 
@@ -319,7 +318,7 @@ public final class JParsers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.19
 	 */
-	public static final class JTransient {
+	public static final class Transients {
 		/**
 		 * A parser that parses a single-line command.
 		 *
@@ -446,7 +445,7 @@ public final class JParsers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.19
 		 */
-		private JTransient() {
+		private Transients() {
 			throw new AssertionError("No instance for you");
 		}
 
@@ -537,7 +536,7 @@ public final class JParsers {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public static final class JValue {
+	public static final class Values {
 		/**
 		 * A predicate that returns {@code true} if the tree provided to it has a parent
 		 * with a kind that is known to have a logical context.
@@ -569,7 +568,7 @@ public final class JParsers {
 		@NotNull
 		public static final Parser ADDITION = new LiteralParser(
 				Patterns.ADDITION
-		).condition(JValue.CONDITION)
+		).condition(Values.CONDITION)
 		 .peek(tree -> tree.getSketch().setKind(Kind.Value.ADDITION));
 
 		/**
@@ -580,7 +579,7 @@ public final class JParsers {
 		@NotNull
 		public static final Parser SUBTRACTION = new LiteralParser(
 				Patterns.SUBTRACTION
-		).condition(JValue.CONDITION)
+		).condition(Values.CONDITION)
 		 .peek(tree -> tree.getSketch().setKind(Kind.Value.SUBTRACTION));
 
 		/**
@@ -589,12 +588,12 @@ public final class JParsers {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.23
 		 */
-		private JValue() {
+		private Values() {
 			throw new AssertionError("No instance for you");
 		}
 
 		/**
-		 * The patterns used by the class {@link JValue}.
+		 * The patterns used by the class {@link Values}.
 		 *
 		 * @author LSafer
 		 * @version 0.2.0

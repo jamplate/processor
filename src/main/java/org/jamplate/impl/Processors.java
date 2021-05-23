@@ -13,9 +13,8 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.process;
+package org.jamplate.impl;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.impl.util.model.CommandSketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Processor;
@@ -32,7 +31,7 @@ import java.util.function.Predicate;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
-public final class JPPProcessors {
+public final class Processors {
 	/**
 	 * A processor that analyzes the default jamplate components searching for known
 	 * jamplate specs.
@@ -42,12 +41,12 @@ public final class JPPProcessors {
 	@NotNull
 	public static final Processor PROCESSOR =
 			new SequentialProcessor(
-					JSyntax.LN_SUPPRESSED,
-					JCommand.CONSOLE,
-					JCommand.DECLARE,
-					JCommand.DEFINE,
-					JCommand.INCLUDE,
-					JValue.STRING
+					Syntax.LN_SUPPRESSED,
+					Commands.CONSOLE,
+					Commands.DECLARE,
+					Commands.DEFINE,
+					Commands.INCLUDE,
+					Values.STRING
 			);
 
 	/**
@@ -56,7 +55,7 @@ public final class JPPProcessors {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	private JPPProcessors() {
+	private Processors() {
 		throw new AssertionError("No instance for you");
 	}
 
@@ -67,7 +66,7 @@ public final class JPPProcessors {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public static final class JCommand {
+	public static final class Commands {
 		/**
 		 * A parser that parses the include command.
 		 *
@@ -182,7 +181,7 @@ public final class JPPProcessors {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.20
 		 */
-		private JCommand() {
+		private Commands() {
 			throw new AssertionError("No instance for you");
 		}
 	}
@@ -194,7 +193,7 @@ public final class JPPProcessors {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public static final class JSyntax {
+	public static final class Syntax {
 		/**
 		 * A processor that suppresses line-separator sketches that are after a command.
 		 *
@@ -226,7 +225,7 @@ public final class JPPProcessors {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.23
 		 */
-		private JSyntax() {
+		private Syntax() {
 			throw new AssertionError("No instance for you");
 		}
 	}
@@ -238,7 +237,7 @@ public final class JPPProcessors {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public static final class JValue {
+	public static final class Values {
 		/**
 		 * The condition for the value components to be processed.
 		 *
@@ -267,7 +266,7 @@ public final class JPPProcessors {
 			boolean[] modified = {false};
 			Trees.collect(compilation.getRootTree())
 				 .stream()
-				 .filter(JValue.CONDITION)
+				 .filter(Values.CONDITION)
 				 .forEach(tree ->
 						 Trees.children(tree)
 							  .parallelStream()
@@ -294,7 +293,7 @@ public final class JPPProcessors {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.23
 		 */
-		private JValue() {
+		private Values() {
 			throw new AssertionError("No instance for you");
 		}
 	}
