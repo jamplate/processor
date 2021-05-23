@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOError;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -81,10 +83,40 @@ public final class Trees {
 	}
 
 	/**
+	 * Get the line of the given {@code tree} on its document.
+	 *
+	 * @param tree the tree to get its line.
+	 * @return the line of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} is null.
+	 * @throws IOError               if any I/O error occurred while reading.
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
+	 *                               unavailable.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Contract(pure = true)
+	public static int line(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		int p = tree.reference().position();
+		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
+			while ((p -= reader.skip(p)) != 0) {
+				if (reader.read() == -1)
+					break;
+
+				p--;
+			}
+
+			return reader.getLineNumber() + 1;
+		} catch (IOException e) {
+			throw new IOError(e);
+		}
+	}
+
+	/**
 	 * Read the source-code of the given {@code tree}.
 	 *
 	 * @param tree the tree to read its source-code.
 	 * @return the source code of the given {@code tree}.
+	 * @throws NullPointerException  if the given {@code tree} is null.
 	 * @throws IOError               if any I/O error occurred while reading.
 	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
 	 *                               unavailable.
