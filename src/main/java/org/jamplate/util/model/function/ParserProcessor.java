@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.util.compile;
+package org.jamplate.util.model.function;
 
-import org.jamplate.compile.Parser;
-import org.jamplate.compile.Processor;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
+import org.jamplate.model.function.Parser;
+import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

@@ -14,11 +14,11 @@
  *	limitations under the License.
  */
 /**
- * A package containing default implementations of the package {@link
- * org.jamplate.compile}.
+ * All about processors. Processors are functions that processes objects from the {@link
+ * org.jamplate.model} package.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.16
+ * @since 0.2.0 ~2021.01.26
  */
-package org.jamplate.util.compile;
+package org.jamplate.model.function;
