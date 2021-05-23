@@ -20,6 +20,7 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOError;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -176,6 +177,7 @@ public interface Parser {
 	 * @return the parsed sketches.
 	 * @throws NullPointerException if the given {@code compilation} or {@code node} is
 	 *                              null.
+	 * @throws IOError              if any I/O error occurs.
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull

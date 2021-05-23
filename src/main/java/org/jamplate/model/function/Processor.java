@@ -39,6 +39,8 @@ public interface Processor {
 	 * @param compilation the compilation the node is from.
 	 * @return true, if this processor have done something. False, otherwise.
 	 * @throws NullPointerException if the given {@code compilation} is null.
+	 * @throws RuntimeException     if any runtime exception occurs.
+	 * @throws Error                if any unexpected/non-recoverable exception occurs.
 	 * @since 0.0.1 ~2021.04.28
 	 */
 	@Contract(mutates = "param")
