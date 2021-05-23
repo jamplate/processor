@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.model;
+package org.jamplate.impl.util.model;
 
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
