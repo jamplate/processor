@@ -150,15 +150,15 @@ public class ScopeParser implements Parser {
 						  Document d = tree.document();
 						  ScopeSketch s = this.constructor.get();
 						  Tree t = new Tree(d, m.get(0), s);
-						  Tree o = new Tree(d, m.get(1), s.getOpenAnchor());
-						  Tree c = new Tree(d, m.get(2), s.getCloseAnchor());
+						  Tree o = new Tree(d, m.get(1), s.getOpenAnchorSketch());
+						  Tree c = new Tree(d, m.get(2), s.getCloseAnchorSketch());
 						  if (o.reference().length() != 0)
 							  t.offer(o);
 						  if (c.reference().length() != 0)
 							  t.offer(c);
 						  s.setTree(t);
-						  s.getOpenAnchor().setTree(o);
-						  s.getCloseAnchor().setTree(c);
+						  s.getOpenAnchorSketch().setTree(o);
+						  s.getCloseAnchorSketch().setTree(c);
 						  return t;
 					  })
 					  .collect(Collectors.toSet());

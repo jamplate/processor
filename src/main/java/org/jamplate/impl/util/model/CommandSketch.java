@@ -39,7 +39,7 @@ public class CommandSketch extends ScopeSketch {
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Parameter parameter;
+	protected final CommandSketch.ParameterSketch parameter;
 
 	/**
 	 * The type of this command.
@@ -47,7 +47,7 @@ public class CommandSketch extends ScopeSketch {
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Type type;
+	protected final CommandSketch.TypeSketch type;
 
 	/**
 	 * Construct a new command sketch.
@@ -55,8 +55,8 @@ public class CommandSketch extends ScopeSketch {
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	public CommandSketch() {
-		this.type = new Type();
-		this.parameter = new Parameter();
+		this.type = new TypeSketch();
+		this.parameter = new ParameterSketch();
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class CommandSketch extends ScopeSketch {
 	 */
 	public CommandSketch(@NotNull Tree tree) {
 		super(tree);
-		this.type = new Type();
-		this.parameter = new Parameter();
+		this.type = new TypeSketch();
+		this.parameter = new ParameterSketch();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class CommandSketch extends ScopeSketch {
 	 *                              or {@code type} or {@code parameter} is null.
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	protected CommandSketch(@NotNull Anchor openAnchor, @NotNull Anchor closeAnchor, @NotNull Type type, @NotNull Parameter parameter) {
+	protected CommandSketch(@NotNull ScopeSketch.AnchorSketch openAnchor, @NotNull ScopeSketch.AnchorSketch closeAnchor, @NotNull CommandSketch.TypeSketch type, @NotNull CommandSketch.ParameterSketch parameter) {
 		super(openAnchor, closeAnchor);
 		Objects.requireNonNull(type, "type");
 		Objects.requireNonNull(parameter, "parameter");
@@ -100,7 +100,7 @@ public class CommandSketch extends ScopeSketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Parameter getParameter() {
+	public CommandSketch.ParameterSketch getParameterSketch() {
 		return this.parameter;
 	}
 
@@ -112,7 +112,7 @@ public class CommandSketch extends ScopeSketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Type getType() {
+	public CommandSketch.TypeSketch getTypeSketch() {
 		return this.type;
 	}
 
@@ -123,9 +123,50 @@ public class CommandSketch extends ScopeSketch {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public class Parameter extends Sketch {
+	public class ParameterSketch extends Sketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = -300019613180151971L;
+
+		/**
+		 * The key part of the parameter.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		protected final CommandSketch.ParameterSketch.KeySketch key;
+		/**
+		 * The value part of the parameter.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		protected final CommandSketch.ParameterSketch.ValueSketch value;
+
+		/**
+		 * Construct a new command parameter sketch.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		public ParameterSketch() {
+			this.key = new KeySketch();
+			this.value = new ValueSketch();
+		}
+
+		/**
+		 * An internal construct for subclasses to be able to specify the components.
+		 *
+		 * @param key   the key part of the constructed parameter.
+		 * @param value the value part of the constructed parameter.
+		 * @throws NullPointerException if the given {@code key} or {@code value} is
+		 *                              null.
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		protected ParameterSketch(@NotNull CommandSketch.ParameterSketch.KeySketch key, @NotNull CommandSketch.ParameterSketch.ValueSketch value) {
+			Objects.requireNonNull(key, "key");
+			Objects.requireNonNull(value, "value");
+			this.key = key;
+			this.value = value;
+		}
 
 		/**
 		 * Return the command sketch.
@@ -135,8 +176,104 @@ public class CommandSketch extends ScopeSketch {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public CommandSketch getCommand() {
+		public CommandSketch getCommandSketch() {
 			return CommandSketch.this;
+		}
+
+		/**
+		 * Return the key part of the parameter.
+		 *
+		 * @return the key part of the parameter.
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		@Contract(pure = true)
+		public CommandSketch.ParameterSketch.KeySketch getKeySketch() {
+			return this.key;
+		}
+
+		/**
+		 * Return the value part of the parameter.
+		 *
+		 * @return the value part of the parameter.
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		@Contract(pure = true)
+		public CommandSketch.ParameterSketch.ValueSketch getValueSketch() {
+			return this.value;
+		}
+
+		/**
+		 * An optional sketch representing the key part of the parameter.
+		 *
+		 * @author LSafer
+		 * @version 0.2.0
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		public class KeySketch extends Sketch {
+			@SuppressWarnings("JavaDoc")
+			private static final long serialVersionUID = -337916045025377470L;
+
+			/**
+			 * Return the command sketch.
+			 *
+			 * @return the sketch of the command this sketch is in.
+			 * @since 0.2.0 ~2021.05.20
+			 */
+			@NotNull
+			@Contract(pure = true)
+			public CommandSketch getCommandSketch() {
+				return CommandSketch.this;
+			}
+
+			/**
+			 * Return the parameter sketch.
+			 *
+			 * @return the sketch of the parameter this sketch is in.
+			 * @since 0.2.0 ~2021.05.23
+			 */
+			@NotNull
+			@Contract(pure = true)
+			public ParameterSketch getParameterSketch() {
+				return ParameterSketch.this;
+			}
+		}
+
+		/**
+		 * An optional sketch representing the value part of the parameter.
+		 *
+		 * @author LSafer
+		 * @version 0.2.0
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		public class ValueSketch extends Sketch {
+			@SuppressWarnings("JavaDoc")
+			private static final long serialVersionUID = -7663526977228212038L;
+
+			/**
+			 * Return the command sketch.
+			 *
+			 * @return the sketch of the command this sketch is in.
+			 * @since 0.2.0 ~2021.05.20
+			 */
+			@NotNull
+			@Contract(pure = true)
+			public CommandSketch getCommandSketch() {
+				return CommandSketch.this;
+			}
+
+			/**
+			 * Return the parameter sketch.
+			 *
+			 * @return the sketch of the parameter this sketch is in.
+			 * @since 0.2.0 ~2021.05.23
+			 */
+			@NotNull
+			@Contract(pure = true)
+			public ParameterSketch getParameterSketch() {
+				return ParameterSketch.this;
+			}
 		}
 	}
 
@@ -147,7 +284,7 @@ public class CommandSketch extends ScopeSketch {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public class Type extends LiteralSketch {
+	public class TypeSketch extends LiteralSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 821197872627775597L;
 
@@ -159,7 +296,7 @@ public class CommandSketch extends ScopeSketch {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public CommandSketch getCommand() {
+		public CommandSketch getCommandSketch() {
 			return CommandSketch.this;
 		}
 	}

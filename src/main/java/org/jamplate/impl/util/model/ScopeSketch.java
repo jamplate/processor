@@ -39,14 +39,14 @@ public class ScopeSketch extends Sketch {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final ScopeSketch.Anchor closeAnchor;
+	protected final ScopeSketch.AnchorSketch closeAnchor;
 	/**
 	 * The opening anchor of this scope.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final ScopeSketch.Anchor openAnchor;
+	protected final ScopeSketch.AnchorSketch openAnchor;
 
 	/**
 	 * Construct a new scope.
@@ -54,8 +54,8 @@ public class ScopeSketch extends Sketch {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	public ScopeSketch() {
-		this.openAnchor = new Anchor();
-		this.closeAnchor = new Anchor();
+		this.openAnchor = new AnchorSketch();
+		this.closeAnchor = new AnchorSketch();
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class ScopeSketch extends Sketch {
 	 */
 	public ScopeSketch(@NotNull Tree tree) {
 		super(tree);
-		this.openAnchor = new Anchor();
-		this.closeAnchor = new Anchor();
+		this.openAnchor = new AnchorSketch();
+		this.closeAnchor = new AnchorSketch();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class ScopeSketch extends Sketch {
 	 *                              is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	protected ScopeSketch(@NotNull ScopeSketch.Anchor openAnchor, @NotNull ScopeSketch.Anchor closeAnchor) {
+	protected ScopeSketch(@NotNull ScopeSketch.AnchorSketch openAnchor, @NotNull ScopeSketch.AnchorSketch closeAnchor) {
 		Objects.requireNonNull(openAnchor, "openAnchor");
 		Objects.requireNonNull(closeAnchor, "closeAnchor");
 		this.openAnchor = openAnchor;
@@ -95,7 +95,7 @@ public class ScopeSketch extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final ScopeSketch.Anchor getCloseAnchor() {
+	public final ScopeSketch.AnchorSketch getCloseAnchorSketch() {
 		return this.closeAnchor;
 	}
 
@@ -107,7 +107,7 @@ public class ScopeSketch extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final ScopeSketch.Anchor getOpenAnchor() {
+	public final ScopeSketch.AnchorSketch getOpenAnchorSketch() {
 		return this.openAnchor;
 	}
 
@@ -118,7 +118,7 @@ public class ScopeSketch extends Sketch {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public class Anchor extends Sketch {
+	public class AnchorSketch extends Sketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = -3412465985053992082L;
 
