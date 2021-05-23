@@ -1,6 +1,5 @@
-package org.jamplate.impl.process;
+package org.jamplate.impl;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.model.*;
 import org.jamplate.util.Trees;
 import org.jamplate.util.model.CompilationImpl;
@@ -16,7 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class JParsersTest {
+public class ParsersTest {
 	@RepeatedTest(1)
 	public void axe() {
 		Document document = new PseudoDocument(
@@ -34,7 +33,7 @@ public class JParsersTest {
 		Environment environment = new EnvironmentImpl();
 		Compilation compilation = environment.optCompilation(document);
 
-		while (JParsers.PROCESSOR.process(compilation))
+		while (Parsers.PROCESSOR.process(compilation))
 			;
 
 		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
@@ -79,7 +78,7 @@ public class JParsersTest {
 		Environment environment = new EnvironmentImpl();
 		Compilation compilation = environment.optCompilation(document);
 
-		while (JParsers.PROCESSOR.process(compilation))
+		while (Parsers.PROCESSOR.process(compilation))
 			;
 
 		int i = 0;
@@ -101,7 +100,7 @@ public class JParsersTest {
 				"Expected the other command being parsed"
 		);
 
-		while (JPPProcessors.PROCESSOR.process(compilation))
+		while (Processors.PROCESSOR.process(compilation))
 			;
 
 		assertEquals(
@@ -114,6 +113,64 @@ public class JParsersTest {
 				command2.getSketch().getKind(),
 				"Expected the other command not being recognized as any command"
 		);
+	}
+
+	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
+	@Test
+	public void jManualInspection() throws IOException {
+		Environment environment = Jamplate.DEFAULT.process(
+				new PseudoDocument("Main",
+						"#define Hello \"H3110\"\n" +
+						"#define Hello \"heLLo\"\n" +
+						"#declare Bye \"8y3\"\n" +
+						"Hello and Bye\n" +
+						"#include \"Hi\"  \n" +
+						"\n" +
+						"//#console \"test\"\n" +
+						"//#include \"Hi\"\n" +
+						"#include \"Hi\"\n" +
+						"#declare __define__ \"{\\\"Hello\\\":\\\"Yellow\\\"}\"\n" +
+						"Hello"
+				),
+				new PseudoDocument("Hi", "Included")
+		);
+
+		for (Compilation compilation : environment.compilationSet()) {
+			Instruction instruction = compilation.getInstruction();
+
+			Memory memory = new Memory();
+			memory.getFrame().setInstruction(instruction);
+
+			try {
+				instruction.exec(environment, memory);
+			} catch (ExecutionException e) {
+				System.err.print(e.getTree().document());
+				System.err.print(":");
+				System.err.print(Trees.line(e.getTree()));
+				System.err.print(": ");
+				System.err.print(e.getMessage());
+				System.err.println();
+				for (Memory.Frame frame : memory.getFrames()) {
+					Tree tree = frame.getInstruction().getTree();
+					System.err.print("\t");
+					System.err.print("at ");
+					System.err.print(tree.getSketch());
+					System.err.print("(");
+					System.err.print(tree.document());
+					System.err.print(":");
+					System.err.print(Trees.line(frame.getInstruction().getTree()));
+					System.err.print(")");
+					System.err.println();
+				}
+			}
+
+			System.out.println("Compilation: " + compilation.getRootTree().document());
+			System.out.println("------------------------------");
+			System.out.println(memory.getConsole());
+			System.out.println("------------------------------");
+			System.out.println();
+			memory.close();
+		}
 	}
 
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
@@ -137,16 +194,16 @@ public class JParsersTest {
 
 		Compilation compilation = environment.optCompilation(document);
 
-		while (JParsers.PROCESSOR.process(compilation))
+		while (Parsers.PROCESSOR.process(compilation))
 			;
-		while (JPPProcessors.PROCESSOR.process(compilation))
+		while (Processors.PROCESSOR.process(compilation))
 			;
-		while (JCompilers.PROCESSOR.process(compilation))
+		while (Compilers.PROCESSOR.process(compilation))
 			;
 
 		Instruction instruction = compilation.getInstruction();
 
-		environment.optCompilation(new PseudoDocument("", "Hi"))
+		environment.optCompilation(new PseudoDocument("Hi", ""))
 				   .setInstruction((environment1, memory) ->
 						   memory.print("Included")
 				   );
@@ -185,7 +242,7 @@ public class JParsersTest {
 		Tree tree = new Tree(document);
 		Compilation compilation = new CompilationImpl(environment, tree);
 
-		JParsers.PROCESSOR.process(compilation);
+		Parsers.PROCESSOR.process(compilation);
 
 		Set<Tree> trees = Trees.collect(tree);
 
@@ -224,7 +281,7 @@ public class JParsersTest {
 					   String.join("", Collections.nCopies(50, "}[")) + "]";
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JParsers.PROCESSOR.process(compilation);
+		Parsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
@@ -238,7 +295,7 @@ public class JParsersTest {
 		String value = String.join("", Collections.nCopies(50, "{][}"));
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JParsers.PROCESSOR.process(compilation);
+		Parsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -260,7 +317,7 @@ public class JParsersTest {
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		//I am actually stunned to see that this works with RandomMergeParser!!!
-		JParsers.PROCESSOR.process(compilation);
+		Parsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
