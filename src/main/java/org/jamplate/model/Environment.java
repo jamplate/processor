@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
@@ -34,6 +35,30 @@ import java.util.Map;
  * @since 0.2.0 ~2021.05.16
  */
 public interface Environment extends Serializable {
+	/**
+	 * Return a set view containing the compilations in this environment.
+	 *
+	 * @return a view of the compilations in this.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	@Contract(pure = true)
+	Set<Compilation> compilationSet();
+
+	/**
+	 * Get the compilation set to this environment with the given {@code document} or
+	 * return {@code null} if no such compilation exist in this environment.
+	 *
+	 * @param document the document of the compilation to be returned.
+	 * @return the compilation with the given {@code document} in this environment. Or
+	 *        {@code null} if no such compilation exist.
+	 * @throws NullPointerException if the given {@code document} is null.
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@Nullable
+	@Contract(pure = true)
+	Compilation getCompilation(@NotNull Document document);
+
 	/**
 	 * Get the compilation registered in this environment with the document qualified with
 	 * the given {@code name} or return {@code null} if no such compilation has been set
@@ -49,20 +74,6 @@ public interface Environment extends Serializable {
 	@Nullable
 	@Contract(pure = true)
 	Compilation getCompilation(@NotNull String name);
-
-	/**
-	 * Get the compilation set to this environment with the given {@code document} or
-	 * return {@code null} if no such compilation exist in this environment.
-	 *
-	 * @param document the document of the compilation to be returned.
-	 * @return the compilation with the given {@code document} in this environment. Or
-	 *        {@code null} if no such compilation exist.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@Nullable
-	@Contract(pure = true)
-	Compilation getCompilation(@NotNull Document document);
 
 	/**
 	 * Return the diagnostic manager in this environment.
