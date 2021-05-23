@@ -16,7 +16,7 @@
 package org.jamplate.impl.util.model.function;
 
 import org.jamplate.impl.Kind;
-import org.jamplate.impl.incstructions.InstructionArray;
+import org.jamplate.impl.util.model.InstructionArray;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;

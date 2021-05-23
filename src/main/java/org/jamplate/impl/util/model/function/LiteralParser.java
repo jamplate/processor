@@ -16,7 +16,7 @@
 package org.jamplate.impl.util.model.function;
 
 import org.jamplate.model.function.Parser;
-import org.jamplate.impl.util.model.Literal;
+import org.jamplate.impl.util.model.LiteralSketch;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
@@ -43,7 +43,7 @@ public class LiteralParser implements Parser {
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Supplier<Literal> constructor;
+	protected final Supplier<LiteralSketch> constructor;
 	/**
 	 * A pattern matching the literal.
 	 *
@@ -63,7 +63,7 @@ public class LiteralParser implements Parser {
 	 */
 	public LiteralParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		this.constructor = Literal::new;
+		this.constructor = LiteralSketch::new;
 		this.pattern = pattern;
 	}
 
@@ -79,7 +79,7 @@ public class LiteralParser implements Parser {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public LiteralParser(@NotNull Supplier<Literal> constructor, @NotNull Pattern pattern) {
+	public LiteralParser(@NotNull Supplier<LiteralSketch> constructor, @NotNull Pattern pattern) {
 		Objects.requireNonNull(constructor, "constructor");
 		Objects.requireNonNull(pattern, "pattern");
 		this.constructor = constructor;
@@ -95,7 +95,7 @@ public class LiteralParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  Literal s = this.constructor.get();
+						  LiteralSketch s = this.constructor.get();
 						  Tree t = new Tree(d, m, s);
 						  s.setTree(t);
 						  return t;

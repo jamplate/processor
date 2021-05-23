@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.19
  */
-public class Literal extends Sketch {
+public class LiteralSketch extends Sketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8126285691779567203L;
 
@@ -36,7 +36,7 @@ public class Literal extends Sketch {
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public Literal() {
+	public LiteralSketch() {
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Literal extends Sketch {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.19
 	 */
-	public Literal(@NotNull Tree tree) {
+	public LiteralSketch(@NotNull Tree tree) {
 		super(tree);
 	}
 }

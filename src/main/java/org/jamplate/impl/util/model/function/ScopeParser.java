@@ -16,7 +16,7 @@
 package org.jamplate.impl.util.model.function;
 
 import org.jamplate.model.function.Parser;
-import org.jamplate.impl.util.model.Scope;
+import org.jamplate.impl.util.model.ScopeSketch;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
@@ -43,7 +43,7 @@ public class ScopeParser implements Parser {
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Supplier<Scope> constructor;
+	protected final Supplier<ScopeSketch> constructor;
 	/**
 	 * A pattern matching the closing sequence.
 	 *
@@ -70,7 +70,7 @@ public class ScopeParser implements Parser {
 	 */
 	public ScopeParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		this.constructor = Scope::new;
+		this.constructor = ScopeSketch::new;
 		this.startPattern = pattern;
 		this.endPattern = pattern;
 	}
@@ -87,7 +87,7 @@ public class ScopeParser implements Parser {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public ScopeParser(@NotNull Supplier<Scope> constructor, @NotNull Pattern pattern) {
+	public ScopeParser(@NotNull Supplier<ScopeSketch> constructor, @NotNull Pattern pattern) {
 		Objects.requireNonNull(constructor, "constructor");
 		Objects.requireNonNull(pattern, "pattern");
 		this.constructor = constructor;
@@ -110,7 +110,7 @@ public class ScopeParser implements Parser {
 	public ScopeParser(@NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
-		this.constructor = Scope::new;
+		this.constructor = ScopeSketch::new;
 		this.startPattern = startPattern;
 		this.endPattern = endPattern;
 	}
@@ -129,7 +129,7 @@ public class ScopeParser implements Parser {
 	 *                              endPattern} is null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public ScopeParser(@NotNull Supplier<Scope> constructor, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	public ScopeParser(@NotNull Supplier<ScopeSketch> constructor, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
 		Objects.requireNonNull(constructor, "constructor");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
@@ -148,7 +148,7 @@ public class ScopeParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  Scope s = this.constructor.get();
+						  ScopeSketch s = this.constructor.get();
 						  Tree t = new Tree(d, m.get(0), s);
 						  Tree o = new Tree(d, m.get(1), s.getOpenAnchor());
 						  Tree c = new Tree(d, m.get(2), s.getCloseAnchor());

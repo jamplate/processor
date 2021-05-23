@@ -29,7 +29,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
-public class Command extends Scope {
+public class CommandSketch extends ScopeSketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 6566273402709048696L;
 
@@ -54,7 +54,7 @@ public class Command extends Scope {
 	 *
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public Command() {
+	public CommandSketch() {
 		this.type = new Type();
 		this.parameter = new Parameter();
 	}
@@ -66,7 +66,7 @@ public class Command extends Scope {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public Command(@NotNull Tree tree) {
+	public CommandSketch(@NotNull Tree tree) {
 		super(tree);
 		this.type = new Type();
 		this.parameter = new Parameter();
@@ -84,7 +84,7 @@ public class Command extends Scope {
 	 *                              or {@code type} or {@code parameter} is null.
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	protected Command(@NotNull Anchor openAnchor, @NotNull Anchor closeAnchor, @NotNull Type type, @NotNull Parameter parameter) {
+	protected CommandSketch(@NotNull Anchor openAnchor, @NotNull Anchor closeAnchor, @NotNull Type type, @NotNull Parameter parameter) {
 		super(openAnchor, closeAnchor);
 		Objects.requireNonNull(type, "type");
 		Objects.requireNonNull(parameter, "parameter");
@@ -135,8 +135,8 @@ public class Command extends Scope {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public Command getCommand() {
-			return Command.this;
+		public CommandSketch getCommand() {
+			return CommandSketch.this;
 		}
 	}
 
@@ -147,7 +147,7 @@ public class Command extends Scope {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public class Type extends Literal {
+	public class Type extends LiteralSketch {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = 821197872627775597L;
 
@@ -159,8 +159,8 @@ public class Command extends Scope {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public Command getCommand() {
-			return Command.this;
+		public CommandSketch getCommand() {
+			return CommandSketch.this;
 		}
 	}
 }

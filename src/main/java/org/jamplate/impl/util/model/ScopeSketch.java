@@ -29,7 +29,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.17
  */
-public class Scope extends Sketch {
+public class ScopeSketch extends Sketch {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3006066369136395993L;
 
@@ -39,21 +39,21 @@ public class Scope extends Sketch {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final Scope.Anchor closeAnchor;
+	protected final ScopeSketch.Anchor closeAnchor;
 	/**
 	 * The opening anchor of this scope.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@NotNull
-	protected final Scope.Anchor openAnchor;
+	protected final ScopeSketch.Anchor openAnchor;
 
 	/**
 	 * Construct a new scope.
 	 *
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public Scope() {
+	public ScopeSketch() {
 		this.openAnchor = new Anchor();
 		this.closeAnchor = new Anchor();
 	}
@@ -65,7 +65,7 @@ public class Scope extends Sketch {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public Scope(@NotNull Tree tree) {
+	public ScopeSketch(@NotNull Tree tree) {
 		super(tree);
 		this.openAnchor = new Anchor();
 		this.closeAnchor = new Anchor();
@@ -80,7 +80,7 @@ public class Scope extends Sketch {
 	 *                              is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	protected Scope(@NotNull Scope.Anchor openAnchor, @NotNull Scope.Anchor closeAnchor) {
+	protected ScopeSketch(@NotNull ScopeSketch.Anchor openAnchor, @NotNull ScopeSketch.Anchor closeAnchor) {
 		Objects.requireNonNull(openAnchor, "openAnchor");
 		Objects.requireNonNull(closeAnchor, "closeAnchor");
 		this.openAnchor = openAnchor;
@@ -95,7 +95,7 @@ public class Scope extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final Scope.Anchor getCloseAnchor() {
+	public final ScopeSketch.Anchor getCloseAnchor() {
 		return this.closeAnchor;
 	}
 
@@ -107,7 +107,7 @@ public class Scope extends Sketch {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public final Scope.Anchor getOpenAnchor() {
+	public final ScopeSketch.Anchor getOpenAnchor() {
 		return this.openAnchor;
 	}
 
@@ -130,8 +130,8 @@ public class Scope extends Sketch {
 		 */
 		@NotNull
 		@Contract(pure = true)
-		public final Scope getScope() {
-			return Scope.this;
+		public final ScopeSketch getScope() {
+			return ScopeSketch.this;
 		}
 	}
 }
