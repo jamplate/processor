@@ -21,6 +21,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class EnvironmentImpl implements Environment {
 	 */
 	@NotNull
 	protected final Map<Document, Compilation> compilations = new HashMap<>();
+
 	/**
 	 * The diagnostic manager in this enlivenment.
 	 *
@@ -62,17 +64,22 @@ public class EnvironmentImpl implements Environment {
 
 	@NotNull
 	@Override
-	public Compilation getCompilation(@NotNull Document document) {
-		Objects.requireNonNull(document, "document");
-		return this.compilations.computeIfAbsent(document,
-				k -> new CompilationImpl(this, new Tree(document))
-		);
+	public Compilation getCompilation(@NotNull String name) {
+		Objects.requireNonNull(name, "name");
+		return this.compilations
+				.entrySet()
+				.parallelStream()
+				.filter(entry -> entry.getKey().toString().equals(name))
+				.map(Map.Entry::getValue)
+				.findAny()
+				.orElse(null);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
-	public Map<Document, Compilation> getCompilations() {
-		return Collections.unmodifiableMap(this.compilations);
+	public Compilation getCompilation(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		return this.compilations.get(document);
 	}
 
 	@NotNull
@@ -87,6 +94,15 @@ public class EnvironmentImpl implements Environment {
 		return Collections.checkedMap(this.meta, String.class, Object.class);
 	}
 
+	@NotNull
+	@Override
+	public Compilation optCompilation(@NotNull Document document) {
+		Objects.requireNonNull(document, "document");
+		return this.compilations.computeIfAbsent(document, k ->
+				new CompilationImpl(this, new Tree(document))
+		);
+	}
+
 	@Override
 	public void setCompilation(@NotNull Document document, @NotNull Compilation compilation) {
 		Objects.requireNonNull(document, "document");
@@ -94,3 +110,149 @@ public class EnvironmentImpl implements Environment {
 		this.compilations.put(document, compilation);
 	}
 }
+//gate
+/*
+	@NotNull
+	@Override
+	public Instruction compile(@NotNull Compilation compilation) {
+		Objects.requireNonNull(compilation, "compilation");
+		return this.instructions.computeIfAbsent(compilation, k -> {
+			Tree root = compilation.getRootTree();
+			Instruction instruction = this.compiler.compile(this.compiler, compilation, root);
+
+			if (instruction == null)
+				throw new CompilationException("Unrecognized compilation", root);
+
+			return instruction;
+		});
+	}*/
+//
+//	@NotNull
+//	@Override
+//	public Compilation parse(@NotNull Document document) {
+//		Objects.requireNonNull(document, "document");
+//		//noinspection OverlyLongLambda
+//		return this.compilations.computeIfAbsent(document,
+//				k -> {
+//					Tree root = new Tree(document);
+//					Compilation compilation = new CompilationImpl(this, root);
+//
+//					while (true) {
+//						Set<Tree> treeSet = this.parser.parse(compilation, root);
+//
+//						if (treeSet.isEmpty())
+//							return compilation;
+//
+//						for (Tree tree : treeSet)
+//							if (tree.reference().equals(root.reference()))
+//								//its OK baby its OK to takeover :)
+//								root.setSketch(tree.getSketch());
+//							else
+//								root.offer(tree);
+//					}
+//				}
+//		);
+//	}
+/**/
+//functions
+//
+//	@NotNull
+//	@Override
+//	public Compiler getCompiler() {
+//		return this.compiler;
+//	}
+//
+//	@Override
+//	public void setCompiler(@NotNull Compiler compiler) {
+//		Objects.requireNonNull(compiler, "compiler");
+//		this.compiler = compiler;
+//	}
+//
+//	@NotNull
+//	@Override
+//	public Parser getParser() {
+//		return this.parser;
+//	}
+//
+//	@Override
+//	public void setParser(@NotNull Parser parser) {
+//		Objects.requireNonNull(parser, "parser");
+//		this.parser = parser;
+//	}
+//
+//	/**
+//	 * The compiler used by this compilation.
+//	 *
+//	 * @since 0.2.0 ~2021.05.21
+//	 */
+//	@NotNull
+//	protected Compiler compiler = (compiler, compilation, tree) -> null;
+//	/**
+//	 * The parser used by this environment.
+//	 *
+//	 * @since 0.2.0 ~2021.05.21
+//	 */
+//	@NotNull
+//	protected Parser parser = (compilation, tree) -> Collections.emptySet();
+//
+
+//getter `instruction`
+//
+//	@Nullable
+//	@Override
+//	public Instruction getInstruction(@NotNull String name) {
+//		return this.instructions
+//				.entrySet()
+//				.parallelStream()
+//				.filter(entry ->
+//						entry.getKey()
+//							 .getRootTree()
+//							 .document()
+//							 .toString()
+//							 .equals(name)
+//				)
+//				.map(Map.Entry::getValue)
+//				.findAny()
+//				.orElse(null);
+//	}
+//
+//	@Nullable
+//	@Override
+//	public Instruction getInstruction(@NotNull Document document) {
+//		Objects.requireNonNull(document, "document");
+//		return this.instructions
+//				.entrySet()
+//				.parallelStream()
+//				.filter(entry ->
+//						entry.getKey()
+//							 .getRootTree()
+//							 .document()
+//							 .equals(document)
+//				)
+//				.map(Map.Entry::getValue)
+//				.findAny()
+//				.orElse(null);
+//	}
+//
+//	@Nullable
+//	@Override
+//	public Instruction getInstruction(@NotNull Compilation compilation) {
+//		Objects.requireNonNull(compilation, "compilation");
+//		return this.instructions.get(compilation);
+//	}
+//
+//	//setter `instruction`
+//
+//	@Override
+//	public void setInstruction(@NotNull Compilation compilation, @NotNull Instruction instruction) {
+//		Objects.requireNonNull(compilation, "compilation");
+//		Objects.requireNonNull(instruction, "instruction");
+//		this.instructions.put(compilation, instruction);
+//	}
+//	/**
+//	 * The executables in this environment.
+//	 *
+//	 * @since 0.2.0 ~2021.05.21
+//	 */
+//	@NotNull
+//	protected final Map<Compilation, Instruction> instructions = new HashMap<>();
