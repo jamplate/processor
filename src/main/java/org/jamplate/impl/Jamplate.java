@@ -39,6 +39,19 @@ import java.util.stream.Collectors;
  */
 public class Jamplate {
 	/**
+	 * The default jamplate implementation.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final Jamplate DEFAULT =
+			new Jamplate(
+					Parsers.PROCESSOR,
+					Processors.PROCESSOR,
+					Compilers.PROCESSOR
+			);
+
+	/**
 	 * The processors used by this jamplate implementation.
 	 *
 	 * @since 0.2.0 ~2021.05.23
