@@ -15,11 +15,11 @@
  */
 package org.jamplate.impl.util.model.function;
 
-import org.jamplate.model.function.Parser;
 import org.jamplate.impl.util.model.LiteralSketch;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
+import org.jamplate.model.function.Parser;
 import org.jamplate.util.Parsing;
 import org.jetbrains.annotations.NotNull;
 

@@ -15,9 +15,9 @@
  */
 package org.jamplate.util.model.function;
 
-import org.jamplate.model.function.Parser;
 import org.jamplate.model.Dominance;
 import org.jamplate.model.Tree;
+import org.jamplate.model.function.Parser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

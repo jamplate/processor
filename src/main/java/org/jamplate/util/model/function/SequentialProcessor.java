@@ -15,8 +15,8 @@
  */
 package org.jamplate.util.model.function;
 
-import org.jamplate.model.function.Processor;
 import org.jamplate.model.Compilation;
+import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
