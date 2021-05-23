@@ -108,6 +108,7 @@ public interface Instruction extends Serializable {
 	 *                    on.
 	 * @throws NullPointerException if the given {@code environment} or {@code memory} is
 	 *                              null.
+	 * @throws ExecutionException   if this instruction failed to be executed.
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@Contract(mutates = "param1,param2")
