@@ -76,8 +76,8 @@ public class PseudoDocument implements Document {
 	 */
 	public PseudoDocument(@NotNull CharSequence content) {
 		Objects.requireNonNull(content, "content");
-		this.content = content;
 		this.identifier = Integer.toHexString(System.identityHashCode(content));
+		this.content = content;
 	}
 
 	/**
@@ -89,17 +89,17 @@ public class PseudoDocument implements Document {
 	 * instance to anyone requests it. So, due to that. The provided content might get
 	 * changed in value while it suppose to be immutable.
 	 *
-	 * @param content    the content of the constructed pseudo content.
 	 * @param identifier the identity of the constructed document.
-	 * @throws NullPointerException if the given {@code content} or {@code identifier} is
+	 * @param content    the content of the constructed pseudo content.
+	 * @throws NullPointerException if the given {@code identifier} or {@code content} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.01.13
 	 */
-	public PseudoDocument(@NotNull CharSequence content, @NotNull String identifier) {
-		Objects.requireNonNull(content, "content");
+	public PseudoDocument(@NotNull String identifier, @NotNull CharSequence content) {
 		Objects.requireNonNull(identifier, "identifier");
-		this.content = content;
+		Objects.requireNonNull(content, "content");
 		this.identifier = identifier;
+		this.content = content;
 	}
 
 	@Override
