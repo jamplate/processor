@@ -1,11 +1,7 @@
-package org.jamplate.impl.syntax;
+package org.jamplate.impl.process;
 
-import org.jamplate.impl.analyze.CommandKind;
-import org.jamplate.impl.analyze.JamplateAnalyze;
-import org.jamplate.model.Compilation;
-import org.jamplate.model.Document;
-import org.jamplate.model.Environment;
-import org.jamplate.model.Tree;
+import org.jamplate.impl.Kind;
+import org.jamplate.model.*;
 import org.jamplate.util.Trees;
 import org.jamplate.util.model.CompilationImpl;
 import org.jamplate.util.model.EnvironmentImpl;
@@ -13,13 +9,14 @@ import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class JamplateSyntaxTest {
+public class JParsersTest {
 	@RepeatedTest(1)
 	public void axe() {
 		Document document = new PseudoDocument(
@@ -35,15 +32,15 @@ public class JamplateSyntaxTest {
 		);
 
 		Environment environment = new EnvironmentImpl();
-		Compilation compilation = environment.getCompilation(document);
+		Compilation compilation = environment.optCompilation(document);
 
-		while (JamplateSyntax.PROCESSOR.process(compilation))
+		while (JParsers.PROCESSOR.process(compilation))
 			;
 
 		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
 
 		assertEquals(
-				TransientKind.COMMAND,
+				Kind.Transient.COMMAND,
 				hashDefine.getSketch().getKind(),
 				"expected #Define"
 		);
@@ -55,7 +52,7 @@ public class JamplateSyntaxTest {
 		Tree round = parameter.getChild(); //("10 + 5")
 
 		assertEquals(
-				SyntaxKind.ROUND,
+				Kind.Syntax.ROUND,
 				round.getSketch().getKind(),
 				"(\"10 + 5\") is expected"
 		);
@@ -63,7 +60,7 @@ public class JamplateSyntaxTest {
 		Tree tenPlusFive = round.getChild().getNext(); //"10 + 5"
 
 		assertEquals(
-				SyntaxKind.DQUOTE,
+				Kind.Syntax.DQUOTE,
 				tenPlusFive.getSketch().getKind(),
 				"\"10 + 5\" is expected"
 		);
@@ -80,9 +77,9 @@ public class JamplateSyntaxTest {
 		);
 
 		Environment environment = new EnvironmentImpl();
-		Compilation compilation = environment.getCompilation(document);
+		Compilation compilation = environment.optCompilation(document);
 
-		while (JamplateSyntax.PROCESSOR.process(compilation))
+		while (JParsers.PROCESSOR.process(compilation))
 			;
 
 		int i = 0;
@@ -91,7 +88,7 @@ public class JamplateSyntaxTest {
 		Tree command1 = root.getChild();
 
 		assertEquals(
-				TransientKind.COMMAND,
+				Kind.Transient.COMMAND,
 				command1.getSketch().getKind(),
 				"Expected the command being parsed"
 		);
@@ -99,24 +96,86 @@ public class JamplateSyntaxTest {
 		Tree command2 = command1.getNext().getNext();
 
 		assertEquals(
-				TransientKind.COMMAND,
+				Kind.Transient.COMMAND,
 				command2.getSketch().getKind(),
 				"Expected the other command being parsed"
 		);
 
-		while (JamplateAnalyze.PROCESSOR.process(compilation))
+		while (JPPProcessors.PROCESSOR.process(compilation))
 			;
 
 		assertEquals(
-				CommandKind.INCLUDE,
+				Kind.Command.INCLUDE,
 				command1.getSketch().getKind(),
 				"Expected the command being recognized as an include command"
 		);
 		assertEquals(
-				TransientKind.COMMAND,
+				Kind.Transient.COMMAND,
 				command2.getSketch().getKind(),
 				"Expected the other command not being recognized as any command"
 		);
+	}
+
+	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
+	@Test
+	public void manualInspection() throws IOException {
+		Environment environment = new EnvironmentImpl();
+
+		Document document = new PseudoDocument(
+				"#define Hello \"H3110\"\n" +
+				"#define Hello \"heLLo\"\n" +
+				"#declare Bye \"8y3\"\n" +
+				"Hello and Bye\n" +
+				"#include \"Hi\"  \n" +
+				"\n" +
+				"//#console \"test\"\n" +
+				"//#include \"Hi\"\n" +
+				"#include \"Hi\"\n" +
+				"#declare __define__ \"{\\\"Hello\\\":\\\"Yellow\\\"}\"\n" +
+				"Hello"
+		);
+
+		Compilation compilation = environment.optCompilation(document);
+
+		while (JParsers.PROCESSOR.process(compilation))
+			;
+		while (JPPProcessors.PROCESSOR.process(compilation))
+			;
+		while (JCompilers.PROCESSOR.process(compilation))
+			;
+
+		Instruction instruction = compilation.getInstruction();
+
+		environment.optCompilation(new PseudoDocument("", "Hi"))
+				   .setInstruction((environment1, memory) ->
+						   memory.print("Included")
+				   );
+		Memory memory = new Memory();
+		memory.getFrame().setInstruction(instruction);
+
+		try {
+			instruction.exec(environment, memory);
+		} catch (ExecutionException e) {
+			System.err.print(e.getClass());
+			System.err.print(": ");
+			System.err.print(e.getMessage());
+			System.err.println();
+			for (Memory.Frame frame : memory.getFrames()) {
+				Tree tree = frame.getInstruction().getTree();
+				System.err.print("\t");
+				System.err.print("at ");
+				System.err.print(tree.getSketch());
+				System.err.print("(");
+				System.err.print(document);
+				System.err.print(":");
+				System.err.print(Trees.line(frame.getInstruction().getTree()));
+				System.err.print(")");
+				System.err.println();
+			}
+		}
+
+		System.out.println(memory.getConsole());
+		memory.close();
 	}
 
 	@RepeatedTest(50)
@@ -126,7 +185,7 @@ public class JamplateSyntaxTest {
 		Tree tree = new Tree(document);
 		Compilation compilation = new CompilationImpl(environment, tree);
 
-		JamplateSyntax.PROCESSOR.process(compilation);
+		JParsers.PROCESSOR.process(compilation);
 
 		Set<Tree> trees = Trees.collect(tree);
 
@@ -165,7 +224,7 @@ public class JamplateSyntaxTest {
 					   String.join("", Collections.nCopies(50, "}[")) + "]";
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JamplateSyntax.PROCESSOR.process(compilation);
+		JParsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
@@ -179,7 +238,7 @@ public class JamplateSyntaxTest {
 		String value = String.join("", Collections.nCopies(50, "{][}"));
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
-		JamplateSyntax.PROCESSOR.process(compilation);
+		JParsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -201,7 +260,7 @@ public class JamplateSyntaxTest {
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		//I am actually stunned to see that this works with RandomMergeParser!!!
-		JamplateSyntax.PROCESSOR.process(compilation);
+		JParsers.PROCESSOR.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -216,7 +275,7 @@ public class JamplateSyntaxTest {
 					"All the scopes are expected to have only 4 characters"
 			);
 			assertSame(
-					SyntaxKind.DQUOTE,
+					Kind.Syntax.DQUOTE,
 					tree.getSketch().getKind(),
 					"Expected all to be double quotes"
 			);
