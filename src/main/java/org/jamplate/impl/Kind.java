@@ -90,14 +90,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String CURLY_CLOSE = "curly-close";
+		public static final String CURLY_CLOSE = "curly:close";
 		/**
 		 * The kind for curly brackets.
 		 *
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String CURLY_OPEN = "curly-open";
+		public static final String CURLY_OPEN = "curly:open";
 
 		/**
 		 * The kind for double-quotes.
@@ -112,14 +112,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String DQUOTE_CLOSE = "dquote-close";
+		public static final String DQUOTE_CLOSE = "dquote:close";
 		/**
 		 * The kind for double-quotes.
 		 *
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String DQUOTE_OPEN = "dquote-open";
+		public static final String DQUOTE_OPEN = "dquote:open";
 
 		/**
 		 * The kind for escaped sequences.
@@ -159,14 +159,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String QUOTE_CLOSE = "quote-close";
+		public static final String QUOTE_CLOSE = "quote:close";
 		/**
 		 * The kind for quotes.
 		 *
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String QUOTE_OPEN = "quote-open";
+		public static final String QUOTE_OPEN = "quote:open";
 
 		/**
 		 * The kind for round brackets.
@@ -181,14 +181,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String ROUND_CLOSE = "round-close";
+		public static final String ROUND_CLOSE = "round:close";
 		/**
 		 * The kind for round brackets.
 		 *
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String ROUND_OPEN = "round-open";
+		public static final String ROUND_OPEN = "round:open";
 
 		/**
 		 * The kind for square brackets.
@@ -203,14 +203,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String SQUARE_CLOSE = "square-close";
+		public static final String SQUARE_CLOSE = "square:close";
 		/**
 		 * The kind for square brackets.
 		 *
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final String SQUARE_OPEN = "square-open";
+		public static final String SQUARE_OPEN = "square:open";
 
 		/**
 		 * Utility classes must not be initialized.
@@ -244,28 +244,28 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMAND_CLOSE = "command-close";
+		public static final String COMMAND_CLOSE = "command:close";
 		/**
 		 * The kind of the opening anchor of a single-line command.
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMAND_OPEN = "command-open";
+		public static final String COMMAND_OPEN = "command:open";
 		/**
 		 * The kind of the parameter of a single-line command.
 		 *
 		 * @since 0.2.0 ~2021.05.20
 		 */
 		@NotNull
-		public static final String COMMAND_PARAMETER = "command-parameter";
+		public static final String COMMAND_PARAMETER = "command:parameter";
 		/**
 		 * The kind of the type of a single-line command.
 		 *
 		 * @since 0.2.0 ~2021.05.20
 		 */
 		@NotNull
-		public static final String COMMAND_TYPE = "command-type";
+		public static final String COMMAND_TYPE = "command:type";
 
 		/**
 		 * The kind of comment blocks.
@@ -273,21 +273,21 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMENT_BLOCK = "comment-block";
+		public static final String COMMENT_BLOCK = "comment:block";
 		/**
 		 * The kind of the closing anchor of comment blocks.
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMENT_BLOCK_CLOSE = "comment-block-close";
+		public static final String COMMENT_BLOCK_CLOSE = "comment-block:close";
 		/**
 		 * The kind of the opening anchor of comment blocks.
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMENT_BLOCK_OPEN = "comment-block-open";
+		public static final String COMMENT_BLOCK_OPEN = "comment-block:open";
 
 		/**
 		 * The kind of commented lines.
@@ -302,14 +302,14 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMENT_LINE_CLOSE = "comment-line-close";
+		public static final String COMMENT_LINE_CLOSE = "comment-line:close";
 		/**
 		 * The kind of the opening anchor of commented lines.
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String COMMENT_LINE_OPEN = "comment-line-open";
+		public static final String COMMENT_LINE_OPEN = "comment-line:open";
 
 		/**
 		 * The kind of an injection sequence.
@@ -324,21 +324,21 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String INJECTION_CLOSE = "injection-close";
+		public static final String INJECTION_CLOSE = "injection:close";
 		/**
 		 * The kind of the opening anchor of an injection.
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final String INJECTION_OPEN = "injection-open";
+		public static final String INJECTION_OPEN = "injection:open";
 		/**
 		 * The kind of the parameter of an injection.
 		 *
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final String INJECTION_PARAMETER = "injection-parameter";
+		public static final String INJECTION_PARAMETER = "injection:parameter";
 
 		/**
 		 * The kind of undefined text.
@@ -380,7 +380,8 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final String ADDITION_CONTEXT = "addition-context";
+		public static final String ADDITION_CONTEXT = "addition:context";
+
 		/**
 		 * The kind for arrays.
 		 *
@@ -442,6 +443,7 @@ public class Kind {
 		 */
 		@NotNull
 		public static final String OBJECT = "object";
+
 		/**
 		 * The kind for stirngs.
 		 *
@@ -455,7 +457,8 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final String STRING_CONTENT = "string-content";
+		public static final String STRING_CONTENT = "string:content";
+
 		/**
 		 * The kind for the subtraction symbol.
 		 *
