@@ -24,7 +24,17 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
-public class Kind {
+public final class Kind {
+	/**
+	 * Utility classes must not be initialized.
+	 *
+	 * @throws AssertionError when called.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	private Kind() {
+		throw new AssertionError("No instance for you");
+	}
+
 	/**
 	 * A utility class containing the kinds of jamplate commands.
 	 *
@@ -42,12 +52,69 @@ public class Kind {
 		public static final String CONSOLE = "command/console";
 
 		/**
+		 * The command that allocates a value into the heap.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String DECLARE = "command/declare";
+
+		/**
+		 * The command that allocates a value into the heap and replaces all the
+		 * occurrences of the name of that variable in the text.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String DEFINE = "command/define";
+
+		/**
+		 * The command kind of the {@code elif} command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ELIF = "command/elif";
+
+		/**
+		 * The command kind of the {@code else} command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ELSE = "command/else";
+
+		/**
+		 * The command kind of the {@code endif} command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ENDIF = "command/else";
+
+		/**
+		 * The command kind of the {@code #if} command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String IF = "command/if";
+
+		/**
 		 * The command kind of the {@code #include} command.
 		 *
 		 * @since 0.2.0 ~2021.05.20
 		 */
 		@NotNull
 		public static final String INCLUDE = "command/include";
+
+		/**
+		 * The command kind of the {@code #make} command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String MAKE = "command/make";
 
 		/**
 		 * Utility classes must not be initialized.
@@ -259,6 +326,20 @@ public class Kind {
 		 */
 		@NotNull
 		public static final String COMMAND_PARAMETER = "command:parameter";
+		/**
+		 * The kind of the key part of the parameter of a command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String COMMAND_PARAMETER_KEY = "command:parameter:key";
+		/**
+		 * The kind of the value part of the parameter of a command.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String COMMAND_PARAMETER_VALUE = "command:parameter:value";
 		/**
 		 * The kind of the type of a single-line command.
 		 *

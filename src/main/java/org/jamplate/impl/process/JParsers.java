@@ -15,19 +15,20 @@
  */
 package org.jamplate.impl.process;
 
-import org.jamplate.model.function.Parser;
-import org.jamplate.model.function.Processor;
-import org.jamplate.impl.model.Command;
-import org.jamplate.impl.model.Kind;
-import org.jamplate.impl.model.Scope;
-import org.jamplate.impl.util.LiteralParser;
-import org.jamplate.impl.util.ScopeParser;
+import org.jamplate.impl.Kind;
+import org.jamplate.impl.util.model.CommandSketch;
+import org.jamplate.impl.util.model.ScopeSketch;
+import org.jamplate.impl.util.model.function.LiteralParser;
+import org.jamplate.impl.util.model.function.ScopeParser;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
+import org.jamplate.model.function.Parser;
+import org.jamplate.model.function.Processor;
 import org.jamplate.util.model.function.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -37,7 +38,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
-public final class JamplateParse {
+public final class JParsers {
 	/**
 	 * An all-in-one parser used by the jamplate default implementation.
 	 *
@@ -46,23 +47,23 @@ public final class JamplateParse {
 	@NotNull
 	public static final Parser PARSER =
 			new CollectParser(new OrderParser(
-					JamplateParse.Syntax.LN,
-					JamplateParse.Transient.COMMENT_LINE,
+					JSyntax.LN,
+					JTransient.COMMENT_LINE,
 					new MergeParser(new CombineParser(
-							JamplateParse.Transient.COMMENT_BLOCK,
+							JTransient.COMMENT_BLOCK,
 							new CombineParser(
-									JamplateParse.Syntax.QUOTE,
-									JamplateParse.Syntax.DQUOTE
-							).also(JamplateParse.Syntax.ESCAPE)
+									JSyntax.QUOTE,
+									JSyntax.DQUOTE
+							).also(JSyntax.ESCAPE)
 					)),
 					new FlatOrderParser(
-							JamplateParse.Transient.INJECTION,
-							JamplateParse.Transient.COMMAND
+							JTransient.INJECTION,
+							JTransient.COMMAND
 					),
 					new MergeParser(new CombineParser(
-							JamplateParse.Syntax.CURLY,
-							JamplateParse.Syntax.SQUARE,
-							JamplateParse.Syntax.ROUND
+							JSyntax.CURLY,
+							JSyntax.SQUARE,
+							JSyntax.ROUND
 					))
 			));
 
@@ -74,7 +75,7 @@ public final class JamplateParse {
 	 */
 	@NotNull
 	public static final Processor PROCESSOR =
-			new ParserProcessor(JamplateParse.PARSER);
+			new ParserProcessor(JParsers.PARSER);
 
 	/**
 	 * Utility classes must not be initialized.
@@ -82,7 +83,7 @@ public final class JamplateParse {
 	 * @throws AssertionError when called.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	private JamplateParse() {
+	private JParsers() {
 		throw new AssertionError("No instance for you");
 	}
 
@@ -93,7 +94,7 @@ public final class JamplateParse {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public static final class Syntax {
+	public static final class JSyntax {
 		/**
 		 * A parser parsing commas.
 		 *
@@ -114,8 +115,8 @@ public final class JamplateParse {
 				Patterns.CURLY_OPEN, Patterns.CURLY_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.CURLY);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Syntax.CURLY_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Syntax.CURLY_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.CURLY_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.CURLY_CLOSE);
 		});
 
 		/**
@@ -128,8 +129,8 @@ public final class JamplateParse {
 				Patterns.DQUOTE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.DQUOTE);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Syntax.DQUOTE_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Syntax.DQUOTE_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.DQUOTE_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.DQUOTE_CLOSE);
 		});
 
 		/**
@@ -162,8 +163,8 @@ public final class JamplateParse {
 				Patterns.QUOTE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.QUOTE);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Syntax.QUOTE_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Syntax.QUOTE_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.QUOTE_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.QUOTE_CLOSE);
 		});
 
 		/**
@@ -176,8 +177,8 @@ public final class JamplateParse {
 				Patterns.ROUND_OPEN, Patterns.ROUND_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.ROUND);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Syntax.ROUND_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Syntax.ROUND_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.ROUND_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.ROUND_CLOSE);
 		});
 
 		/**
@@ -190,8 +191,8 @@ public final class JamplateParse {
 				Patterns.SQUARE_OPEN, Patterns.SQUARE_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.SQUARE);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Syntax.SQUARE_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Syntax.SQUARE_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.SQUARE_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.SQUARE_CLOSE);
 		});
 
 		/**
@@ -200,7 +201,7 @@ public final class JamplateParse {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.16
 		 */
-		private Syntax() {
+		private JSyntax() {
 			throw new AssertionError("No instance for you");
 		}
 
@@ -318,7 +319,7 @@ public final class JamplateParse {
 	 * @version 0.2.0
 	 * @since 0.2.0 ~2021.05.19
 	 */
-	public static final class Transient {
+	public static final class JTransient {
 		/**
 		 * A parser that parses a single-line command.
 		 *
@@ -327,43 +328,74 @@ public final class JamplateParse {
 		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
 		public static final Parser COMMAND = new ScopeParser(
-				Command::new, Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
+				CommandSketch::new, Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
 		).peek(tree -> {
-			Command sketch = (Command) tree.getSketch();
+			CommandSketch sketch = (CommandSketch) tree.getSketch();
 			sketch.setKind(Kind.Transient.COMMAND);
-			sketch.getOpenAnchor().setKind(Kind.Transient.COMMAND_OPEN);
-			sketch.getCloseAnchor().setKind(Kind.Transient.COMMAND_CLOSE);
-			sketch.getType().setKind(Kind.Transient.COMMAND_TYPE);
-			sketch.getParameter().setKind(Kind.Transient.COMMAND_PARAMETER);
+			sketch.getOpenAnchorSketch().setKind(Kind.Transient.COMMAND_OPEN);
+			sketch.getCloseAnchorSketch().setKind(Kind.Transient.COMMAND_CLOSE);
+			sketch.getCloseAnchorSketch().getTree().pop();
+			sketch.getTypeSketch().setKind(Kind.Transient.COMMAND_TYPE);
+			sketch.getParameterSketch().setKind(Kind.Transient.COMMAND_PARAMETER);
+			sketch.getParameterSketch().getKeySketch().setKind(Kind.Transient.COMMAND_PARAMETER_KEY);
+			sketch.getParameterSketch().getValueSketch().setKind(Kind.Transient.COMMAND_PARAMETER_VALUE);
+		})
+		 .peek(tree -> {
+			 //define the trees of `type` and `parameter`
+			 CommandSketch sketch = (CommandSketch) tree.getSketch();
+			 Document document = tree.document();
+			 Reference open = sketch.getOpenAnchorSketch().getTree().reference();
+			 Reference close = sketch.getCloseAnchorSketch().getTree().reference();
+			 int position = open.position() + open.length();
+			 int length = close.position() - position;
 
-			//define the trees of `type` and `parameter`
-			Document document = tree.document();
-			Reference open = sketch.getOpenAnchor().getTree().reference();
-			Reference close = sketch.getCloseAnchor().getTree().reference();
-			int position = open.position() + open.length();
-			int length = close.position() - position;
+			 int middle = document.read(new Reference(position, length))
+								  .toString()
+								  .indexOf(' ');
 
-			int middle = document.read(new Reference(position, length))
-								 .toString()
-								 .indexOf(' ');
+			 Tree t = new Tree(document, new Reference(
+					 position,
+					 middle == -1 ? length : middle
+			 ), sketch.getTypeSketch());
+			 Tree p = new Tree(document, new Reference(
+					 middle == -1 ? position + length : position + middle,
+					 middle == -1 ? 0 : length - middle
+			 ), sketch.getParameterSketch());
 
-			Tree t = new Tree(document, new Reference(
-					position,
-					middle == -1 ? length : middle
-			), sketch.getType());
-			Tree p = new Tree(document, new Reference(
-					middle == -1 ? position + length : position + middle + 1,
-					middle == -1 ? 0 : length - middle - 1
-			), sketch.getParameter());
+			 sketch.getTypeSketch().setTree(t);
+			 sketch.getParameterSketch().setTree(p);
 
-			sketch.getType().setTree(t);
-			sketch.getParameter().setTree(p);
+			 if (t.reference().length() != 0)
+				 tree.offer(t);
+			 if (p.reference().length() != 0)
+				 tree.offer(p);
+		 })
+		 .peek(tree -> {
+			 //define `key` and `value`
+			 CommandSketch sketch = (CommandSketch) tree.getSketch();
+			 Document document = tree.document();
+			 Reference parameter = sketch.getParameterSketch().getTree().reference();
 
-			if (t.reference().length() != 0)
-				tree.offer(t);
-			if (p.reference().length() != 0)
-				tree.offer(p);
-		});
+			 int position = parameter.position();
+			 int length = parameter.length();
+			 int p = length == 0 ? position : position + 1;
+			 int l = length == 0 ? 0 : length - 1;
+			 int middle = document.read(new Reference(p, l))
+								  .toString()
+								  .indexOf(' ');
+
+			 Tree k = new Tree(document, new Reference(
+					 p,
+					 middle == -1 ? l : middle
+			 ), sketch.getParameterSketch().getKeySketch());
+			 Tree v = new Tree(document, new Reference(
+					 middle == -1 ? p + l : p + middle,
+					 middle == -1 ? 0 : l - middle
+			 ), sketch.getParameterSketch().getValueSketch());
+
+			 sketch.getParameterSketch().getKeySketch().setTree(k);
+			 sketch.getParameterSketch().getValueSketch().setTree(v);
+		 });
 
 		/**
 		 * A parser that parses comment blocks.
@@ -375,8 +407,8 @@ public final class JamplateParse {
 				Patterns.COMMENT_BLOCK_OPEN, Patterns.COMMENT_BLOCK_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Transient.COMMENT_BLOCK);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Transient.COMMENT_BLOCK_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Transient.COMMENT_BLOCK_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.COMMENT_BLOCK_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.COMMENT_BLOCK_CLOSE);
 		});
 
 		/**
@@ -389,8 +421,9 @@ public final class JamplateParse {
 				Patterns.COMMENT_LINE_OPEN, Patterns.COMMENT_LINE_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Transient.COMMENT_LINE);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Transient.COMMENT_LINE_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Transient.COMMENT_LINE_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.COMMENT_LINE_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.COMMENT_LINE_CLOSE);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().getTree().pop();
 		});
 
 		/**
@@ -403,8 +436,8 @@ public final class JamplateParse {
 				Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Transient.INJECTION);
-			((Scope) tree.getSketch()).getOpenAnchor().setKind(Kind.Transient.INJECTION_OPEN);
-			((Scope) tree.getSketch()).getCloseAnchor().setKind(Kind.Transient.INJECTION_CLOSE);
+			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.INJECTION_OPEN);
+			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.INJECTION_CLOSE);
 		});
 
 		/**
@@ -413,7 +446,7 @@ public final class JamplateParse {
 		 * @throws AssertionError when called.
 		 * @since 0.2.0 ~2021.05.19
 		 */
-		private Transient() {
+		private JTransient() {
 			throw new AssertionError("No instance for you");
 		}
 
@@ -490,6 +523,104 @@ public final class JamplateParse {
 			 *
 			 * @throws AssertionError when called.
 			 * @since 0.2.0 ~2021.05.19
+			 */
+			private Patterns() {
+				throw new AssertionError("No instance for you");
+			}
+		}
+	}
+
+	/**
+	 * A class containing logical-context components.
+	 *
+	 * @author LSafer
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	public static final class JValue {
+		/**
+		 * A predicate that returns {@code true} if the tree provided to it has a parent
+		 * with a kind that is known to have a logical context.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		private static final Predicate<Tree> CONDITION = tree -> {
+			for (
+					Tree parent = tree.getParent();
+					parent != null;
+					parent = parent.getParent()
+			)
+				switch (parent.getSketch().getKind()) {
+					case Kind.Transient.COMMAND_PARAMETER:
+					case Kind.Transient.COMMAND_PARAMETER_VALUE:
+					case Kind.Transient.INJECTION_PARAMETER:
+						return true;
+				}
+
+			return false;
+		};
+
+		/**
+		 * A parser that parses addition symbols.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final Parser ADDITION = new LiteralParser(
+				Patterns.ADDITION
+		).condition(JValue.CONDITION)
+		 .peek(tree -> tree.getSketch().setKind(Kind.Value.ADDITION));
+
+		/**
+		 * A parser that parses subtraction symbols.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final Parser SUBTRACTION = new LiteralParser(
+				Patterns.SUBTRACTION
+		).condition(JValue.CONDITION)
+		 .peek(tree -> tree.getSketch().setKind(Kind.Value.SUBTRACTION));
+
+		/**
+		 * Utility classes must not be initialized.
+		 *
+		 * @throws AssertionError when called.
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		private JValue() {
+			throw new AssertionError("No instance for you");
+		}
+
+		/**
+		 * The patterns used by the class {@link JValue}.
+		 *
+		 * @author LSafer
+		 * @version 0.2.0
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		public static final class Patterns {
+			/**
+			 * A pattern matching addition symbols.
+			 *
+			 * @since 0.2.0 ~2021.05.23
+			 */
+			@NotNull
+			public static final Pattern ADDITION = Pattern.compile("\\+");
+			/**
+			 * A pattern matching subtraction symbols.
+			 *
+			 * @since 0.2.0 ~2021.05.23
+			 */
+			@NotNull
+			public static final Pattern SUBTRACTION = Pattern.compile("\\-");
+
+			/**
+			 * Utility classes must not be initialized.
+			 *
+			 * @throws AssertionError when called.
+			 * @since 0.2.0 ~2021.05.23
 			 */
 			private Patterns() {
 				throw new AssertionError("No instance for you");

@@ -13,12 +13,34 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
+package org.jamplate.impl;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
- * A package to analyze the trees compiled by the {@link org.jamplate.impl.syntax}
- * package.
+ * Commonly used memory addresses.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.20
+ * @since 0.2.0 ~2021.05.23
  */
-package org.jamplate.impl.analyze;
+public final class Address {
+	/**
+	 * An address used to allocate a json string containing the sequences to be replaced
+	 * and their replacement.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final String DEFINE = "__define__";
+
+	/**
+	 * Utility classes must not be initialized.
+	 *
+	 * @throws AssertionError when called.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	private Address() {
+		throw new AssertionError("No instance for you");
+	}
+}
