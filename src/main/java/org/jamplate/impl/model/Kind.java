@@ -61,6 +61,108 @@ public class Kind {
 	}
 
 	/**
+	 * A utility class containing the kinds for values.
+	 *
+	 * @author LSafer
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	public static final class Logic {
+		/**
+		 * The kind for the addition symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ADDITION = "addition";
+		/**
+		 * The kind for arrays.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ARRAY = "array";
+		/**
+		 * The kind for the division symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String DIVISION = "division";
+		/**
+		 * The kind for the equating symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String EQUALS = "equals";
+		/**
+		 * The kind for the less-than symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String LESS_THAN = "less-than";
+		/**
+		 * The kind for the more-than symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String MORE_THAN = "more-than";
+		/**
+		 * The kind for the multiplication symbol.
+		 */
+		@NotNull
+		public static final String MULTIPLICATION = "multiplication";
+		/**
+		 * The kind for the not-equals symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String NOT_EQUALS = "not-equals";
+		/**
+		 * The kind for numbers.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String NUMBER = "number";
+		/**
+		 * The kind for objects.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String OBJECT = "object";
+		/**
+		 * The kind for stirngs.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String STRING = "string";
+		/**
+		 * The kind for the subtraction symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String SUBTRACTION = "subtraction";
+
+		/**
+		 * Utility classes must not be initialized.
+		 *
+		 * @throws AssertionError when called.
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		private Logic() {
+			throw new AssertionError("No instance for you");
+		}
+	}
+
+	/**
 	 * A utility class containing the names of the kinds the default jamplate
 	 * implementation offers.
 	 *
@@ -339,108 +441,6 @@ public class Kind {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		private Transient() {
-			throw new AssertionError("No instance for you");
-		}
-	}
-
-	/**
-	 * A utility class containing the kinds for values.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	public static final class Value {
-		/**
-		 * The kind for the addition symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String ADDITION = "addition";
-		/**
-		 * The kind for arrays.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String ARRAY = "array";
-		/**
-		 * The kind for the division symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String DIVISION = "division";
-		/**
-		 * The kind for the equating symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String EQUALS = "equals";
-		/**
-		 * The kind for the less-than symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String LESS_THAN = "less-than";
-		/**
-		 * The kind for the more-than symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String MORE_THAN = "more-than";
-		/**
-		 * The kind for the multiplication symbol.
-		 */
-		@NotNull
-		public static final String MULTIPLICATION = "multiplication";
-		/**
-		 * The kind for the not-equals symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String NOT_EQUALS = "not-equals";
-		/**
-		 * The kind for numbers.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String NUMBER = "number";
-		/**
-		 * The kind for objects.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String OBJECT = "object";
-		/**
-		 * The kind for stirngs.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String STRING = "string";
-		/**
-		 * The kind for the subtraction symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String SUBTRACTION = "subtraction";
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		private Value() {
 			throw new AssertionError("No instance for you");
 		}
 	}
