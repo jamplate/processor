@@ -19,8 +19,10 @@ import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -102,7 +104,13 @@ public class ConsoleInstruction implements Instruction {
 		}
 
 		try {
-			memory.setConsole(new FileWriter(parameter));
+			File file = new File(parameter);
+			File parent = file.getParentFile();
+
+			if (!parent.exists())
+				Files.createDirectories(parent.toPath());
+
+			memory.setConsole(new FileWriter(file));
 		} catch (IOException e) {
 			throw new ExecutionException(e, this.tree);
 		}
