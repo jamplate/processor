@@ -15,19 +15,17 @@
  */
 package org.jamplate.util;
 
-import org.jamplate.model.Document;
-import org.jamplate.model.DocumentNotFoundError;
-import org.jamplate.model.Reference;
-import org.jamplate.model.Tree;
+import org.jamplate.impl.Kind;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Common operations functions for {@link Tree trees}.
@@ -83,6 +81,77 @@ public final class Trees {
 	}
 
 	/**
+	 * Return an ordered list containing the children of the given {@code tree} alongside
+	 * with newly created trees that fills the gaps between the children of the given
+	 * {@code tree}.
+	 *
+	 * @param tree the tree.
+	 * @return an ordered list containing the actual and possible children of the given
+	 *        {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static List<Tree> flatChildren(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		List<Tree> children = new ArrayList<>();
+
+		Iterator<Tree> iterator = tree.iterator();
+
+		if (iterator.hasNext()) {
+			Tree previous = iterator.next();
+
+			if (Intersection.compute(tree, previous) != Intersection.START) {
+				int p = tree.reference().position();
+				int l = previous.reference().position() - p;
+
+				Tree gap = new Tree(tree.document(), new Reference(p, l));
+
+				gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+
+				children.add(gap);
+			}
+
+			children.add(previous);
+
+			while (iterator.hasNext()) {
+				Tree next = iterator.next();
+
+				if (Intersection.compute(previous, next) != Intersection.NEXT) {
+					int p = previous.reference().position() +
+							previous.reference().length();
+					int l = next.reference().position() - p;
+
+					Tree gap = new Tree(tree.document(), new Reference(p, l));
+
+					gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+
+					children.add(gap);
+				}
+
+				children.add(next);
+				previous = next;
+			}
+
+			if (Intersection.compute(tree, previous) != Intersection.END) {
+				int p = previous.reference().position() +
+						previous.reference().length();
+				int l = tree.reference().position() +
+						tree.reference().length() - p;
+
+				Tree gap = new Tree(tree.document(), new Reference(p, l));
+
+				gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+
+				children.add(gap);
+			}
+		}
+
+		return children;
+	}
+
+	/**
 	 * Get the line of the given {@code tree} on its document.
 	 *
 	 * @param tree the tree to get its line.
@@ -112,6 +181,63 @@ public final class Trees {
 	}
 
 	/**
+	 * Return the position of the given {@code tree} on its line.
+	 *
+	 * @param tree the tree to get its position in its line.
+	 * @return the position of the given {@code tree} on its line.
+	 * @throws NullPointerException  if the given {@code tree} is null.
+	 * @throws IOError               if any I/O error occurred while reading.
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
+	 *                               unavailable.
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@SuppressWarnings("OverlyLongMethod")
+	@Contract(pure = true)
+	public static int positionInLine(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		int p = tree.reference().position();
+		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
+			char[] b = new char[2];
+			while (true) {
+				reader.mark(Math.max(10, p << 1));
+				String line = reader.readLine();
+
+				if (line == null)
+					return 0;
+
+				reader.reset();
+				long skipped = reader.skip(line.length());
+
+				while (skipped++ < line.length())
+					if (reader.read() == -1)
+						return 0;
+
+				int ctrl = 0;
+				reader.mark(2);
+				reader.read(b);
+				if (b[0] == '\n')
+					ctrl++;
+				if (b[0] == '\r') {
+					ctrl++;
+
+					if (b[1] == '\n')
+						ctrl++;
+				}
+				reader.reset();
+				long skipped2 = reader.skip(ctrl);
+				while (skipped2++ < ctrl)
+					if (reader.read() == -1)
+						return 0;
+
+				if ((p -= line.length() + ctrl) < 0)
+					return line.length() + p + ctrl;
+			}
+		} catch (IOException e) {
+			throw new IOError(e);
+		}
+	}
+
+	/**
 	 * Read the source-code of the given {@code tree}.
 	 *
 	 * @param tree the tree to read its source-code.
@@ -129,6 +255,65 @@ public final class Trees {
 		Document document = tree.document();
 		Reference reference = tree.reference();
 		return document.read(reference);
+	}
+
+	/**
+	 * Read the whole line that the given {@code tree} is at on its document.
+	 *
+	 * @param tree the tree to read the line it is in.
+	 * @return the text of the line the given {@code tree} is at.
+	 * @throws NullPointerException  if the given {@code tree} is null.
+	 * @throws IOError               if any I/O error occurred while reading.
+	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
+	 *                               unavailable.
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@SuppressWarnings("OverlyLongMethod")
+	@Nullable
+	@Contract(pure = true)
+	public static CharSequence readLine(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Objects.requireNonNull(tree, "tree");
+		int p = tree.reference().position();
+		try (BufferedReader reader = new BufferedReader(tree.document().openReader())) {
+			char[] b = new char[2];
+			while (true) {
+				reader.mark(Math.max(10, p << 1));
+				String line = reader.readLine();
+
+				if (line == null)
+					return null;
+
+				reader.reset();
+				long skipped = reader.skip(line.length());
+
+				while (skipped++ < line.length())
+					if (reader.read() == -1)
+						return "";
+
+				int ctrl = 0;
+				reader.mark(2);
+				reader.read(b);
+				if (b[0] == '\n')
+					ctrl++;
+				if (b[0] == '\r') {
+					ctrl++;
+
+					if (b[1] == '\n')
+						ctrl++;
+				}
+				reader.reset();
+				long skipped2 = reader.skip(ctrl);
+				while (skipped2++ < ctrl)
+					if (reader.read() == -1)
+						return "";
+
+				if ((p -= line.length() + ctrl) < 0)
+					return line;
+			}
+		} catch (IOException e) {
+			throw new IOError(e);
+		}
 	}
 
 	/**
