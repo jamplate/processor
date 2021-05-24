@@ -90,7 +90,7 @@ public final class Kind {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final String ENDIF = "command/else";
+		public static final String ENDIF = "command/endif";
 
 		/**
 		 * The command kind of the {@code #if} command.
@@ -99,6 +99,14 @@ public final class Kind {
 		 */
 		@NotNull
 		public static final String IF = "command/if";
+
+		/**
+		 * The if command context kind.
+		 *
+		 * @since 0.2.0 ~2021.05.24
+		 */
+		@NotNull
+		public static final String IF_CONTEXT = "command/if-context";
 
 		/**
 		 * The command kind of the {@code #include} command.
