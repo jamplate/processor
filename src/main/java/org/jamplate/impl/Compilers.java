@@ -305,7 +305,8 @@ public final class Compilers {
 					private final Compiler context =
 							new StrictCompiler((compiler, compilation, tree) -> {
 								if (Trees.read(tree).toString().trim().isEmpty())
-									return null;
+									return Instruction.create(tree, (e, m) -> {
+									});
 
 								throw new CompileException(
 										"Unrecognized value",
