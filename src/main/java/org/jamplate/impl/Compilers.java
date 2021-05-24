@@ -26,6 +26,8 @@ import org.jamplate.util.model.function.OrderCompiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.*;
+
 /**
  * A class containing the default jamplate implementation compilers.
  *
@@ -47,6 +49,7 @@ public final class Compilers {
 					Commands.INCLUDE,
 					Commands.DECLARE,
 					Commands.DEFINE,
+					Commands.IF_CONTEXT,
 					Values.COMPILER,
 					Syntax.TEXT
 			);
@@ -167,6 +170,77 @@ public final class Compilers {
 								}) :
 								parameterInstruction
 						);
+					}
+
+					return null;
+				};
+
+		/**
+		 * A compiler that compiles if-contexts. (including the if, elif-s, else and endif
+		 * in it)
+		 *
+		 * @since 0.2.0 ~2021.05.24
+		 */
+		@SuppressWarnings("OverlyLongLambda")
+		@NotNull
+		public static final Compiler IF_CONTEXT =
+				(compiler, compilation, tree) -> {
+					if (tree.getSketch().getKind().equals(Kind.Command.IF_CONTEXT)) {
+						Map<Instruction, List<Instruction>> instructions = new LinkedHashMap<>();
+						List<Instruction> current = null;
+
+						//assert IF is the first and ENDIF is the last
+						for (Tree t : Trees.flatChildren(tree))
+							switch (t.getSketch().getKind()) {
+								case Kind.Command.IF:
+								case Kind.Command.ELIF:
+									CommandSketch command = (CommandSketch) t.getSketch();
+									Tree parameterTree = command.getParameterSketch().getTree();
+
+									Instruction condition = compiler.compile(compiler, compilation, parameterTree);
+
+									instructions.put(condition, current = new ArrayList<>());
+									break;
+								case Kind.Command.ELSE:
+									instructions.put(null, current = new ArrayList<>());
+									break;
+								case Kind.Command.ENDIF:
+									//done
+									current = null;
+									break;
+								default:
+									//intermediate instruction
+									Instruction instruction = compiler.compile(compiler, compilation, t);
+
+									current.add(instruction);
+									break;
+							}
+
+						List<Instruction> conditions = new ArrayList<>(instructions.keySet());
+						Collections.reverse(conditions);
+
+						Instruction instruction = null;
+						for (Instruction condition : conditions)
+							if (condition == null)
+								instruction = new InstructionArray(
+										tree,
+										instructions.get(null)
+								);
+							else if (instruction == null)
+								instruction = new IfInstruction(
+										tree,
+										condition,
+										new InstructionArray(instructions.get(condition))
+								);
+							else
+								instruction = new IfInstruction(
+										tree,
+										condition,
+										new InstructionArray(instructions.get(condition)),
+										instruction
+								);
+
+						return instruction;
 					}
 
 					return null;

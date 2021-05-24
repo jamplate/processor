@@ -235,6 +235,103 @@ public class ParsersTest {
 		memory.close();
 	}
 
+	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
+	@Test
+	public void manualParseIf() throws IOException {
+		Memory memory = null;
+		try {
+			Environment environment = Jamplate.DEFAULT.process(
+					new PseudoDocument("Main",
+							/*01*/"BEFORE IF\n" +
+							/*02*/"#if \"1\"\r\n" +
+							/*03*/"If first\n" +
+							/*04*/"#if \"0\"\n" +
+							/*05*/"If first and second\n" +
+							/*06*/"#else\n" +
+							/*07*/"If first but not second\n" +
+							/*08*/"#endif\n" +
+							/*09*/"#elif \"0\"\n" +
+							/*10*/"If not first but third\n" +
+							/*11*/"#else\n" +
+							/*12*/"If not first nor third\n" +
+							/*13*/"#endif\n" +
+							/*14*/"AFTER IF"
+					)
+			);
+
+			for (Compilation compilation : environment.compilationSet()) {
+				Instruction instruction = compilation.getInstruction();
+
+				memory = new Memory();
+				memory.getFrame().setInstruction(instruction);
+
+				Trees.readLine(compilation.getRootTree().getChild().getNext().getNext());
+				instruction.exec(environment, memory);
+
+				System.out.println(
+						"Compilation: " + compilation.getRootTree().document()
+				);
+				System.out.println("------------------------------");
+				System.out.println(memory.getConsole());
+				System.out.println("------------------------------");
+				System.out.println();
+				memory.close();
+			}
+		} catch (CompileException e) {
+			Tree eTree = e.getTree();
+
+			if (eTree == null)
+				System.err.println(
+						e.getClass() +
+						": " +
+						e.getMessage()
+				);
+			else
+				System.err.println(
+						e.getTree().document() +
+						":" +
+						Trees.line(e.getTree()) +
+						": " +
+						e.getMessage() +
+						"\n\t" +
+						Trees.readLine(e.getTree())
+				);
+		} catch (ExecutionException e) {
+			Tree eTree = e.getTree();
+
+			if (eTree == null)
+				System.err.println(
+						e.getClass() +
+						": " +
+						e.getMessage()
+				);
+			else
+				System.err.println(
+						eTree.document() +
+						":" +
+						Trees.line(eTree) +
+						": " +
+						e.getMessage()
+				);
+			if (memory != null)
+				for (Memory.Frame frame : memory.getFrames()) {
+					Tree frameTree = frame.getInstruction().getTree();
+
+					if (frameTree != null)
+						System.err.println(
+								"\t" +
+								"at " +
+								frameTree.getSketch() +
+								"(" +
+								frameTree.document() +
+								":" +
+								Trees.line(frame.getInstruction().getTree()) +
+								")"
+						);
+				}
+		}
+	}
+
 	@RepeatedTest(50)
 	public void parse() {
 		Environment environment = new EnvironmentImpl();
