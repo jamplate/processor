@@ -336,6 +336,23 @@ public final class Compilers {
 	 */
 	public static final class Values {
 		/**
+		 * A compiler that compiles reference instructions.
+		 *
+		 * @since 0.2.0 ~2021.05.24
+		 */
+		@NotNull
+		public static final Compiler REFERENCE =
+				(compiler, compilation, tree) -> {
+					if (tree.getSketch().getKind().equals(Kind.Value.REFERENCE)) {
+						String name = Trees.read(tree).toString();
+
+						return new ReferenceInstruction(tree, name);
+					}
+
+					return null;
+				};
+
+		/**
 		 * A compiler that compiles strings.
 		 *
 		 * @since 0.2.0 ~2021.05.23
@@ -395,7 +412,10 @@ public final class Compilers {
 					 */
 					@NotNull
 					private final Compiler value =
-							new OrderCompiler(Values.STRING);
+							new OrderCompiler(
+									Values.STRING,
+									Values.REFERENCE
+							);
 
 					/**
 					 * The fallback compiler.

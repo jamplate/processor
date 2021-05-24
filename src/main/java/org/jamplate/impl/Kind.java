@@ -534,6 +534,14 @@ public final class Kind {
 		public static final String OBJECT = "object";
 
 		/**
+		 * The kind of a reference value. (a reference for a value in the heap)
+		 *
+		 * @since 0.2.0 ~2021.05.24
+		 */
+		@NotNull
+		public static final String REFERENCE = "reference";
+
+		/**
 		 * The kind for stirngs.
 		 *
 		 * @since 0.2.0 ~2021.05.23

@@ -63,7 +63,8 @@ public final class Parsers {
 							Syntax.CURLY,
 							Syntax.SQUARE,
 							Syntax.ROUND
-					))
+					)),
+					Values.REFERENCE
 			));
 
 	/**
@@ -538,6 +539,16 @@ public final class Parsers {
 	 */
 	public static final class Values {
 		/**
+		 * A parser that parses references.
+		 *
+		 * @since 0.2.0 ~2021.05.24
+		 */
+		@NotNull
+		public static final Parser REFERENCE = new LiteralParser(
+				Patterns.REFERENCE
+		).peek(tree -> tree.getSketch().setKind(Kind.Value.REFERENCE));
+
+		/**
 		 * A predicate that returns {@code true} if the tree provided to it has a parent
 		 * with a kind that is known to have a logical context.
 		 *
@@ -607,6 +618,15 @@ public final class Parsers {
 			 */
 			@NotNull
 			public static final Pattern ADDITION = Pattern.compile("\\+");
+
+			/**
+			 * A pattern matching references.
+			 *
+			 * @since 0.2.0 ~2021.05.24
+			 */
+			@NotNull
+			public static final Pattern REFERENCE = Pattern.compile("[A-Za-z][A-Za-z1-9_$]*");
+
 			/**
 			 * A pattern matching subtraction symbols.
 			 *
