@@ -94,12 +94,12 @@ public class ConsoleInstruction implements Instruction {
 		Value parameterValue = memory.pop();
 		memory.popFrame();
 
-		if (parameterValue == Value.NULL) {
+		String parameter = parameterValue.evaluate(memory);
+
+		if (parameter.equals("\0")) {
 			memory.setConsole(new StringBuilder());
 			return;
 		}
-
-		String parameter = parameterValue.evaluate(memory);
 
 		try {
 			memory.setConsole(new FileWriter(parameter));

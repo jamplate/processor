@@ -36,7 +36,7 @@ public interface Value extends Serializable {
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	Value NULL = memory -> "null";
+	Value NULL = memory -> "\0";
 
 	/**
 	 * Evaluate this value with the given {@code memory}.

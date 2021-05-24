@@ -163,12 +163,12 @@ public class IfInstruction implements Instruction {
 		switch (condition) {
 			case "":
 			case "0":
-			case "null":
 			case "false":
 				memory.pushFrame(new Memory.Frame(this.conditionFalse));
 				this.conditionFalse.exec(environment, memory);
 				memory.popFrame();
 				break;
+			case "\0": //actual null -> OK
 			default:
 				memory.pushFrame(new Memory.Frame(this.conditionTrue));
 				this.conditionTrue.exec(environment, memory);
