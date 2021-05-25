@@ -169,12 +169,12 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 		switch (text) {
 			case "":
 			case "0":
+			case "\0":
 			case "false":
 				memory.pushFrame(new Memory.Frame(this.instruction2));
 				this.instruction2.exec(environment, memory);
 				memory.popFrame();
 				break;
-			case "\0": //actual null -> OK
 			default:
 				memory.pushFrame(new Memory.Frame(this.instruction1));
 				this.instruction1.exec(environment, memory);
