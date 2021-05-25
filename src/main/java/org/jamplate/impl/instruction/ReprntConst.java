@@ -26,20 +26,19 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 /**
- * An instruction that prints a predefined string to the console when it gets executed.
+ * <h3>{@code REPRNT( CONST )}</h3>
+ * An instruction that prints a pre-specified constant to the console.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class ReprntConst implements Instruction {
-	//REPRNT( CONST )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 4950811636884162730L;
 
 	/**
-	 * The content to be printed.
+	 * The constant to be printed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -68,12 +67,11 @@ public class ReprntConst implements Instruction {
 	}
 
 	/**
-	 * Construct a new instruction that prints the given {@code value} to the console when
-	 * executed.
+	 * Construct a new instruction that prints the given {@code constant} to the console
+	 * when executed.
 	 *
-	 * @param constant the value to be printed to the console by the constructed
-	 *                 instruction when it gets executed.
-	 * @throws NullPointerException if the given {@code value} is null.
+	 * @param constant the constant to be printed.
+	 * @throws NullPointerException if the given {@code constant} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	public ReprntConst(@NotNull String constant) {
@@ -83,13 +81,13 @@ public class ReprntConst implements Instruction {
 	}
 
 	/**
-	 * Construct a new instruction that prints the given {@code value} to the console when
-	 * executed.
+	 * Construct a new instruction that prints the given {@code constant} to the console
+	 * when executed.
 	 *
 	 * @param tree     the tree of the constructed instruction.
-	 * @param constant the value to be printed to the console by the constructed
-	 *                 instruction when it gets executed.
-	 * @throws NullPointerException if the given {@code value} is null.
+	 * @param constant the constant to be printed.
+	 * @throws NullPointerException if the given {@code tree} or {@code constant} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	public ReprntConst(@NotNull Tree tree, @NotNull String constant) {
@@ -103,25 +101,28 @@ public class ReprntConst implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
-		Value replaceValue = memory.get(Address.DEFINE);
-		String replaceString = replaceValue.evaluate(memory);
-		JSONObject replaceObject;
+
+		//REPRNT( CONST )
+		Value value = memory.get(Address.DEFINE);
+		JSONObject replaces;
 
 		try {
-			replaceObject = new JSONObject(replaceString);
+			String replace = value.evaluate(memory);
+
+			replaces = new JSONObject(replace);
 		} catch (JSONException e) {
-			replaceObject = new JSONObject();
+			replaces = new JSONObject();
 		}
 
-		String value = this.constant;
+		String text = this.constant;
 
-		for (String replace : replaceObject.keySet()) {
-			String replacement = replaceObject.getString(replace);
+		for (String replace : replaces.keySet()) {
+			String replacement = replaces.getString(replace);
 
-			value = value.replace(replace, replacement);
+			text = text.replace(replace, replacement);
 		}
 
-		memory.print(value);
+		memory.print(text);
 	}
 
 	@Nullable

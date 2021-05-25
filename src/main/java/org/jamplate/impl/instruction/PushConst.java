@@ -26,20 +26,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * An instruction that pushes a predefined string to the stack when it gets executed.
+ * <h3>{@code PUSH( CONST )}</h3>
+ * An instruction that pushes a pre-specified constant to the stack.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class PushConst implements Instruction {
-	//PUSH( CONST )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -764009371662392281L;
 
 	/**
-	 * The value to be pushed.
+	 * The constant to be pushed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -55,7 +54,7 @@ public class PushConst implements Instruction {
 
 	/**
 	 * Construct a new instruction that pushes the content of the given {@code tree} to
-	 * the stack when executed.
+	 * the stack.
 	 *
 	 * @param tree the tree of the constructed instruction.
 	 * @throws NullPointerException if the given {@code tree} is null.
@@ -72,11 +71,9 @@ public class PushConst implements Instruction {
 	}
 
 	/**
-	 * Construct a new instruction that pushes the given {@code constant} to the stack
-	 * when executed.
+	 * Construct a new instruction that pushes the given {@code constant} to the stack.
 	 *
-	 * @param constant the value to be pushed to the stack by the constructed instruction
-	 *                 when it gets executed.
+	 * @param constant the constant to be pushed.
 	 * @throws NullPointerException if the given {@code constant} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -87,12 +84,10 @@ public class PushConst implements Instruction {
 	}
 
 	/**
-	 * Construct a new instruction that pushes the given {@code constant} to the stack
-	 * when executed.
+	 * Construct a new instruction that pushes the given {@code constant} to the stack.
 	 *
 	 * @param tree     the tree of the constructed instruction.
-	 * @param constant the value to be pushed to the stack by the constructed instruction
-	 *                 when it gets executed.
+	 * @param constant the constant to be pushed.
 	 * @throws NullPointerException if the given {@code tree} or {@code constant} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
@@ -108,6 +103,8 @@ public class PushConst implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
+
+		//PUSH( CONST )
 		memory.push(m -> this.constant);
 	}
 

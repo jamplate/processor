@@ -16,26 +16,28 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * An instruction that executes one of two predefined instructions based on a condition.
+ * <h3>{@code BRANCH( EXEC( INSTR0 ) , INSTR1 , INSTR2 )}</h3>
+ * An instruction that execute a pre-specified instruction {@code A} then if the results
+ * was not {@code false}* then executes a pre-specified instruction {@code B} otherwise
+ * executes a pre-specified instruction {@code C}.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
 public class BranchExecInstr0Instr1Instr2 implements Instruction {
-	//BRANCH( EXEC( INSTR0 ) , INSTR1 , INSTR2 )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -9034207643511548467L;
 
 	/**
-	 * The instruction of the condition.
+	 * The condition instruction.
 	 *
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -64,18 +66,18 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new if instruction that checks the given {@code condition} and executes
-	 * the given {@code conditionTrue} when the condition succeed.
+	 * Construct a new instruction that executes the given {@code instruction0} and
+	 * executes the given {@code instruction1} when the condition succeed.
 	 *
-	 * @param instruction0 the condition.
+	 * @param instruction0 the condition instruction.
 	 * @param instruction1 the instruction to be executed when the condition succeed.
-	 * @throws NullPointerException if the given {@code condition} or {@code
-	 *                              conditionTrue} is null.
+	 * @throws NullPointerException if the given {@code instruction0} or {@code
+	 *                              instruction1} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	public BranchExecInstr0Instr1Instr2(@NotNull Instruction instruction0, @NotNull Instruction instruction1) {
-		Objects.requireNonNull(instruction0, "condition");
-		Objects.requireNonNull(instruction1, "conditionTrue");
+		Objects.requireNonNull(instruction0, "instruction0");
+		Objects.requireNonNull(instruction1, "instruction1");
 		this.tree = null;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
@@ -84,21 +86,21 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 	}
 
 	/**
-	 * Construct a new if instruction that checks the given {@code condition} and executes
-	 * the given {@code conditionTrue} when the condition succeed and execute the given
-	 * {@code conditionFalse} when the condition fails.
+	 * Construct a new instruction that executes the given {@code instruction0} and
+	 * executes the given {@code instruction1} when the condition succeed and execute the
+	 * given {@code instruction2} when the condition fails.
 	 *
-	 * @param instruction0 the condition.
+	 * @param instruction0 the condition instruction.
 	 * @param instruction1 the instruction to be executed when the condition succeed.
 	 * @param instruction2 the instruction to be executed when the condition fails.
-	 * @throws NullPointerException if the given {@code condition} or {@code
-	 *                              conditionTrue} or {@code conditionFalse} is null.
+	 * @throws NullPointerException if the given {@code instruction0} or {@code
+	 *                              instruction1} or {@code instruction2} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	public BranchExecInstr0Instr1Instr2(@NotNull Instruction instruction0, @NotNull Instruction instruction1, @NotNull Instruction instruction2) {
-		Objects.requireNonNull(instruction0, "condition");
-		Objects.requireNonNull(instruction1, "conditionTrue");
-		Objects.requireNonNull(instruction2, "conditionFalse");
+		Objects.requireNonNull(instruction0, "instruction0");
+		Objects.requireNonNull(instruction1, "instruction1");
+		Objects.requireNonNull(instruction2, "instruction2");
 		this.tree = null;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
@@ -106,20 +108,20 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 	}
 
 	/**
-	 * Construct a new if instruction that checks the given {@code condition} and executes
-	 * the given {@code conditionTrue} when the condition succeed.
+	 * Construct a new instruction that executes the given {@code instruction0} and
+	 * executes the given {@code instruction1} when the condition succeed.
 	 *
 	 * @param tree         the tree from where this instruction was declared.
-	 * @param instruction0 the condition.
+	 * @param instruction0 the condition instruction.
 	 * @param instruction1 the instruction to be executed when the condition succeed.
-	 * @throws NullPointerException if the given {@code condition} or {@code
-	 *                              conditionTrue} is null.
+	 * @throws NullPointerException if the given {@code instruction0} or {@code
+	 *                              instruction1} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	public BranchExecInstr0Instr1Instr2(@NotNull Tree tree, @NotNull Instruction instruction0, @NotNull Instruction instruction1) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(instruction0, "condition");
-		Objects.requireNonNull(instruction1, "conditionTrue");
+		Objects.requireNonNull(instruction0, "instruction0");
+		Objects.requireNonNull(instruction1, "instruction1");
 		this.tree = tree;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
@@ -128,23 +130,23 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 	}
 
 	/**
-	 * Construct a new if instruction that checks the given {@code condition} and executes
-	 * the given {@code conditionTrue} when the condition succeed and execute the given
-	 * {@code conditionFalse} when the condition fails.
+	 * Construct a new instruction that executes the given {@code instruction0} and
+	 * executes the given {@code instruction1} when the condition succeed and execute the
+	 * given {@code instruction2} when the condition fails.
 	 *
 	 * @param tree         the tree from where this instruction was declared.
-	 * @param instruction0 the condition.
+	 * @param instruction0 the condition instruction.
 	 * @param instruction1 the instruction to be executed when the condition succeed.
 	 * @param instruction2 the instruction to be executed when the condition fails.
-	 * @throws NullPointerException if the given {@code condition} or {@code
-	 *                              conditionTrue} or {@code conditionFalse} is null.
+	 * @throws NullPointerException if the given {@code instruction0} or {@code
+	 *                              instruction1} or {@code instruction2} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	public BranchExecInstr0Instr1Instr2(@NotNull Tree tree, @NotNull Instruction instruction0, @NotNull Instruction instruction1, @NotNull Instruction instruction2) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(instruction0, "condition");
-		Objects.requireNonNull(instruction1, "conditionTrue");
-		Objects.requireNonNull(instruction2, "conditionFalse");
+		Objects.requireNonNull(instruction0, "instruction0");
+		Objects.requireNonNull(instruction1, "instruction1");
+		Objects.requireNonNull(instruction2, "instruction2");
 		this.tree = tree;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
@@ -155,14 +157,16 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
+
+		// EXEC( INSTR0 )
 		memory.pushFrame(new Memory.Frame(this.instruction0));
 		this.instruction0.exec(environment, memory);
-		Value value = memory.pop();
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		String condition = value.evaluate(memory);
-
-		switch (condition) {
+		//BRANCH( EXEC( INSTR0 ) , INSTR1 , INSTR2 )
+		String text = value.evaluate(memory);
+		switch (text) {
 			case "":
 			case "0":
 			case "false":

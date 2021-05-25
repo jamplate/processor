@@ -16,33 +16,34 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * An instruction that allocates a variable in the heap to a respecified value.
+ * <h3>{@code ALLOC( ADDR , EXEC( INSTR ) )}</h3>
+ * An instruction that executes a pre-specified instruction and allocate the results of
+ * the execution to the heap at a pre-specified address.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class AllocAddrExecInstr implements Instruction {
-	//ALLOC( ADDR , EXEC( INSTR ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 4592223353913897009L;
 
 	/**
-	 * The key parameter.
+	 * The address to allocate to.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	protected final String address;
 	/**
-	 * The instruction of the value part of the parameter.
+	 * The instruction to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -57,11 +58,11 @@ public class AllocAddrExecInstr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new declare instruction that allocates the results from executing the
-	 * given {@code instruction} to the given {@code address} as the address.
+	 * Construct a new instruction that allocates the results from executing the given
+	 * {@code instruction} to the given {@code address} at the heap.
 	 *
 	 * @param address     the address to where to allocate.
-	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @param instruction the instruction to execute.
 	 * @throws NullPointerException if the given {@code address} or {@code instruction} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
@@ -75,12 +76,12 @@ public class AllocAddrExecInstr implements Instruction {
 	}
 
 	/**
-	 * Construct a new declare instruction that allocates the results from executing the
-	 * given {@code instruction} to the given {@code address} as the address.
+	 * Construct a new instruction that allocates the results from executing the given
+	 * {@code instruction} to the given {@code address} at the heap.
 	 *
 	 * @param tree        the tree from where this instruction was declared.
 	 * @param address     the address to where to allocate.
-	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @param instruction the instruction to execute.
 	 * @throws NullPointerException if the given {@code tree} or {@code address} or {@code
 	 *                              instruction} is null.
 	 * @since 0.2.0 ~2021.05.23
@@ -99,15 +100,16 @@ public class AllocAddrExecInstr implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//EXEC( INSTR )
 		memory.pushFrame(new Memory.Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		Value valueParameterValue = memory.pop();
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		String keyParameter = this.address;
-		String valueParameter = valueParameterValue.evaluate(memory);
-
-		memory.set(keyParameter, m -> valueParameter);
+		//ALLOC( ADDR , EXEC( INSTR ) )
+		String address = this.address;
+		String text = value.evaluate(memory);
+		memory.set(address, m -> text);
 	}
 
 	@Nullable

@@ -53,27 +53,36 @@
  *     <li>
  *         {@code EVAL( X : Address ) : Value}
  *         <p>
- *             return evaluation of X
+ *             return evaluation of X;
+ *             return name of X if failed
  *     </li>
  *     <li>
  *         {@code EXEC( X : Instruction ) : Value}
  *         <p>
- *             return result of executing X
+ *             return result of executing X;
+ *             push frame before execution;
+ *             pop after execution and getting results;
  *     </li>
  *     <li>
  *         {@code BRANCH( X : Text | Value , Y : Instruction , Z : Instruction ) : Void}
  *         <p>
- *             if X evaluated to true execute Y otherwise execute Z
+ *             if X evaluated to true execute Y otherwise execute Z;
+ *             push frame before execution;
+ *             pop frame after execution
  *     </li>
  *     <li>
  *         {@code IMPORT( X : Text | Value ) : Instruction}
  *         <p>
- *             return imported instruction X
+ *             return imported instruction X;
+ *             push frame before execution;
+ *             pop frame after execution
  *     </li>
  *     <li>
  *         {@code IEXEC( X : Instruction[] ) : Void}
  *         <p>
- *             Execute the instructions in X
+ *             Execute the instructions in X;
+ *             Push frame before each exeuction;
+ *             Pop frame after each execution
  *     </li>
  *     <li>
  *         {@code IPED( X : Instruction[] ) : Void}
@@ -83,15 +92,6 @@
  *             Dump frame after each execution
  *         <p>
  *             IPED stands for Iterate-Push-Execute-Dump
- *     </li>
- *     <li>
- *         {@code IPEP( X : Instruction[]) : Void}
- *         <p>
- *             Execute the instructions in X;
- *             Push frame before each exeuction;
- *             Pop frame after each execution
- *         <p>
- *             IPEP stands for Iterate-Push-Execute-Pop
  *     </li>
  * </ul>
  * <br><br>

@@ -16,28 +16,27 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
- * An instruction that prints the values returned from another instruction.
+ * <h3>{@code PRINT( EXEC( INSTR ) )}</h3>
+ * An instruction that executes a pre-specified instruction and print the results from
+ * it.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
 public class PrintExecInstr implements Instruction {
-	//PRINT( EXEC( INSTR ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1584518958362936537L;
 
 	/**
-	 * The instruction to inject its results.
+	 * The instruction to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -52,10 +51,10 @@ public class PrintExecInstr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that prints the output of the given {@code
+	 * Construct a new instruction that prints the results from executing the given {@code
 	 * instruction}.
 	 *
-	 * @param instruction the instruction to print its value.
+	 * @param instruction the instruction to print the results from executing it.
 	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -66,11 +65,11 @@ public class PrintExecInstr implements Instruction {
 	}
 
 	/**
-	 * Construct a new instruction that prints the output of the given {@code
+	 * Construct a new instruction that prints the results from executing the given {@code
 	 * instruction}.
 	 *
 	 * @param tree        the tree from where this instruction was declared.
-	 * @param instruction the instruction to print its value.
+	 * @param instruction the instruction to print the results from executing it.
 	 * @throws NullPointerException if the given {@code tree} or {@code instruction} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.24
@@ -87,19 +86,15 @@ public class PrintExecInstr implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//EXEC( INSTR )
 		memory.pushFrame(new Memory.Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		List<Value> values = new ArrayList<>();
-		Value v;
-		while ((v = memory.pop()) != Value.NULL)
-			values.add(v);
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		for (Value value : values) {
-			String injection = value.evaluate(memory);
-
-			memory.print(injection);
-		}
+		//PRINT( EXEC( INSTR ) )
+		String text = value.evaluate(memory);
+		memory.print(text);
 	}
 
 	@Nullable

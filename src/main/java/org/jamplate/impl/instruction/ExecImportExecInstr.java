@@ -16,27 +16,27 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * An instruction that executes another variable instruction with the name returned from
- * another third predefined instruction.
+ * <h3>{@code EXEC( IMPORT( EXEC( INSTR ) ) )}</h3>
+ * An instruction that executes a pre-specified instruction, then import with the returned
+ * results, then execute the imported instruction.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class ExecImportExecInstr implements Instruction {
-	//EXEC( IMPORT( EXEC( INSTR ) ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3241587385841635191L;
 
 	/**
-	 * The instruction of the parameter.
+	 * The instruction to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -51,12 +51,10 @@ public class ExecImportExecInstr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new include instruction that executes the instruction in the
-	 * environment that has the name equal to the string from evaluating the value
-	 * returned from executing the given {@code instruction}.
+	 * Construct a new instruction that import the instruction with the results of
+	 * executing the given {@code instruction}.
 	 *
-	 * @param instruction the instruction to perform the constructed instruction on the
-	 *                    value returned from executing it.
+	 * @param instruction the instruction to be executed.
 	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~ 2021.05.23
 	 */
@@ -67,13 +65,11 @@ public class ExecImportExecInstr implements Instruction {
 	}
 
 	/**
-	 * Construct a new include instruction that executes the instruction in the
-	 * environment that has the name equal to the string from evaluating the value
-	 * returned from executing the given {@code instruction}.
+	 * Construct a new instruction that import the instruction with the results of
+	 * executing the given {@code instruction}.
 	 *
 	 * @param tree        the tree from where this instruction was declared.
-	 * @param instruction the instruction to perform the constructed instruction on the
-	 *                    value returned from executing it.
+	 * @param instruction the instruction to be executed.
 	 * @throws NullPointerException if the given {@code tree} or {@code instruction} is
 	 *                              null.
 	 * @since 0.2.0 ~ 2021.05.23
@@ -90,38 +86,36 @@ public class ExecImportExecInstr implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//EXEC( INSTR )
 		memory.pushFrame(new Memory.Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		Value parameterValue = memory.pop();
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		if (parameterValue == Value.NULL)
+		//IMPORT( EXEC( INSTR ) )
+		if (value == Value.NULL)
 			throw new ExecutionException(
-					"Include requires a value",
+					"Cannot import null",
 					this.tree
 			);
-
-		String parameter = parameterValue.evaluate(memory);
-
-		Compilation includeCompilation = environment.getCompilation(parameter);
-
-		if (includeCompilation == null)
+		String text = value.evaluate(memory);
+		Compilation compilation = environment.getCompilation(text);
+		if (compilation == null)
 			throw new ExecutionException(
-					"Cannot find a compilation with the name: " + parameter,
+					"Compilation does not exist: " + text,
 					this.tree
 			);
-
-		Instruction includeInstruction = includeCompilation.getInstruction();
-
-		if (includeInstruction == null)
+		Instruction instruction = compilation.getInstruction();
+		if (instruction == null)
 			throw new ExecutionException(
-					"No instruction found for the compilation: " +
-					includeCompilation.getRootTree().document(),
-					includeCompilation.getRootTree()
+					"Compilation contain no instruction: " +
+					compilation.getRootTree().document(),
+					compilation.getRootTree()
 			);
 
-		memory.pushFrame(new Memory.Frame(includeInstruction));
-		includeInstruction.exec(environment, memory);
+		//EXEC( IMPORT( EXEC( INSTR ) ) )
+		memory.pushFrame(new Memory.Frame(instruction));
+		instruction.exec(environment, memory);
 		memory.popFrame();
 	}
 

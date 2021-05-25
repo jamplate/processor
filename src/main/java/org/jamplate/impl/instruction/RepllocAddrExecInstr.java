@@ -17,6 +17,7 @@ package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -25,28 +26,27 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 /**
- * An instruction that allocates a variable in the heap to a respecified value and also
- * replaces the occurrences of the name of that variable in the text with that value.
+ * <h3>{@code REPLLOC( ADDR , EXEC( INSTR ) )}</h3>
+ * An instruction that executes a pre-specified instruction and {@link
+ * org.jamplate.impl.instruction REPLLOC} the results to a pre-specified address.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class RepllocAddrExecInstr implements Instruction {
-	//REPLLOC( ADDR , EXEC( INSTR ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 7085804102176126751L;
 
 	/**
-	 * The key parameter.
+	 * The address to allocate to.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	protected final String address;
 	/**
-	 * The instruction of the value part of the parameter.
+	 * The instruction to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -61,11 +61,12 @@ public class RepllocAddrExecInstr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new define instruction that allocates the results from executing the
-	 * given {@code instruction} to the given {@code address} as the address.
+	 * Construct a new instruction that allocates the results from executing the given
+	 * {@code instruction} to the given {@code address} as the address in {@link
+	 * org.jamplate.impl.instruction REPLLOC} style.
 	 *
-	 * @param address     the address to where to allocate.
-	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @param address     the address to allocate to.
+	 * @param instruction the instruction be execute.
 	 * @throws NullPointerException if the given {@code address} or {@code instruction} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
@@ -79,12 +80,13 @@ public class RepllocAddrExecInstr implements Instruction {
 	}
 
 	/**
-	 * Construct a new define instruction that allocates the results from executing the
-	 * given {@code instruction} to the given {@code address} as the address.
+	 * Construct a new instruction that allocates the results from executing the given
+	 * {@code instruction} to the given {@code address} as the address in {@link
+	 * org.jamplate.impl.instruction REPLLOC} style.
 	 *
 	 * @param tree        the tree from where this instruction was declared.
-	 * @param address     the address to where to allocate.
-	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @param address     the address to allocate to.
+	 * @param instruction the instruction be execute.
 	 * @throws NullPointerException if the given {@code tree} or {@code address} or {@code
 	 *                              instruction} is null.
 	 * @since 0.2.0 ~2021.05.23
@@ -103,15 +105,16 @@ public class RepllocAddrExecInstr implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//EXEC( INSTR )
 		memory.pushFrame(new Memory.Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		Value valueParameterValue = memory.pop();
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		String keyParameter = this.address;
-		String valueParameter = valueParameterValue.evaluate(memory);
-
-		memory.set(keyParameter, m -> valueParameter);
+		//REPLLOC( ADDR , EXEC( INSTR ) )
+		String address = this.address;
+		String text = value.evaluate(memory);
+		memory.set(address, m -> text);
 		memory.compute(Address.DEFINE, oldValue -> {
 			JSONObject object;
 
@@ -121,7 +124,7 @@ public class RepllocAddrExecInstr implements Instruction {
 				object = new JSONObject();
 			}
 
-			object.put(keyParameter, valueParameter);
+			object.put(address, text);
 
 			String newValue = object.toString();
 			return m -> newValue;

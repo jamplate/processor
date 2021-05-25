@@ -16,6 +16,7 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
+import org.jamplate.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,20 +27,20 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 /**
- * The instruction for the {@code #console} command.
+ * <h3>{@code CONSOLE( EXEC( INSTR ) )}</h3>
+ * An instruction executes a pre-specified instruction and set the console to be the
+ * results of the execution.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class ConsoleExecInstr implements Instruction {
-	//CONSOLE( EXEC( INSTR ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 5922427070959211074L;
 
 	/**
-	 * The instruction of the parameter.
+	 * The instruction to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -54,9 +55,9 @@ public class ConsoleExecInstr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new console instruction that sets the console to be outputting to the
-	 * file with the name equals to the string from evaluating the value returned from
-	 * executing the given {@code instruction}.
+	 * Construct a new instruction that sets the console to be outputting to the file with
+	 * the name equals to the results of evaluating the value returned from executing the
+	 * given {@code instruction}.
 	 *
 	 * @param instruction the instruction to perform the constructed instruction on the
 	 *                    value returned from executing it.
@@ -70,15 +71,14 @@ public class ConsoleExecInstr implements Instruction {
 	}
 
 	/**
-	 * Construct a new console instruction that sets the console to be outputting to the
-	 * file with the name equals to the string from evaluating the value returned from
-	 * executing the given {@code instruction}.
+	 * Construct a new instruction that sets the console to be outputting to the file with
+	 * the name equals to the results of evaluating the value returned from executing the
+	 * given {@code instruction}.
 	 *
 	 * @param tree        the tree from where this instruction was declared.
 	 * @param instruction the instruction to perform the constructed instruction on the
 	 *                    value returned from executing it.
-	 * @throws NullPointerException if the given {@code tree} or {@code instruction} is
-	 *                              null.
+	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~ 2021.05.23
 	 */
 	public ConsoleExecInstr(@NotNull Tree tree, @NotNull Instruction instruction) {
@@ -93,20 +93,22 @@ public class ConsoleExecInstr implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//EXEC( INSTR )
 		memory.pushFrame(new Memory.Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		Value parameterValue = memory.pop();
+		Value value = Memories.joinPop(memory);
 		memory.popFrame();
 
-		String parameter = parameterValue.evaluate(memory);
+		//CONSOLE( EXEC( INSTR ) )
+		String text = value.evaluate(memory);
 
-		if (parameter.equals("\0")) {
+		if (text.equals("\0")) {
 			memory.setConsole(new StringBuilder());
 			return;
 		}
 
 		try {
-			File file = new File(parameter);
+			File file = new File(text);
 			File parent = file.getParentFile();
 
 			if (!parent.exists())

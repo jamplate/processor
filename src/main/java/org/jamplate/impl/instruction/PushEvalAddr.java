@@ -22,20 +22,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * An instruction that takes a specified value from the heap and push it to the stack.
+ * <h3>{@code PUSH( EVAL( ADDR ) )}</h3>
+ * An instruction that evaluates a pre-specified address then push the results to the
+ * stack.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
 public class PushEvalAddr implements Instruction {
-	//PUSH( EVAL( ADDR ) )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3380257902335591663L;
 
 	/**
-	 * The name of the reference to be pushed.
+	 * The address to push the value of evaluating it.
 	 *
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -50,10 +50,10 @@ public class PushEvalAddr implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new reference instruction that takes the value at the heap with the
-	 * given {@code address} and pushes it to the stack.
+	 * Construct a new instruction that evaluates the given {@code address} then pushes
+	 * the results to the stack.
 	 *
-	 * @param address the name of the value in the heap.
+	 * @param address the address to be evaluated.
 	 * @throws NullPointerException if the given {@code address} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -64,11 +64,11 @@ public class PushEvalAddr implements Instruction {
 	}
 
 	/**
-	 * Construct a new reference instruction that takes the value at the heap with the
-	 * given {@code address} and pushes it to the stack.
+	 * Construct a new instruction that evaluates the given {@code address} then pushes
+	 * the results to the stack.
 	 *
 	 * @param tree    the tree of the constructed instruction.
-	 * @param address the name of the value in the heap.
+	 * @param address the address to be evaluated.
 	 * @throws NullPointerException if the given {@code tree} or {@code address} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
@@ -83,11 +83,13 @@ public class PushEvalAddr implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
-		Value value = memory.get(this.address);
 
+		//EVAL( ADDR )
+		Value value = memory.get(this.address);
 		if (value == Value.NULL)
 			value = m -> this.address;
 
+		//PUSH( EVAL( ADDR ) )
 		memory.push(value);
 	}
 

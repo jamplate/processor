@@ -29,20 +29,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * An instruction that executes other predefined instructions in order when executed.
+ * <h3>{@code IPED( XINSTR )}</h3>
+ * An instruction that {@link org.jamplate.impl.instruction IPED} a respecified array of
+ * instructions.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class IpedXinstr implements Instruction {
-	//IPED( XINSTR )
-
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1714505823832660137L;
 
 	/**
-	 * The instructions in order.
+	 * The instructions to be executed.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -58,12 +58,11 @@ public class IpedXinstr implements Instruction {
 
 	/**
 	 * Construct a new instruction that executes the given {@code instructions} in order
-	 * when gets executed.
+	 * in {@link org.jamplate.impl.instruction IPED} style.
 	 * <br>
 	 * Null instructions in the array will be ignored.
 	 *
-	 * @param instructions the instructions for the constructed instruction will executed
-	 *                     when it gets executed.
+	 * @param instructions the instructions to be executed.
 	 * @throws NullPointerException if the given {@code instructions} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -78,12 +77,11 @@ public class IpedXinstr implements Instruction {
 
 	/**
 	 * Construct a new instruction that executes the given {@code instructions} in order
-	 * when gets executed.
+	 * in a {@link org.jamplate.impl.instruction IPED} style.
 	 * <br>
 	 * Null instructions in the list will be ignored.
 	 *
-	 * @param instructions the instructions for the constructed instruction will executed
-	 *                     when it gets executed.
+	 * @param instructions the instructions to be executed.
 	 * @throws NullPointerException if the given {@code instructions} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
@@ -98,13 +96,12 @@ public class IpedXinstr implements Instruction {
 
 	/**
 	 * Construct a new instruction that executes the given {@code instructions} in order
-	 * when gets executed.
+	 * in a {@link org.jamplate.impl.instruction IPED} style.
 	 * <br>
 	 * Null instructions in the array will be ignored.
 	 *
 	 * @param tree         the tree from where this instruction was declared.
-	 * @param instructions the instructions for the constructed instruction will executed
-	 *                     when it gets executed.
+	 * @param instructions the instructions to be executed.
 	 * @throws NullPointerException if the given {@code tree} or {@code instructions} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
@@ -120,13 +117,12 @@ public class IpedXinstr implements Instruction {
 
 	/**
 	 * Construct a new instruction that executes the given {@code instructions} in order
-	 * when gets executed.
+	 * in a {@link org.jamplate.impl.instruction IPED} style.
 	 * <br>
 	 * Null instructions in the list will be ignored.
 	 *
 	 * @param tree         the tree from where this instruction was declared.
-	 * @param instructions the instructions for the constructed instruction will executed
-	 *                     when it gets executed.
+	 * @param instructions the instructions to be executed.
 	 * @throws NullPointerException if the given {@code tree} or {@code instructions} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
@@ -144,6 +140,8 @@ public class IpedXinstr implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
+
+		//IPED( XINSTR )
 		for (Instruction instruction : this.instructions) {
 			memory.pushFrame(new Memory.Frame(instruction));
 			instruction.exec(environment, memory);
