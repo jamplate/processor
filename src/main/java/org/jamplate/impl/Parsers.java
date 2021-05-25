@@ -16,6 +16,7 @@
 package org.jamplate.impl;
 
 import org.jamplate.impl.util.model.CommandSketch;
+import org.jamplate.impl.util.model.InjectionSketch;
 import org.jamplate.impl.util.model.ScopeSketch;
 import org.jamplate.impl.util.model.function.LiteralParser;
 import org.jamplate.impl.util.model.function.ScopeParser;
@@ -431,14 +432,36 @@ public final class Parsers {
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
+		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
 		public static final Parser INJECTION = new ScopeParser(
-				Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
+				InjectionSketch::new, Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
 		).peek(tree -> {
-			tree.getSketch().setKind(Kind.Transient.INJECTION);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.INJECTION_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.INJECTION_CLOSE);
-		});
+			InjectionSketch sketch = (InjectionSketch) tree.getSketch();
+			sketch.setKind(Kind.Transient.INJECTION);
+			sketch.getOpenAnchorSketch().setKind(Kind.Transient.INJECTION_OPEN);
+			sketch.getCloseAnchorSketch().setKind(Kind.Transient.INJECTION_CLOSE);
+			sketch.getParameterSketch().setKind(Kind.Transient.INJECTION_PARAMETER);
+		})
+		 .peek(tree -> {
+			 //define the trees of `type` and `parameter`
+			 InjectionSketch sketch = (InjectionSketch) tree.getSketch();
+			 Document document = tree.document();
+			 Reference open = sketch.getOpenAnchorSketch().getTree().reference();
+			 Reference close = sketch.getCloseAnchorSketch().getTree().reference();
+			 int position = open.position() + open.length();
+			 int length = close.position() - position;
+
+			 Tree p = new Tree(document, new Reference(
+					 position,
+					 length
+			 ), sketch.getParameterSketch());
+
+			 sketch.getParameterSketch().setTree(p);
+
+			 if (p.reference().length() != 0)
+				 tree.offer(p);
+		 });
 
 		/**
 		 * Utility classes must not be initialized.

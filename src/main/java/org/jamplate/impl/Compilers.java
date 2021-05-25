@@ -50,6 +50,7 @@ public final class Compilers {
 					Commands.DECLARE,
 					Commands.DEFINE,
 					Commands.IF_CONTEXT,
+					Transient.INJECTION,
 					Values.COMPILER,
 					Syntax.TEXT
 			);
@@ -323,6 +324,54 @@ public final class Compilers {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		private Syntax() {
+			throw new AssertionError("No instance for you");
+		}
+	}
+
+	/**
+	 * A class containing the compilers of the transient components.
+	 *
+	 * @author LSafer
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.05.25
+	 */
+	public static final class Transient {
+		/**
+		 * A compiler that compiles injections.
+		 *
+		 * @since 0.2.0 ~2021.05.25
+		 */
+		@NotNull
+		public static final Compiler INJECTION =
+				(compiler, compilation, tree) -> {
+					if (tree.getSketch().getKind().equals(Kind.Transient.INJECTION)) {
+						InjectionSketch injection = (InjectionSketch) tree.getSketch();
+						Tree parameterTree = injection.getParameterSketch().getTree();
+
+						Instruction parameterInstruction = compiler.compile(compiler, compilation, parameterTree);
+
+						if (parameterInstruction == null)
+							throw new CompileException(
+									"Unrecognized value",
+									parameterTree
+							);
+
+						return new InjectInstruction(
+								tree,
+								parameterInstruction
+						);
+					}
+
+					return null;
+				};
+
+		/**
+		 * Utility classes must not be initialized.
+		 *
+		 * @throws AssertionError when called.
+		 * @since 0.2.0 ~2021.05.25
+		 */
+		private Transient() {
 			throw new AssertionError("No instance for you");
 		}
 	}
