@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl.parser;
 
-import org.jamplate.impl.sketch.LiteralSketch;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
+import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jamplate.util.Parsing;
@@ -36,14 +36,14 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.04.28
  */
-public class LiteralParser implements Parser {
+public class PatternParser implements Parser {
 	/**
 	 * The constructor to be used to construct new sketches.
 	 *
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Supplier<LiteralSketch> constructor;
+	protected final Supplier<Sketch> constructor;
 	/**
 	 * A pattern matching the literal.
 	 *
@@ -61,9 +61,9 @@ public class LiteralParser implements Parser {
 	 * @throws NullPointerException if the given {@code pattern} is null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public LiteralParser(@NotNull Pattern pattern) {
+	public PatternParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		this.constructor = LiteralSketch::new;
+		this.constructor = Sketch::new;
 		this.pattern = pattern;
 	}
 
@@ -79,7 +79,7 @@ public class LiteralParser implements Parser {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public LiteralParser(@NotNull Supplier<LiteralSketch> constructor, @NotNull Pattern pattern) {
+	public PatternParser(@NotNull Supplier<Sketch> constructor, @NotNull Pattern pattern) {
 		Objects.requireNonNull(constructor, "constructor");
 		Objects.requireNonNull(pattern, "pattern");
 		this.constructor = constructor;
@@ -95,7 +95,7 @@ public class LiteralParser implements Parser {
 					  .parallelStream()
 					  .map(m -> {
 						  Document d = tree.document();
-						  LiteralSketch s = this.constructor.get();
+						  Sketch s = this.constructor.get();
 						  Tree t = new Tree(d, m, s);
 						  s.setTree(t);
 						  return t;

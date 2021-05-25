@@ -15,9 +15,6 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.sketch.CommandSketch;
-import org.jamplate.impl.sketch.InjectionSketch;
-import org.jamplate.impl.sketch.ScopeSketch;
 import org.jamplate.impl.compiler.StrictCompiler;
 import org.jamplate.impl.instruction.*;
 import org.jamplate.model.*;
@@ -95,8 +92,8 @@ public final class Compilers {
 		public static final Compiler CONSOLE =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Command.CONSOLE)) {
-						CommandSketch command = (CommandSketch) tree.getSketch();
-						CommandSketch.ParameterSketch parameter = command.getParameterSketch();
+						Sketch command = tree.getSketch();
+						Sketch parameter = command.get(Component.PARAMETER);
 						Tree parameterTree = parameter.getTree();
 
 						Instruction paramInstruction = compiler.compile(compiler, compilation, parameterTree);
@@ -123,10 +120,10 @@ public final class Compilers {
 		public static final Compiler DECLARE =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Command.DECLARE)) {
-						CommandSketch command = (CommandSketch) tree.getSketch();
-						CommandSketch.ParameterSketch parameter = command.getParameterSketch();
-						CommandSketch.ParameterSketch.KeySketch key = parameter.getKeySketch();
-						CommandSketch.ParameterSketch.ValueSketch value = parameter.getValueSketch();
+						Sketch command = tree.getSketch();
+						Sketch parameter = command.get(Component.PARAMETER);
+						Sketch key = parameter.get(Component.KEY);
+						Sketch value = parameter.get(Component.VALUE);
 						Tree keyParameterTree = key.getTree();
 						Tree valueParameterTree = value.getTree();
 
@@ -156,10 +153,10 @@ public final class Compilers {
 		public static final Compiler DEFINE =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Command.DEFINE)) {
-						CommandSketch command = (CommandSketch) tree.getSketch();
-						CommandSketch.ParameterSketch parameter = command.getParameterSketch();
-						CommandSketch.ParameterSketch.KeySketch key = parameter.getKeySketch();
-						CommandSketch.ParameterSketch.ValueSketch value = parameter.getValueSketch();
+						Sketch command = tree.getSketch();
+						Sketch parameter = command.get(Component.PARAMETER);
+						Sketch key = parameter.get(Component.KEY);
+						Sketch value = parameter.get(Component.VALUE);
 						Tree keyParameterTree = key.getTree();
 						Tree valueParameterTree = value.getTree();
 
@@ -198,8 +195,8 @@ public final class Compilers {
 							switch (t.getSketch().getKind()) {
 								case Kind.Command.IF:
 								case Kind.Command.ELIF:
-									CommandSketch command = (CommandSketch) t.getSketch();
-									Tree parameterTree = command.getParameterSketch().getTree();
+									Sketch command = t.getSketch();
+									Tree parameterTree = command.get(Component.PARAMETER).getTree();
 
 									Instruction condition = compiler.compile(compiler, compilation, parameterTree);
 
@@ -260,8 +257,8 @@ public final class Compilers {
 		public static final Compiler INCLUDE =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Command.INCLUDE)) {
-						CommandSketch command = (CommandSketch) tree.getSketch();
-						CommandSketch.ParameterSketch parameter = command.getParameterSketch();
+						Sketch command = tree.getSketch();
+						Sketch parameter = command.get(Component.PARAMETER);
 						Tree parameterTree = parameter.getTree();
 
 						Instruction paramInstruction = compiler.compile(compiler, compilation, parameterTree);
@@ -348,8 +345,8 @@ public final class Compilers {
 		public static final Compiler INJECTION =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Transient.INJECTION)) {
-						InjectionSketch injection = (InjectionSketch) tree.getSketch();
-						Tree parameterTree = injection.getParameterSketch().getTree();
+						Sketch injection = tree.getSketch();
+						Tree parameterTree = injection.get(Component.PARAMETER).getTree();
 
 						Instruction parameterInstruction = compiler.compile(compiler, compilation, parameterTree);
 
@@ -431,9 +428,9 @@ public final class Compilers {
 		public static final Compiler STRING =
 				(compiler, compilation, tree) -> {
 					if (tree.getSketch().getKind().equals(Kind.Value.STRING)) {
-						ScopeSketch scope = (ScopeSketch) tree.getSketch();
-						Tree open = scope.getOpenAnchorSketch().getTree();
-						Tree close = scope.getCloseAnchorSketch().getTree();
+						Sketch scope = tree.getSketch();
+						Tree open = scope.get(Component.OPEN).getTree();
+						Tree close = scope.get(Component.CLOSE).getTree();
 
 						int p = open.reference().position() +
 								open.reference().length();

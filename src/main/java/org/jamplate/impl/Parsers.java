@@ -15,13 +15,11 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.sketch.CommandSketch;
-import org.jamplate.impl.sketch.InjectionSketch;
-import org.jamplate.impl.sketch.ScopeSketch;
-import org.jamplate.impl.parser.LiteralParser;
-import org.jamplate.impl.parser.ScopeParser;
+import org.jamplate.impl.parser.DoublePatternParser;
+import org.jamplate.impl.parser.PatternParser;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
+import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jamplate.model.function.Processor;
@@ -103,7 +101,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser COMMA = new LiteralParser(
+		public static final Parser COMMA = new PatternParser(
 				Patterns.COMMA
 		).peek(tree -> tree.getSketch().setKind(Kind.Syntax.COMMA));
 
@@ -113,12 +111,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser CURLY = new ScopeParser(
+		public static final Parser CURLY = new DoublePatternParser(
 				Patterns.CURLY_OPEN, Patterns.CURLY_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.CURLY);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.CURLY_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.CURLY_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Syntax.CURLY_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Syntax.CURLY_CLOSE);
 		});
 
 		/**
@@ -127,12 +125,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser DQUOTE = new ScopeParser(
+		public static final Parser DQUOTE = new DoublePatternParser(
 				Patterns.DQUOTE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.DQUOTE);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.DQUOTE_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.DQUOTE_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Syntax.DQUOTE_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Syntax.DQUOTE_CLOSE);
 		});
 
 		/**
@@ -141,7 +139,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.17
 		 */
 		@NotNull
-		public static final Parser ESCAPE = new LiteralParser(
+		public static final Parser ESCAPE = new PatternParser(
 				Patterns.ESCAPE
 		).peek(tree -> tree.getSketch().setKind(Kind.Syntax.ESCAPE));
 
@@ -151,7 +149,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final Parser LN = new LiteralParser(
+		public static final Parser LN = new PatternParser(
 				Patterns.LN
 		).peek(tree -> tree.getSketch().setKind(Kind.Syntax.LN));
 
@@ -161,12 +159,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser QUOTE = new ScopeParser(
+		public static final Parser QUOTE = new DoublePatternParser(
 				Patterns.QUOTE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.QUOTE);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.QUOTE_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.QUOTE_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Syntax.QUOTE_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Syntax.QUOTE_CLOSE);
 		});
 
 		/**
@@ -175,12 +173,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser ROUND = new ScopeParser(
+		public static final Parser ROUND = new DoublePatternParser(
 				Patterns.ROUND_OPEN, Patterns.ROUND_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.ROUND);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.ROUND_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.ROUND_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Syntax.ROUND_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Syntax.ROUND_CLOSE);
 		});
 
 		/**
@@ -189,12 +187,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.16
 		 */
 		@NotNull
-		public static final Parser SQUARE = new ScopeParser(
+		public static final Parser SQUARE = new DoublePatternParser(
 				Patterns.SQUARE_OPEN, Patterns.SQUARE_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Syntax.SQUARE);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Syntax.SQUARE_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Syntax.SQUARE_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Syntax.SQUARE_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Syntax.SQUARE_CLOSE);
 		});
 
 		/**
@@ -329,25 +327,25 @@ public final class Parsers {
 		 */
 		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
-		public static final Parser COMMAND = new ScopeParser(
-				CommandSketch::new, Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
+		public static final Parser COMMAND = new DoublePatternParser(
+				Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
 		).peek(tree -> {
-			CommandSketch sketch = (CommandSketch) tree.getSketch();
+			Sketch sketch = tree.getSketch();
 			sketch.setKind(Kind.Transient.COMMAND);
-			sketch.getOpenAnchorSketch().setKind(Kind.Transient.COMMAND_OPEN);
-			sketch.getCloseAnchorSketch().setKind(Kind.Transient.COMMAND_CLOSE);
-			sketch.getCloseAnchorSketch().getTree().pop();
-			sketch.getTypeSketch().setKind(Kind.Transient.COMMAND_TYPE);
-			sketch.getParameterSketch().setKind(Kind.Transient.COMMAND_PARAMETER);
-			sketch.getParameterSketch().getKeySketch().setKind(Kind.Transient.COMMAND_PARAMETER_KEY);
-			sketch.getParameterSketch().getValueSketch().setKind(Kind.Transient.COMMAND_PARAMETER_VALUE);
+			sketch.get(Component.OPEN).setKind(Kind.Transient.COMMAND_OPEN);
+			sketch.get(Component.CLOSE).setKind(Kind.Transient.COMMAND_CLOSE);
+			sketch.get(Component.CLOSE).getTree().pop();
+			sketch.get(Component.TYPE).setKind(Kind.Transient.COMMAND_TYPE);
+			sketch.get(Component.PARAMETER).setKind(Kind.Transient.COMMAND_PARAMETER);
+			sketch.get(Component.PARAMETER).get(Component.KEY).setKind(Kind.Transient.COMMAND_PARAMETER_KEY);
+			sketch.get(Component.PARAMETER).get(Component.VALUE).setKind(Kind.Transient.COMMAND_PARAMETER_VALUE);
 		})
 		 .peek(tree -> {
 			 //define the trees of `type` and `parameter`
-			 CommandSketch sketch = (CommandSketch) tree.getSketch();
+			 Sketch sketch = tree.getSketch();
 			 Document document = tree.document();
-			 Reference open = sketch.getOpenAnchorSketch().getTree().reference();
-			 Reference close = sketch.getCloseAnchorSketch().getTree().reference();
+			 Reference open = sketch.get(Component.OPEN).getTree().reference();
+			 Reference close = sketch.get(Component.CLOSE).getTree().reference();
 			 int position = open.position() + open.length();
 			 int length = close.position() - position;
 
@@ -358,14 +356,14 @@ public final class Parsers {
 			 Tree t = new Tree(document, new Reference(
 					 position,
 					 middle == -1 ? length : middle
-			 ), sketch.getTypeSketch());
+			 ), sketch.get(Component.TYPE));
 			 Tree p = new Tree(document, new Reference(
 					 middle == -1 ? position + length : position + middle,
 					 middle == -1 ? 0 : length - middle
-			 ), sketch.getParameterSketch());
+			 ), sketch.get(Component.PARAMETER));
 
-			 sketch.getTypeSketch().setTree(t);
-			 sketch.getParameterSketch().setTree(p);
+			 sketch.get(Component.TYPE).setTree(t);
+			 sketch.get(Component.PARAMETER).setTree(p);
 
 			 if (t.reference().length() != 0)
 				 tree.offer(t);
@@ -374,9 +372,9 @@ public final class Parsers {
 		 })
 		 .peek(tree -> {
 			 //define `key` and `value`
-			 CommandSketch sketch = (CommandSketch) tree.getSketch();
+			 Sketch sketch = tree.getSketch();
 			 Document document = tree.document();
-			 Reference parameter = sketch.getParameterSketch().getTree().reference();
+			 Reference parameter = sketch.get(Component.PARAMETER).getTree().reference();
 
 			 int position = parameter.position();
 			 int length = parameter.length();
@@ -389,14 +387,14 @@ public final class Parsers {
 			 Tree k = new Tree(document, new Reference(
 					 p,
 					 middle == -1 ? l : middle
-			 ), sketch.getParameterSketch().getKeySketch());
+			 ), sketch.get(Component.PARAMETER).get(Component.KEY));
 			 Tree v = new Tree(document, new Reference(
 					 middle == -1 ? p + l : p + middle,
 					 middle == -1 ? 0 : l - middle
-			 ), sketch.getParameterSketch().getValueSketch());
+			 ), sketch.get(Component.PARAMETER).get(Component.VALUE));
 
-			 sketch.getParameterSketch().getKeySketch().setTree(k);
-			 sketch.getParameterSketch().getValueSketch().setTree(v);
+			 sketch.get(Component.PARAMETER).get(Component.KEY).setTree(k);
+			 sketch.get(Component.PARAMETER).get(Component.VALUE).setTree(v);
 		 });
 
 		/**
@@ -405,12 +403,12 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final Parser COMMENT_BLOCK = new ScopeParser(
+		public static final Parser COMMENT_BLOCK = new DoublePatternParser(
 				Patterns.COMMENT_BLOCK_OPEN, Patterns.COMMENT_BLOCK_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Transient.COMMENT_BLOCK);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.COMMENT_BLOCK_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.COMMENT_BLOCK_CLOSE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Transient.COMMENT_BLOCK_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Transient.COMMENT_BLOCK_CLOSE);
 		});
 
 		/**
@@ -419,13 +417,13 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.19
 		 */
 		@NotNull
-		public static final Parser COMMENT_LINE = new ScopeParser(
+		public static final Parser COMMENT_LINE = new DoublePatternParser(
 				Patterns.COMMENT_LINE_OPEN, Patterns.COMMENT_LINE_CLOSE
 		).peek(tree -> {
 			tree.getSketch().setKind(Kind.Transient.COMMENT_LINE);
-			((ScopeSketch) tree.getSketch()).getOpenAnchorSketch().setKind(Kind.Transient.COMMENT_LINE_OPEN);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().setKind(Kind.Transient.COMMENT_LINE_CLOSE);
-			((ScopeSketch) tree.getSketch()).getCloseAnchorSketch().getTree().pop();
+			tree.getSketch().get(Component.OPEN).setKind(Kind.Transient.COMMENT_LINE_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.Transient.COMMENT_LINE_CLOSE);
+			tree.getSketch().get(Component.OPEN).getTree().pop();
 		});
 
 		/**
@@ -435,30 +433,30 @@ public final class Parsers {
 		 */
 		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
-		public static final Parser INJECTION = new ScopeParser(
-				InjectionSketch::new, Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
+		public static final Parser INJECTION = new DoublePatternParser(
+				Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
 		).peek(tree -> {
-			InjectionSketch sketch = (InjectionSketch) tree.getSketch();
+			Sketch sketch = tree.getSketch();
 			sketch.setKind(Kind.Transient.INJECTION);
-			sketch.getOpenAnchorSketch().setKind(Kind.Transient.INJECTION_OPEN);
-			sketch.getCloseAnchorSketch().setKind(Kind.Transient.INJECTION_CLOSE);
-			sketch.getParameterSketch().setKind(Kind.Transient.INJECTION_PARAMETER);
+			sketch.get(Component.OPEN).setKind(Kind.Transient.INJECTION_OPEN);
+			sketch.get(Component.CLOSE).setKind(Kind.Transient.INJECTION_CLOSE);
+			sketch.get(Component.PARAMETER).setKind(Kind.Transient.INJECTION_PARAMETER);
 		})
 		 .peek(tree -> {
 			 //define the trees of `type` and `parameter`
-			 InjectionSketch sketch = (InjectionSketch) tree.getSketch();
+			 Sketch sketch = tree.getSketch();
 			 Document document = tree.document();
-			 Reference open = sketch.getOpenAnchorSketch().getTree().reference();
-			 Reference close = sketch.getCloseAnchorSketch().getTree().reference();
+			 Reference open = sketch.get(Component.OPEN).getTree().reference();
+			 Reference close = sketch.get(Component.CLOSE).getTree().reference();
 			 int position = open.position() + open.length();
 			 int length = close.position() - position;
 
 			 Tree p = new Tree(document, new Reference(
 					 position,
 					 length
-			 ), sketch.getParameterSketch());
+			 ), sketch.get(Component.PARAMETER));
 
-			 sketch.getParameterSketch().setTree(p);
+			 sketch.get(Component.PARAMETER).setTree(p);
 
 			 if (p.reference().length() != 0)
 				 tree.offer(p);
@@ -568,7 +566,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.25
 		 */
 		@NotNull
-		public static final Parser NUMBER = new LiteralParser(
+		public static final Parser NUMBER = new PatternParser(
 				Patterns.NUMBER
 		).peek(tree -> tree.getSketch().setKind(Kind.Value.NUMBER));
 
@@ -578,7 +576,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.24
 		 */
 		@NotNull
-		public static final Parser REFERENCE = new LiteralParser(
+		public static final Parser REFERENCE = new PatternParser(
 				Patterns.REFERENCE
 		).peek(tree -> tree.getSketch().setKind(Kind.Value.REFERENCE));
 
@@ -611,7 +609,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final Parser ADDITION = new LiteralParser(
+		public static final Parser ADDITION = new PatternParser(
 				Patterns.ADDITION
 		).condition(Values.CONDITION)
 		 .peek(tree -> tree.getSketch().setKind(Kind.Value.ADDITION));
@@ -622,7 +620,7 @@ public final class Parsers {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		public static final Parser SUBTRACTION = new LiteralParser(
+		public static final Parser SUBTRACTION = new PatternParser(
 				Patterns.SUBTRACTION
 		).condition(Values.CONDITION)
 		 .peek(tree -> tree.getSketch().setKind(Kind.Value.SUBTRACTION));

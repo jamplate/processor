@@ -15,11 +15,7 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.sketch.CommandSketch;
-import org.jamplate.model.CompileException;
-import org.jamplate.model.Dominance;
-import org.jamplate.model.Reference;
-import org.jamplate.model.Tree;
+import org.jamplate.model.*;
 import org.jamplate.model.function.Processor;
 import org.jamplate.util.Trees;
 import org.jamplate.util.model.function.SequentialProcessor;
@@ -88,8 +84,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("console")) {
 							 command.setKind(Kind.Command.CONSOLE);
@@ -114,13 +110,13 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("declare")) {
 							 command.setKind(Kind.Command.DECLARE);
-							 command.getParameterSketch().getTree().pop();
-							 tree.offer(command.getParameterSketch().getValueSketch().getTree());
+							 command.get(Component.PARAMETER).getTree().pop();
+							 tree.offer(command.get(Component.PARAMETER).get(Component.VALUE).getTree());
 
 							 modified[0] = true;
 						 }
@@ -142,13 +138,13 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("define")) {
 							 command.setKind(Kind.Command.DEFINE);
-							 command.getParameterSketch().getTree().pop();
-							 tree.offer(command.getParameterSketch().getValueSketch().getTree());
+							 command.get(Component.PARAMETER).getTree().pop();
+							 tree.offer(command.get(Component.PARAMETER).get(Component.VALUE).getTree());
 
 							 modified[0] = true;
 						 }
@@ -170,8 +166,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("elif")) {
 							 command.setKind(Kind.Command.ELIF);
@@ -196,8 +192,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("else")) {
 							 command.setKind(Kind.Command.ELSE);
@@ -222,8 +218,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("endif")) {
 							 command.setKind(Kind.Command.ENDIF);
@@ -248,8 +244,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("if")) {
 							 command.setKind(Kind.Command.IF);
@@ -363,8 +359,8 @@ public final class Processors {
 				 .parallelStream()
 				 .forEach(tree -> {
 					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
-						 CommandSketch command = (CommandSketch) tree.getSketch();
-						 String content = Trees.read(command.getTypeSketch().getTree()).toString();
+						 Sketch command = tree.getSketch();
+						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
 						 if (content.equalsIgnoreCase("include")) {
 							 command.setKind(Kind.Command.INCLUDE);
