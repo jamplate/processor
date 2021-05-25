@@ -51,6 +51,11 @@
  *             replace X to Y in all REPRINTS
  *     </li>
  *     <li>
+ *         {@code DEF( X : Address ) : Text}
+ *         <p>
+ *             return the {@code true} if the address is defined, {@code false} otherwise.
+ *     </li>
+ *     <li>
  *         {@code EVAL( X : Address ) : Value}
  *         <p>
  *             return evaluation of X;
