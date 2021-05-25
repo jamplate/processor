@@ -15,6 +15,8 @@
  */
 package org.jamplate.model;
 
+import cufy.util.HashNode;
+import cufy.util.Node;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +38,13 @@ public class Sketch implements Serializable {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -7132338777576310144L;
 
+	/**
+	 * A node relating to the components of this sketch.
+	 *
+	 * @since 0.2.0 ~2021.05.25
+	 */
+	@NotNull
+	protected final Node<Sketch> components = new HashNode<>(this);
 	/**
 	 * The additional meta-data of this sketch.
 	 *
@@ -91,6 +100,31 @@ public class Sketch implements Serializable {
 	@Override
 	public String toString() {
 		return this.kind + (this.name.isEmpty() ? "" : " ") + this.name;
+	}
+
+	/**
+	 * Return the component of this sketch with the given {@code key}.
+	 *
+	 * @param key the key of the component.
+	 * @return the component with the given {@code key}.
+	 * @throws NullPointerException if the given {@code key} is null.
+	 * @since 0.2.0 ~2021.05.25
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Sketch getComponent(@NotNull Node.Key key) {
+		Objects.requireNonNull(key, "key");
+		Node<Sketch> n = this.components.get(key);
+
+		if (n == null) {
+			Sketch sketch = new Sketch();
+
+			this.components.put(key, sketch.components);
+
+			return sketch;
+		}
+
+		return n.get();
 	}
 
 	/**
