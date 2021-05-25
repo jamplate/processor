@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.util.model.CommandSketch;
+import org.jamplate.impl.sketch.CommandSketch;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Dominance;
 import org.jamplate.model.Reference;

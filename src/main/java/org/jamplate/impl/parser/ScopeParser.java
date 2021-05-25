@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.parser;
 
-import org.jamplate.impl.util.model.ScopeSketch;
+import org.jamplate.impl.sketch.ScopeSketch;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;

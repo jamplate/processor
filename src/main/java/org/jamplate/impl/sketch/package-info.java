@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * The jamplate specific models.
+ * A set of sketches.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.20
+ * @since 0.2.0 ~2021.05.25
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.sketch;
