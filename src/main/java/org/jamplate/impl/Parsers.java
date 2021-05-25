@@ -65,7 +65,8 @@ public final class Parsers {
 							Syntax.SQUARE,
 							Syntax.ROUND
 					)),
-					Values.REFERENCE
+					Values.REFERENCE,
+					Values.NUMBER
 			));
 
 	/**
@@ -562,6 +563,16 @@ public final class Parsers {
 	 */
 	public static final class Values {
 		/**
+		 * A parser parsing numbers.
+		 *
+		 * @since 0.2.0 ~2021.05.25
+		 */
+		@NotNull
+		public static final Parser NUMBER = new LiteralParser(
+				Patterns.NUMBER
+		).peek(tree -> tree.getSketch().setKind(Kind.Value.NUMBER));
+
+		/**
 		 * A parser that parses references.
 		 *
 		 * @since 0.2.0 ~2021.05.24
@@ -643,12 +654,22 @@ public final class Parsers {
 			public static final Pattern ADDITION = Pattern.compile("\\+");
 
 			/**
+			 * A pattern matching numbers.
+			 *
+			 * @since 0.2.0 ~2021.05.25
+			 */
+			@NotNull
+			public static final Pattern NUMBER = Pattern.compile(
+					"(?:0[xb])?[0-9_][1-9]*[DdLlFf]?"
+			);
+
+			/**
 			 * A pattern matching references.
 			 *
 			 * @since 0.2.0 ~2021.05.24
 			 */
 			@NotNull
-			public static final Pattern REFERENCE = Pattern.compile("[A-Za-z][A-Za-z1-9_$]*");
+			public static final Pattern REFERENCE = Pattern.compile("[A-Za-z][A-Za-z0-9_$]*");
 
 			/**
 			 * A pattern matching subtraction symbols.

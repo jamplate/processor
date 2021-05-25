@@ -15,8 +15,11 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.util.model.*;
+import org.jamplate.impl.util.model.CommandSketch;
+import org.jamplate.impl.util.model.InjectionSketch;
+import org.jamplate.impl.util.model.ScopeSketch;
 import org.jamplate.impl.util.model.function.StrictCompiler;
+import org.jamplate.impl.instruction.*;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;
 import org.jamplate.model.function.Processor;
@@ -98,7 +101,7 @@ public final class Compilers {
 
 						Instruction paramInstruction = compiler.compile(compiler, compilation, parameterTree);
 
-						return new ConsoleInstruction(
+						return new ConsoleExecInstr(
 								tree,
 								paramInstruction == null ?
 								Instruction.create(parameterTree, (e, m) -> {
@@ -130,7 +133,7 @@ public final class Compilers {
 						String keyParameter = Trees.read(keyParameterTree).toString();
 						Instruction parameterInstruction = compiler.compile(compiler, compilation, valueParameterTree);
 
-						return new DeclareInstruction(
+						return new AllocAddrExecInstr(
 								tree,
 								keyParameter,
 								parameterInstruction == null ?
@@ -163,7 +166,7 @@ public final class Compilers {
 						String keyParameter = Trees.read(keyParameterTree).toString();
 						Instruction parameterInstruction = compiler.compile(compiler, compilation, valueParameterTree);
 
-						return new DefineInstruction(
+						return new RepllocAddrExecInstr(
 								tree,
 								keyParameter,
 								parameterInstruction == null ?
@@ -223,21 +226,21 @@ public final class Compilers {
 						Instruction instruction = null;
 						for (Instruction condition : conditions)
 							if (condition == null)
-								instruction = new InstructionArray(
+								instruction = new IpedXinstr(
 										tree,
 										instructions.get(null)
 								);
 							else if (instruction == null)
-								instruction = new IfInstruction(
+								instruction = new BranchExecInstr0Instr1Instr2(
 										tree,
 										condition,
-										new InstructionArray(instructions.get(condition))
+										new IpedXinstr(instructions.get(condition))
 								);
 							else
-								instruction = new IfInstruction(
+								instruction = new BranchExecInstr0Instr1Instr2(
 										tree,
 										condition,
-										new InstructionArray(instructions.get(condition)),
+										new IpedXinstr(instructions.get(condition)),
 										instruction
 								);
 
@@ -269,7 +272,7 @@ public final class Compilers {
 									parameterTree
 							);
 
-						return new IncludeInstruction(tree, paramInstruction);
+						return new ExecImportExecInstr(tree, paramInstruction);
 					}
 
 					return null;
@@ -314,7 +317,7 @@ public final class Compilers {
 		 */
 		public static final Compiler TEXT =
 				new StrictCompiler((compiler, compilation, tree) ->
-						new PrintInstruction(tree)
+						new ReprntConst(tree)
 				);
 
 		/**
@@ -356,7 +359,7 @@ public final class Compilers {
 									parameterTree
 							);
 
-						return new InjectInstruction(
+						return new PrintExecInstr(
 								tree,
 								parameterInstruction
 						);
@@ -385,6 +388,23 @@ public final class Compilers {
 	 */
 	public static final class Values {
 		/**
+		 * A compiler that compiles numbers.
+		 *
+		 * @since 0.2.0 ~2021.05.25
+		 */
+		@NotNull
+		public static final Compiler NUMBER =
+				(compiler, compilation, tree) -> {
+					if (tree.getSketch().getKind().equals(Kind.Value.NUMBER)) {
+						String value = Trees.read(tree).toString();
+
+						return new PushConst(value);
+					}
+
+					return null;
+				};
+
+		/**
 		 * A compiler that compiles reference instructions.
 		 *
 		 * @since 0.2.0 ~2021.05.24
@@ -395,7 +415,7 @@ public final class Compilers {
 					if (tree.getSketch().getKind().equals(Kind.Value.REFERENCE)) {
 						String name = Trees.read(tree).toString();
 
-						return new ReferenceInstruction(tree, name);
+						return new PushEvalAddr(tree, name);
 					}
 
 					return null;
@@ -423,7 +443,7 @@ public final class Compilers {
 
 						content.getSketch().setKind(Kind.Value.STRING_CONTENT);
 
-						return new StringInstruction(content);
+						return new PushConst(content);
 					}
 
 					return null;
@@ -463,7 +483,8 @@ public final class Compilers {
 					private final Compiler value =
 							new OrderCompiler(
 									Values.STRING,
-									Values.REFERENCE
+									Values.REFERENCE,
+									Values.NUMBER
 							);
 
 					/**

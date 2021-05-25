@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
 import org.jamplate.model.*;
@@ -32,10 +32,19 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class PrintInstruction implements Instruction {
+public class ReprntConst implements Instruction {
+	//REPRNT( CONST )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 4950811636884162730L;
 
+	/**
+	 * The content to be printed.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	protected final String constant;
 	/**
 	 * The tree from where this instruction was declared.
 	 *
@@ -43,13 +52,6 @@ public class PrintInstruction implements Instruction {
 	 */
 	@Nullable
 	protected final Tree tree;
-	/**
-	 * The content to be printed.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	protected final String value;
 
 	/**
 	 * Construct a new instruction that prints the content of the given {@code tree} to
@@ -59,42 +61,42 @@ public class PrintInstruction implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public PrintInstruction(@NotNull Tree tree) {
+	public ReprntConst(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
-		this.value = Trees.read(tree).toString();
+		this.constant = Trees.read(tree).toString();
 	}
 
 	/**
 	 * Construct a new instruction that prints the given {@code value} to the console when
 	 * executed.
 	 *
-	 * @param value the value to be printed to the console by the constructed instruction
-	 *              when it gets executed.
+	 * @param constant the value to be printed to the console by the constructed
+	 *                 instruction when it gets executed.
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public PrintInstruction(@NotNull String value) {
-		Objects.requireNonNull(value, "value");
+	public ReprntConst(@NotNull String constant) {
+		Objects.requireNonNull(constant, "constant");
 		this.tree = null;
-		this.value = value;
+		this.constant = constant;
 	}
 
 	/**
 	 * Construct a new instruction that prints the given {@code value} to the console when
 	 * executed.
 	 *
-	 * @param tree  the tree of the constructed instruction.
-	 * @param value the value to be printed to the console by the constructed instruction
-	 *              when it gets executed.
+	 * @param tree     the tree of the constructed instruction.
+	 * @param constant the value to be printed to the console by the constructed
+	 *                 instruction when it gets executed.
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public PrintInstruction(@NotNull Tree tree, @NotNull String value) {
+	public ReprntConst(@NotNull Tree tree, @NotNull String constant) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(value, "value");
+		Objects.requireNonNull(constant, "constant");
 		this.tree = tree;
-		this.value = value;
+		this.constant = constant;
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class PrintInstruction implements Instruction {
 			replaceObject = new JSONObject();
 		}
 
-		String value = this.value;
+		String value = this.constant;
 
 		for (String replace : replaceObject.keySet()) {
 			String replacement = replaceObject.getString(replace);

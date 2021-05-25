@@ -16,7 +16,7 @@
 package org.jamplate.impl.util.model.function;
 
 import org.jamplate.impl.Kind;
-import org.jamplate.impl.util.model.InstructionArray;
+import org.jamplate.impl.instruction.IpedXinstr;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
@@ -146,6 +146,6 @@ public class StrictCompiler implements Compiler {
 		}
 
 		//nulls are auto filtered
-		return new InstructionArray(tree, instructions);
+		return new IpedXinstr(tree, instructions);
 	}
 }

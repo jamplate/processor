@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
 import org.jamplate.model.*;
@@ -32,7 +32,9 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class DefineInstruction implements Instruction {
+public class RepllocAddrExecInstr implements Instruction {
+	//REPLLOC( ADDR , EXEC( INSTR ) )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 7085804102176126751L;
 
@@ -42,7 +44,14 @@ public class DefineInstruction implements Instruction {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	protected final String keyParameter;
+	protected final String address;
+	/**
+	 * The instruction of the value part of the parameter.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	protected final Instruction instruction;
 	/**
 	 * The tree this instruction was declared at.
 	 *
@@ -50,55 +59,43 @@ public class DefineInstruction implements Instruction {
 	 */
 	@Nullable
 	protected final Tree tree;
-	/**
-	 * The instruction of the value part of the parameter.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	protected final Instruction valueParameterInstruction;
 
 	/**
 	 * Construct a new define instruction that allocates the results from executing the
-	 * given {@code valueParameterInstruction} to the given {@code keyParameter} as the
-	 * address.
+	 * given {@code instruction} to the given {@code address} as the address.
 	 *
-	 * @param keyParameter              the address to where to allocate.
-	 * @param valueParameterInstruction the instruction to execute to get the value to be
-	 *                                  allocated.
-	 * @throws NullPointerException if the given {@code keyParameter} or {@code
-	 *                              valueParameterInstruction} is null.
+	 * @param address     the address to where to allocate.
+	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @throws NullPointerException if the given {@code address} or {@code instruction} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public DefineInstruction(@NotNull String keyParameter, @NotNull Instruction valueParameterInstruction) {
-		Objects.requireNonNull(keyParameter, "keyParameter");
-		Objects.requireNonNull(valueParameterInstruction, "valueParameterInstruction");
+	public RepllocAddrExecInstr(@NotNull String address, @NotNull Instruction instruction) {
+		Objects.requireNonNull(address, "address");
+		Objects.requireNonNull(instruction, "instruction");
 		this.tree = null;
-		this.keyParameter = keyParameter;
-		this.valueParameterInstruction = valueParameterInstruction;
+		this.address = address;
+		this.instruction = instruction;
 	}
 
 	/**
 	 * Construct a new define instruction that allocates the results from executing the
-	 * given {@code valueParameterInstruction} to the given {@code keyParameter} as the
-	 * address.
+	 * given {@code instruction} to the given {@code address} as the address.
 	 *
-	 * @param tree                      the tree from where this instruction was
-	 *                                  declared.
-	 * @param keyParameter              the address to where to allocate.
-	 * @param valueParameterInstruction the instruction to execute to get the value to be
-	 *                                  allocated.
-	 * @throws NullPointerException if the given {@code tree} or {@code keyParameter} or
-	 *                              {@code valueParameterInstruction} is null.
+	 * @param tree        the tree from where this instruction was declared.
+	 * @param address     the address to where to allocate.
+	 * @param instruction the instruction to execute to get the value to be allocated.
+	 * @throws NullPointerException if the given {@code tree} or {@code address} or {@code
+	 *                              instruction} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public DefineInstruction(@NotNull Tree tree, @NotNull String keyParameter, @NotNull Instruction valueParameterInstruction) {
+	public RepllocAddrExecInstr(@NotNull Tree tree, @NotNull String address, @NotNull Instruction instruction) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(keyParameter, "keyParameter");
-		Objects.requireNonNull(valueParameterInstruction, "valueParameterInstruction");
+		Objects.requireNonNull(address, "address");
+		Objects.requireNonNull(instruction, "instruction");
 		this.tree = tree;
-		this.keyParameter = keyParameter;
-		this.valueParameterInstruction = valueParameterInstruction;
+		this.address = address;
+		this.instruction = instruction;
 	}
 
 	@Override
@@ -106,12 +103,12 @@ public class DefineInstruction implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		memory.pushFrame(new Memory.Frame(this.valueParameterInstruction));
-		this.valueParameterInstruction.exec(environment, memory);
+		memory.pushFrame(new Memory.Frame(this.instruction));
+		this.instruction.exec(environment, memory);
 		Value valueParameterValue = memory.pop();
 		memory.popFrame();
 
-		String keyParameter = this.keyParameter;
+		String keyParameter = this.address;
 		String valueParameter = valueParameterValue.evaluate(memory);
 
 		memory.set(keyParameter, m -> valueParameter);

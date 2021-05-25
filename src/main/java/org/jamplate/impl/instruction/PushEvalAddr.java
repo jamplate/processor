@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,9 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
-public class ReferenceInstruction implements Instruction {
+public class PushEvalAddr implements Instruction {
+	//PUSH( EVAL( ADDR ) )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3380257902335591663L;
 
@@ -38,7 +40,7 @@ public class ReferenceInstruction implements Instruction {
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	@NotNull
-	protected final String name;
+	protected final String address;
 	/**
 	 * The tree of this instruction.
 	 *
@@ -49,42 +51,42 @@ public class ReferenceInstruction implements Instruction {
 
 	/**
 	 * Construct a new reference instruction that takes the value at the heap with the
-	 * given {@code name} and pushes it to the stack.
+	 * given {@code address} and pushes it to the stack.
 	 *
-	 * @param name the name of the value in the heap.
-	 * @throws NullPointerException if the given {@code name} is null.
+	 * @param address the name of the value in the heap.
+	 * @throws NullPointerException if the given {@code address} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public ReferenceInstruction(@NotNull String name) {
-		Objects.requireNonNull(name, "name");
+	public PushEvalAddr(@NotNull String address) {
+		Objects.requireNonNull(address, "address");
 		this.tree = null;
-		this.name = name;
+		this.address = address;
 	}
 
 	/**
 	 * Construct a new reference instruction that takes the value at the heap with the
-	 * given {@code name} and pushes it to the stack.
+	 * given {@code address} and pushes it to the stack.
 	 *
-	 * @param tree the tree of the constructed instruction.
-	 * @param name the name of the value in the heap.
-	 * @throws NullPointerException if the given {@code tree} or {@code name} is null.
+	 * @param tree    the tree of the constructed instruction.
+	 * @param address the name of the value in the heap.
+	 * @throws NullPointerException if the given {@code tree} or {@code address} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public ReferenceInstruction(@NotNull Tree tree, @NotNull String name) {
+	public PushEvalAddr(@NotNull Tree tree, @NotNull String address) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(name, "name");
+		Objects.requireNonNull(address, "address");
 		this.tree = tree;
-		this.name = name;
+		this.address = address;
 	}
 
 	@Override
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
-		Value value = memory.get(this.name);
+		Value value = memory.get(this.address);
 
 		if (value == Value.NULL)
-			value = m -> this.name;
+			value = m -> this.address;
 
 		memory.push(value);
 	}

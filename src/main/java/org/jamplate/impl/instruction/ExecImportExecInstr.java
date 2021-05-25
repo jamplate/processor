@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,9 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class IncludeInstruction implements Instruction {
+public class ExecImportExecInstr implements Instruction {
+	//EXEC( IMPORT( EXEC( INSTR ) ) )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3241587385841635191L;
 
@@ -39,7 +41,7 @@ public class IncludeInstruction implements Instruction {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	protected final Instruction parameterInstruction;
+	protected final Instruction instruction;
 	/**
 	 * The tree this instruction was declared at.
 	 *
@@ -51,36 +53,36 @@ public class IncludeInstruction implements Instruction {
 	/**
 	 * Construct a new include instruction that executes the instruction in the
 	 * environment that has the name equal to the string from evaluating the value
-	 * returned from executing the given {@code paramInstruction}.
+	 * returned from executing the given {@code instruction}.
 	 *
-	 * @param parameterInstruction the instruction to perform the constructed instruction
-	 *                             on the value returned from executing it.
-	 * @throws NullPointerException if the given {@code paramInstruction} is null.
+	 * @param instruction the instruction to perform the constructed instruction on the
+	 *                    value returned from executing it.
+	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~ 2021.05.23
 	 */
-	public IncludeInstruction(@NotNull Instruction parameterInstruction) {
-		Objects.requireNonNull(parameterInstruction, "parameterInstruction");
+	public ExecImportExecInstr(@NotNull Instruction instruction) {
+		Objects.requireNonNull(instruction, "instruction");
 		this.tree = null;
-		this.parameterInstruction = parameterInstruction;
+		this.instruction = instruction;
 	}
 
 	/**
 	 * Construct a new include instruction that executes the instruction in the
 	 * environment that has the name equal to the string from evaluating the value
-	 * returned from executing the given {@code paramInstruction}.
+	 * returned from executing the given {@code instruction}.
 	 *
-	 * @param tree                 the tree from where this instruction was declared.
-	 * @param parameterInstruction the instruction to perform the constructed instruction
-	 *                             on the value returned from executing it.
-	 * @throws NullPointerException if the given {@code tree} or {@code paramInstruction}
-	 *                              is null.
+	 * @param tree        the tree from where this instruction was declared.
+	 * @param instruction the instruction to perform the constructed instruction on the
+	 *                    value returned from executing it.
+	 * @throws NullPointerException if the given {@code tree} or {@code instruction} is
+	 *                              null.
 	 * @since 0.2.0 ~ 2021.05.23
 	 */
-	public IncludeInstruction(@NotNull Tree tree, @NotNull Instruction parameterInstruction) {
+	public ExecImportExecInstr(@NotNull Tree tree, @NotNull Instruction instruction) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(parameterInstruction, "parameterInstruction");
+		Objects.requireNonNull(instruction, "instruction");
 		this.tree = tree;
-		this.parameterInstruction = parameterInstruction;
+		this.instruction = instruction;
 	}
 
 	@Override
@@ -88,8 +90,8 @@ public class IncludeInstruction implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		memory.pushFrame(new Memory.Frame(this.parameterInstruction));
-		this.parameterInstruction.exec(environment, memory);
+		memory.pushFrame(new Memory.Frame(this.instruction));
+		this.instruction.exec(environment, memory);
 		Value parameterValue = memory.pop();
 		memory.popFrame();
 

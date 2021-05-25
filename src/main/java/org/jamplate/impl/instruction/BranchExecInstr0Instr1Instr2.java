@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,9 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
-public class IfInstruction implements Instruction {
+public class BranchExecInstr0Instr1Instr2 implements Instruction {
+	//BRANCH( EXEC( INSTR0 ) , INSTR1 , INSTR2 )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -9034207643511548467L;
 
@@ -38,21 +40,21 @@ public class IfInstruction implements Instruction {
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	@NotNull
-	protected final Instruction condition;
-	/**
-	 * The instruction to be executed when the condition fails.
-	 *
-	 * @since 0.2.0 ~2021.05.24
-	 */
-	@NotNull
-	protected final Instruction conditionFalse;
+	protected final Instruction instruction0;
 	/**
 	 * The instruction to be executed when the condition passes.
 	 *
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	@NotNull
-	protected final Instruction conditionTrue;
+	protected final Instruction instruction1;
+	/**
+	 * The instruction to be executed when the condition fails.
+	 *
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@NotNull
+	protected final Instruction instruction2;
 	/**
 	 * The tree this instruction was declared at.
 	 *
@@ -65,19 +67,19 @@ public class IfInstruction implements Instruction {
 	 * Construct a new if instruction that checks the given {@code condition} and executes
 	 * the given {@code conditionTrue} when the condition succeed.
 	 *
-	 * @param condition     the condition.
-	 * @param conditionTrue the instruction to be executed when the condition succeed.
+	 * @param instruction0 the condition.
+	 * @param instruction1 the instruction to be executed when the condition succeed.
 	 * @throws NullPointerException if the given {@code condition} or {@code
 	 *                              conditionTrue} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public IfInstruction(@NotNull Instruction condition, @NotNull Instruction conditionTrue) {
-		Objects.requireNonNull(condition, "condition");
-		Objects.requireNonNull(conditionTrue, "conditionTrue");
+	public BranchExecInstr0Instr1Instr2(@NotNull Instruction instruction0, @NotNull Instruction instruction1) {
+		Objects.requireNonNull(instruction0, "condition");
+		Objects.requireNonNull(instruction1, "conditionTrue");
 		this.tree = null;
-		this.condition = condition;
-		this.conditionTrue = conditionTrue;
-		this.conditionFalse = (e, m) -> {
+		this.instruction0 = instruction0;
+		this.instruction1 = instruction1;
+		this.instruction2 = (e, m) -> {
 		};
 	}
 
@@ -86,42 +88,42 @@ public class IfInstruction implements Instruction {
 	 * the given {@code conditionTrue} when the condition succeed and execute the given
 	 * {@code conditionFalse} when the condition fails.
 	 *
-	 * @param condition      the condition.
-	 * @param conditionTrue  the instruction to be executed when the condition succeed.
-	 * @param conditionFalse the instruction to be executed when the condition fails.
+	 * @param instruction0 the condition.
+	 * @param instruction1 the instruction to be executed when the condition succeed.
+	 * @param instruction2 the instruction to be executed when the condition fails.
 	 * @throws NullPointerException if the given {@code condition} or {@code
 	 *                              conditionTrue} or {@code conditionFalse} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public IfInstruction(@NotNull Instruction condition, @NotNull Instruction conditionTrue, @NotNull Instruction conditionFalse) {
-		Objects.requireNonNull(condition, "condition");
-		Objects.requireNonNull(conditionTrue, "conditionTrue");
-		Objects.requireNonNull(conditionFalse, "conditionFalse");
+	public BranchExecInstr0Instr1Instr2(@NotNull Instruction instruction0, @NotNull Instruction instruction1, @NotNull Instruction instruction2) {
+		Objects.requireNonNull(instruction0, "condition");
+		Objects.requireNonNull(instruction1, "conditionTrue");
+		Objects.requireNonNull(instruction2, "conditionFalse");
 		this.tree = null;
-		this.condition = condition;
-		this.conditionTrue = conditionTrue;
-		this.conditionFalse = conditionFalse;
+		this.instruction0 = instruction0;
+		this.instruction1 = instruction1;
+		this.instruction2 = instruction2;
 	}
 
 	/**
 	 * Construct a new if instruction that checks the given {@code condition} and executes
 	 * the given {@code conditionTrue} when the condition succeed.
 	 *
-	 * @param tree          the tree from where this instruction was declared.
-	 * @param condition     the condition.
-	 * @param conditionTrue the instruction to be executed when the condition succeed.
+	 * @param tree         the tree from where this instruction was declared.
+	 * @param instruction0 the condition.
+	 * @param instruction1 the instruction to be executed when the condition succeed.
 	 * @throws NullPointerException if the given {@code condition} or {@code
 	 *                              conditionTrue} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public IfInstruction(@NotNull Tree tree, @NotNull Instruction condition, @NotNull Instruction conditionTrue) {
+	public BranchExecInstr0Instr1Instr2(@NotNull Tree tree, @NotNull Instruction instruction0, @NotNull Instruction instruction1) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(condition, "condition");
-		Objects.requireNonNull(conditionTrue, "conditionTrue");
+		Objects.requireNonNull(instruction0, "condition");
+		Objects.requireNonNull(instruction1, "conditionTrue");
 		this.tree = tree;
-		this.condition = condition;
-		this.conditionTrue = conditionTrue;
-		this.conditionFalse = Instruction.create(tree, (e, m) -> {
+		this.instruction0 = instruction0;
+		this.instruction1 = instruction1;
+		this.instruction2 = Instruction.create(tree, (e, m) -> {
 		});
 	}
 
@@ -130,31 +132,31 @@ public class IfInstruction implements Instruction {
 	 * the given {@code conditionTrue} when the condition succeed and execute the given
 	 * {@code conditionFalse} when the condition fails.
 	 *
-	 * @param tree           the tree from where this instruction was declared.
-	 * @param condition      the condition.
-	 * @param conditionTrue  the instruction to be executed when the condition succeed.
-	 * @param conditionFalse the instruction to be executed when the condition fails.
+	 * @param tree         the tree from where this instruction was declared.
+	 * @param instruction0 the condition.
+	 * @param instruction1 the instruction to be executed when the condition succeed.
+	 * @param instruction2 the instruction to be executed when the condition fails.
 	 * @throws NullPointerException if the given {@code condition} or {@code
 	 *                              conditionTrue} or {@code conditionFalse} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public IfInstruction(@NotNull Tree tree, @NotNull Instruction condition, @NotNull Instruction conditionTrue, @NotNull Instruction conditionFalse) {
+	public BranchExecInstr0Instr1Instr2(@NotNull Tree tree, @NotNull Instruction instruction0, @NotNull Instruction instruction1, @NotNull Instruction instruction2) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(condition, "condition");
-		Objects.requireNonNull(conditionTrue, "conditionTrue");
-		Objects.requireNonNull(conditionFalse, "conditionFalse");
+		Objects.requireNonNull(instruction0, "condition");
+		Objects.requireNonNull(instruction1, "conditionTrue");
+		Objects.requireNonNull(instruction2, "conditionFalse");
 		this.tree = tree;
-		this.condition = condition;
-		this.conditionTrue = conditionTrue;
-		this.conditionFalse = conditionFalse;
+		this.instruction0 = instruction0;
+		this.instruction1 = instruction1;
+		this.instruction2 = instruction2;
 	}
 
 	@Override
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
-		memory.pushFrame(new Memory.Frame(this.condition));
-		this.condition.exec(environment, memory);
+		memory.pushFrame(new Memory.Frame(this.instruction0));
+		this.instruction0.exec(environment, memory);
 		Value value = memory.pop();
 		memory.popFrame();
 
@@ -164,14 +166,14 @@ public class IfInstruction implements Instruction {
 			case "":
 			case "0":
 			case "false":
-				memory.pushFrame(new Memory.Frame(this.conditionFalse));
-				this.conditionFalse.exec(environment, memory);
+				memory.pushFrame(new Memory.Frame(this.instruction2));
+				this.instruction2.exec(environment, memory);
 				memory.popFrame();
 				break;
 			case "\0": //actual null -> OK
 			default:
-				memory.pushFrame(new Memory.Frame(this.conditionTrue));
-				this.conditionTrue.exec(environment, memory);
+				memory.pushFrame(new Memory.Frame(this.instruction1));
+				this.instruction1.exec(environment, memory);
 				memory.popFrame();
 				break;
 		}

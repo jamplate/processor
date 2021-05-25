@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class InstructionArray implements Instruction {
+public class IpedXinstr implements Instruction {
+	//IPED( XINSTR )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1714505823832660137L;
 
@@ -65,7 +67,7 @@ public class InstructionArray implements Instruction {
 	 * @throws NullPointerException if the given {@code instructions} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public InstructionArray(@Nullable Instruction @NotNull ... instructions) {
+	public IpedXinstr(@Nullable Instruction @NotNull ... instructions) {
 		Objects.requireNonNull(instructions, "instructions");
 		this.tree = null;
 		this.instructions = Arrays
@@ -85,7 +87,7 @@ public class InstructionArray implements Instruction {
 	 * @throws NullPointerException if the given {@code instructions} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public InstructionArray(@NotNull List<Instruction> instructions) {
+	public IpedXinstr(@NotNull List<Instruction> instructions) {
 		Objects.requireNonNull(instructions, "instructions");
 		this.tree = null;
 		this.instructions = new ArrayList<>();
@@ -107,7 +109,7 @@ public class InstructionArray implements Instruction {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public InstructionArray(@NotNull Tree tree, @Nullable Instruction @NotNull ... instructions) {
+	public IpedXinstr(@NotNull Tree tree, @Nullable Instruction @NotNull ... instructions) {
 		Objects.requireNonNull(instructions, "instructions");
 		this.tree = tree;
 		this.instructions = Arrays
@@ -129,7 +131,7 @@ public class InstructionArray implements Instruction {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public InstructionArray(@NotNull Tree tree, @NotNull List<Instruction> instructions) {
+	public IpedXinstr(@NotNull Tree tree, @NotNull List<Instruction> instructions) {
 		Objects.requireNonNull(instructions, "instructions");
 		this.tree = tree;
 		this.instructions = new ArrayList<>();

@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
@@ -32,10 +32,19 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class StringInstruction implements Instruction {
+public class PushConst implements Instruction {
+	//PUSH( CONST )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -764009371662392281L;
 
+	/**
+	 * The value to be pushed.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	protected final String constant;
 	/**
 	 * The tree of this instruction.
 	 *
@@ -43,69 +52,63 @@ public class StringInstruction implements Instruction {
 	 */
 	@Nullable
 	protected final Tree tree;
-	/**
-	 * The value to be pushed.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	protected final String value;
 
 	/**
-	 * Construct a new string instruction that pushes the content of the given {@code
-	 * tree} to the stack when executed.
+	 * Construct a new instruction that pushes the content of the given {@code tree} to
+	 * the stack when executed.
 	 *
 	 * @param tree the tree of the constructed instruction.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public StringInstruction(@NotNull Tree tree) {
+	public PushConst(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 		//noinspection DynamicRegexReplaceableByCompiledPattern
-		this.value = Trees
+		this.constant = Trees
 				.read(tree)
 				.toString()
 				.replaceAll("\\\\(.)", "$1");
 	}
 
 	/**
-	 * Construct a new string instruction that pushes the given {@code value} to the stack
+	 * Construct a new instruction that pushes the given {@code constant} to the stack
 	 * when executed.
 	 *
-	 * @param value the value to be pushed to the stack by the constructed instruction
-	 *              when it gets executed.
-	 * @throws NullPointerException if the given {@code value} is null.
+	 * @param constant the value to be pushed to the stack by the constructed instruction
+	 *                 when it gets executed.
+	 * @throws NullPointerException if the given {@code constant} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public StringInstruction(@NotNull String value) {
-		Objects.requireNonNull(value, "value");
+	public PushConst(@NotNull String constant) {
+		Objects.requireNonNull(constant, "constant");
 		this.tree = null;
-		this.value = value;
+		this.constant = constant;
 	}
 
 	/**
-	 * Construct a new string instruction that pushes the given {@code value} to the stack
+	 * Construct a new instruction that pushes the given {@code constant} to the stack
 	 * when executed.
 	 *
-	 * @param tree  the tree of the constructed instruction.
-	 * @param value the value to be pushed to the stack by the constructed instruction
-	 *              when it gets executed.
-	 * @throws NullPointerException if the given {@code tree} or {@code value} is null.
+	 * @param tree     the tree of the constructed instruction.
+	 * @param constant the value to be pushed to the stack by the constructed instruction
+	 *                 when it gets executed.
+	 * @throws NullPointerException if the given {@code tree} or {@code constant} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public StringInstruction(@NotNull Tree tree, @NotNull String value) {
+	public PushConst(@NotNull Tree tree, @NotNull String constant) {
 		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(value, "value");
+		Objects.requireNonNull(constant, "constant");
 		this.tree = tree;
-		this.value = value;
+		this.constant = constant;
 	}
 
 	@Override
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
-		memory.push(m -> this.value);
+		memory.push(m -> this.constant);
 	}
 
 	@Nullable

@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model;
+package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,9 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
-public class InjectInstruction implements Instruction {
+public class PrintExecInstr implements Instruction {
+	//PRINT( EXEC( INSTR ) )
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1584518958362936537L;
 
@@ -41,7 +43,6 @@ public class InjectInstruction implements Instruction {
 	 */
 	@NotNull
 	protected final Instruction instruction;
-
 	/**
 	 * The tree this instruction was declared at.
 	 *
@@ -58,7 +59,7 @@ public class InjectInstruction implements Instruction {
 	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public InjectInstruction(@NotNull Instruction instruction) {
+	public PrintExecInstr(@NotNull Instruction instruction) {
 		Objects.requireNonNull(instruction, "instruction");
 		this.tree = null;
 		this.instruction = instruction;
@@ -74,7 +75,7 @@ public class InjectInstruction implements Instruction {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.24
 	 */
-	public InjectInstruction(@NotNull Tree tree, @NotNull Instruction instruction) {
+	public PrintExecInstr(@NotNull Tree tree, @NotNull Instruction instruction) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(instruction, "instruction");
 		this.tree = tree;
