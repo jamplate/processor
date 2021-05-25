@@ -15,15 +15,16 @@
  */
 package org.jamplate.impl.compiler;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.impl.instruction.IpedXinstr;
-import org.jamplate.model.*;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
+import org.jamplate.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,85 +65,29 @@ public class StrictCompiler implements Compiler {
 		this.fallBack = fallBack;
 	}
 
-	@SuppressWarnings("OverlyLongMethod")
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		List<Instruction> instructions = new ArrayList<>();
+		List<Tree> children = Trees.flatChildren(tree);
 
-		Iterator<Tree> iterator = tree.iterator();
-
-		if (!iterator.hasNext())
+		if (children.isEmpty())
 			//got no children
 			return this.fallBack.compile(compiler, compilation, tree);
 
-		Tree previous = iterator.next();
+		for (Tree child : children) {
+			if (child.getParent() != null) {
+				Instruction instruction = compiler.compile(compiler, compilation, child);
 
-		//between the parent and the first child
-		if (Intersection.compute(tree, previous) != Intersection.START) {
-			int p = tree.reference().position();
-			int l = previous.reference().position() - p;
-
-			Tree gap = new Tree(tree.document(), new Reference(p, l));
-
-			gap.getSketch().setKind(Kind.Transient.UNDEFINED);
-
-			instructions.add(this.fallBack.compile(compiler, compilation, gap));
-		}
-
-		//the first child itself
-		{
-			Instruction instruction = compiler.compile(compiler, compilation, previous);
-
-			if (instruction == null)
-				instructions.add(this.fallBack.compile(compiler, compilation, previous));
-			else
-				instructions.add(instruction);
-		}
-
-		while (iterator.hasNext()) {
-			Tree next = iterator.next();
-
-			//between the children
-			if (Intersection.compute(previous, next) != Intersection.NEXT) {
-				int p = previous.reference().position() +
-						previous.reference().length();
-				int l = next.reference().position() - p;
-
-				Tree gap = new Tree(tree.document(), new Reference(p, l));
-
-				gap.getSketch().setKind(Kind.Transient.UNDEFINED);
-
-				instructions.add(this.fallBack.compile(compiler, compilation, gap));
-			}
-
-			//the children themselves
-			{
-				Instruction instruction = compiler.compile(compiler, compilation, next);
-
-				if (instruction == null)
-					instructions.add(this.fallBack.compile(compiler, compilation, next));
-				else
+				if (instruction != null) {
 					instructions.add(instruction);
+					continue;
+				}
 			}
 
-			previous = next;
-		}
-
-		//between the parent and the last child
-		if (Intersection.compute(tree, previous) != Intersection.END) {
-			int p = previous.reference().position() +
-					previous.reference().length();
-			int l = tree.reference().position() +
-					tree.reference().length() - p;
-
-			Tree gap = new Tree(tree.document(), new Reference(p, l));
-
-			gap.getSketch().setKind(Kind.Transient.UNDEFINED);
-
-			instructions.add(this.fallBack.compile(compiler, compilation, gap));
+			instructions.add(this.fallBack.compile(compiler, compilation, child));
 		}
 
 		//nulls are auto filtered
