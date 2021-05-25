@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.util.model.function;
+package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.Kind;
 import org.jamplate.impl.instruction.IpedXinstr;

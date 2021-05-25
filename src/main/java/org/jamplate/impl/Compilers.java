@@ -18,7 +18,7 @@ package org.jamplate.impl;
 import org.jamplate.impl.util.model.CommandSketch;
 import org.jamplate.impl.util.model.InjectionSketch;
 import org.jamplate.impl.util.model.ScopeSketch;
-import org.jamplate.impl.util.model.function.StrictCompiler;
+import org.jamplate.impl.compiler.StrictCompiler;
 import org.jamplate.impl.instruction.*;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;

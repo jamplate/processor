@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Syntax compiling utilities for the default jamplate implementation.
+ * A set of compilers.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.17
+ * @since 0.2.0 ~2021.05.25
  */
-package org.jamplate.impl.util.model.function;
+package org.jamplate.impl.compiler;
