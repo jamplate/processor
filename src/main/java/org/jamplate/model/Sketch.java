@@ -112,7 +112,7 @@ public class Sketch implements Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Sketch getComponent(@NotNull Node.Key key) {
+	public Sketch get(@NotNull Node.Key key) {
 		Objects.requireNonNull(key, "key");
 		Node<Sketch> n = this.components.get(key);
 
