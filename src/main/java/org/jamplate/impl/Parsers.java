@@ -591,7 +591,7 @@ public final class Parsers {
 			 * @since 0.2.0 ~2021.05.24
 			 */
 			@NotNull
-			public static final Pattern REFERENCE = Pattern.compile("[A-Za-z][A-Za-z0-9_$]*");
+			public static final Pattern REFERENCE = Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*");
 
 			/**
 			 * A pattern matching subtraction symbols.
