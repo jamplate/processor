@@ -16,9 +16,9 @@
 package org.jamplate.impl;
 
 import org.jamplate.impl.parser.DoublePatternParser;
+import org.jamplate.impl.parser.InjectionParser;
 import org.jamplate.impl.parser.PatternParser;
-import org.jamplate.model.Document;
-import org.jamplate.model.Reference;
+import org.jamplate.impl.parser.CommandParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
@@ -327,7 +327,7 @@ public final class Parsers {
 		 */
 		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
-		public static final Parser COMMAND = new DoublePatternParser(
+		public static final Parser COMMAND = new CommandParser(
 				Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
 		).peek(tree -> {
 			Sketch sketch = tree.getSketch();
@@ -339,63 +339,7 @@ public final class Parsers {
 			sketch.get(Component.PARAMETER).setKind(Kind.Transient.COMMAND_PARAMETER);
 			sketch.get(Component.PARAMETER).get(Component.KEY).setKind(Kind.Transient.COMMAND_PARAMETER_KEY);
 			sketch.get(Component.PARAMETER).get(Component.VALUE).setKind(Kind.Transient.COMMAND_PARAMETER_VALUE);
-		})
-		 .peek(tree -> {
-			 //define the trees of `type` and `parameter`
-			 Sketch sketch = tree.getSketch();
-			 Document document = tree.document();
-			 Reference open = sketch.get(Component.OPEN).getTree().reference();
-			 Reference close = sketch.get(Component.CLOSE).getTree().reference();
-			 int position = open.position() + open.length();
-			 int length = close.position() - position;
-
-			 int middle = document.read(new Reference(position, length))
-								  .toString()
-								  .indexOf(' ');
-
-			 Tree t = new Tree(document, new Reference(
-					 position,
-					 middle == -1 ? length : middle
-			 ), sketch.get(Component.TYPE));
-			 Tree p = new Tree(document, new Reference(
-					 middle == -1 ? position + length : position + middle,
-					 middle == -1 ? 0 : length - middle
-			 ), sketch.get(Component.PARAMETER));
-
-			 sketch.get(Component.TYPE).setTree(t);
-			 sketch.get(Component.PARAMETER).setTree(p);
-
-			 if (t.reference().length() != 0)
-				 tree.offer(t);
-			 if (p.reference().length() != 0)
-				 tree.offer(p);
-		 })
-		 .peek(tree -> {
-			 //define `key` and `value`
-			 Sketch sketch = tree.getSketch();
-			 Document document = tree.document();
-			 Reference parameter = sketch.get(Component.PARAMETER).getTree().reference();
-
-			 int position = parameter.position();
-			 int length = parameter.length();
-			 int p = length == 0 ? position : position + 1;
-			 int l = length == 0 ? 0 : length - 1;
-			 int middle = document.read(new Reference(p, l))
-								  .toString()
-								  .indexOf(' ');
-
-			 Tree k = new Tree(document, new Reference(
-					 p,
-					 middle == -1 ? l : middle
-			 ), sketch.get(Component.PARAMETER).get(Component.KEY));
-			 Tree v = new Tree(document, new Reference(
-					 middle == -1 ? p + l : p + middle,
-					 middle == -1 ? 0 : l - middle
-			 ), sketch.get(Component.PARAMETER).get(Component.VALUE));
-
-			 sketch.get(Component.PARAMETER).get(Component.KEY).setTree(k);
-			 sketch.get(Component.PARAMETER).get(Component.VALUE).setTree(v);
-		 });
+		});
 
 		/**
 		 * A parser that parses comment blocks.
@@ -431,9 +375,8 @@ public final class Parsers {
 		 *
 		 * @since 0.2.0 ~2021.05.19
 		 */
-		@SuppressWarnings("OverlyLongLambda")
 		@NotNull
-		public static final Parser INJECTION = new DoublePatternParser(
+		public static final Parser INJECTION = new InjectionParser(
 				Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
 		).peek(tree -> {
 			Sketch sketch = tree.getSketch();
@@ -441,26 +384,7 @@ public final class Parsers {
 			sketch.get(Component.OPEN).setKind(Kind.Transient.INJECTION_OPEN);
 			sketch.get(Component.CLOSE).setKind(Kind.Transient.INJECTION_CLOSE);
 			sketch.get(Component.PARAMETER).setKind(Kind.Transient.INJECTION_PARAMETER);
-		})
-		 .peek(tree -> {
-			 //define the trees of `type` and `parameter`
-			 Sketch sketch = tree.getSketch();
-			 Document document = tree.document();
-			 Reference open = sketch.get(Component.OPEN).getTree().reference();
-			 Reference close = sketch.get(Component.CLOSE).getTree().reference();
-			 int position = open.position() + open.length();
-			 int length = close.position() - position;
-
-			 Tree p = new Tree(document, new Reference(
-					 position,
-					 length
-			 ), sketch.get(Component.PARAMETER));
-
-			 sketch.get(Component.PARAMETER).setTree(p);
-
-			 if (p.reference().length() != 0)
-				 tree.offer(p);
-		 });
+		});
 
 		/**
 		 * Utility classes must not be initialized.
