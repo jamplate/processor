@@ -100,12 +100,12 @@ public class ConsoleExecInstr implements Instruction {
 		memory.popFrame();
 
 		//CONSOLE( EXEC( INSTR ) )
-		String text = value.evaluate(memory);
-
-		if (text.equals("\0")) {
+		if (value == Value.NULL) {
 			memory.setConsole(new StringBuilder());
 			return;
 		}
+
+		String text = value.evaluate(memory);
 
 		try {
 			File file = new File(text);
