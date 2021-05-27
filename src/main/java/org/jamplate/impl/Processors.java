@@ -83,7 +83,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -109,7 +109,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -137,7 +137,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -165,7 +165,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -191,7 +191,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -217,7 +217,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -243,7 +243,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -358,7 +358,7 @@ public final class Processors {
 			Trees.collect(compilation.getRootTree())
 				 .parallelStream()
 				 .forEach(tree -> {
-					 if (tree.getSketch().getKind().equals(Kind.Transient.COMMAND)) {
+					 if (tree.getSketch().getKind().equals(Kind.COMMAND)) {
 						 Sketch command = tree.getSketch();
 						 String content = Trees.read(command.get(Component.TYPE).getTree()).toString();
 
@@ -408,7 +408,7 @@ public final class Processors {
 
 					 if (previous != null)
 						 switch (previous.getSketch().getKind()) {
-							 case Kind.Transient.COMMAND:
+							 case Kind.COMMAND:
 								 tree.getSketch().setKind(Kind.Syntax.LN_SUPPRESSED);
 								 modified[0] = true;
 						 }
@@ -443,9 +443,9 @@ public final class Processors {
 		@NotNull
 		private static final Predicate<Tree> CONDITION = tree -> {
 			switch (tree.getSketch().getKind()) {
-				case Kind.Transient.COMMAND_PARAMETER:
-				case Kind.Transient.COMMAND_PARAMETER_VALUE:
-				case Kind.Transient.INJECTION_PARAMETER:
+				case Kind.COMMAND_PARAMETER:
+				case Kind.COMMAND_PARAMETER_VALUE:
+				case Kind.INJECTION_PARAMETER:
 					return true;
 				default:
 					return false;

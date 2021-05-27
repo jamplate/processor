@@ -344,7 +344,7 @@ public final class Compilers {
 		@NotNull
 		public static final Compiler INJECTION =
 				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Transient.INJECTION)) {
+					if (tree.getSketch().getKind().equals(Kind.INJECTION)) {
 						Sketch injection = tree.getSketch();
 						Tree parameterTree = injection.get(Component.PARAMETER).getTree();
 
@@ -502,9 +502,9 @@ public final class Compilers {
 					@Override
 					public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
 						switch (tree.getSketch().getKind()) {
-							case Kind.Transient.COMMAND_PARAMETER:
-							case Kind.Transient.COMMAND_PARAMETER_VALUE:
-							case Kind.Transient.INJECTION_PARAMETER:
+							case Kind.COMMAND_PARAMETER:
+							case Kind.COMMAND_PARAMETER_VALUE:
+							case Kind.INJECTION_PARAMETER:
 								return this.fallback.compile(compiler, compilation, tree);
 							default:
 								return null;

@@ -26,6 +26,139 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class Kind {
 	/**
+	 * The kind of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMAND = "command";
+	/**
+	 * The kind of the closing anchor of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMAND_CLOSE = "command:close";
+	/**
+	 * The kind of the opening anchor of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMAND_OPEN = "command:open";
+
+	/**
+	 * The kind of the parameter of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	public static final String COMMAND_PARAMETER = "command:parameter";
+	/**
+	 * The kind of the key part of the parameter of a command.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final String COMMAND_PARAMETER_KEY = "command:parameter:key";
+	/**
+	 * The kind of the value part of the parameter of a command.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final String COMMAND_PARAMETER_VALUE = "command:parameter:value";
+
+	/**
+	 * The kind of the type of a single-line command.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	public static final String COMMAND_TYPE = "command:type";
+
+	/**
+	 * The kind of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK = "comment:block";
+	/**
+	 * The kind of the closing anchor of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK_CLOSE = "comment-block:close";
+	/**
+	 * The kind of the opening anchor of comment blocks.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_BLOCK_OPEN = "comment-block:open";
+
+	/**
+	 * The kind of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE = "comment-line";
+	/**
+	 * The kind of the closing anchor of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE_CLOSE = "comment-line:close";
+	/**
+	 * The kind of the opening anchor of commented lines.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String COMMENT_LINE_OPEN = "comment-line:open";
+
+	/**
+	 * The kind of an injection sequence.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String INJECTION = "injection";
+	/**
+	 * The kind of the closing anchor of an injection.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String INJECTION_CLOSE = "injection:close";
+	/**
+	 * The kind of the opening anchor of an injection.
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String INJECTION_OPEN = "injection:open";
+	/**
+	 * The kind of the parameter of an injection.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final String INJECTION_PARAMETER = "injection:parameter";
+
+	/**
+	 * The kind of undefined text.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	public static final String UNDEFINED = "undefined";
+
+	/**
 	 * Utility classes must not be initialized.
 	 *
 	 * @throws AssertionError when called.
@@ -131,6 +264,87 @@ public final class Kind {
 		 * @since 0.2.0 ~2021.05.20
 		 */
 		private Command() {
+			throw new AssertionError("No instance for you");
+		}
+	}
+
+	/**
+	 * A utility class containing the kinds for operators.
+	 *
+	 * @author LSafer
+	 * @version 0.2.0
+	 * @since 0.2.0 ~2021.05.27
+	 */
+	public static final class Operator {
+		/**
+		 * The kind for the addition symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ADDITION = "addition";
+		/**
+		 * The kind for the context of an addition operation.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String ADDITION_CONTEXT = "addition:context";
+		/**
+		 * The kind for the division symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String DIVISION = "division";
+		/**
+		 * The kind for the equating symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String EQUALS = "equals";
+		/**
+		 * The kind for the less-than symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String LESS_THAN = "less-than";
+		/**
+		 * The kind for the more-than symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String MORE_THAN = "more-than";
+		/**
+		 * The kind for the multiplication symbol.
+		 */
+		@NotNull
+		public static final String MULTIPLICATION = "multiplication";
+		/**
+		 * The kind for the not-equals symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String NOT_EQUALS = "not-equals";
+		/**
+		 * The kind for the subtraction symbol.
+		 *
+		 * @since 0.2.0 ~2021.05.23
+		 */
+		@NotNull
+		public static final String SUBTRACTION = "subtraction";
+
+		/**
+		 * Utility classes must not be initialized.
+		 *
+		 * @throws AssertionError when called.
+		 * @since 0.2.0 ~2021.05.27
+		 */
+		private Operator() {
 			throw new AssertionError("No instance for you");
 		}
 	}
@@ -299,156 +513,6 @@ public final class Kind {
 	}
 
 	/**
-	 * A utility class containing the kinds for the sketches that to be elements.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	public static final class Transient {
-		/**
-		 * The kind of a single-line command.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMAND = "command";
-		/**
-		 * The kind of the closing anchor of a single-line command.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMAND_CLOSE = "command:close";
-		/**
-		 * The kind of the opening anchor of a single-line command.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMAND_OPEN = "command:open";
-		/**
-		 * The kind of the parameter of a single-line command.
-		 *
-		 * @since 0.2.0 ~2021.05.20
-		 */
-		@NotNull
-		public static final String COMMAND_PARAMETER = "command:parameter";
-		/**
-		 * The kind of the key part of the parameter of a command.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String COMMAND_PARAMETER_KEY = "command:parameter:key";
-		/**
-		 * The kind of the value part of the parameter of a command.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String COMMAND_PARAMETER_VALUE = "command:parameter:value";
-		/**
-		 * The kind of the type of a single-line command.
-		 *
-		 * @since 0.2.0 ~2021.05.20
-		 */
-		@NotNull
-		public static final String COMMAND_TYPE = "command:type";
-
-		/**
-		 * The kind of comment blocks.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_BLOCK = "comment:block";
-		/**
-		 * The kind of the closing anchor of comment blocks.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_BLOCK_CLOSE = "comment-block:close";
-		/**
-		 * The kind of the opening anchor of comment blocks.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_BLOCK_OPEN = "comment-block:open";
-
-		/**
-		 * The kind of commented lines.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_LINE = "comment-line";
-		/**
-		 * The kind of the closing anchor of commented lines.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_LINE_CLOSE = "comment-line:close";
-		/**
-		 * The kind of the opening anchor of commented lines.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String COMMENT_LINE_OPEN = "comment-line:open";
-
-		/**
-		 * The kind of an injection sequence.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String INJECTION = "injection";
-		/**
-		 * The kind of the closing anchor of an injection.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String INJECTION_CLOSE = "injection:close";
-		/**
-		 * The kind of the opening anchor of an injection.
-		 *
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		@NotNull
-		public static final String INJECTION_OPEN = "injection:open";
-		/**
-		 * The kind of the parameter of an injection.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String INJECTION_PARAMETER = "injection:parameter";
-
-		/**
-		 * The kind of undefined text.
-		 *
-		 * @since 0.2.0 ~2021.05.21
-		 */
-		@NotNull
-		public static final String UNDEFINED = "undefined";
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.19
-		 */
-		private Transient() {
-			throw new AssertionError("No instance for you");
-		}
-	}
-
-	/**
 	 * A utility class containing the kinds for values.
 	 *
 	 * @author LSafer
@@ -457,67 +521,12 @@ public final class Kind {
 	 */
 	public static final class Value {
 		/**
-		 * The kind for the addition symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String ADDITION = "addition";
-		/**
-		 * The kind for the context of an addition operation.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String ADDITION_CONTEXT = "addition:context";
-
-		/**
 		 * The kind for arrays.
 		 *
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
 		public static final String ARRAY = "array";
-		/**
-		 * The kind for the division symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String DIVISION = "division";
-		/**
-		 * The kind for the equating symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String EQUALS = "equals";
-		/**
-		 * The kind for the less-than symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String LESS_THAN = "less-than";
-		/**
-		 * The kind for the more-than symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String MORE_THAN = "more-than";
-		/**
-		 * The kind for the multiplication symbol.
-		 */
-		@NotNull
-		public static final String MULTIPLICATION = "multiplication";
-		/**
-		 * The kind for the not-equals symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String NOT_EQUALS = "not-equals";
 		/**
 		 * The kind for numbers.
 		 *
@@ -555,14 +564,6 @@ public final class Kind {
 		 */
 		@NotNull
 		public static final String STRING_CONTENT = "string:content";
-
-		/**
-		 * The kind for the subtraction symbol.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final String SUBTRACTION = "subtraction";
 
 		/**
 		 * Utility classes must not be initialized.

@@ -108,7 +108,7 @@ public final class Trees {
 
 				Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-				gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+				gap.getSketch().setKind(Kind.UNDEFINED);
 
 				children.add(gap);
 			}
@@ -125,7 +125,7 @@ public final class Trees {
 
 					Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-					gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+					gap.getSketch().setKind(Kind.UNDEFINED);
 
 					children.add(gap);
 				}
@@ -142,7 +142,7 @@ public final class Trees {
 
 				Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-				gap.getSketch().setKind(Kind.Transient.UNDEFINED);
+				gap.getSketch().setKind(Kind.UNDEFINED);
 
 				children.add(gap);
 			}

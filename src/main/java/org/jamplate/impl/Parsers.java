@@ -331,14 +331,14 @@ public final class Parsers {
 				Patterns.COMMAND_OPEN, Patterns.COMMAND_CLOSE
 		).peek(tree -> {
 			Sketch sketch = tree.getSketch();
-			sketch.setKind(Kind.Transient.COMMAND);
-			sketch.get(Component.OPEN).setKind(Kind.Transient.COMMAND_OPEN);
-			sketch.get(Component.CLOSE).setKind(Kind.Transient.COMMAND_CLOSE);
+			sketch.setKind(Kind.COMMAND);
+			sketch.get(Component.OPEN).setKind(Kind.COMMAND_OPEN);
+			sketch.get(Component.CLOSE).setKind(Kind.COMMAND_CLOSE);
 			sketch.get(Component.CLOSE).getTree().pop();
-			sketch.get(Component.TYPE).setKind(Kind.Transient.COMMAND_TYPE);
-			sketch.get(Component.PARAMETER).setKind(Kind.Transient.COMMAND_PARAMETER);
-			sketch.get(Component.PARAMETER).get(Component.KEY).setKind(Kind.Transient.COMMAND_PARAMETER_KEY);
-			sketch.get(Component.PARAMETER).get(Component.VALUE).setKind(Kind.Transient.COMMAND_PARAMETER_VALUE);
+			sketch.get(Component.TYPE).setKind(Kind.COMMAND_TYPE);
+			sketch.get(Component.PARAMETER).setKind(Kind.COMMAND_PARAMETER);
+			sketch.get(Component.PARAMETER).get(Component.KEY).setKind(Kind.COMMAND_PARAMETER_KEY);
+			sketch.get(Component.PARAMETER).get(Component.VALUE).setKind(Kind.COMMAND_PARAMETER_VALUE);
 		});
 
 		/**
@@ -350,9 +350,9 @@ public final class Parsers {
 		public static final Parser COMMENT_BLOCK = new DoublePatternParser(
 				Patterns.COMMENT_BLOCK_OPEN, Patterns.COMMENT_BLOCK_CLOSE
 		).peek(tree -> {
-			tree.getSketch().setKind(Kind.Transient.COMMENT_BLOCK);
-			tree.getSketch().get(Component.OPEN).setKind(Kind.Transient.COMMENT_BLOCK_OPEN);
-			tree.getSketch().get(Component.CLOSE).setKind(Kind.Transient.COMMENT_BLOCK_CLOSE);
+			tree.getSketch().setKind(Kind.COMMENT_BLOCK);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.COMMENT_BLOCK_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.COMMENT_BLOCK_CLOSE);
 		});
 
 		/**
@@ -364,9 +364,9 @@ public final class Parsers {
 		public static final Parser COMMENT_LINE = new DoublePatternParser(
 				Patterns.COMMENT_LINE_OPEN, Patterns.COMMENT_LINE_CLOSE
 		).peek(tree -> {
-			tree.getSketch().setKind(Kind.Transient.COMMENT_LINE);
-			tree.getSketch().get(Component.OPEN).setKind(Kind.Transient.COMMENT_LINE_OPEN);
-			tree.getSketch().get(Component.CLOSE).setKind(Kind.Transient.COMMENT_LINE_CLOSE);
+			tree.getSketch().setKind(Kind.COMMENT_LINE);
+			tree.getSketch().get(Component.OPEN).setKind(Kind.COMMENT_LINE_OPEN);
+			tree.getSketch().get(Component.CLOSE).setKind(Kind.COMMENT_LINE_CLOSE);
 			tree.getSketch().get(Component.OPEN).getTree().pop();
 		});
 
@@ -380,10 +380,10 @@ public final class Parsers {
 				Patterns.INJECTION_OPEN, Patterns.INJECTION_CLOSE
 		).peek(tree -> {
 			Sketch sketch = tree.getSketch();
-			sketch.setKind(Kind.Transient.INJECTION);
-			sketch.get(Component.OPEN).setKind(Kind.Transient.INJECTION_OPEN);
-			sketch.get(Component.CLOSE).setKind(Kind.Transient.INJECTION_CLOSE);
-			sketch.get(Component.PARAMETER).setKind(Kind.Transient.INJECTION_PARAMETER);
+			sketch.setKind(Kind.INJECTION);
+			sketch.get(Component.OPEN).setKind(Kind.INJECTION_OPEN);
+			sketch.get(Component.CLOSE).setKind(Kind.INJECTION_CLOSE);
+			sketch.get(Component.PARAMETER).setKind(Kind.INJECTION_PARAMETER);
 		});
 
 		/**
@@ -518,9 +518,9 @@ public final class Parsers {
 					parent = parent.getParent()
 			)
 				switch (parent.getSketch().getKind()) {
-					case Kind.Transient.COMMAND_PARAMETER:
-					case Kind.Transient.COMMAND_PARAMETER_VALUE:
-					case Kind.Transient.INJECTION_PARAMETER:
+					case Kind.COMMAND_PARAMETER:
+					case Kind.COMMAND_PARAMETER_VALUE:
+					case Kind.INJECTION_PARAMETER:
 						return true;
 				}
 
@@ -536,7 +536,7 @@ public final class Parsers {
 		public static final Parser ADDITION = new PatternParser(
 				Patterns.ADDITION
 		).condition(Values.CONDITION)
-		 .peek(tree -> tree.getSketch().setKind(Kind.Value.ADDITION));
+		 .peek(tree -> tree.getSketch().setKind(Kind.Operator.ADDITION));
 
 		/**
 		 * A parser that parses subtraction symbols.
@@ -547,7 +547,7 @@ public final class Parsers {
 		public static final Parser SUBTRACTION = new PatternParser(
 				Patterns.SUBTRACTION
 		).condition(Values.CONDITION)
-		 .peek(tree -> tree.getSketch().setKind(Kind.Value.SUBTRACTION));
+		 .peek(tree -> tree.getSketch().setKind(Kind.Operator.SUBTRACTION));
 
 		/**
 		 * Utility classes must not be initialized.
