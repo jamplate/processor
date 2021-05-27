@@ -30,7 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.25
  */
-public class DefAddress implements Instruction {
+public class DefAddr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3432648177276191300L;
 
@@ -57,7 +57,7 @@ public class DefAddress implements Instruction {
 	 * @throws NullPointerException if the given {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public DefAddress(@NotNull String address) {
+	public DefAddr(@NotNull String address) {
 		Objects.requireNonNull(address, "address");
 		this.tree = null;
 		this.address = address;
@@ -72,7 +72,7 @@ public class DefAddress implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} or {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public DefAddress(@NotNull Tree tree, @NotNull String address) {
+	public DefAddr(@NotNull Tree tree, @NotNull String address) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(address, "address");
 		this.tree = tree;
@@ -84,7 +84,7 @@ public class DefAddress implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		//DEF( EXEC( INSTR ) )
+		//DEF( ADDR )
 		Value value = memory.get(this.address);
 
 		if (value == Value.NULL)
