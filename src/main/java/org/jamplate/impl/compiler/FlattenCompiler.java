@@ -20,7 +20,7 @@ import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.util.Trees;
+import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class StrictCompiler implements Compiler {
+public class FlattenCompiler implements Compiler {
 	/**
 	 * The compiler used by this compiler to compile the non-reserved ranges.
 	 *
@@ -60,7 +60,7 @@ public class StrictCompiler implements Compiler {
 	 * @throws NullPointerException if the given {@code fallback} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public StrictCompiler(@NotNull Compiler fallBack) {
+	public FlattenCompiler(@NotNull Compiler fallBack) {
 		Objects.requireNonNull(fallBack, "fallBack");
 		this.fallBack = fallBack;
 	}
