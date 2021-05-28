@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * <h3>{@code IPED( XINSTR )}</h3>
- * An instruction that {@link org.jamplate.impl.instruction IPED} a respecified array of
+ * An instruction that {@link org.jamplate.impl.instruction IPED} a pre-specified array of
  * instructions.
  *
  * @author LSafer
