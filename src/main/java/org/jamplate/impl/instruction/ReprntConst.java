@@ -17,7 +17,7 @@ package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
 import org.jamplate.model.*;
-import org.jamplate.util.Trees;
+import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;

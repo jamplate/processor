@@ -16,7 +16,7 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.model.*;
-import org.jamplate.util.Memories;
+import org.jamplate.impl.util.Memories;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,8 +125,7 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 		this.tree = tree;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
-		this.instruction2 = Instruction.create(tree, (e, m) -> {
-		});
+		this.instruction2 = Instruction.empty(tree);
 	}
 
 	/**

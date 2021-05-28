@@ -20,7 +20,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
-import org.jamplate.util.Parsing;
+import org.jamplate.impl.util.Parsing;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
