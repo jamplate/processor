@@ -13,9 +13,8 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.util;
+package org.jamplate.impl.util;
 
-import org.jamplate.impl.Kind;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -108,8 +107,6 @@ public final class Trees {
 
 				Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-				gap.getSketch().setKind(Kind.UNDEFINED);
-
 				children.add(gap);
 			}
 
@@ -125,8 +122,6 @@ public final class Trees {
 
 					Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-					gap.getSketch().setKind(Kind.UNDEFINED);
-
 					children.add(gap);
 				}
 
@@ -141,8 +136,6 @@ public final class Trees {
 						tree.reference().length() - p;
 
 				Tree gap = new Tree(tree.document(), new Reference(p, l));
-
-				gap.getSketch().setKind(Kind.UNDEFINED);
 
 				children.add(gap);
 			}
