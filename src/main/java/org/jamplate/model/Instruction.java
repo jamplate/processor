@@ -41,6 +41,8 @@ public interface Instruction extends Serializable {
 	 * @throws NullPointerException if the given {@code instruction} is null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
 	static Instruction create(@NotNull Instruction instruction) {
 		Objects.requireNonNull(instruction, "instruction");
 		return new Instruction() {
@@ -67,6 +69,8 @@ public interface Instruction extends Serializable {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
 	static Instruction create(@NotNull Tree tree, @NotNull Instruction instruction) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(instruction, "instruction");
@@ -84,6 +88,47 @@ public interface Instruction extends Serializable {
 			public Tree getTree() {
 				return tree;
 			}
+		};
+	}
+
+	/**
+	 * Construct a new empty instruction with the given {@code tree}.
+	 *
+	 * @param tree the tree to be returned by the returned instruction.
+	 * @return an empty instruction with the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.28
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	static Instruction empty(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		return new Instruction() {
+			@SuppressWarnings("JavaDoc")
+			private static final long serialVersionUID = -772065919121487682L;
+
+			@Override
+			public void exec(@NotNull Environment environment, @NotNull Memory memory) {
+			}
+
+			@NotNull
+			@Override
+			public Tree getTree() {
+				return tree;
+			}
+		};
+	}
+
+	/**
+	 * Return a new empty instruction.
+	 *
+	 * @return a new empty instruction.
+	 * @since 0.2.0 ~2021.05.28
+	 */
+	@NotNull
+	@Contract(pure = true)
+	static Instruction empty() {
+		return (e, m) -> {
 		};
 	}
 
