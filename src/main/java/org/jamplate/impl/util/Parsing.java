@@ -224,11 +224,11 @@ public final class Parsing {
 					//bingo!
 					results.add(Arrays.asList(
 							//context
-							new Reference(i - p, e - i),
+							new Reference(i, e - i),
 							//start
-							new Reference(i - p, j - i),
+							new Reference(i, j - i),
 							//end
-							new Reference(s - p, e - s)
+							new Reference(s, e - s)
 					));
 
 					//make the next rounds search for their start after the end of this match
@@ -361,11 +361,11 @@ public final class Parsing {
 					//bingo!
 					return Arrays.asList(
 							//context
-							new Reference(i - p, e - i),
+							new Reference(i, e - i),
 							//start
-							new Reference(i - p, j - i),
+							new Reference(i, j - i),
 							//end
-							new Reference(s - p, e - s)
+							new Reference(s, e - s)
 					);
 
 				//No valid start for the end of this round
