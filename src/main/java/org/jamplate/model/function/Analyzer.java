@@ -16,6 +16,7 @@
 package org.jamplate.model.function;
 
 import org.jamplate.model.Compilation;
+import org.jamplate.model.CompileException;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +87,7 @@ public interface Analyzer {
 	 * 		compilation.
 	 * @throws NullPointerException if the given {@code compilation} or {@code tree} is
 	 *                              null.
+	 * @throws CompileException     if any illegal pattern detected.
 	 * @since 0.2.0 ~2021.05.28
 	 */
 	@Contract(mutates = "param1,param2")
