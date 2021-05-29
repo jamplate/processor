@@ -34,6 +34,25 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface Analyzer {
 	/**
+	 * Return a new analyzer that analyzes using this analyzer then if this analyzer
+	 * analyzed something, then analyze using the given {@code analyzer}.
+	 *
+	 * @param analyzer the other analyzer. (the analyzer to analyze after this)
+	 * @return a new analyzer tha analyzes using this then using the given {@code
+	 * 		analyzer}.
+	 * @throws NullPointerException if the given {@code analyzer} is null.
+	 * @since 0.2.0 ~2021.05.29
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	default Analyzer then(@NotNull Analyzer analyzer) {
+		Objects.requireNonNull(analyzer, "analyzer");
+		return (compilation, tree) ->
+				this.analyze(compilation, tree) &&
+				analyzer.analyze(compilation, tree);
+	}
+
+	/**
 	 * Return an analyzer that delegates to this analyzer, and if analyzed something, then
 	 * invokes the given {@code consumer}.
 	 *

@@ -21,12 +21,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOError;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,7 +47,7 @@ public interface Parser {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	default Parser also(@NotNull Parser parser) {
+	default Parser then(@NotNull Parser parser) {
 		return (compilation, tree) ->
 				this.parse(compilation, tree)
 					.parallelStream()
@@ -61,70 +58,6 @@ public interface Parser {
 										  .stream()
 							)
 					)
-					.collect(Collectors.toSet());
-	}
-
-	/**
-	 * Return a new parser that uses this parser for parsing only if the given {@code
-	 * predicate} returned {@code true} on the tree to be parsed. Otherwise, returns an
-	 * empty set.
-	 *
-	 * @param predicate the predicate to be used.
-	 * @return a parser that uses this parser and only parses if the given {@code
-	 * 		predicate} returned {@code true} for the compilation and tree to parse on.
-	 * @throws NullPointerException if the given {@code predicate} is null.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser condition(@NotNull Predicate<Tree> predicate) {
-		Objects.requireNonNull(predicate, "predicate");
-		return (compilation, tree) ->
-				predicate.test(tree) ?
-				this.parse(compilation, tree) :
-				Collections.emptySet();
-	}
-
-	/**
-	 * Return a new parser that uses this parser to parse and then filter the results
-	 * depending on the given {@code predicate}.
-	 *
-	 * @param predicate the predicate to be used to filter the results.
-	 * @return a new parser that uses this and filters the results using the given {@code
-	 * 		predicate}.
-	 * @throws NullPointerException if the given {@code predicate} is null.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser filter(@NotNull Predicate<Tree> predicate) {
-		Objects.requireNonNull(predicate, "predicate");
-		return (compilation, tree) ->
-				this.parse(compilation, tree)
-					.parallelStream()
-					.filter(predicate)
-					.collect(Collectors.toSet());
-	}
-
-	/**
-	 * Return a new parser that uses this parser for parsing and then replaces each parsed
-	 * tree with the result of invoking the given {@code operator} with that tree as the
-	 * argument.
-	 *
-	 * @param operator the operator to get the replacement tree from.
-	 * @return a parser that parses using this and replaces the results using the given
-	 *        {@code operator}.
-	 * @throws NullPointerException if the given {@code operator} is null.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser map(@NotNull UnaryOperator<Tree> operator) {
-		Objects.requireNonNull(operator, "operator");
-		return (compilation, tree) ->
-				this.parse(compilation, tree)
-					.parallelStream()
-					.map(operator)
 					.collect(Collectors.toSet());
 	}
 
@@ -140,33 +73,14 @@ public interface Parser {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	default Parser peek(@NotNull Consumer<Tree> consumer) {
+	default Parser then(@NotNull BiConsumer<Compilation, Tree> consumer) {
 		Objects.requireNonNull(consumer, "consumer");
 		return (compilation, tree) -> {
 			Set<Tree> trees = this.parse(compilation, tree);
-			trees.forEach(consumer);
+			for (Tree child : trees)
+				consumer.accept(compilation, child);
 			return trees;
 		};
-	}
-
-	/**
-	 * Return a new parser that first parses using this parser then parse the results
-	 * one-by-one using the given {@code parser}.
-	 *
-	 * @param parser the parser to be used after this parser by the returned parser.
-	 * @return a parser that parses using this parser then the given {@code parser}.
-	 * @throws NullPointerException if the given {@code parser} is null.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser then(@NotNull Parser parser) {
-		return (compilation, tree) ->
-				this.parse(compilation, tree)
-					.parallelStream()
-					.map(t -> parser.parse(compilation, t))
-					.flatMap(Set::stream)
-					.collect(Collectors.toSet());
 	}
 
 	/**
