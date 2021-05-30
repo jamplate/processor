@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.util;
+package org.jamplate.impl.util;
 
+import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
-import org.jamplate.util.model.PseudoDocument;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

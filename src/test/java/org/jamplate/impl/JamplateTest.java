@@ -1,74 +1,22 @@
 package org.jamplate.impl;
 
+import org.jamplate.impl.model.CompilationImpl;
+import org.jamplate.impl.model.EnvironmentImpl;
+import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.processor.ParserProcessor;
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.*;
-import org.jamplate.util.Trees;
-import org.jamplate.util.model.CompilationImpl;
-import org.jamplate.util.model.EnvironmentImpl;
-import org.jamplate.util.model.PseudoDocument;
+import org.jamplate.model.function.Processor;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class ParsersTest {
-	@RepeatedTest(1)
-	public void axe() {
-		Document document = new PseudoDocument(
-				"#DEFINE SpecialInteger (\"10 + 5\") + [(5 + 10), \".01\"]\n" +
-				"import java.util.*; //#Define /*Blocky Block*/\n" +
-				"/*\n" +
-				"              #{SpecialInteger}#\n" +
-				"   */\n" +
-				"#{SpecialInteger + \"But\"}#Float\n" +
-				"//#ifdef string.h\n" +
-				"/*#include <string.h>*/\n" +
-				"//#endif\n"
-		);
-
-		Environment environment = new EnvironmentImpl();
-		Compilation compilation = environment.optCompilation(document);
-
-		while (Parsers.PROCESSOR.process(compilation))
-			;
-
-		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
-
-		assertEquals(
-				Kind.Transient.COMMAND,
-				hashDefine.getSketch().getKind(),
-				"expected #Define"
-		);
-
-		Tree type = hashDefine.getChild().getNext(); //DEFINE
-
-		Tree parameter = type.getNext(); //("10 + 5") + [(5 + 10), ".01"]
-
-		Tree round = parameter.getChild(); //("10 + 5")
-
-		assertEquals(
-				Kind.Syntax.ROUND,
-				round.getSketch().getKind(),
-				"(\"10 + 5\") is expected"
-		);
-
-		Tree tenPlusFive = round.getChild().getNext(); //"10 + 5"
-
-		assertEquals(
-				Kind.Syntax.DQUOTE,
-				tenPlusFive.getSketch().getKind(),
-				"\"10 + 5\" is expected"
-		);
-
-		Tree square = round.getNext(); //[(5 + 10), ".01"]
-
-		//todo the rest
-	}
-
+public class JamplateTest {
 	@Test
 	public void include() {
 		Document document = new PseudoDocument(
@@ -78,16 +26,13 @@ public class ParsersTest {
 		Environment environment = new EnvironmentImpl();
 		Compilation compilation = environment.optCompilation(document);
 
-		while (Parsers.PROCESSOR.process(compilation))
-			;
-
-		int i = 0;
+		Jamplate.PARSER_PROCESSOR.process(compilation);
 
 		Tree root = compilation.getRootTree();
 		Tree command1 = root.getChild();
 
 		assertEquals(
-				Kind.Transient.COMMAND,
+				Kind.CX_CMD,
 				command1.getSketch().getKind(),
 				"Expected the command being parsed"
 		);
@@ -95,21 +40,21 @@ public class ParsersTest {
 		Tree command2 = command1.getNext().getNext();
 
 		assertEquals(
-				Kind.Transient.COMMAND,
+				Kind.CX_CMD,
 				command2.getSketch().getKind(),
 				"Expected the other command being parsed"
 		);
 
-		while (Processors.PROCESSOR.process(compilation))
+		while (Jamplate.ANALYZER_PROCESSOR.process(compilation))
 			;
 
 		assertEquals(
-				Kind.Command.INCLUDE,
+				Kind.CX_CMD_INCLUDE,
 				command1.getSketch().getKind(),
 				"Expected the command being recognized as an include command"
 		);
 		assertEquals(
-				Kind.Transient.COMMAND,
+				Kind.CX_CMD,
 				command2.getSketch().getKind(),
 				"Expected the other command not being recognized as any command"
 		);
@@ -118,7 +63,9 @@ public class ParsersTest {
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 	@Test
 	public void jManualInspection() throws IOException {
-		Environment environment = Jamplate.DEFAULT.process(
+		Environment environment = new EnvironmentImpl();
+		Jamplate.INITIALIZER.initialize(
+				environment,
 				new PseudoDocument("Main",
 						"#define Hello \"H3110\"\n" +
 						"#define Hello \"heLLo\"\n" +
@@ -192,14 +139,9 @@ public class ParsersTest {
 				"Hello"
 		);
 
-		Compilation compilation = environment.optCompilation(document);
+		Jamplate.INITIALIZER.initialize(environment, document);
 
-		while (Parsers.PROCESSOR.process(compilation))
-			;
-		while (Processors.PROCESSOR.process(compilation))
-			;
-		while (Compilers.PROCESSOR.process(compilation))
-			;
+		Compilation compilation = environment.getCompilation(document);
 
 		Instruction instruction = compilation.getInstruction();
 
@@ -207,6 +149,7 @@ public class ParsersTest {
 				   .setInstruction((environment1, memory) ->
 						   memory.print("Included")
 				   );
+
 		Memory memory = new Memory();
 		memory.getFrame().setInstruction(instruction);
 
@@ -240,7 +183,9 @@ public class ParsersTest {
 	public void manualParseIf() throws IOException {
 		Memory memory = null;
 		try {
-			Environment environment = Jamplate.DEFAULT.process(
+			Environment environment = new EnvironmentImpl();
+			Jamplate.INITIALIZER.initialize(
+					environment,
 					new PseudoDocument("Main",
 							/*01*/"BEFORE IF\n" +
 							/*02*/"#if \"1\"\r\n" +
@@ -337,7 +282,9 @@ public class ParsersTest {
 	public void manualParseRef() throws IOException {
 		Memory memory = null;
 		try {
-			Environment environment = Jamplate.DEFAULT.process(
+			Environment environment = new EnvironmentImpl();
+			Jamplate.INITIALIZER.initialize(
+					environment,
 					new PseudoDocument("Main",
 							/*01*/"BEFORE IF\n" +
 							/*02*/"#if \"1\"\r\n" +
@@ -439,88 +386,13 @@ public class ParsersTest {
 	}
 
 	@RepeatedTest(50)
-	public void parse() {
-		Environment environment = new EnvironmentImpl();
-		Document document = new PseudoDocument("{\"name\":\"\\\"Sula{i}man\\\"{](\\\"\", \"ag}e\":\"\\\\\"}");
-		Tree tree = new Tree(document);
-		Compilation compilation = new CompilationImpl(environment, tree);
-
-		Parsers.PROCESSOR.process(compilation);
-
-		Set<Tree> trees = Trees.collect(tree);
-
-		//01	curly					| {"name":"\"Sula{i}man\"{](\"", "ag}e":"\\"}
-		//02		curly-open			| {
-		//03		dquote				| "name"
-		//04			dquote-open		| "
-		//05			dquote-close	| "
-		//06		dquote				| "\"Sula{i}man\"{](\""
-		//07			dquote-open		| "
-		//08			escape			| \"
-		//09			curly			| {i}
-		//10				curly-open	| {
-		//11				curly-close	| }
-		//12			escape			| \"
-		//13			escape			| \"
-		//14			dquote-close	| "
-		//15		dquote				| "ag}e"
-		//16			dquote-open		| "
-		//17			dquote-close	| "
-		//18		dquote				| "\\"
-		//19			dquote-open		| "
-		//20			escape			| \\
-		//21			dquote-close	| "
-		//22		curly-close			| }
-		assertSame(
-				22,
-				trees.size(),
-				"Wrong number of the trees expected"
-		);
-	}
-
-	@RepeatedTest(2)
-	public void parseNested() {
-		String value = String.join("", Collections.nCopies(50, "{")) +
-					   String.join("", Collections.nCopies(50, "}[")) + "]";
-		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
-
-		Parsers.PROCESSOR.process(compilation);
-
-		assertEquals(
-				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
-				Trees.collect(compilation.getRootTree()).size(),
-				"Wrong number of trees"
-		);
-	}
-
-	@RepeatedTest(50)
-	public void parseRepeated() {
-		String value = String.join("", Collections.nCopies(50, "{][}"));
-		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
-
-		Parsers.PROCESSOR.process(compilation);
-
-		assertEquals(
-				1 + 50 + (50 << 1), //root + scopes + anchors
-				Trees.collect(compilation.getRootTree()).size(),
-				"Unexpected number of trees after parsing"
-		);
-
-		for (Tree tree : compilation.getRootTree())
-			assertEquals(
-					4,
-					tree.reference().length(),
-					"All the scopes are expected to have only 4 characters"
-			);
-	}
-
-	@RepeatedTest(50)
 	public void parseRepeatedIdentical() {
 		String value = String.join("", Collections.nCopies(50, "\"'\""));
 		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
 
 		//I am actually stunned to see that this works with RandomMergeParser!!!
-		Parsers.PROCESSOR.process(compilation);
+		Processor processor = new ParserProcessor(Jamplate.PARSER);
+		processor.process(compilation);
 
 		assertEquals(
 				1 + 50 + (50 << 1), //root + scopes + anchors
@@ -535,10 +407,141 @@ public class ParsersTest {
 					"All the scopes are expected to have only 4 characters"
 			);
 			assertSame(
-					Kind.Syntax.DQUOTE,
+					Kind.SX_DQT,
 					tree.getSketch().getKind(),
 					"Expected all to be double quotes"
 			);
 		}
 	}
 }
+//	@RepeatedTest(1)
+//	public void axe() {
+//		Document document = new PseudoDocument(
+//				"#DEFINE SpecialInteger (\"10 + 5\") + [(5 + 10), \".01\"]\n" +
+//				"import java.util.*; //#Define /*Blocky Block*/\n" +
+//				"/*\n" +
+//				"              #{SpecialInteger}#\n" +
+//				"   */\n" +
+//				"#{SpecialInteger + \"But\"}#Float\n" +
+//				"//#ifdef string.h\n" +
+//				"/*#include <string.h>*/\n" +
+//				"//#endif\n"
+//		);
+//
+//		Environment environment = new EnvironmentImpl();
+//		Compilation compilation = environment.optCompilation(document);
+//
+//		Processor processor = new ParserProcessor(Jamplate.PARSER);
+//		while (processor.process(compilation))
+//			;
+//
+//		Tree hashDefine = compilation.getRootTree().getChild(); //the first line
+//
+//		assertEquals(
+//				Kind.CX_CMD,
+//				hashDefine.getSketch().getKind(),
+//				"expected #Define"
+//		);
+//
+//		Tree type = hashDefine.getChild().getNext(); //DEFINE
+//
+//		Tree parameter = type.getNext(); //("10 + 5") + [(5 + 10), ".01"]
+//
+//		Tree round = parameter.getChild(); //("10 + 5")
+//
+//		assertEquals(
+//				Kind.SX_RND,
+//				round.getSketch().getKind(),
+//				"(\"10 + 5\") is expected"
+//		);
+//
+//		Tree tenPlusFive = round.getChild().getNext(); //"10 + 5"
+//
+//		assertEquals(
+//				Kind.SX_DQT,
+//				tenPlusFive.getSketch().getKind(),
+//				"\"10 + 5\" is expected"
+//		);
+//
+//		Tree square = round.getNext(); //[(5 + 10), ".01"]
+//
+//	}
+
+//
+//	@RepeatedTest(50)
+//	public void parse() {
+//		Environment environment = new EnvironmentImpl();
+//		Document document = new PseudoDocument("{\"name\":\"\\\"Sula{i}man\\\"{](\\\"\", \"ag}e\":\"\\\\\"}");
+//		Tree tree = new Tree(document);
+//		Compilation compilation = new CompilationImpl(environment, tree);
+//
+//		Jamplate.PARSER_PROCESSOR.process(compilation);
+//
+//		Set<Tree> trees = Trees.collect(tree);
+//
+//		//01	curly					| {"name":"\"Sula{i}man\"{](\"", "ag}e":"\\"}
+//		//02		curly-open			| {
+//		//03		dquote				| "name"
+//		//04			dquote-open		| "
+//		//05			dquote-close	| "
+//		//06		dquote				| "\"Sula{i}man\"{](\""
+//		//07			dquote-open		| "
+//		//08			escape			| \"
+//		//09			curly			| {i}
+//		//10				curly-open	| {
+//		//11				curly-close	| }
+//		//12			escape			| \"
+//		//13			escape			| \"
+//		//14			dquote-close	| "
+//		//15		dquote				| "ag}e"
+//		//16			dquote-open		| "
+//		//17			dquote-close	| "
+//		//18		dquote				| "\\"
+//		//19			dquote-open		| "
+//		//20			escape			| \\
+//		//21			dquote-close	| "
+//		//22		curly-close			| }
+//		assertSame(
+//				22,
+//				trees.size(),
+//				"Wrong number of the trees expected"
+//		);
+//	}
+//
+//	@RepeatedTest(2)
+//	public void parseNested() {
+//		String value = String.join("", Collections.nCopies(50, "{")) +
+//					   String.join("", Collections.nCopies(50, "}[")) + "]";
+//		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
+//
+//		Processor processor = new ParserProcessor(Jamplate.PARSER);
+//		processor.process(compilation);
+//
+//		assertEquals(
+//				1 + 50 + (50 << 1) + 3, //root + scopes + anchors + bait
+//				Trees.collect(compilation.getRootTree()).size(),
+//				"Wrong number of trees"
+//		);
+//	}
+//
+//	@RepeatedTest(50)
+//	public void parseRepeated() {
+//		String value = String.join("", Collections.nCopies(50, "{][}"));
+//		Compilation compilation = new CompilationImpl(new EnvironmentImpl(), new Tree(new PseudoDocument(value)));
+//
+//		Processor processor = new ParserProcessor(Jamplate.PARSER);
+//		processor.process(compilation);
+//
+//		assertEquals(
+//				1 + 50 + (50 << 1), //root + scopes + anchors
+//				Trees.collect(compilation.getRootTree()).size(),
+//				"Unexpected number of trees after parsing"
+//		);
+//
+//		for (Tree tree : compilation.getRootTree())
+//			assertEquals(
+//					4,
+//					tree.reference().length(),
+//					"All the scopes are expected to have only 4 characters"
+//			);
+//	}
