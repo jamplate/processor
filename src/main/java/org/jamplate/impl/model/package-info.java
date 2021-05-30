@@ -14,8 +14,7 @@
  *	limitations under the License.
  */
 /**
- * A package containing default implementations of the package {@link
- * org.jamplate.model}.
+ * A package containing implementations of the package {@link org.jamplate.model}.
  *
  * @author LSafer
  * @version 0.2.0

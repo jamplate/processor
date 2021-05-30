@@ -48,7 +48,7 @@ public final class Memories {
 	 * @param memory the memory to join-pop its values
 	 * @return a value from joining all the values in the current frame of the given
 	 *        {@code memory} after popped them.
-	 * @throws NullPointerException if the given {@code memroy} is null.
+	 * @throws NullPointerException if the given {@code memory} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	public static Value joinPop(@NotNull Memory memory) {

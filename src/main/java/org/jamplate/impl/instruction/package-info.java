@@ -14,7 +14,8 @@
  *	limitations under the License.
  */
 /**
- * A set of instructions.
+ * A package containing implementations of the interface {@link
+ * org.jamplate.model.Instruction}.
  * <br><br>
  * Doc Methods:
  * <ul>
@@ -97,6 +98,18 @@
  *             Dump frame after each execution
  *         <p>
  *             IPED stands for Iterate-Push-Execute-Dump
+ *     </li>
+ *     <li>
+ *         {@code FPED( X : ADDR , Y : Text | Value , Z : Instruction[] ) }
+ *         <p>
+ *             Executes the instructions in Z foreach item in Y;
+ *             Push frame on each iteration;
+ *             Allocate the item of the iteration to X before each iteration;
+ *             Push frame before each execution;
+ *             Dump frame after each execution;
+ *             Pop frame after each iteration
+ *         <p>
+ *             FPED stands for Foreach-Push-Execute-Dump
  *     </li>
  * </ul>
  * <br><br>

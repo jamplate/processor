@@ -14,11 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package containing implementations of the interface {@link
- * org.jamplate.model.function.Parser}.
+ * Common utilities.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.25
+ * @since 0.2.0 ~2021.05.29
  */
-package org.jamplate.impl.parser;
+package org.jamplate.impl.util;

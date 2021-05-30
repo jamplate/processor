@@ -14,10 +14,11 @@
  *	limitations under the License.
  */
 /**
- * A package containing optional utilities to deal with the jamplate module.
+ * A package containing implementations of the interface {@link
+ * org.jamplate.model.function.Processor}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.16
+ * @since 0.2.0 ~2021.05.29
  */
-package org.jamplate.util;
+package org.jamplate.impl.processor;

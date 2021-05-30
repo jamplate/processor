@@ -14,11 +14,11 @@
  *	limitations under the License.
  */
 /**
- * A package containing default implementations of the package {@link
- * org.jamplate.model.function}.
+ * A package containing implementations of the interface {@link
+ * org.jamplate.model.function.Initializer}.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.16
+ * @since 0.2.0 ~2021.05.29
  */
-package org.jamplate.util.model.function;
+package org.jamplate.impl.initializer;
