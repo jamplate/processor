@@ -15,20 +15,18 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.model.Compilation;
-import org.jamplate.model.Document;
-import org.jamplate.model.Environment;
-import org.jamplate.model.function.Processor;
-import org.jamplate.util.model.EnvironmentImpl;
-import org.jetbrains.annotations.Contract;
+import org.jamplate.impl.analyzer.RecursiveAnalyzer;
+import org.jamplate.impl.analyzer.SequentialAnalyzer;
+import org.jamplate.impl.compiler.*;
+import org.jamplate.impl.initializer.ProcessorsInitializer;
+import org.jamplate.impl.parser.*;
+import org.jamplate.impl.processor.AnalyzerProcessor;
+import org.jamplate.impl.processor.CompilerProcessor;
+import org.jamplate.impl.processor.ParserProcessor;
+import org.jamplate.impl.processor.SequentialProcessor;
+import org.jamplate.model.function.Compiler;
+import org.jamplate.model.function.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * An all-in-one jamplate processor.
@@ -37,87 +35,204 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public class Jamplate {
+@SuppressWarnings("OverlyCoupledClass")
+public final class Jamplate {
 	/**
-	 * The default jamplate implementation.
+	 * The default jamplate analyzer.
 	 *
-	 * @since 0.2.0 ~2021.05.23
+	 * @since 0.2.0 ~2021.05.29
 	 */
 	@NotNull
-	public static final Jamplate DEFAULT =
-			new Jamplate(
-					Parsers.PROCESSOR,
-					Processors.PROCESSOR,
-					Compilers.PROCESSOR
+	public static final Analyzer ANALYZER =
+			new SequentialAnalyzer(
+					/* Suppressed EOL First, before `CX_CMD`s get convert */
+					new RecursiveAnalyzer(Analyzers.SX_EOL_SUPPRESSED),
+					/* Commands */
+					new RecursiveAnalyzer(new SequentialAnalyzer(
+							/* Console command */
+							Analyzers.CX_CMD_CONSOLE,
+							/* Declare command */
+							Analyzers.CX_CMD_DECLARE,
+							/* Define command */
+							Analyzers.CX_CMD_DEFINE,
+							/* Elif command */
+							Analyzers.CX_CMD_ELIF,
+							/* Elifdef command */
+							Analyzers.CX_CMD_ELIFDEF,
+							/* Elifndef command */
+							Analyzers.CX_CMD_ELIFNDEF,
+							/* Else command */
+							Analyzers.CX_CMD_ELSE,
+							/* Endif command */
+							Analyzers.CX_CMD_ENDIF,
+							/* If command */
+							Analyzers.CX_CMD_IF,
+							/* Ifdef command */
+							Analyzers.CX_CMD_IFDEF,
+							/* Ifndef command */
+							Analyzers.CX_CMD_IFNDEF,
+							/* Include command */
+							Analyzers.CX_CMD_INCLUDE
+					))
 			);
 
 	/**
-	 * The processors used by this jamplate implementation.
+	 * A processor for the jamplate analyzer.
 	 *
-	 * @since 0.2.0 ~2021.05.23
+	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	protected final List<Processor> processors;
+	public static final Processor ANALYZER_PROCESSOR =
+			new AnalyzerProcessor(Jamplate.ANALYZER);
 
 	/**
-	 * Construct a new jamplate implementation that uses the given {@code processors}.
-	 * <br>
-	 * Null processors in the array will be ignored.
+	 * The default jamplate compiler.
 	 *
-	 * @param processors the processors used by the constructed jamplate implementation.
-	 *                   (in order)
-	 * @throws NullPointerException if the given {@code processors} is null.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	public Jamplate(@Nullable Processor @NotNull ... processors) {
-		Objects.requireNonNull(processors, "processors");
-		this.processors = Arrays
-				.stream(processors)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
-	}
-
-	/**
-	 * Construct a new jamplate implementation that uses the given {@code processors}.
-	 * <br>
-	 * Null processors in the list will be ignored.
-	 *
-	 * @param processors the processors used by the constructed jamplate implementation.
-	 *                   (in order)
-	 * @throws NullPointerException if the given {@code processors} is null.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	public Jamplate(@Nullable List<Processor> processors) {
-		Objects.requireNonNull(processors, "processors");
-		this.processors = new ArrayList<>();
-		for (Processor processor : processors)
-			if (processor != null)
-				this.processors.add(processor);
-	}
-
-	/**
-	 * Completely process the given {@code documents} in a new environment using the
-	 * processors of this Jamplate implementation.
-	 *
-	 * @param documents the documents to be processed.
-	 * @return the environment from processing the given {@code documents}.
-	 * @throws NullPointerException if the given {@code documents} is null.
-	 * @since 0.2.0 ~2021.05.23
+	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	@Contract(value = "_->new", pure = true)
-	public Environment process(@Nullable Document @NotNull ... documents) {
-		Objects.requireNonNull(documents, "documents");
-		Environment environment = new EnvironmentImpl();
+	public static final Compiler COMPILER =
+			new OrderCompiler(
+					/* Seek suppressed EOL, to suppress CX_TXT */
+					Compilers.SX_EOL_SUPPRESSED,
+					/* Console commands */
+					Compilers.CX_CMD_CONSOLE,
+					/* Include commands */
+					Compilers.CX_CMD_INCLUDE,
+					/* Declare commands */
+					Compilers.CX_CMD_DECLARE,
+					/* Define commands */
+					Compilers.CX_CMD_DEFINE,
+					/* If flow */
+					Compilers.CX_FLW_IF,
+					/* Injections */
+					Compilers.CX_INJ,
+					/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
+					new KindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
+							/* Cleanup ws and throw if unrecognized */
+							new FlattenCompiler(new MandatoryCompiler(
+									/* Ignore whitespace */
+									new WhitespaceCompiler()
+							)),
+							/* Compile recognized logic */
+							new OrderCompiler(
+									/* String */
+									Compilers.VL_STR,
+									/* Reference */
+									Compilers.VL_REF,
+									/* Number */
+									Compilers.VL_NUM
+							)
+					)),
+					/* Fallthrough, convert into REPRNT */
+					Compilers.CX_TXT
+			);
 
-		for (Document document : documents)
-			environment.optCompilation(document);
+	/**
+	 * A processor for the jamplate compiler.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Processor COMPILER_PROCESSOR =
+			new CompilerProcessor(Jamplate.COMPILER);
 
-		for (Processor processor : this.processors)
-			for (Compilation compilation : environment.compilationSet())
-				while (processor.process(compilation))
-					;
+	/**
+	 * An all-in-one parser used by the jamplate default implementation.
+	 *
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@NotNull
+	public static final Parser PARSER =
+			new CollectParser(new OrderParser(
+					/* Separate the file by lines. */
+					Parsers.SX_EOL,
+					/* Always ignore commented end-of-lines */
+					Parsers.CM_SLN,
+					/* Wild Block Battles (first occurs win) */
+					new MergeParser(new CombineParser(
+							/* Comment blocks */
+							Parsers.CM_BLK,
+							/* Strings, encapsulated to parse inner components */
+							new CombineParser(
+									/* Double quote strings */
+									Parsers.SX_QTE,
+									/* Single quote strings */
+									Parsers.SX_DQT
+							).then(
+									/* Register escaped sequences */
+									Parsers.VL_STR_ESCAPE
+							)
+					)),
+					/* Runtime elements, encapsulated to parse inner components */
+					new FlatOrderParser(
+							/* Injections, injection must win over commands */
+							Parsers.CX_INJ,
+							/* Commands */
+							Parsers.CX_CMD
+					).then(new RecursiveParser(new MergeParser(new CombineParser(
+							/* References */
+							Parsers.VL_REF,
+							/* Numbers */
+							Parsers.VL_NUM,
+							/* Braces */
+							Parsers.SX_CUR,
+							/* Brackets */
+							Parsers.SX_SQR,
+							/* Parentheses */
+							Parsers.SX_RND
+					))))
+			));
 
-		return environment;
+	/**
+	 * A processor wrapper for the jamplate parser.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Processor PARSER_PROCESSOR =
+			new ParserProcessor(Jamplate.PARSER);
+
+	/**
+	 * A processor that analyzes the default jamplate components searching for known
+	 * jamplate specs.
+	 *
+	 * @since 0.2.0 ~2021.05.20
+	 */
+	@NotNull
+	public static final Processor PROCESSOR =
+			new SequentialProcessor(
+					/* Detect if flows */
+					Processors.CX_FLW_IF,
+					/* Detect strings */
+					Processors.VL_STR
+			);
+
+	/**
+	 * The default jamplate initializer.
+	 *
+	 * @since 0.2.0 ~2021.05.29
+	 */
+	@NotNull
+	public static final Initializer INITIALIZER =
+			new ProcessorsInitializer(
+					/* Parse stage, parse everything */
+					Jamplate.PARSER_PROCESSOR,
+					/* Analyze stage, convert wildcards into specifics */
+					Jamplate.ANALYZER_PROCESSOR,
+					/* Process/link contexts and flows */
+					Jamplate.PROCESSOR,
+					/* Compile into one instruction */
+					Jamplate.COMPILER_PROCESSOR
+			);
+
+	/**
+	 * Utility classes must not be initialized.
+	 *
+	 * @throws AssertionError when called.
+	 * @since 0.2.0 ~2021.05.29
+	 */
+	private Jamplate() {
+		throw new AssertionError("No instance for you");
 	}
 }

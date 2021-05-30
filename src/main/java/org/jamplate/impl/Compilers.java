@@ -15,16 +15,13 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.compiler.StrictCompiler;
+import org.jamplate.impl.compiler.FlattenCompiler;
+import org.jamplate.impl.compiler.KindCompiler;
 import org.jamplate.impl.instruction.*;
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.model.function.Processor;
-import org.jamplate.util.Trees;
-import org.jamplate.util.model.function.CompilerProcessor;
-import org.jamplate.util.model.function.OrderCompiler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -35,35 +32,299 @@ import java.util.*;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
+@SuppressWarnings("OverlyCoupledClass")
 public final class Compilers {
+	//CX CMD
+
 	/**
-	 * The default jamplate compiler.
+	 * A compiler that compiles console commands.
 	 *
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	public static final Compiler COMPILER =
-			new OrderCompiler(
-					Syntax.LN_SUPPRESSED,
-					Commands.CONSOLE,
-					Commands.INCLUDE,
-					Commands.DECLARE,
-					Commands.DEFINE,
-					Commands.IF_CONTEXT,
-					Transient.INJECTION,
-					Values.COMPILER,
-					Syntax.TEXT
-			);
+	public static final Compiler CX_CMD_CONSOLE =
+			new KindCompiler(Kind.CX_CMD_CONSOLE, (compiler, compilation, tree) -> {
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+				return new ConsoleExecInstr(
+						tree,
+						instruction == null ?
+						Instruction.empty(paramT) :
+						instruction
+				);
+			});
 
 	/**
-	 * A processor that compiles the compilations given to it using {@link #COMPILER the
-	 * jamplate default implementation compiler}.
+	 * A compiler that compiles declare commands.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	public static final Processor PROCESSOR =
-			new CompilerProcessor(Compilers.COMPILER);
+	public static final Compiler CX_CMD_DECLARE =
+			new KindCompiler(Kind.CX_CMD_DECLARE, (compiler, compilation, tree) -> {
+				Tree keyT = tree.getSketch().get(Component.PARAMETER).get(Component.KEY).getTree();
+				Tree valueT = tree.getSketch().get(Component.PARAMETER).get(Component.VALUE).getTree();
+
+				String address = Trees.read(keyT).toString();
+				Instruction instruction = compiler.compile(compiler, compilation, valueT);
+
+				return new AllocAddrExecInstr(
+						tree,
+						address,
+						instruction == null ?
+						Instruction.empty(valueT) :
+						instruction
+				);
+			});
+
+	/**
+	 * A compiler that compiles define commands.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_DEFINE =
+			new KindCompiler(Kind.CX_CMD_DEFINE, (compiler, compilation, tree) -> {
+				Tree keyT = tree.getSketch().get(Component.PARAMETER).get(Component.KEY).getTree();
+				Tree valueT = tree.getSketch().get(Component.PARAMETER).get(Component.VALUE).getTree();
+
+				String address = Trees.read(keyT).toString();
+				Instruction instruction = compiler.compile(compiler, compilation, valueT);
+
+				return new RepllocAddrExecInstr(
+						tree,
+						address,
+						instruction == null ?
+						Instruction.empty(valueT) :
+						instruction
+				);
+			});
+
+	/**
+	 * A compiler that compiles include commands.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_INCLUDE =
+			new KindCompiler(Kind.CX_CMD_INCLUDE, (compiler, compilation, tree) -> {
+				Tree parameterT = tree.getSketch().get(Component.PARAMETER).getTree();
+
+				Instruction instruction = compiler.compile(compiler, compilation, parameterT);
+
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized parameter",
+							parameterT
+					);
+
+				return new ExecImportExecInstr(tree, instruction);
+			});
+
+	//CX FLW
+
+	/**
+	 * A compiler that compiles if-contexts. (including the if, elif-s, else and endif in
+	 * it)
+	 *
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Compiler CX_FLW_IF =
+			new KindCompiler(Kind.CX_FLW_IF, (compiler, compilation, tree) -> {
+				Map<Instruction, List<Instruction>> instructions = new LinkedHashMap<>();
+				List<Instruction> current = null;
+
+				//assert IF/IFDEF/IFNDEF is the first and ENDIF is the last
+				for (Tree t : Trees.flatChildren(tree))
+					switch (t.getSketch().getKind()) {
+						case Kind.CX_CMD_IF:
+						case Kind.CX_CMD_ELIF: {
+							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
+							Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+							instructions.put(instruction, current = new ArrayList<>());
+							break;
+						}
+						case Kind.CX_CMD_IFDEF:
+						case Kind.CX_CMD_ELIFDEF: {
+							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
+							String address = Trees.read(paramT).toString().trim();
+
+							//noinspection DynamicRegexReplaceableByCompiledPattern
+							if (!address.matches("\\S+"))
+								throw new CompileException(
+										"IllegalAddress",
+										paramT
+								);
+
+							instructions.put(new DefAddr(paramT, address), current = new ArrayList<>());
+							break;
+						}
+						case Kind.CX_CMD_IFNDEF:
+						case Kind.CX_CMD_ELIFNDEF: {
+							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
+							String address = Trees.read(paramT).toString().trim();
+
+							//noinspection DynamicRegexReplaceableByCompiledPattern
+							if (!address.matches("\\S+"))
+								throw new CompileException(
+										"IllegalAddress",
+										paramT
+								);
+
+							instructions.put(new NdefAddr(paramT, address), current = new ArrayList<>());
+							break;
+						}
+						case Kind.CX_CMD_ELSE: {
+							instructions.put(null, current = new ArrayList<>());
+							break;
+						}
+						case Kind.CX_CMD_ENDIF: {
+							//done
+							current = null;
+							break;
+						}
+						default: {
+							//intermediate instruction
+							Instruction instruction = compiler.compile(compiler, compilation, t);
+
+							current.add(instruction);
+							break;
+						}
+					}
+
+				List<Instruction> conditions = new ArrayList<>(instructions.keySet());
+				Collections.reverse(conditions);
+
+				Instruction instruction = null;
+				for (Instruction condition : conditions)
+					if (condition == null)
+						instruction = new IpedXinstr(
+								tree,
+								instructions.get(null)
+						);
+					else if (instruction == null)
+						instruction = new BranchExecInstr0Instr1Instr2(
+								tree,
+								condition,
+								new IpedXinstr(instructions.get(condition))
+						);
+					else
+						instruction = new BranchExecInstr0Instr1Instr2(
+								tree,
+								condition,
+								new IpedXinstr(instructions.get(condition)),
+								instruction
+						);
+
+				return instruction;
+			});
+
+	//CX INJ
+
+	/**
+	 * A compiler that compiles injections.
+	 *
+	 * @since 0.2.0 ~2021.05.25
+	 */
+	@NotNull
+	public static final Compiler CX_INJ =
+			new KindCompiler(Kind.CX_INJ, (compiler, compilation, tree) -> {
+				Tree parameterT = tree.getSketch().get(Component.PARAMETER).getTree();
+
+				Instruction instruction = compiler.compile(compiler, compilation, parameterT);
+
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized value",
+							parameterT
+					);
+
+				return new PrintExecInstr(
+						tree,
+						instruction
+				);
+			});
+
+	//CX TXT
+
+	/**
+	 * A compiler that compiles the non-command text.
+	 *
+	 * @since 0.2.0 ~2021.05.21
+	 */
+	@NotNull
+	public static final Compiler CX_TXT =
+			new FlattenCompiler((compiler, compilation, tree) ->
+					new ReprntConst(tree)
+			);
+
+	//SX
+
+	/**
+	 * A compiler that compiles suppressed line separators.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final Compiler SX_EOL_SUPPRESSED =
+			new KindCompiler(Kind.SX_EOL_SUPPRESSED, (compiler, compilation, tree) ->
+					Instruction.empty(tree)
+			);
+
+	//VL
+
+	/**
+	 * A compiler that compiles numbers.
+	 *
+	 * @since 0.2.0 ~2021.05.25
+	 */
+	@NotNull
+	public static final Compiler VL_NUM =
+			new KindCompiler(Kind.VL_NUM, (compiler, compilation, tree) -> {
+				String constant = Trees.read(tree).toString();
+
+				return new PushConst(constant);
+			});
+
+	/**
+	 * A compiler that compiles reference instructions.
+	 *
+	 * @since 0.2.0 ~2021.05.24
+	 */
+	@NotNull
+	public static final Compiler VL_REF =
+			new KindCompiler(Kind.VL_REF, (compiler, compilation, tree) -> {
+				String address = Trees.read(tree).toString();
+
+				return new PushEvalAddr(tree, address);
+			});
+
+	/**
+	 * A compiler that compiles strings.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final Compiler VL_STR =
+			new KindCompiler(Kind.VL_STR, (compiler, compilation, tree) -> {
+				Sketch sketch = tree.getSketch();
+				Tree open = sketch.get(Component.OPEN).getTree();
+				Tree close = sketch.get(Component.CLOSE).getTree();
+
+				int p = open.reference().position() +
+						open.reference().length();
+				int l = close.reference().position() - p;
+
+				Tree content = new Tree(tree.document(), new Reference(p, l));
+
+				content.getSketch().setKind(Kind.VL_STR_CONTENT);
+
+				return new PushConst(content);
+			});
 
 	/**
 	 * Utility classes must not be initialized.
@@ -73,453 +334,5 @@ public final class Compilers {
 	 */
 	private Compilers() {
 		throw new AssertionError("No instance for you");
-	}
-
-	/**
-	 * Command compilers.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	public static final class Commands {
-		/**
-		 * A compiler that compiles console commands.
-		 *
-		 * @since 0.2.0 ~2021.05.21
-		 */
-		@NotNull
-		public static final Compiler CONSOLE =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Command.CONSOLE)) {
-						Sketch command = tree.getSketch();
-						Sketch parameter = command.get(Component.PARAMETER);
-						Tree parameterTree = parameter.getTree();
-
-						Instruction paramInstruction = compiler.compile(compiler, compilation, parameterTree);
-
-						return new ConsoleExecInstr(
-								tree,
-								paramInstruction == null ?
-								Instruction.create(parameterTree, (e, m) -> {
-								}) :
-								paramInstruction
-						);
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles declare commands.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@SuppressWarnings("OverlyLongLambda")
-		@NotNull
-		public static final Compiler DECLARE =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Command.DECLARE)) {
-						Sketch command = tree.getSketch();
-						Sketch parameter = command.get(Component.PARAMETER);
-						Sketch key = parameter.get(Component.KEY);
-						Sketch value = parameter.get(Component.VALUE);
-						Tree keyParameterTree = key.getTree();
-						Tree valueParameterTree = value.getTree();
-
-						String keyParameter = Trees.read(keyParameterTree).toString();
-						Instruction parameterInstruction = compiler.compile(compiler, compilation, valueParameterTree);
-
-						return new AllocAddrExecInstr(
-								tree,
-								keyParameter,
-								parameterInstruction == null ?
-								Instruction.create(valueParameterTree, (k, m) -> {
-								}) :
-								parameterInstruction
-						);
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles define commands.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@SuppressWarnings("OverlyLongLambda")
-		@NotNull
-		public static final Compiler DEFINE =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Command.DEFINE)) {
-						Sketch command = tree.getSketch();
-						Sketch parameter = command.get(Component.PARAMETER);
-						Sketch key = parameter.get(Component.KEY);
-						Sketch value = parameter.get(Component.VALUE);
-						Tree keyParameterTree = key.getTree();
-						Tree valueParameterTree = value.getTree();
-
-						String keyParameter = Trees.read(keyParameterTree).toString();
-						Instruction parameterInstruction = compiler.compile(compiler, compilation, valueParameterTree);
-
-						return new RepllocAddrExecInstr(
-								tree,
-								keyParameter,
-								parameterInstruction == null ?
-								Instruction.create(valueParameterTree, (k, m) -> {
-								}) :
-								parameterInstruction
-						);
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles if-contexts. (including the if, elif-s, else and endif
-		 * in it)
-		 *
-		 * @since 0.2.0 ~2021.05.24
-		 */
-		@SuppressWarnings("OverlyLongLambda")
-		@NotNull
-		public static final Compiler IF_CONTEXT =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Command.IF_CONTEXT)) {
-						Map<Instruction, List<Instruction>> instructions = new LinkedHashMap<>();
-						List<Instruction> current = null;
-
-						//assert IF is the first and ENDIF is the last
-						for (Tree t : Trees.flatChildren(tree))
-							switch (t.getSketch().getKind()) {
-								case Kind.Command.IF:
-								case Kind.Command.ELIF:
-									Sketch command = t.getSketch();
-									Tree parameterTree = command.get(Component.PARAMETER).getTree();
-
-									Instruction condition = compiler.compile(compiler, compilation, parameterTree);
-
-									instructions.put(condition, current = new ArrayList<>());
-									break;
-								case Kind.Command.ELSE:
-									instructions.put(null, current = new ArrayList<>());
-									break;
-								case Kind.Command.ENDIF:
-									//done
-									current = null;
-									break;
-								default:
-									//intermediate instruction
-									Instruction instruction = compiler.compile(compiler, compilation, t);
-
-									current.add(instruction);
-									break;
-							}
-
-						List<Instruction> conditions = new ArrayList<>(instructions.keySet());
-						Collections.reverse(conditions);
-
-						Instruction instruction = null;
-						for (Instruction condition : conditions)
-							if (condition == null)
-								instruction = new IpedXinstr(
-										tree,
-										instructions.get(null)
-								);
-							else if (instruction == null)
-								instruction = new BranchExecInstr0Instr1Instr2(
-										tree,
-										condition,
-										new IpedXinstr(instructions.get(condition))
-								);
-							else
-								instruction = new BranchExecInstr0Instr1Instr2(
-										tree,
-										condition,
-										new IpedXinstr(instructions.get(condition)),
-										instruction
-								);
-
-						return instruction;
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles include commands.
-		 *
-		 * @since 0.2.0 ~2021.05.21
-		 */
-		@SuppressWarnings("OverlyLongLambda")
-		@NotNull
-		public static final Compiler INCLUDE =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Command.INCLUDE)) {
-						Sketch command = tree.getSketch();
-						Sketch parameter = command.get(Component.PARAMETER);
-						Tree parameterTree = parameter.getTree();
-
-						Instruction paramInstruction = compiler.compile(compiler, compilation, parameterTree);
-
-						if (paramInstruction == null)
-							throw new CompileException(
-									"Unrecognized parameter",
-									parameterTree
-							);
-
-						return new ExecImportExecInstr(tree, paramInstruction);
-					}
-
-					return null;
-				};
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.21
-		 */
-		private Commands() {
-			throw new AssertionError("No instance for you");
-		}
-	}
-
-	/**
-	 * Syntax-level compiles.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	public static final class Syntax {
-		/**
-		 * A compiler that compiles suppressed line separators.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final Compiler LN_SUPPRESSED =
-				(compiler, compilation, tree) ->
-						tree.getSketch().getKind().equals(Kind.Syntax.LN_SUPPRESSED) ?
-						Instruction.create(tree, (environment, memory) -> {
-						}) :
-						null;
-
-		/**
-		 * A compiler that compiles the non-command text.
-		 *
-		 * @since 0.2.0 ~2021.05.21
-		 */
-		public static final Compiler TEXT =
-				new StrictCompiler((compiler, compilation, tree) ->
-						new ReprntConst(tree)
-				);
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		private Syntax() {
-			throw new AssertionError("No instance for you");
-		}
-	}
-
-	/**
-	 * A class containing the compilers of the transient components.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.25
-	 */
-	public static final class Transient {
-		/**
-		 * A compiler that compiles injections.
-		 *
-		 * @since 0.2.0 ~2021.05.25
-		 */
-		@NotNull
-		public static final Compiler INJECTION =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.INJECTION)) {
-						Sketch injection = tree.getSketch();
-						Tree parameterTree = injection.get(Component.PARAMETER).getTree();
-
-						Instruction parameterInstruction = compiler.compile(compiler, compilation, parameterTree);
-
-						if (parameterInstruction == null)
-							throw new CompileException(
-									"Unrecognized value",
-									parameterTree
-							);
-
-						return new PrintExecInstr(
-								tree,
-								parameterInstruction
-						);
-					}
-
-					return null;
-				};
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.25
-		 */
-		private Transient() {
-			throw new AssertionError("No instance for you");
-		}
-	}
-
-	/**
-	 * Values compilers.
-	 *
-	 * @author LSafer
-	 * @version 0.2.0
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	public static final class Values {
-		/**
-		 * A compiler that compiles numbers.
-		 *
-		 * @since 0.2.0 ~2021.05.25
-		 */
-		@NotNull
-		public static final Compiler NUMBER =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Value.NUMBER)) {
-						String value = Trees.read(tree).toString();
-
-						return new PushConst(value);
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles reference instructions.
-		 *
-		 * @since 0.2.0 ~2021.05.24
-		 */
-		@NotNull
-		public static final Compiler REFERENCE =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Value.REFERENCE)) {
-						String name = Trees.read(tree).toString();
-
-						return new PushEvalAddr(tree, name);
-					}
-
-					return null;
-				};
-
-		/**
-		 * A compiler that compiles strings.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@SuppressWarnings("OverlyLongLambda")
-		@NotNull
-		public static final Compiler STRING =
-				(compiler, compilation, tree) -> {
-					if (tree.getSketch().getKind().equals(Kind.Value.STRING)) {
-						Sketch scope = tree.getSketch();
-						Tree open = scope.get(Component.OPEN).getTree();
-						Tree close = scope.get(Component.CLOSE).getTree();
-
-						int p = open.reference().position() +
-								open.reference().length();
-						int l = close.reference().position() - p;
-
-						Tree content = new Tree(tree.document(), new Reference(p, l));
-
-						content.getSketch().setKind(Kind.Value.STRING_CONTENT);
-
-						return new PushConst(content);
-					}
-
-					return null;
-				};
-
-		/**
-		 * The main values compiler.
-		 *
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		@NotNull
-		public static final Compiler COMPILER =
-				new Compiler() {
-					/**
-					 * The compiler used to compile the context. Invoked with {@link #value} as the fallback compiler.
-					 *
-					 * @since 0.2.0 ~2021.05.23
-					 */
-					private final Compiler context =
-							new StrictCompiler((compiler, compilation, tree) -> {
-								if (Trees.read(tree).toString().trim().isEmpty())
-									return Instruction.create(tree, (e, m) -> {
-									});
-
-								throw new CompileException(
-										"Unrecognized value",
-										tree
-								);
-							});
-
-					/**
-					 * The compiler used to compile the value. Invoked with {@link #fallback} as the fallback compiler.
-					 *
-					 * @since 0.2.0 ~2021.05.23
-					 */
-					@NotNull
-					private final Compiler value =
-							new OrderCompiler(
-									Values.STRING,
-									Values.REFERENCE,
-									Values.NUMBER
-							);
-
-					/**
-					 * The fallback compiler.
-					 *
-					 * @since 0.2.0 ~2021.05.23
-					 */
-					@NotNull
-					private final Compiler fallback =
-							(compiler, compilation, tree) ->
-									this.context.compile(
-											(c, cmp, t) -> this.value.compile(this, cmp, t),
-											compilation,
-											tree
-									);
-
-					@Nullable
-					@Override
-					public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
-						switch (tree.getSketch().getKind()) {
-							case Kind.COMMAND_PARAMETER:
-							case Kind.COMMAND_PARAMETER_VALUE:
-							case Kind.INJECTION_PARAMETER:
-								return this.fallback.compile(compiler, compilation, tree);
-							default:
-								return null;
-						}
-					}
-				};
-
-		/**
-		 * Utility classes must not be initialized.
-		 *
-		 * @throws AssertionError when called.
-		 * @since 0.2.0 ~2021.05.23
-		 */
-		private Values() {
-			throw new AssertionError("No instance for you");
-		}
 	}
 }
