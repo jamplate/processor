@@ -54,7 +54,12 @@
  *     <li>
  *         {@code DEF( X : Address ) : Text}
  *         <p>
- *             return the {@code true} if the address is defined, {@code false} otherwise.
+ *             return {@code true} if the address is defined, {@code false} otherwise.
+ *     </li>
+ *     <li>
+ *         {@code NDEF( X : Address ) : Text}
+ *         <p>
+ *             return {@code false} if the address is defined, {@code true} otherwise.
  *     </li>
  *     <li>
  *         {@code EVAL( X : Address ) : Value}
@@ -100,7 +105,7 @@
  *             IPED stands for Iterate-Push-Execute-Dump
  *     </li>
  *     <li>
- *         {@code FPED( X : ADDR , Y : Text | Value , Z : Instruction[] ) }
+ *         {@code FPED( X : ADDR , Y : Text | Value , Z : Instruction[] ) : Void }
  *         <p>
  *             Executes the instructions in Z foreach item in Y;
  *             Push frame on each iteration;
