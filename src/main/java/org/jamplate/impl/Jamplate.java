@@ -18,15 +18,24 @@ package org.jamplate.impl;
 import org.jamplate.impl.analyzer.RecursiveAnalyzer;
 import org.jamplate.impl.analyzer.SequentialAnalyzer;
 import org.jamplate.impl.compiler.*;
+import org.jamplate.impl.diagnostic.MessageImpl;
+import org.jamplate.impl.diagnostic.MessageKind;
+import org.jamplate.impl.diagnostic.MessagePriority;
 import org.jamplate.impl.initializer.ProcessorsInitializer;
 import org.jamplate.impl.parser.*;
 import org.jamplate.impl.processor.AnalyzerProcessor;
 import org.jamplate.impl.processor.CompilerProcessor;
 import org.jamplate.impl.processor.ParserProcessor;
 import org.jamplate.impl.processor.SequentialProcessor;
+import org.jamplate.model.*;
 import org.jamplate.model.function.Compiler;
 import org.jamplate.model.function.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * An all-in-one jamplate processor.
@@ -271,5 +280,136 @@ public final class Jamplate {
 	 */
 	private Jamplate() {
 		throw new AssertionError("No instance for you");
+	}
+
+	/**
+	 * Compile the given {@code documents} to the given {@code environment}.
+	 * <br>
+	 * Null documents in the given array are ignored.
+	 *
+	 * @param environment the environment to compile to.
+	 * @param documents   the documents to be compiled.
+	 * @return true, if all of the given {@code documents} was successfully compiled.
+	 * @throws NullPointerException if the given {@code environment} or {@code documents}
+	 *                              is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "param1,param2")
+	public static boolean compile(@NotNull Environment environment, @Nullable Document @NotNull ... documents) {
+		Objects.requireNonNull(documents, "documents");
+		boolean success = true;
+
+		for (Document document : documents)
+			if (document != null)
+				try {
+					Jamplate.INITIALIZER.initialize(
+							environment,
+							document
+					);
+				} catch (IllegalTreeException e) {
+					environment.getDiagnostic()
+							   .print(new MessageImpl(
+									   e,
+									   MessagePriority.ERROR,
+									   MessageKind.COMPILE,
+									   true,
+									   e.getPrimaryTree(),
+									   e.getIllegalTree()
+							   ));
+					success = false;
+				} catch (CompileException e) {
+					environment.getDiagnostic()
+							   .print(new MessageImpl(
+									   e,
+									   MessagePriority.ERROR,
+									   MessageKind.COMPILE,
+									   true,
+									   e.getTree()
+							   ));
+					success = false;
+				} catch (Throwable e) {
+					environment.getDiagnostic()
+							   .print(new MessageImpl(
+									   e,
+									   MessagePriority.ERROR,
+									   MessageKind.COMPILE,
+									   true
+							   ));
+					success = false;
+				}
+
+		return success;
+	}
+
+	/**
+	 * Execute the given {@code compilations} in order with respect to the given {@code
+	 * environment}.
+	 * <br>
+	 * Null compilations or non-compiled compilations in the given array are ignored.
+	 *
+	 * @param environment  the environment to execute on.
+	 * @param compilations the compilations to be executed (in order).
+	 * @return true, if all of the given {@code compilations} was successfully executed.
+	 * @throws NullPointerException if the given {@code environment} or {@code
+	 *                              compilations} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "param1,param2")
+	public static boolean execute(@NotNull Environment environment, @Nullable Compilation @NotNull ... compilations) {
+		Objects.requireNonNull(environment, "environment");
+		Objects.requireNonNull(compilations, "compilations");
+		boolean success = true;
+
+		for (Compilation compilation : compilations) {
+			Instruction instruction = compilation.getInstruction();
+
+			if (instruction != null) {
+				Memory memory = new Memory();
+
+				try {
+					memory.pushFrame(new Frame(instruction));
+
+					instruction.exec(environment, memory);
+
+					memory.dumpFrame();
+				} catch (ExecutionException e) {
+					environment.getDiagnostic()
+							   .print(new MessageImpl(
+									   e,
+									   memory,
+									   MessagePriority.ERROR,
+									   MessageKind.EXECUTION,
+									   true,
+									   e.getTree()
+							   ));
+					success = false;
+				} catch (Throwable e) {
+					environment.getDiagnostic()
+							   .print(new MessageImpl(
+									   e,
+									   memory,
+									   MessagePriority.ERROR,
+									   MessageKind.EXECUTION,
+									   true
+							   ));
+					success = false;
+				} finally {
+					try {
+						memory.close();
+					} catch (IOException e) {
+						environment.getDiagnostic()
+								   .print(new MessageImpl(
+										   e,
+										   memory,
+										   MessagePriority.WARNING,
+										   MessageKind.EXECUTION,
+										   false
+								   ));
+					}
+				}
+			}
+		}
+
+		return success;
 	}
 }
