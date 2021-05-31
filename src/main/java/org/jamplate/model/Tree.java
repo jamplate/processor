@@ -491,30 +491,20 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(mutates = "this,param")
 	public void offer(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		switch (Intersection.compute(this, tree)) {
-			case CONTAINER:
-			case AHEAD:
-			case BEHIND:
+		switch (Dominance.compute(this, tree)) {
+			case NONE:
+				this.offerIrrelative(tree);
+				return;
+			case CONTAIN:
 				this.offerParent(tree);
 				return;
-			case SAME:
+			case EXACT:
 				this.offerSame(tree);
 				return;
-			case FRAGMENT:
-			case START:
-			case END:
+			case PART:
 				this.offerChild(tree);
 				return;
-			case NEXT:
-			case AFTER:
-				this.offerNext(tree);
-				return;
-			case PREVIOUS:
-			case BEFORE:
-				this.offerPrevious(tree);
-				return;
-			case OVERFLOW:
-			case UNDERFLOW:
+			case SHARE:
 				throw new TreeClashException("Invalid tree", this, tree);
 			default:
 				throw new InternalError();
@@ -750,6 +740,56 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				throw new TreeOutOfBoundsException("Invalid child", this, tree);
 			case SHARE:
 				throw new TreeClashException("Invalid child", this, tree);
+			default:
+				throw new InternalError();
+		}
+	}
+
+	/**
+	 * Try to place the given {@code tree} somewhere not containing nor fitting in this
+	 * tree.
+	 *
+	 * @param tree the offered tree.
+	 * @throws NullPointerException  if the given {@code tree} is null.
+	 * @throws IllegalTreeException  if the given {@code tree} is does relate to this
+	 *                               tree.
+	 * @throws TreeTakeoverException if the given {@code tree} has the same range as a
+	 *                               tree in the structure of this tree.
+	 * @throws TreeClashException    if the given {@code tree} clashes with another tree
+	 *                               in the structure of this tree.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "this,param")
+	private void offerIrrelative(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Dominance.compute(this, tree)) {
+			case NONE:
+				Tree parent = this.getParent();
+
+				if (parent != null)
+					switch (Dominance.compute(parent, tree)) {
+						case NONE:
+							parent.offerIrrelative(tree);
+							return;
+						case PART:
+							this.offerSibling(tree);
+							return;
+						case SHARE:
+							throw new TreeClashException("Clash with parent", parent, tree);
+						case CONTAIN:
+						case EXACT:
+							//this must never happen
+						default:
+							throw new InternalError();
+					}
+
+				this.offerSibling(tree);
+				return;
+			case CONTAIN:
+			case EXACT:
+			case PART:
+			case SHARE:
+				throw new IllegalTreeException("Illegal irrelative", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -1182,6 +1222,53 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				throw new TreeClashException("Invalid same", this, tree);
 			case PART:
 				throw new IllegalTreeException("Invalid same", this, tree);
+			default:
+				throw new InternalError();
+		}
+	}
+
+	/**
+	 * Try to place the given {@code tree} somewhere before or after this tree within its
+	 * parent.
+	 *
+	 * @param tree the offered tree.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is not a valid sibling
+	 *                                  for this tree.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                  tree in the structure of this tree.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "this,param")
+	private void offerSibling(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Intersection.compute(this, tree)) {
+			case NEXT:
+			case AFTER:
+				this.offerNext(tree);
+				return;
+			case PREVIOUS:
+			case BEFORE:
+				this.offerPrevious(tree);
+				return;
+			case CONTAINER:
+			case AHEAD:
+			case BEHIND:
+				//
+			case SAME:
+				//
+			case FRAGMENT:
+			case START:
+			case END:
+				//
+			case OVERFLOW:
+			case UNDERFLOW:
+				//
+				throw new IllegalTreeException("Illegal sibling", this, tree);
 			default:
 				throw new InternalError();
 		}
