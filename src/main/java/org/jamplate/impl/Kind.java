@@ -253,6 +253,14 @@ public final class Kind {
 	//CX FLW
 
 	/**
+	 * The for command context kind.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_FLW_FOR = "cx/flw.for";
+
+	/**
 	 * The if command context kind.
 	 *
 	 * @since 0.2.0 ~2021.05.24
