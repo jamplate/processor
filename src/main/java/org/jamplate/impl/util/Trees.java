@@ -25,6 +25,7 @@ import java.io.IOError;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
  * Common operations functions for {@link Tree trees}.
@@ -220,7 +221,7 @@ public final class Trees {
 				long skipped2 = reader.skip(ctrl);
 				while (skipped2++ < ctrl)
 					if (reader.read() == -1)
-						return 0;
+						return p;
 
 				if ((p -= line.length() + ctrl) < 0)
 					return line.length() + p + ctrl;
@@ -299,7 +300,7 @@ public final class Trees {
 				long skipped2 = reader.skip(ctrl);
 				while (skipped2++ < ctrl)
 					if (reader.read() == -1)
-						return "";
+						return line;
 
 				if ((p -= line.length() + ctrl) < 0)
 					return line;
@@ -307,6 +308,29 @@ public final class Trees {
 		} catch (IOException e) {
 			throw new IOError(e);
 		}
+	}
+
+	/**
+	 * Return an array containing the current children of the given {@code tree}.
+	 *
+	 * @param tree the tree to get an array containing its current children.
+	 * @return a new array containing the children of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Tree[] toArray(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		return StreamSupport.stream(
+				Spliterators.spliteratorUnknownSize(
+						tree.iterator(),
+						Spliterator.ORDERED |
+						Spliterator.NONNULL |
+						Spliterator.DISTINCT
+				),
+				false
+		).toArray(Tree[]::new);
 	}
 
 	/**
