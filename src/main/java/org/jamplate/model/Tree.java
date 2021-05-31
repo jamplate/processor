@@ -49,6 +49,10 @@ import java.util.Objects;
  * structure is totally fine. Also, one thread modifying a tree structure while the other
  * threads just reading it will not corrupt the structure and will only confuse the other
  * threads because random sketches will be moved around while those threads are reading.
+ * <br>
+ * Two identical trees in one structure is allowed only if the two trees has the same
+ * {@link #getZIndex() z-index}. The tree with the higher z-index can fit inside the tree
+ * with the lower z-index.
  *
  * @author LSafer
  * @version 0.2.0
@@ -83,6 +87,13 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private final Reference reference;
 
 	/**
+	 * The Z-index.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	private final int zIndex;
+
+	/**
 	 * The sketch set to this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.17
@@ -106,25 +117,35 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = new Sketch(this);
+		this.zIndex = 0;
 	}
 
 	/**
 	 * Construct a new tree for the whole given {@code document}.
+	 * <br>
+	 * After constructing this, the tree of the given {@code sketch} will be set to this.
 	 *
 	 * @param document the document the constructed tree is for.
 	 * @param sketch   the initial sketch set to this tree.
-	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws NullPointerException  if the given {@code document} or {@code sketch} is
+	 *                               null.
+	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
 	 * @throws java.io.IOError       if any I/O error occurred while reading the given
 	 *                               {@code document} to get its length.
 	 * @throws DocumentNotFoundError if the given {@code document} is not available for
 	 *                               reading.
 	 * @since 0.2.0 ~2021.05.17
 	 */
+	@Contract(mutates = "param2")
 	public Tree(@NotNull Document document, @NotNull Sketch sketch) {
 		Objects.requireNonNull(document, "document");
+		Objects.requireNonNull(sketch, "sketch");
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = sketch;
+		this.zIndex = 0;
+
+		sketch.setTree(this);
 	}
 
 	/**
@@ -142,19 +163,24 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = reference;
 		this.sketch = new Sketch(this);
+		this.zIndex = 0;
 	}
 
 	/**
 	 * Construct a new tree with the given {@code reference} and the given {@code
 	 * sketch}.
+	 * <br>
+	 * After constructing this, the tree of the given {@code sketch} will be set to this.
 	 *
 	 * @param document  the document of the constructed tree.
 	 * @param reference the reference of the contracted tree.
 	 * @param sketch    the initial sketch set to this tree.
-	 * @throws NullPointerException if the given {@code document} or {@code reference} or
-	 *                              {@code sketch} is null.
+	 * @throws NullPointerException  if the given {@code document} or {@code reference} or
+	 *                               {@code sketch} is null.
+	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
+	@Contract(mutates = "param3")
 	public Tree(@NotNull Document document, @NotNull Reference reference, @NotNull Sketch sketch) {
 		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(reference, "reference");
@@ -162,6 +188,105 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = reference;
 		this.sketch = sketch;
+		this.zIndex = 0;
+
+		sketch.setTree(this);
+	}
+
+	/**
+	 * Construct a new tree for the whole given {@code document}.
+	 *
+	 * @param document the document the constructed tree is for.
+	 * @param zIndex   the z-index for the constructed tree.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws java.io.IOError       if any I/O error occurred while reading the given
+	 *                               {@code document} to get its length.
+	 * @throws DocumentNotFoundError if the given {@code document} is not available for
+	 *                               reading.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	public Tree(@NotNull Document document, int zIndex) {
+		Objects.requireNonNull(document, "document");
+		this.document = document;
+		this.reference = new Reference(0, document.read().length());
+		this.sketch = new Sketch(this);
+		this.zIndex = zIndex;
+	}
+
+	/**
+	 * Construct a new tree for the whole given {@code document}.
+	 * <br>
+	 * After constructing this, the tree of the given {@code sketch} will be set to this.
+	 *
+	 * @param document the document the constructed tree is for.
+	 * @param sketch   the initial sketch set to this tree.
+	 * @param zIndex   the z-index for the constructed tree.
+	 * @throws NullPointerException  if the given {@code document} or {@code sketch} is
+	 *                               null.
+	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
+	 * @throws java.io.IOError       if any I/O error occurred while reading the given
+	 *                               {@code document} to get its length.
+	 * @throws DocumentNotFoundError if the given {@code document} is not available for
+	 *                               reading.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@Contract(mutates = "param2")
+	public Tree(@NotNull Document document, @NotNull Sketch sketch, int zIndex) {
+		Objects.requireNonNull(document, "document");
+		Objects.requireNonNull(sketch, "sketch");
+		this.document = document;
+		this.reference = new Reference(0, document.read().length());
+		this.sketch = sketch;
+		this.zIndex = zIndex;
+
+		sketch.setTree(this);
+	}
+
+	/**
+	 * Construct a new tree with the given {@code reference}.
+	 *
+	 * @param document  the document of the constructed tree.
+	 * @param reference the reference of the constructed tree.
+	 * @param zIndex    the z-index for the constructed tree.
+	 * @throws NullPointerException if the given {@code document} or {@code reference} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	public Tree(@NotNull Document document, @NotNull Reference reference, int zIndex) {
+		Objects.requireNonNull(document, "document");
+		Objects.requireNonNull(reference, "reference");
+		this.document = document;
+		this.reference = reference;
+		this.sketch = new Sketch(this);
+		this.zIndex = zIndex;
+	}
+
+	/**
+	 * Construct a new tree with the given {@code reference} and the given {@code
+	 * sketch}.
+	 * <br>
+	 * After constructing this, the tree of the given {@code sketch} will be set to this.
+	 *
+	 * @param document  the document of the constructed tree.
+	 * @param reference the reference of the contracted tree.
+	 * @param sketch    the initial sketch set to this tree.
+	 * @param zIndex    the z-index for the constructed tree.
+	 * @throws NullPointerException  if the given {@code document} or {@code reference} or
+	 *                               {@code sketch} is null.
+	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
+	 * @since 0.2.0 ~2021.05.15
+	 */
+	@Contract(mutates = "param3")
+	public Tree(@NotNull Document document, @NotNull Reference reference, @NotNull Sketch sketch, int zIndex) {
+		Objects.requireNonNull(document, "document");
+		Objects.requireNonNull(reference, "reference");
+		Objects.requireNonNull(sketch, "sketch");
+		this.document = document;
+		this.reference = reference;
+		this.sketch = sketch;
+		this.zIndex = zIndex;
+
+		sketch.setTree(this);
 	}
 
 	@Contract(value = "null->false", pure = true)
@@ -335,6 +460,17 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
+	 * Return the Z-index of this tree.
+	 *
+	 * @return the z index of this tree.
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@Contract(pure = true)
+	public int getZIndex() {
+		return this.zIndex;
+	}
+
+	/**
 	 * Offer the given {@code tree} to the structure of this tree. The given {@code tree}
 	 * will be removed from its structure then put to the proper place in the structure of
 	 * this tree.
@@ -356,29 +492,30 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	public void offer(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		switch (Intersection.compute(this, tree)) {
+			case CONTAINER:
 			case AHEAD:
 			case BEHIND:
-			case CONTAINER:
 				this.offerParent(tree);
 				return;
-			case START:
+			case SAME:
+				this.offerSame(tree);
+				return;
 			case FRAGMENT:
+			case START:
 			case END:
 				this.offerChild(tree);
 				return;
-			case AFTER:
 			case NEXT:
+			case AFTER:
 				this.offerNext(tree);
 				return;
-			case BEFORE:
 			case PREVIOUS:
+			case BEFORE:
 				this.offerPrevious(tree);
 				return;
-			case SAME:
-				throw new TreeTakeoverException("Sketch takeover", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new TreeClashException("Sketch clash", this, tree);
+				throw new TreeClashException("Invalid tree", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -507,12 +644,13 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	@SuppressWarnings("OverlyLongMethod")
+	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
 	@Contract(mutates = "this,param")
 	private void offerChild(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
+		//noinspection SwitchStatementDensity
 		switch (Dominance.compute(this, tree)) {
-			case PART:
+			case PART: {
 				Node<Tree> bottom = this.node.get(Tetragon.BOTTOM);
 
 				//case no children
@@ -527,8 +665,8 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 				//compare to the first
 				switch (Intersection.compute(bottom.get(), tree)) {
-					case BEFORE:
 					case PREVIOUS:
+					case BEFORE:
 						//clean
 						tree.pop();
 
@@ -536,38 +674,82 @@ public final class Tree implements Iterable<Tree>, Serializable {
 						this.node.put(Tetragon.BOTTOM, tree.node);
 						bottom.put(Tetragon.START, tree.node);
 						return;
-					case BEHIND:
 					case CONTAINER:
 					case AHEAD:
+					case BEHIND:
 						//this |> tree |> bottom
 						bottom.get().offerParent(tree);
 						return;
-					case START:
+					case SAME:
+						//this |> bottom | tree
+						bottom.get().offerSame(tree);
+						return;
 					case FRAGMENT:
+					case START:
 					case END:
 						//this |> bottom |> tree
 						bottom.get().offerChild(tree);
 						return;
-					case AFTER:
 					case NEXT:
+					case AFTER:
 						//this |> bottom -> tree
 						bottom.get().offerNext(tree);
 						return;
-					case SAME:
-						throw new TreeTakeoverException("Exact child bounds", bottom.get(), tree);
 					case OVERFLOW:
 					case UNDERFLOW:
 						throw new TreeClashException("Clash with child", bottom.get(), tree);
 					default:
 						throw new InternalError();
 				}
+			}
+			case EXACT: {
+				int zdf = this.zIndex - tree.zIndex;
+
+				if (zdf >= 0)
+					throw new TreeTakeoverException("Invalid child", this, tree);
+
+				Node<Tree> bottom = this.node.get(Tetragon.BOTTOM);
+
+				if (bottom != null)
+					//compare to the bottom
+					switch (Dominance.compute(bottom.get(), tree)) {
+						case EXACT:
+							int zdf2 = bottom.get().zIndex - tree.zIndex;
+
+							if (zdf2 == 0)
+								throw new TreeTakeoverException("Exact child bounds", bottom.get(), tree);
+
+							//case bottom is lower
+							if (zdf2 < 0) {
+								//this |> bottom |> tree
+								bottom.get().offerChild(tree);
+								return;
+							}
+						case CONTAIN:
+							//break `if (bottom != null)`
+							break;
+						case SHARE:
+						case PART:
+						case NONE:
+							//this must never happen
+						default:
+							throw new InternalError();
+					}
+
+				//clean
+				tree.pop();
+
+				//this |> tree |> bottom
+				this.node.put(Tetragon.BOTTOM, tree.node);
+				if (bottom != null)
+					bottom.put(Tetragon.TOP, tree.node);
+				return;
+			}
 			case CONTAIN:
 			case NONE:
-				throw new TreeOutOfBoundsException("Out of the bounds", this, tree);
-			case EXACT:
-				throw new TreeTakeoverException("Exact bounds", this, tree);
+				throw new TreeOutOfBoundsException("Invalid child", this, tree);
 			case SHARE:
-				throw new TreeClashException("Clash with", this, tree);
+				throw new TreeClashException("Invalid child", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -624,9 +806,9 @@ public final class Tree implements Iterable<Tree>, Serializable {
 						case SHARE:
 							throw new TreeClashException("Clash with parent", parent, tree);
 						case NONE:
-							throw new TreeOutOfBoundsException("Out of the bounds of the parent", parent, tree);
-						case EXACT:
+							throw new TreeOutOfBoundsException("Out of parent bounds", parent, tree);
 						case CONTAIN:
+						case EXACT:
 							//actually, this must not happen, never!!!
 						default:
 							throw new InternalError();
@@ -635,25 +817,8 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 				//compare to the next
 				switch (Intersection.compute(end.get(), tree)) {
-					case NEXT:
-					case AFTER:
-						//this -> end -> tree
-						end.get().offerNext(tree);
-						return;
-					case BEHIND:
-					case CONTAINER:
-					case AHEAD:
-						//this -> tree |> end
-						end.get().offerParent(tree);
-						return;
-					case START:
-					case FRAGMENT:
-					case END:
-						//this -> end |> tree
-						end.get().offerChild(tree);
-						return;
-					case BEFORE:
 					case PREVIOUS:
+					case BEFORE:
 						//clean
 						tree.pop();
 
@@ -661,30 +826,49 @@ public final class Tree implements Iterable<Tree>, Serializable {
 						this.node.put(Tetragon.END, tree.node);
 						end.put(Tetragon.START, tree.node);
 						return;
+					case CONTAINER:
+					case AHEAD:
+					case BEHIND:
+						//this -> tree |> end
+						end.get().offerParent(tree);
+						return;
 					case SAME:
-						throw new TreeTakeoverException("Exact bounds", end.get(), tree);
+						//this -> end | tree
+						end.get().offerSame(tree);
+						return;
+					case FRAGMENT:
+					case START:
+					case END:
+						//this -> end |> tree
+						end.get().offerChild(tree);
+						return;
+					case NEXT:
+					case AFTER:
+						//this -> end -> tree
+						end.get().offerNext(tree);
+						return;
 					case OVERFLOW:
 					case UNDERFLOW:
 						throw new TreeClashException("Clash with next", end.get(), tree);
 					default:
 						throw new InternalError();
 				}
-			case START:
-			case FRAGMENT:
-			case END:
-				//
-			case AHEAD:
 			case CONTAINER:
+			case AHEAD:
 			case BEHIND:
+				//
+			case FRAGMENT:
+			case START:
+			case END:
 				//
 			case PREVIOUS:
 			case BEFORE:
-				throw new IllegalTreeException("Must be after", tree);
+				throw new IllegalTreeException("Invalid next", this, tree);
 			case SAME:
-				throw new TreeTakeoverException("Exact bounds", this, tree);
+				throw new TreeTakeoverException("Invalid next", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new TreeClashException("Clash with", this, tree);
+				throw new TreeClashException("Invalid next", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -715,11 +899,14 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		Objects.requireNonNull(tree, "tree");
 		//noinspection SwitchStatementDensity
 		switch (Dominance.compute(this, tree)) {
+			case EXACT:
+				if (this.zIndex - tree.zIndex <= 0)
+					throw new TreeTakeoverException("Invalid parent", this, tree);
 			case CONTAIN:
-				Node<Tree> bottom = this.node;
-				Node<Tree> top;
-				Node<Tree> previous = null;
-				Node<Tree> next = null;
+				Node<Tree> bottom = this.node; //to be tree.bottom
+				Node<Tree> top;                //to be tree.top
+				Node<Tree> previous = null;    //to be tree.previous
+				Node<Tree> next = null;   //to be tree.next
 
 				//backwards (collecting `bottom` and `previous`)
 				while0:
@@ -751,7 +938,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				//forward (collecting `next`)
 				for0:
 				for (
-						Node<Tree> n = this.node;
+						Node<Tree> n = this.node.get(Tetragon.END);
 						n != null;
 						n = n.get(Tetragon.END)
 				)
@@ -787,6 +974,14 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 					//compare to the top
 					switch (Dominance.compute(top.get(), tree)) {
+						case CONTAIN:
+							//tree |> top |> this
+							top.get().offerParent(tree);
+							return;
+						case EXACT:
+							//top | tree |> this
+							top.get().offerSame(tree);
+							return;
 						case PART:
 							//clean
 							tree.pop();
@@ -797,13 +992,10 @@ public final class Tree implements Iterable<Tree>, Serializable {
 							if (next != null)
 								next.put(Tetragon.START, tree.node);
 							return;
-						case CONTAIN:
-						case NONE:
-							throw new TreeOutOfBoundsException("Out of the bounds of the parent", top.get(), tree);
-						case EXACT:
-							throw new TreeTakeoverException("Exact parent bounds", top.get(), tree);
 						case SHARE:
 							throw new TreeClashException("Clash with parent", top.get(), tree);
+						case NONE:
+							//this must never happen
 						default:
 							throw new InternalError();
 					}
@@ -819,12 +1011,10 @@ public final class Tree implements Iterable<Tree>, Serializable {
 					next.put(Tetragon.START, tree.node);
 				return;
 			case SHARE:
-				throw new TreeClashException("Clash with", this, tree);
-			case NONE:
+				throw new TreeClashException("Invalid parent", this, tree);
 			case PART:
-				throw new IllegalTreeException("Must fit", tree);
-			case EXACT:
-				throw new TreeTakeoverException("Exact bounds", this, tree);
+			case NONE:
+				throw new IllegalTreeException("Invalid parent", this, tree);
 			default:
 				throw new InternalError();
 		}
@@ -883,9 +1073,9 @@ public final class Tree implements Iterable<Tree>, Serializable {
 						case SHARE:
 							throw new TreeClashException("Clash with parent", parent, tree);
 						case NONE:
-							throw new TreeOutOfBoundsException("Out of the bounds of the parent", parent, tree);
-						case EXACT:
+							throw new TreeOutOfBoundsException("Out of parent bounds ", parent, tree);
 						case CONTAIN:
+						case EXACT:
 							//actually, this must not happen, never!!!
 						default:
 							throw new InternalError();
@@ -894,23 +1084,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 
 				//compare to the previous
 				switch (Intersection.compute(start.get(), tree)) {
-					case PREVIOUS:
-					case BEFORE:
-						//tree -> start -> this
-						start.get().offerPrevious(tree);
-						return;
-					case BEHIND:
-					case CONTAINER:
-					case AHEAD:
-						//tree |> start; tree -> this
-						start.get().offerParent(tree);
-						return;
-					case START:
-					case FRAGMENT:
-					case END:
-						//start |> tree; start -> this
-						start.get().offerChild(tree);
-						return;
 					case AFTER:
 					case NEXT:
 						//clean
@@ -920,30 +1093,95 @@ public final class Tree implements Iterable<Tree>, Serializable {
 						start.put(Tetragon.END, tree.node);
 						this.node.put(Tetragon.START, tree.node);
 						return;
+					case CONTAINER:
+					case AHEAD:
+					case BEHIND:
+						//tree |> start; tree -> this
+						start.get().offerParent(tree);
+						return;
 					case SAME:
-						throw new TreeTakeoverException("Exact bounds", start.get(), tree);
+						//start | tree -> this
+						start.get().offerSame(tree);
+						return;
+					case FRAGMENT:
+					case START:
+					case END:
+						//start |> tree; start -> this
+						start.get().offerChild(tree);
+						return;
+					case PREVIOUS:
+					case BEFORE:
+						//tree -> start -> this
+						start.get().offerPrevious(tree);
+						return;
 					case OVERFLOW:
 					case UNDERFLOW:
 						throw new TreeClashException("Clash with previous", start.get(), tree);
 					default:
 						throw new InternalError();
 				}
-			case START:
-			case FRAGMENT:
-			case END:
-				//
-			case AHEAD:
 			case CONTAINER:
+			case AHEAD:
 			case BEHIND:
+				//
+			case FRAGMENT:
+			case START:
+			case END:
 				//
 			case NEXT:
 			case AFTER:
-				throw new IllegalTreeException("Must be before", tree);
+				throw new IllegalTreeException("Invalid previous", this, tree);
 			case SAME:
-				throw new TreeTakeoverException("Exact bounds", this, tree);
+				throw new TreeTakeoverException("Invalid previous", this, tree);
 			case OVERFLOW:
 			case UNDERFLOW:
-				throw new TreeClashException("Clash with", this, tree);
+				throw new TreeClashException("Invalid previous", this, tree);
+			default:
+				throw new InternalError();
+		}
+	}
+
+	/**
+	 * Try to place the given {@code tree} at the exact bounds of this tree.
+	 *
+	 * @param tree the offered tree.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalTreeException     if the given {@code tree} is null.
+	 * @throws TreeOutOfBoundsException if the given {@code tree} does not fit in the
+	 *                                  parent of this tree.
+	 * @throws TreeTakeoverException    if the given {@code tree} has the same range as a
+	 *                                  tree in the structure of this tree.
+	 * @throws TreeClashException       if the given {@code tree} clashes with another
+	 *                                  tree in the structure of this tree.
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@Contract(mutates = "this,param")
+	private void offerSame(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		switch (Dominance.compute(this, tree)) {
+			case EXACT:
+				int zDiff = this.zIndex - tree.zIndex;
+
+				//case no z-index difference
+				if (zDiff == 0)
+					throw new TreeTakeoverException("Exact bounds", this, tree);
+
+				//case higher than this
+				if (zDiff < 0)
+					this.offerChild(tree);
+
+				//case lower than this
+				if (zDiff > 0)
+					this.offerParent(tree);
+
+				return;
+			case CONTAIN:
+			case NONE:
+				throw new TreeOutOfBoundsException("Invalid same", this, tree);
+			case SHARE:
+				throw new TreeClashException("Invalid same", this, tree);
+			case PART:
+				throw new IllegalTreeException("Invalid same", this, tree);
 			default:
 				throw new InternalError();
 		}
