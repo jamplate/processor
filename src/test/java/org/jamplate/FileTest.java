@@ -7,7 +7,7 @@ import org.jamplate.impl.model.FileDocument;
 import org.jamplate.impl.util.Trees;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -165,7 +165,7 @@ public class FileTest {
 	}
 
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
-	@Test
+	@RepeatedTest(10)
 	public void run() {
 		Environment environment = new EnvironmentImpl();
 
