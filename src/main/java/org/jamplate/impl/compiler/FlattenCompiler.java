@@ -16,11 +16,11 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.IpedXinstr;
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,19 +31,26 @@ import java.util.Objects;
 /**
  * A compiler that compiles using two compilers.
  * <br>
- * The first compiler is the compiler given to it when compiling. It uses it for the trees
+ * The first compiler is the "compiler" pre-specified compiler. It uses it for the trees
  * in the tree given to it.
  * <br>
- * The other one is the compiler given to its the constructor. It uses it for both the
- * trees that the first compiler couldn't compile and a newly constructed trees for the
- * ranges between the children of the tree given to it or the tree given to it if the tree
- * given to it contain no children.
+ * The other one is the "fallback" compiler given to its the constructor. It uses it for
+ * both the trees that the first compiler couldn't compile and a newly constructed trees
+ * for the ranges between the children of the tree given to it or the tree given to it if
+ * the tree given to it contain no children.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
 public class FlattenCompiler implements Compiler {
+	/**
+	 * The compiler to be used.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	protected final Compiler compiler;
 	/**
 	 * The compiler used by this compiler to compile the non-reserved ranges.
 	 *
@@ -56,12 +63,16 @@ public class FlattenCompiler implements Compiler {
 	 * Construct a new strict compiler that compiles the unreserved ranges using the given
 	 * {@code fallback} compiler.
 	 *
+	 * @param compiler the compiler.
 	 * @param fallBack the compiler to be used to compile unreserved ranges.
-	 * @throws NullPointerException if the given {@code fallback} is null.
+	 * @throws NullPointerException if the given {@code compiler} or {@code fallback} is
+	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public FlattenCompiler(@NotNull Compiler fallBack) {
+	public FlattenCompiler(@NotNull Compiler compiler, @NotNull Compiler fallBack) {
+		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(fallBack, "fallBack");
+		this.compiler = compiler;
 		this.fallBack = fallBack;
 	}
 
@@ -79,7 +90,7 @@ public class FlattenCompiler implements Compiler {
 
 		for (Tree child : children) {
 			if (child.getParent() != null) {
-				Instruction instruction = compiler.compile(compiler, compilation, child);
+				Instruction instruction = this.compiler.compile(compiler, compilation, child);
 
 				if (instruction != null) {
 					instructions.add(instruction);

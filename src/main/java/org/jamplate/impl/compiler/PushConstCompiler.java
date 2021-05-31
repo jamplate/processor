@@ -15,31 +15,32 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.impl.instruction.PushConst;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * A compiler that compiles whitespaces.
+ * A compiler that always compiles into a {@link PushConst} with the constant being the
+ * result of reading the tree given to it.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.28
+ * @since 0.2.0 ~2021.05.31
  */
-public class WhitespaceCompiler implements Compiler {
+public class PushConstCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final WhitespaceCompiler INSTANCE = new WhitespaceCompiler();
+	public static final PushConstCompiler INSTANCE = new PushConstCompiler();
 
 	@Nullable
 	@Override
@@ -47,9 +48,6 @@ public class WhitespaceCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (Trees.read(tree).toString().trim().isEmpty())
-			return Instruction.empty(tree);
-
-		return null;
+		return new PushConst(tree);
 	}
 }

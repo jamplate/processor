@@ -19,27 +19,26 @@ import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * A compiler that compiles whitespaces.
+ * A compiler that delegates to the fallback compiler.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.28
+ * @since 0.2.0 ~2021.05.31
  */
-public class WhitespaceCompiler implements Compiler {
+public class FallbackCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final WhitespaceCompiler INSTANCE = new WhitespaceCompiler();
+	public static final FallbackCompiler INSTANCE = new FallbackCompiler();
 
 	@Nullable
 	@Override
@@ -47,9 +46,6 @@ public class WhitespaceCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (Trees.read(tree).toString().trim().isEmpty())
-			return Instruction.empty(tree);
-
-		return null;
+		return compiler.compile(compiler, compilation, tree);
 	}
 }
