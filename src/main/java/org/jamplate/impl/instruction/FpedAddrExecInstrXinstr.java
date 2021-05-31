@@ -185,7 +185,7 @@ public class FpedAddrExecInstrXinstr implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		//EXEC( INSTR )
-		memory.pushFrame(new Memory.Frame(this.instruction));
+		memory.pushFrame(new Frame(this.instruction));
 		this.instruction.exec(environment, memory);
 		Value value = Memories.joinPop(memory);
 		memory.popFrame();
@@ -202,11 +202,11 @@ public class FpedAddrExecInstrXinstr implements Instruction {
 		for (Object item : items) {
 			String text = String.valueOf(item);
 
-			memory.pushFrame(new Memory.Frame(this));
+			memory.pushFrame(new Frame(this));
 			memory.getFrame().set(this.address, m -> text);
 
 			for (Instruction instruction : this.instructions) {
-				memory.pushFrame(new Memory.Frame(instruction));
+				memory.pushFrame(new Frame(instruction));
 				instruction.exec(environment, memory);
 				memory.dumpFrame();
 			}

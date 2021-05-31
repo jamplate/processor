@@ -97,7 +97,7 @@ public class JamplateTest {
 				System.err.print(": ");
 				System.err.print(e.getMessage());
 				System.err.println();
-				for (Memory.Frame frame : memory.getFrames()) {
+				for (Frame frame : memory.getFrames()) {
 					Tree tree = frame.getInstruction().getTree();
 					System.err.print("\t");
 					System.err.print("at ");
@@ -160,7 +160,7 @@ public class JamplateTest {
 			System.err.print(": ");
 			System.err.print(e.getMessage());
 			System.err.println();
-			for (Memory.Frame frame : memory.getFrames()) {
+			for (Frame frame : memory.getFrames()) {
 				Tree tree = frame.getInstruction().getTree();
 				System.err.print("\t");
 				System.err.print("at ");
@@ -259,7 +259,7 @@ public class JamplateTest {
 						e.getMessage()
 				);
 			if (memory != null)
-				for (Memory.Frame frame : memory.getFrames()) {
+				for (Frame frame : memory.getFrames()) {
 					Tree frameTree = frame.getInstruction().getTree();
 
 					if (frameTree != null)
@@ -367,7 +367,7 @@ public class JamplateTest {
 						e.getMessage()
 				);
 			if (memory != null)
-				for (Memory.Frame frame : memory.getFrames()) {
+				for (Frame frame : memory.getFrames()) {
 					Tree frameTree = frame.getInstruction().getTree();
 
 					if (frameTree != null)

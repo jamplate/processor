@@ -158,7 +158,7 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		// EXEC( INSTR0 )
-		memory.pushFrame(new Memory.Frame(this.instruction0));
+		memory.pushFrame(new Frame(this.instruction0));
 		this.instruction0.exec(environment, memory);
 		Value value = Memories.joinPop(memory);
 		memory.popFrame();
@@ -170,12 +170,12 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 			case "0":
 			case "\0":
 			case "false":
-				memory.pushFrame(new Memory.Frame(this.instruction2));
+				memory.pushFrame(new Frame(this.instruction2));
 				this.instruction2.exec(environment, memory);
 				memory.popFrame();
 				break;
 			default:
-				memory.pushFrame(new Memory.Frame(this.instruction1));
+				memory.pushFrame(new Frame(this.instruction1));
 				this.instruction1.exec(environment, memory);
 				memory.popFrame();
 				break;

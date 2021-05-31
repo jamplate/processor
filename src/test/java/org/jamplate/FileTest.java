@@ -65,12 +65,12 @@ public class FileTest {
 			   .append(exception.getMessage());
 
 		Tree[] dup = {null};
-		Memory.Frame[] frames = memory.getFrames();
+		Frame[] frames = memory.getFrames();
 		Collections.reverse(Arrays.asList(frames));
 		Stream.concat(
 				Stream.of(exception.getTree()),
 				Arrays.stream(frames)
-					  .map(Memory.Frame::getInstruction)
+					  .map(Frame::getInstruction)
 					  .filter(Objects::nonNull)
 					  .map(Instruction::getTree)
 		)
@@ -180,7 +180,7 @@ public class FileTest {
 
 				Memory m = null;
 				try (Memory memory = m = new Memory()) {
-					memory.pushFrame(new Memory.Frame(instruction));
+					memory.pushFrame(new Frame(instruction));
 
 					instruction.exec(environment, memory);
 				} catch (IOException e) {

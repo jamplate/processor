@@ -15,10 +15,7 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.model.Environment;
-import org.jamplate.model.Instruction;
-import org.jamplate.model.Memory;
-import org.jamplate.model.Tree;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,7 +140,7 @@ public class IpedXinstr implements Instruction {
 
 		//IPED( XINSTR )
 		for (Instruction instruction : this.instructions) {
-			memory.pushFrame(new Memory.Frame(instruction));
+			memory.pushFrame(new Frame(instruction));
 			instruction.exec(environment, memory);
 			memory.dumpFrame();
 		}

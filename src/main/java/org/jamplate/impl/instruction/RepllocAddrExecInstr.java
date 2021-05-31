@@ -106,7 +106,7 @@ public class RepllocAddrExecInstr implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		//EXEC( INSTR )
-		memory.pushFrame(new Memory.Frame(this.instruction));
+		memory.pushFrame(new Frame(this.instruction));
 		this.instruction.exec(environment, memory);
 		Value value = Memories.joinPop(memory);
 		memory.popFrame();
