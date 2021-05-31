@@ -16,6 +16,7 @@
 package org.jamplate.impl.model;
 
 import org.jamplate.diagnostic.Diagnostic;
+import org.jamplate.impl.diagnostic.DiagnosticImpl;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
