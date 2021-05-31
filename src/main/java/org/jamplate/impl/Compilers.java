@@ -15,11 +15,12 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.compiler.FlattenCompiler;
-import org.jamplate.impl.compiler.KindCompiler;
+import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
 import org.jamplate.impl.util.Trees;
-import org.jamplate.model.*;
+import org.jamplate.model.CompileException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 
@@ -255,11 +256,49 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_TXT =
-			new FlattenCompiler((compiler, compilation, tree) ->
-					new ReprntConst(tree)
+			new FlattenCompiler(
+					FallbackCompiler.INSTANCE,
+					ReprntConstCompiler.INSTANCE
 			);
 
 	//SX
+
+	/**
+	 * A compiler that compiles curly braces.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler SX_CUR =
+			new KindCompiler(Kind.SX_CUR, new FlattenCompiler(
+					new OrderCompiler(
+							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
+							FallbackCompiler.INSTANCE
+					),
+					new MandatoryCompiler(new OrderCompiler(
+							new KindCompiler(Kind.SX_CUR_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_CUR_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_CLN, PushConstCompiler.INSTANCE),
+							WhitespaceCompiler.INSTANCE
+					))
+			));
+
+	/**
+	 * A compiler that compiles double quotes.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler SX_DQT =
+			new KindCompiler(Kind.SX_DQT, new FlattenCompiler(
+					new OrderCompiler(
+							new KindCompiler(Kind.SX_DQT_OPEN, EmptyCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_DQT_CLOSE, EmptyCompiler.INSTANCE)
+					),
+					PushConstCompiler.INSTANCE
+			));
 
 	/**
 	 * A compiler that compiles suppressed line separators.
@@ -268,60 +307,81 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_EOL_SUPPRESSED =
-			new KindCompiler(Kind.SX_EOL_SUPPRESSED, (compiler, compilation, tree) ->
-					Instruction.empty(tree)
-			);
+			new KindCompiler(Kind.SX_EOL_SUPPRESSED, EmptyCompiler.INSTANCE);
 
-	//VL
+	/**
+	 * A compiler that compiles name instructions.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler SX_NME =
+			new KindCompiler(Kind.SX_NME, PushEvalAddrCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles numbers.
 	 *
-	 * @since 0.2.0 ~2021.05.25
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Compiler VL_NUM =
-			new KindCompiler(Kind.VL_NUM, (compiler, compilation, tree) -> {
-				String constant = Trees.read(tree).toString();
-
-				return new PushConst(constant);
-			});
+	public static final Compiler SX_NUM =
+			new KindCompiler(Kind.SX_NUM, PushConstCompiler.INSTANCE);
 
 	/**
-	 * A compiler that compiles reference instructions.
+	 * A compiler that compiles quotes.
 	 *
-	 * @since 0.2.0 ~2021.05.24
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Compiler VL_REF =
-			new KindCompiler(Kind.VL_REF, (compiler, compilation, tree) -> {
-				String address = Trees.read(tree).toString();
-
-				return new PushEvalAddr(tree, address);
-			});
+	public static final Compiler SX_QTE =
+			new KindCompiler(Kind.SX_QTE, new FlattenCompiler(
+					new OrderCompiler(
+							new KindCompiler(Kind.SX_QTE_OPEN, EmptyCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_QTE_CLOSE, EmptyCompiler.INSTANCE)
+					),
+					PushConstCompiler.INSTANCE
+			));
 
 	/**
-	 * A compiler that compiles strings.
+	 * A compiler that compiles parentheses.
 	 *
-	 * @since 0.2.0 ~2021.05.23
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Compiler VL_STR =
-			new KindCompiler(Kind.VL_STR, (compiler, compilation, tree) -> {
-				Sketch sketch = tree.getSketch();
-				Tree open = sketch.get(Component.OPEN).getTree();
-				Tree close = sketch.get(Component.CLOSE).getTree();
+	public static final Compiler SX_RND =
+			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
+					new OrderCompiler(
+							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
+							FallbackCompiler.INSTANCE
+					),
+					new MandatoryCompiler(new OrderCompiler(
+							new KindCompiler(Kind.SX_RND_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_RND_CLOSE, PushConstCompiler.INSTANCE),
+							WhitespaceCompiler.INSTANCE
+					))
+			));
 
-				int p = open.reference().position() +
-						open.reference().length();
-				int l = close.reference().position() - p;
-
-				Tree content = new Tree(tree.document(), new Reference(p, l));
-
-				content.getSketch().setKind(Kind.VL_STR_CONTENT);
-
-				return new PushConst(content);
-			});
+	/**
+	 * A compiler that compiles square brackets.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler SX_SQR =
+			new KindCompiler(Kind.SX_SQR, new FlattenCompiler(
+					new OrderCompiler(
+							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
+							FallbackCompiler.INSTANCE
+					),
+					new MandatoryCompiler(new OrderCompiler(
+							new KindCompiler(Kind.SX_SQR_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_SQR_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
+							WhitespaceCompiler.INSTANCE
+					))
+			));
 
 	/**
 	 * Utility classes must not be initialized.
