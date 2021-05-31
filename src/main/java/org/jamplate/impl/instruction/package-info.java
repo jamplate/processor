@@ -51,6 +51,11 @@
  *             allocate Y into heap of the last frame at X
  *     </li>
  *     <li>
+ *         {@code SPREAD( X : Value | Text ) : Void}
+ *         <p>
+ *             Assuming X is a json map, Spread the mappings to the heap.
+ *     </li>
+ *     <li>
  *         {@code REPLLOC( X : Address , Y : Text | Value ) : Void}
  *         <p>
  *             allocate Y into heap at X;

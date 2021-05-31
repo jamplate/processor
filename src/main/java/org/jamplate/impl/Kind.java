@@ -227,6 +227,14 @@ public final class Kind {
 	public static final String CX_CMD_OPEN = "cx/cmd:open";
 
 	/**
+	 * The command kind of the {@code #spread} command.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_CMD_SPREAD = "cx/cmd:spread";
+
+	/**
 	 * The kind of the type of a single-line command.
 	 *
 	 * @since 0.2.0 ~2021.05.20

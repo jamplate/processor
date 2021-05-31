@@ -89,6 +89,8 @@ public final class Jamplate {
 							Compilers.CX_CMD_DECLARE,
 							/* Define commands */
 							Compilers.CX_CMD_DEFINE,
+							/* Spread commands */
+							Compilers.CX_CMD_SPREAD,
 							/* Undec commands */
 							Compilers.CX_CMD_UNDEC,
 							/* Undef commands */
@@ -167,69 +169,71 @@ public final class Jamplate {
 					)),
 					/* Always ignore commented end-of-lines */
 					Parsers.CM_SLN,
-					/* Runtime elements, encapsulated to parse inner components */
-					new ThenAddParser(
-							new FlatOrderParser(
-									/* Injections, injection must win over commands */
-									Parsers.CX_INJ,
-									new ThenOfferParser(
-											/* Commands */
-											Parsers.CX_CMD,
-											/* each command kind */
-											new CollectParser(new CombineParser(
-													/* Parse Console command components */
-													Parsers.CX_CMD_CONSOLE,
-													/* Parse Declare command components */
-													Parsers.CX_CMD_DECLARE,
-													/* Parse Define command components */
-													Parsers.CX_CMD_DEFINE,
-													/* Parse Elif command components */
-													Parsers.CX_CMD_ELIF,
-													/* Parse Elifdef command components */
-													Parsers.CX_CMD_ELIFDEF,
-													/* Parse Elifndef command components */
-													Parsers.CX_CMD_ELIFNDEF,
-													/* Parse Else command components */
-													Parsers.CX_CMD_ELSE,
-													/* Parse Endfor command components */
-													Parsers.CX_CMD_ENDFOR,
-													/* Parse Endif command components */
-													Parsers.CX_CMD_ENDIF,
-													/* Parse For command components */
-													Parsers.CX_CMD_FOR,
-													/* Parse If command components */
-													Parsers.CX_CMD_IF,
-													/* Parse Ifdef command components */
-													Parsers.CX_CMD_IFDEF,
-													/* Parse Ifndef command components */
-													Parsers.CX_CMD_IFNDEF,
-													/* Parse Include command components */
-													Parsers.CX_CMD_INCLUDE,
-													/* Parse Undec command components */
-													Parsers.CX_CMD_UNDEC,
-													/* Parse Undef command components */
-													Parsers.CX_CMD_UNDEF
-											))
-									)
-							),
-							new HierarchyParser(new MergeParser(
-									new KindParser(Kind.CX_PRM, new RecursiveParser(new OfferParser(new OrderParser(
-											/* Braces */
-											Parsers.SX_CUR,
-											/* Brackets */
-											Parsers.SX_SQR,
-											/* Parentheses */
-											Parsers.SX_RND,
-											/* Names */
-											Parsers.SX_NME,
-											/* Numbers */
-											Parsers.SX_NUM,
-											/* Colons */
-											Parsers.SX_CLN,
-											/* Commas */
-											Parsers.SX_CMA
-									))))
-							))
+					/* Runtime elements */
+					new FlatOrderParser(
+							/* Injections, injection must win over commands */
+							Parsers.CX_INJ,
+							new ThenOfferParser(
+									/* Commands */
+									Parsers.CX_CMD,
+									/* each command kind */
+									new CollectParser(new CombineParser(
+											/* Parse Console command components */
+											Parsers.CX_CMD_CONSOLE,
+											/* Parse Declare command components */
+											Parsers.CX_CMD_DECLARE,
+											/* Parse Define command components */
+											Parsers.CX_CMD_DEFINE,
+											/* Parse Elif command components */
+											Parsers.CX_CMD_ELIF,
+											/* Parse Elifdef command components */
+											Parsers.CX_CMD_ELIFDEF,
+											/* Parse Elifndef command components */
+											Parsers.CX_CMD_ELIFNDEF,
+											/* Parse Else command components */
+											Parsers.CX_CMD_ELSE,
+											/* Parse Endfor command components */
+											Parsers.CX_CMD_ENDFOR,
+											/* Parse Endif command components */
+											Parsers.CX_CMD_ENDIF,
+											/* Parse For command components */
+											Parsers.CX_CMD_FOR,
+											/* Parse If command components */
+											Parsers.CX_CMD_IF,
+											/* Parse Ifdef command components */
+											Parsers.CX_CMD_IFDEF,
+											/* Parse Ifndef command components */
+											Parsers.CX_CMD_IFNDEF,
+											/* Parse Include command components */
+											Parsers.CX_CMD_INCLUDE,
+											/* Parse Spread command components */
+											Parsers.CX_CMD_SPREAD,
+											/* Parse Undec command components */
+											Parsers.CX_CMD_UNDEC,
+											/* Parse Undef command components */
+											Parsers.CX_CMD_UNDEF
+									))
+							)
+					),
+					/* Parameters */
+					new HierarchyKindParser(
+							Kind.CX_PRM,
+							new MergeParser(new HierarchyParser(new OrderParser(
+									/* Braces */
+									Parsers.SX_CUR,
+									/* Brackets */
+									Parsers.SX_SQR,
+									/* Parentheses */
+									Parsers.SX_RND,
+									/* Names */
+									Parsers.SX_NME,
+									/* Numbers */
+									Parsers.SX_NUM,
+									/* Colons */
+									Parsers.SX_CLN,
+									/* Commas */
+									Parsers.SX_CMA
+							)))
 					)
 			));
 

@@ -136,6 +136,30 @@ public final class Compilers {
 			});
 
 	/**
+	 * A compiler that compiles spread commands.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_SPREAD =
+			new KindCompiler(Kind.CX_CMD_SPREAD, (compiler, compilation, tree) -> {
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
+
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized parameter",
+							paramT
+					);
+
+				return new SpreadExecInstr(
+						tree,
+						instruction
+				);
+			});
+
+	/**
 	 * A compiler that compiles undec commands.
 	 *
 	 * @since 0.2.0 ~2021.05.31
