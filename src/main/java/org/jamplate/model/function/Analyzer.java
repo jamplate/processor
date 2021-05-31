@@ -21,9 +21,6 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.function.BiConsumer;
-
 /**
  * A function that analyzes the trees given to it and modify them (if necessary) depending
  * on its analytic results.
@@ -34,50 +31,6 @@ import java.util.function.BiConsumer;
  */
 @FunctionalInterface
 public interface Analyzer {
-	/**
-	 * Return a new analyzer that analyzes using this analyzer then if this analyzer
-	 * analyzed something, then analyze using the given {@code analyzer}.
-	 *
-	 * @param analyzer the other analyzer. (the analyzer to analyze after this)
-	 * @return a new analyzer tha analyzes using this then using the given {@code
-	 * 		analyzer}.
-	 * @throws NullPointerException if the given {@code analyzer} is null.
-	 * @since 0.2.0 ~2021.05.29
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Analyzer then(@NotNull Analyzer analyzer) {
-		Objects.requireNonNull(analyzer, "analyzer");
-		return (compilation, tree) ->
-				this.analyze(compilation, tree) &&
-				analyzer.analyze(compilation, tree);
-	}
-
-	/**
-	 * Return an analyzer that delegates to this analyzer, and if analyzed something, then
-	 * invokes the given {@code consumer}.
-	 *
-	 * @param consumer the function to be invoked when the returned analyzer analyzes
-	 *                 something.
-	 * @return a new analyzer that uses this analyzer and invokes the given {@code
-	 * 		consumer} when analyzes something.
-	 * @throws NullPointerException if the given {@code consumer} is null.
-	 * @since 0.2.0 ~2021.05.29
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Analyzer then(@NotNull BiConsumer<Compilation, Tree> consumer) {
-		Objects.requireNonNull(consumer, "consumer");
-		return (compilation, tree) -> {
-			if (this.analyze(compilation, tree)) {
-				consumer.accept(compilation, tree);
-				return true;
-			}
-
-			return false;
-		};
-	}
-
 	/**
 	 * Analyze the given {@code tree} and its relative trees.
 	 *

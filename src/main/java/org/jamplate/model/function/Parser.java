@@ -21,11 +21,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOError;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A function that takes a compilation and a sketch and parses new sketches from them.
@@ -36,53 +32,6 @@ import java.util.stream.Stream;
  */
 @FunctionalInterface
 public interface Parser {
-	/**
-	 * Return a parser that uses this parser to parse and then add to the result the
-	 * result of parsing each one of them using the given {@code parser}.
-	 *
-	 * @param parser the parser to be used on the results of this parser.
-	 * @return a parser that uses this parser then uses the given {@code parser}.
-	 * @throws NullPointerException if the given {@code parser} is null.
-	 * @since 0.2.0 ~2021.05.18
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser then(@NotNull Parser parser) {
-		return (compilation, tree) ->
-				this.parse(compilation, tree)
-					.parallelStream()
-					.flatMap(t ->
-							Stream.concat(
-									Stream.of(t),
-									parser.parse(compilation, t)
-										  .stream()
-							)
-					)
-					.collect(Collectors.toSet());
-	}
-
-	/**
-	 * Return a new parser that uses this parser for parsing and then invokes the given
-	 * {@code consumer} for each parsed tree.
-	 *
-	 * @param consumer the consumer to be invoked for each parsed tree.
-	 * @return a new parser that parses using this then invokes the given {@code consumer}
-	 * 		on each parsed tree.
-	 * @throws NullPointerException if the given {@code consumer} is null.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	default Parser then(@NotNull BiConsumer<Compilation, Tree> consumer) {
-		Objects.requireNonNull(consumer, "consumer");
-		return (compilation, tree) -> {
-			Set<Tree> trees = this.parse(compilation, tree);
-			for (Tree child : trees)
-				consumer.accept(compilation, child);
-			return trees;
-		};
-	}
-
 	/**
 	 * Parse the given {@code sketch} with respect to the given {@code compilation}.
 	 *
