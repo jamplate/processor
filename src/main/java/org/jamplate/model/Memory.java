@@ -205,6 +205,37 @@ public final class Memory implements Closeable {
 	}
 
 	/**
+	 * Build the current stack trace of trees.
+	 *
+	 * @return the current stack trace.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Tree[] getStackTrace() {
+		List<Tree> stacktrace = new ArrayList<>(this.frames.size());
+
+		Tree previous = null;
+
+		Iterator<Frame> iterator = this.frames.descendingIterator();
+		while (iterator.hasNext()) {
+			Instruction instruction = iterator.next().getInstruction();
+
+			if (instruction != null) {
+				Tree next = instruction.getTree();
+
+				if (next != null && next != previous) {
+					stacktrace.add(next);
+					previous = next;
+				}
+			}
+		}
+
+		//noinspection ZeroLengthArrayAllocation
+		return stacktrace.toArray(new Tree[0]);
+	}
+
+	/**
 	 * Return and remove the last pushed value to the stack.
 	 * <br>
 	 * The stack of the last frame will be modified.
