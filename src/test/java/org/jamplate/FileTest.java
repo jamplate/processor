@@ -44,7 +44,14 @@ public class FileTest {
 								   " "
 						   )
 				   ))
-				   .append("^");
+				   .append("^")
+				   .append(String.join(
+						   "",
+						   Collections.nCopies(
+								   Math.max(tree.reference().length() - 1, 0),
+								   "-"
+						   )
+				   ));
 
 		return builder.toString();
 	}
@@ -94,13 +101,8 @@ public class FileTest {
 	public static String format(@NotNull IllegalTreeException exception) {
 		Objects.requireNonNull(exception, "exception");
 		StringBuilder builder = new StringBuilder();
-		Tree primary = null;
+		Tree primary = exception.getPrimaryTree();
 		Tree illegal = exception.getIllegalTree();
-
-		if (exception instanceof TreeClashException)
-			primary = ((TreeClashException) exception).getPrimaryTree();
-		if (exception instanceof TreeOutOfBoundsException)
-			primary = ((TreeOutOfBoundsException) exception).getBoundsTree();
 
 		builder.append(exception.getClass())
 			   .append(": ")
@@ -124,7 +126,14 @@ public class FileTest {
 								   " "
 						   )
 				   ))
-				   .append("^");
+				   .append("^")
+				   .append(String.join(
+						   "",
+						   Collections.nCopies(
+								   Math.max(illegal.reference().length() - 1, 0),
+								   "-"
+						   )
+				   ));
 		if (illegal != null)
 			builder.append("\n\tat ")
 				   .append(illegal.getSketch())
@@ -143,7 +152,14 @@ public class FileTest {
 								   " "
 						   )
 				   ))
-				   .append("^");
+				   .append("^")
+				   .append(String.join(
+						   "",
+						   Collections.nCopies(
+								   Math.max(illegal.reference().length() - 1, 0),
+								   "-"
+						   )
+				   ));
 
 		return builder.toString();
 	}
@@ -151,8 +167,9 @@ public class FileTest {
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 	@Test
 	public void run() {
+		Environment environment = new EnvironmentImpl();
+
 		try {
-			Environment environment = new EnvironmentImpl();
 			Jamplate.INITIALIZER.initialize(
 					environment,
 					new FileDocument("test_input2/test.jamplate")
@@ -166,18 +183,26 @@ public class FileTest {
 					memory.pushFrame(new Memory.Frame(instruction));
 
 					instruction.exec(environment, memory);
-
-				} catch (IOException ignored) {
+				} catch (IOException e) {
+					System.err.println(format(new ExecutionException(e), m));
+					System.err.println();
+					e.printStackTrace();
 				} catch (ExecutionException e) {
 					System.err.println(format(e, m));
+					System.err.println();
+					e.printStackTrace();
 				}
 
 				System.out.println(m.getConsole());
 			}
 		} catch (CompileException e) {
 			System.err.println(format(e));
+			System.err.println();
+			e.printStackTrace();
 		} catch (IllegalTreeException e) {
 			System.err.println(format(e));
+			System.err.println();
+			e.printStackTrace();
 		}
 	}
 }

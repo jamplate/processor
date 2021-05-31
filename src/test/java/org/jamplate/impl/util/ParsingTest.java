@@ -39,7 +39,7 @@ public class ParsingTest {
 		Document document = new PseudoDocument("{[],[],[]}");
 		Tree tree = new Tree(document);
 
-		List<Reference> firstParse = Parsing.parseFirst(tree, sp, ep);
+		List<Reference> firstParse = Parsing.parseFirst(tree, sp, ep, 0);
 
 		assertSame(
 				3,
@@ -66,7 +66,7 @@ public class ParsingTest {
 				  .map(reference -> new Tree(document, reference))
 				  .forEach(tree::offer);
 
-		Set<List<Reference>> remainingParse = Parsing.parseAll(tree, sp, ep);
+		Set<List<Reference>> remainingParse = Parsing.parseAll(tree, sp, ep, 0);
 
 		assertSame(
 				2,
@@ -104,5 +104,20 @@ public class ParsingTest {
 
 		//todo convert from manual inspection to auto the insertion
 		int i = 0;
+	}
+
+	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
+	@Test
+	public void splits() {
+		Document document = new PseudoDocument("#console X\n#include X\n#define X Y");
+		Tree console = new Tree(document, new Reference(0, 10));
+		Tree include = new Tree(document, new Reference(11, 10));
+		Tree define = new Tree(document, new Reference(22, 11));
+
+		List<Reference> splits = Parsing.parse(define, Pattern.compile("#(define)\\s(\\S+)\\s(.+)"));
+
+		splits.forEach(
+				split -> System.out.println(document.read(split))
+		);
 	}
 }
