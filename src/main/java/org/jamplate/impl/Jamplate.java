@@ -83,18 +83,31 @@ public final class Jamplate {
 					/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
 					new KindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
 							/* Cleanup ws and throw if unrecognized */
-							new FlattenCompiler(new MandatoryCompiler(
-									/* Ignore whitespace */
-									new WhitespaceCompiler()
-							)),
+							new FlattenCompiler(
+									/* parsed areas */
+									FallbackCompiler.INSTANCE,
+									/* non parsed areas */
+									new MandatoryCompiler(
+											/* Ignore whitespace */
+											WhitespaceCompiler.INSTANCE
+									)
+							),
 							/* Compile recognized logic */
 							new OrderCompiler(
-									/* String */
-									Compilers.VL_STR,
+									/* Object */
+									Compilers.SX_CUR,
 									/* Reference */
-									Compilers.VL_REF,
+									Compilers.SX_NME,
 									/* Number */
-									Compilers.VL_NUM
+									Compilers.SX_NUM,
+									/* DQ String */
+									Compilers.SX_DQT,
+									/* SQ String */
+									Compilers.SX_QTE,
+									/* Parentheses */
+									Compilers.SX_RND,
+									/* Array */
+									Compilers.SX_SQR
 							)
 					)),
 					/* Fallthrough, convert into REPRNT */
@@ -130,60 +143,66 @@ public final class Jamplate {
 									Parsers.SX_QTE,
 									/* Single quote strings */
 									Parsers.SX_DQT
-							).then(
-									/* Register escaped sequences */
-									Parsers.VL_STR_ESCAPE
 							)
 					)),
 					/* Always ignore commented end-of-lines */
 					Parsers.CM_SLN,
 					/* Runtime elements, encapsulated to parse inner components */
-					new FlatOrderParser(
-							/* Injections, injection must win over commands */
-							Parsers.CX_INJ,
-							new ThenOfferParser(
-									/* Commands */
-									Parsers.CX_CMD,
-									/* each command kind */
-									new CollectParser(new CombineParser(
-											/* Parse Console command components */
-											Parsers.CX_CMD_CONSOLE,
-											/* Parse Declare command components */
-											Parsers.CX_CMD_DECLARE,
-											/* Parse Define command components */
-											Parsers.CX_CMD_DEFINE,
-											/* Parse Elif command components */
-											Parsers.CX_CMD_ELIF,
-											/* Parse Elifdef command components */
-											Parsers.CX_CMD_ELIFDEF,
-											/* Parse Elifndef command components */
-											Parsers.CX_CMD_ELIFNDEF,
-											/* Parse Else command components */
-											Parsers.CX_CMD_ELSE,
-											/* Parse Endif command components */
-											Parsers.CX_CMD_ENDIF,
-											/* Parse If command components */
-											Parsers.CX_CMD_IF,
-											/* Parse Ifdef command components */
-											Parsers.CX_CMD_IFDEF,
-											/* Parse Ifndef command components */
-											Parsers.CX_CMD_IFNDEF,
-											/* Parse Include command components */
-											Parsers.CX_CMD_INCLUDE
-									))
-							)
-					).then(new RecursiveParser(new MergeParser(new OrderParser(
-							/* References */
-							Parsers.VL_REF,
-							/* Numbers */
-							Parsers.VL_NUM,
-							/* Braces */
-							Parsers.SX_CUR,
-							/* Brackets */
-							Parsers.SX_SQR,
-							/* Parentheses */
-							Parsers.SX_RND
-					))))
+					new ThenAddParser(
+							new FlatOrderParser(
+									/* Injections, injection must win over commands */
+									Parsers.CX_INJ,
+									new ThenOfferParser(
+											/* Commands */
+											Parsers.CX_CMD,
+											/* each command kind */
+											new CollectParser(new CombineParser(
+													/* Parse Console command components */
+													Parsers.CX_CMD_CONSOLE,
+													/* Parse Declare command components */
+													Parsers.CX_CMD_DECLARE,
+													/* Parse Define command components */
+													Parsers.CX_CMD_DEFINE,
+													/* Parse Elif command components */
+													Parsers.CX_CMD_ELIF,
+													/* Parse Elifdef command components */
+													Parsers.CX_CMD_ELIFDEF,
+													/* Parse Elifndef command components */
+													Parsers.CX_CMD_ELIFNDEF,
+													/* Parse Else command components */
+													Parsers.CX_CMD_ELSE,
+													/* Parse Endif command components */
+													Parsers.CX_CMD_ENDIF,
+													/* Parse If command components */
+													Parsers.CX_CMD_IF,
+													/* Parse Ifdef command components */
+													Parsers.CX_CMD_IFDEF,
+													/* Parse Ifndef command components */
+													Parsers.CX_CMD_IFNDEF,
+													/* Parse Include command components */
+													Parsers.CX_CMD_INCLUDE
+											))
+									)
+							),
+							new HierarchyParser(new MergeParser(
+									new KindParser(Kind.CX_PRM, new RecursiveParser(new OfferParser(new OrderParser(
+											/* Braces */
+											Parsers.SX_CUR,
+											/* Brackets */
+											Parsers.SX_SQR,
+											/* Parentheses */
+											Parsers.SX_RND,
+											/* Names */
+											Parsers.SX_NME,
+											/* Numbers */
+											Parsers.SX_NUM,
+											/* Colons */
+											Parsers.SX_CLN,
+											/* Commas */
+											Parsers.SX_CMA
+									))))
+							))
+					)
 			));
 
 	/**
@@ -207,9 +226,7 @@ public final class Jamplate {
 					/* Commands */
 					Processors.CX_CMD,
 					/* Detect if flows */
-					Processors.CX_FLW_IF,
-					/* Detect strings */
-					Processors.VL_STR
+					Processors.CX_FLW_IF
 			);
 
 	/**
