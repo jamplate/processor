@@ -311,6 +311,29 @@ public final class Trees {
 	}
 
 	/**
+	 * Return the root tree of the given {@code tree}.
+	 *
+	 * @param tree the tree to get its root tree.
+	 * @return the root tree of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static Tree root(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Tree root = tree;
+		while (true) {
+			Tree parent = root.getParent();
+
+			if (parent == null)
+				return root;
+
+			root = parent;
+		}
+	}
+
+	/**
 	 * Return an array containing the current children of the given {@code tree}.
 	 *
 	 * @param tree the tree to get an array containing its current children.
