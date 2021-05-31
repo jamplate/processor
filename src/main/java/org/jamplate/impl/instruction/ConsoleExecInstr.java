@@ -15,8 +15,8 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.model.*;
 import org.jamplate.impl.util.Memories;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,6 +98,11 @@ public class ConsoleExecInstr implements Instruction {
 		this.instruction.exec(environment, memory);
 		Value value = Memories.joinPop(memory);
 		memory.popFrame();
+
+		try {
+			memory.close();
+		} catch (IOException ignored) {
+		}
 
 		//CONSOLE( EXEC( INSTR ) )
 		if (value == Value.NULL) {

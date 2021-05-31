@@ -355,14 +355,6 @@ public final class Memory implements Closeable {
 	@Contract(mutates = "this")
 	public void setConsole(@NotNull Appendable console) {
 		Objects.requireNonNull(console, "console");
-		if (this.console instanceof Closeable)
-			try {
-				((Closeable) this.console).close();
-			} catch (IOException e) {
-				//noinspection CallToPrintStackTrace
-				e.printStackTrace();
-			}
-
 		this.console = console;
 	}
 }
