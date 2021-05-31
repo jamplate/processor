@@ -16,6 +16,14 @@
 package org.jamplate.impl.model;
 
 import org.jamplate.diagnostic.Diagnostic;
+import org.jamplate.diagnostic.Message;
+import org.jamplate.impl.diagnostic.MessageKind;
+import org.jamplate.impl.util.Trees;
+import org.jamplate.model.Tree;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.PrintStream;
+import java.util.*;
 
 /**
  * A basic implementation of the interface {@link Diagnostic}.
@@ -25,4 +33,104 @@ import org.jamplate.diagnostic.Diagnostic;
  * @since 0.2.0 ~2021.05.19
  */
 public class DiagnosticImpl implements Diagnostic {
+	@SuppressWarnings("JavaDoc")
+	private static final long serialVersionUID = 3123631055963070960L;
+
+	/**
+	 * The message queue.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	protected final Deque<Message> queue = new LinkedList<>();
+
+	@NotNull
+	@Override
+	public Diagnostic clear() {
+		this.queue.clear();
+		return this;
+	}
+
+	@NotNull
+	@Override
+	public Diagnostic flush(PrintStream out, PrintStream err) {
+		Objects.requireNonNull(out, "out");
+		Objects.requireNonNull(err, "err");
+		while (true) {
+			Message message = this.queue.pollFirst();
+
+			if (message == null)
+				return this;
+
+			String formatted = this.format(message);
+
+			if (message.isFetal())
+				err.println(formatted);
+			else
+				out.println(formatted);
+		}
+	}
+
+	@NotNull
+	@Override
+	public String format(@NotNull Message message) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(message.getMessagePhrase());
+
+		if (message.getErrorKind().equals(MessageKind.COMPILE))
+			for (Tree criticalPoint : message.getCriticalPoints())
+				builder.append("\n\tat ")
+					   .append(criticalPoint.getSketch())
+					   .append("(")
+					   .append(criticalPoint.document())
+					   .append(":")
+					   .append(Trees.line(criticalPoint))
+					   .append(") ")
+					   .append("\n\t")
+					   .append(Trees.readLine(criticalPoint))
+					   .append("\n\t")
+					   .append(String.join(
+							   "",
+							   Collections.nCopies(
+									   Trees.positionInLine(criticalPoint),
+									   " "
+							   )
+					   ))
+					   .append("^")
+					   .append(String.join(
+							   "",
+							   Collections.nCopies(
+									   Math.max(
+											   criticalPoint.reference().length() - 1, 0),
+									   "-"
+							   )
+					   ));
+
+		for (Tree trace : message.getStackTrace())
+			builder.append("\n\tat ")
+				   .append(trace.getSketch())
+				   .append("(")
+				   .append(trace.document())
+				   .append(":")
+				   .append(Trees.line(trace))
+				   .append(")");
+
+		return builder.toString();
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Message> iterator() {
+		return Collections.unmodifiableCollection(this.queue)
+						  .iterator();
+	}
+
+	@NotNull
+	@Override
+	public Diagnostic print(@NotNull Message message) {
+		Objects.requireNonNull(message, "message");
+		this.queue.addLast(message);
+		return this;
+	}
 }
