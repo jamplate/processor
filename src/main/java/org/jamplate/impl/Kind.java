@@ -235,6 +235,14 @@ public final class Kind {
 	public static final String CX_CMD_TYPE = "cx/cmd.type";
 
 	/**
+	 * The command kind of the {@code #undec} command.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_CMD_UNDEC = "cx/cmd.undec";
+
+	/**
 	 * The command kind of the {@code #undef} command.
 	 *
 	 * @since 0.2.0 ~2021.05.31
