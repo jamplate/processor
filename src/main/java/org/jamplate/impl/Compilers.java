@@ -345,6 +345,17 @@ public final class Compilers {
 					ReprntConstCompiler.INSTANCE
 			);
 
+	//DC
+
+	/**
+	 * A compiler that compiles suppressed line separators.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final Compiler DC_EOL_SUPPRESSED =
+			new KindCompiler(Kind.DC_EOL_SUPPRESSED, EmptyCompiler.INSTANCE);
+
 	//SX
 
 	/**
@@ -383,15 +394,6 @@ public final class Compilers {
 					),
 					PushConstCompiler.INSTANCE
 			));
-
-	/**
-	 * A compiler that compiles suppressed line separators.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final Compiler SX_EOL_SUPPRESSED =
-			new KindCompiler(Kind.SX_EOL_SUPPRESSED, EmptyCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles name instructions.

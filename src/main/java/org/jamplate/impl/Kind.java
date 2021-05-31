@@ -312,6 +312,24 @@ public final class Kind {
 	@NotNull
 	public static final String CX_TXT = "cx/txt";
 
+	//DC
+
+	/**
+	 * The kind for line separators ({@code \n} or {@code \r} or {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String DC_EOL = "dc/eol";
+	/**
+	 * The kind for suppressed (do-not-print) line separators ({@code \n} or {@code \r} or
+	 * {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final String DC_EOL_SUPPRESSED = "dc/eol:suppressed";
+
 	//OP
 
 	/**
@@ -444,22 +462,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_DQT_OPEN = "sx/dqt:open";
-
-	/**
-	 * The kind for line separators ({@code \n} or {@code \r} or {@code \r\n}).
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String SX_EOL = "sx/eol";
-	/**
-	 * The kind for suppressed (do-not-print) line separators ({@code \n} or {@code \r} or
-	 * {@code \r\n}).
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String SX_EOL_SUPPRESSED = "sx/eol:suppressed";
 
 	/**
 	 * The kind for names.

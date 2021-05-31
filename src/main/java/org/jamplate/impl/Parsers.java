@@ -568,6 +568,19 @@ public final class Parsers {
 			))
 	);
 
+	//DC
+
+	/**
+	 * A parser parsing line separators ({@code \n} or {@code \r} or {@code \r\n}).
+	 *
+	 * @since 0.2.0 ~2021.05.19
+	 */
+	@NotNull
+	public static final Parser DC_EOL = new PatternParser(
+			Pattern.compile("\r\n|\r|\n"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.DC_EOL))
+	);
+
 	//OP
 
 	/**
@@ -666,17 +679,6 @@ public final class Parsers {
 					 .get(Component.CLOSE)
 					 .setKind(Kind.SX_DQT_CLOSE)
 			))
-	);
-
-	/**
-	 * A parser parsing line separators ({@code \n} or {@code \r} or {@code \r\n}).
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final Parser SX_EOL = new PatternParser(
-			Pattern.compile("\r\n|\r|\n"),
-			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_EOL))
 	);
 
 	/**

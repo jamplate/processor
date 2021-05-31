@@ -55,7 +55,7 @@ public final class Jamplate {
 	public static final Analyzer ANALYZER =
 			new SequentialAnalyzer(
 					/* Suppressed EOL First, before `CX_CMD`s get convert */
-					new RecursiveAnalyzer(Analyzers.SX_EOL_SUPPRESSED)
+					new RecursiveAnalyzer(Analyzers.DC_EOL_SUPPRESSED)
 			);
 
 	/**
@@ -76,7 +76,7 @@ public final class Jamplate {
 	public static final Compiler COMPILER =
 			new OrderCompiler(
 					/* Seek suppressed EOL, to suppress CX_TXT */
-					Compilers.SX_EOL_SUPPRESSED,
+					Compilers.DC_EOL_SUPPRESSED,
 					/* Console commands */
 					Compilers.CX_CMD_CONSOLE,
 					/* Include commands */
@@ -147,7 +147,7 @@ public final class Jamplate {
 	public static final Parser PARSER =
 			new CollectParser(new OrderParser(
 					/* Separate the file by lines. */
-					Parsers.SX_EOL,
+					Parsers.DC_EOL,
 					/* Wild Block Battles (first occurs win) */
 					new MergeParser(new CombineParser(
 							/* Comment blocks */

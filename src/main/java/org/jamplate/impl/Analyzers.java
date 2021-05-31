@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.2.0 ~2021.05.28
  */
 public final class Analyzers {
-	//SX
+	//DC
 
 	/**
 	 * An analyzer for suppressing line separators.
@@ -37,9 +37,9 @@ public final class Analyzers {
 	 */
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
-	public static final Analyzer SX_EOL_SUPPRESSED =
+	public static final Analyzer DC_EOL_SUPPRESSED =
 			new ConditionTransformAnalyzer(
-					Kind.SX_EOL, Kind.SX_EOL_SUPPRESSED,
+					Kind.DC_EOL, Kind.DC_EOL_SUPPRESSED,
 					(compilation, tree) -> {
 						Tree previous = tree.getPrevious();
 						Tree next = tree.getNext();
