@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * <h3>{@code DEF( ADDR )}</h3>
+ * <h3>{@code PUSH( DEF( ADDR ) )}</h3>
  * An instruction that pushes the constant {@code true} if a pre-specified address is
  * defined and pushes the constant {@code false} otherwise.
  *
@@ -30,7 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.25
  */
-public class DefAddr implements Instruction {
+public class PushDefAddr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3432648177276191300L;
 
@@ -57,7 +57,7 @@ public class DefAddr implements Instruction {
 	 * @throws NullPointerException if the given {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public DefAddr(@NotNull String address) {
+	public PushDefAddr(@NotNull String address) {
 		Objects.requireNonNull(address, "address");
 		this.tree = null;
 		this.address = address;
@@ -72,7 +72,7 @@ public class DefAddr implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} or {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public DefAddr(@NotNull Tree tree, @NotNull String address) {
+	public PushDefAddr(@NotNull Tree tree, @NotNull String address) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(address, "address");
 		this.tree = tree;
@@ -86,10 +86,11 @@ public class DefAddr implements Instruction {
 
 		//DEF( ADDR )
 		Value value = memory.get(this.address);
+		String text = value == Value.NULL ?
+					  "false" :
+					  "true";
 
-		if (value == Value.NULL)
-			memory.push(m -> "false");
-		else
-			memory.push(m -> "true");
+		//PUSH( DEF( ADDR ) )
+		memory.push(m -> text);
 	}
 }

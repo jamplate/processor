@@ -250,7 +250,7 @@ public final class Compilers {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
 							String address = Trees.read(keyT).toString();
 
-							instructions.put(new DefAddr(keyT, address), current = new ArrayList<>());
+							instructions.put(new PushDefAddr(keyT, address), current = new ArrayList<>());
 							break;
 						}
 						case Kind.CX_CMD_IFNDEF:
@@ -258,7 +258,7 @@ public final class Compilers {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
 							String address = Trees.read(keyT).toString();
 
-							instructions.put(new NdefAddr(keyT, address), current = new ArrayList<>());
+							instructions.put(new PushNdefAddr(keyT, address), current = new ArrayList<>());
 							break;
 						}
 						case Kind.CX_CMD_ELSE: {

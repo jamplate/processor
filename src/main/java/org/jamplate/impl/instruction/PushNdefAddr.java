@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * <h3>{@code NDEF( ADDR )}</h3>
+ * <h3>{@code PUSH( NDEF( ADDR ) )}</h3>
  * An instruction that pushes the constant {@code false} if a pre-specified address is
  * defined and pushes the constant {@code true} otherwise.
  *
@@ -30,7 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.25
  */
-public class NdefAddr implements Instruction {
+public class PushNdefAddr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3432648177276191300L;
 
@@ -57,7 +57,7 @@ public class NdefAddr implements Instruction {
 	 * @throws NullPointerException if the given {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public NdefAddr(@NotNull String address) {
+	public PushNdefAddr(@NotNull String address) {
 		Objects.requireNonNull(address, "address");
 		this.tree = null;
 		this.address = address;
@@ -72,7 +72,7 @@ public class NdefAddr implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} or {@code address} is null.
 	 * @since 0.2.0 ~2021.05.25
 	 */
-	public NdefAddr(@NotNull Tree tree, @NotNull String address) {
+	public PushNdefAddr(@NotNull Tree tree, @NotNull String address) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(address, "address");
 		this.tree = tree;
@@ -86,10 +86,11 @@ public class NdefAddr implements Instruction {
 
 		//NDEF( ADDR )
 		Value value = memory.get(this.address);
+		String text = value == Value.NULL ?
+					  "true" :
+					  "false";
 
-		if (value == Value.NULL)
-			memory.push(m -> "true");
-		else
-			memory.push(m -> "false");
+		//PUSH( NDEF( ADDR ) )
+		memory.push(m -> text);
 	}
 }
