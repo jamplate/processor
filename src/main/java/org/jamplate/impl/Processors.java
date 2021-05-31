@@ -151,38 +151,6 @@ public final class Processors {
 		return modified[0];
 	};
 
-	//VL
-
-	/**
-	 * A processor that sets the string kind to valid strings.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@SuppressWarnings("OverlyLongLambda")
-	@NotNull
-	public static final Processor VL_STR = compilation -> {
-		boolean[] modified = {false};
-		Trees.collect(compilation.getRootTree())
-			 .forEach(tree ->
-					 Trees.children(tree)
-						  .parallelStream()
-						  .filter(child -> {
-							  switch (child.getSketch().getKind()) {
-								  case Kind.SX_DQT:
-								  case Kind.SX_QTE:
-									  return true;
-								  default:
-									  return false;
-							  }
-						  })
-						  .forEach(child -> {
-							  child.getSketch().setKind(Kind.VL_STR);
-							  modified[0] = true;
-						  })
-			 );
-		return modified[0];
-	};
-
 	/**
 	 * Utility classes must not be initialized.
 	 *
