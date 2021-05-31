@@ -227,7 +227,7 @@ public final class Trees {
 					return line.length() + p + ctrl;
 			}
 		} catch (IOException e) {
-			throw new IOError(e);
+			return Math.max(0, p);
 		}
 	}
 
@@ -269,11 +269,12 @@ public final class Trees {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(tree, "tree");
 		int p = tree.reference().position();
+		String line = "";
 		try (BufferedReader reader = new BufferedReader(tree.document().openReader())) {
 			char[] b = new char[2];
 			while (true) {
 				reader.mark(Math.max(10, p << 1));
-				String line = reader.readLine();
+				line = reader.readLine();
 
 				if (line == null)
 					return null;
@@ -306,7 +307,7 @@ public final class Trees {
 					return line;
 			}
 		} catch (IOException e) {
-			throw new IOError(e);
+			return line;
 		}
 	}
 
