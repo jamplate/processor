@@ -339,6 +339,14 @@ public final class Kind {
 	//SX
 
 	/**
+	 * The kind for colons.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String SX_CLN = "sx/cln";
+
+	/**
 	 * The kind for commas.
 	 *
 	 * @since 0.2.0 ~2021.05.16
@@ -407,6 +415,22 @@ public final class Kind {
 	public static final String SX_EOL_SUPPRESSED = "sx/eol:suppressed";
 
 	/**
+	 * The kind for names.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String SX_NME = "sx/nme";
+
+	/**
+	 * The kind for numbers.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String SX_NUM = "sx/num";
+
+	/**
 	 * The kind for quotes.
 	 *
 	 * @since 0.2.0 ~2021.05.16
@@ -471,62 +495,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_SQR_OPEN = "sx/sqr:open";
-
-	//VL
-
-	/**
-	 * The kind for arrays.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String VL_ARR = "vl/arr";
-
-	/**
-	 * The kind for numbers.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String VL_NUM = "vl/num";
-
-	/**
-	 * The kind for objects.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String VL_OBJ = "vl/obj";
-
-	/**
-	 * The kind of a reference value. (a reference for a value in the heap)
-	 *
-	 * @since 0.2.0 ~2021.05.24
-	 */
-	@NotNull
-	public static final String VL_REF = "vl/ref";
-
-	/**
-	 * The kind for strings.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String VL_STR = "vl/str";
-	/**
-	 * The kind for the content of the strings.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String VL_STR_CONTENT = "vl/str:content";
-	/**
-	 * The kind for escaped sequences.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String VL_STR_ESCAPE = "vl/str:escape";
 
 	/**
 	 * Utility classes must not be initialized.
