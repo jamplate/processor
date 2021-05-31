@@ -74,59 +74,64 @@ public final class Jamplate {
 	 */
 	@NotNull
 	public static final Compiler COMPILER =
-			new OrderCompiler(
-					/* Seek suppressed EOL, to suppress CX_TXT */
-					Compilers.DC_EOL_SUPPRESSED,
-					/* Console commands */
-					Compilers.CX_CMD_CONSOLE,
-					/* Include commands */
-					Compilers.CX_CMD_INCLUDE,
-					/* Declare commands */
-					Compilers.CX_CMD_DECLARE,
-					/* Define commands */
-					Compilers.CX_CMD_DEFINE,
-					/* Undec commands */
-					Compilers.CX_CMD_UNDEC,
-					/* Undef commands */
-					Compilers.CX_CMD_UNDEF,
-					/* If flow */
-					Compilers.CX_FLW_IF,
-					/* For flow */
-					Compilers.CX_FLW_FOR,
-					/* Injections */
-					Compilers.CX_INJ,
-					/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
-					new KindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
-							/* Cleanup ws and throw if unrecognized */
-							new FlattenCompiler(
-									/* parsed areas */
-									FallbackCompiler.INSTANCE,
-									/* non parsed areas */
-									new MandatoryCompiler(
-											/* Ignore whitespace */
-											WhitespaceCompiler.INSTANCE
+			new CombineCompiler(
+					Compilers.DC_ROT,
+					new ExclusiveCompiler(new OrderCompiler(
+							/* Non suppressed EOL */
+							Compilers.DC_EOL,
+							/* suppressed EOL */
+							Compilers.DC_EOL_SUPPRESSED,
+							/* Console commands */
+							Compilers.CX_CMD_CONSOLE,
+							/* Include commands */
+							Compilers.CX_CMD_INCLUDE,
+							/* Declare commands */
+							Compilers.CX_CMD_DECLARE,
+							/* Define commands */
+							Compilers.CX_CMD_DEFINE,
+							/* Undec commands */
+							Compilers.CX_CMD_UNDEC,
+							/* Undef commands */
+							Compilers.CX_CMD_UNDEF,
+							/* If flow */
+							Compilers.CX_FLW_IF,
+							/* For flow */
+							Compilers.CX_FLW_FOR,
+							/* Injections */
+							Compilers.CX_INJ,
+							/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
+							new KindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
+									/* Cleanup ws and throw if unrecognized */
+									new FlattenCompiler(
+											/* parsed areas */
+											FallbackCompiler.INSTANCE,
+											/* non parsed areas */
+											new MandatoryCompiler(
+													/* Ignore whitespace */
+													WhitespaceCompiler.INSTANCE
+											)
+									),
+									/* Compile recognized logic */
+									new OrderCompiler(
+											/* Object */
+											Compilers.SX_CUR,
+											/* Reference */
+											Compilers.SX_NME,
+											/* Number */
+											Compilers.SX_NUM,
+											/* DQ String */
+											Compilers.SX_DQT,
+											/* SQ String */
+											Compilers.SX_QTE,
+											/* Parentheses */
+											Compilers.SX_RND,
+											/* Array */
+											Compilers.SX_SQR
 									)
-							),
-							/* Compile recognized logic */
-							new OrderCompiler(
-									/* Object */
-									Compilers.SX_CUR,
-									/* Reference */
-									Compilers.SX_NME,
-									/* Number */
-									Compilers.SX_NUM,
-									/* DQ String */
-									Compilers.SX_DQT,
-									/* SQ String */
-									Compilers.SX_QTE,
-									/* Parentheses */
-									Compilers.SX_RND,
-									/* Array */
-									Compilers.SX_SQR
-							)
-					)),
-					/* Fallthrough, convert into REPRNT */
-					Compilers.CX_TXT
+							)),
+							/* Fallthrough, convert into REPRNT */
+							Compilers.CX_TXT
+					))
 			);
 
 	/**
@@ -365,6 +370,16 @@ public final class Jamplate {
 
 			if (instruction != null) {
 				Memory memory = new Memory();
+
+				//set project dir
+				memory.set(
+						Address.PROJECT,
+						m -> String.valueOf(environment.getMeta().getOrDefault(Address.PROJECT, ""))
+				);
+				memory.set(
+						Address.JAMPLATE,
+						s -> "0.2.0"
+				);
 
 				try {
 					memory.pushFrame(new Frame(instruction));

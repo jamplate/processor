@@ -330,6 +330,14 @@ public final class Kind {
 	@NotNull
 	public static final String DC_EOL_SUPPRESSED = "dc/eol:suppressed";
 
+	/**
+	 * The kind for the root element.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String DC_ROT = "dc/rot";
+
 	//OP
 
 	/**

@@ -24,6 +24,7 @@ import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -348,13 +349,73 @@ public final class Compilers {
 	//DC
 
 	/**
+	 * A compiler that compiles line separators.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler DC_EOL =
+			new KindCompiler(Kind.DC_EOL, (compiler, compilation, tree) ->
+					new IpedXinstr(
+							tree,
+							new AllocAddrConst(
+									tree,
+									Address.LINE,
+									String.valueOf(Trees.line(tree) + 1)
+							),
+							new ReprntConst(tree)
+					)
+			);
+
+	/**
 	 * A compiler that compiles suppressed line separators.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	public static final Compiler DC_EOL_SUPPRESSED =
-			new KindCompiler(Kind.DC_EOL_SUPPRESSED, EmptyCompiler.INSTANCE);
+			new KindCompiler(Kind.DC_EOL_SUPPRESSED, (compiler, compilation, tree) ->
+					new AllocAddrConst(
+							tree,
+							Address.LINE,
+							String.valueOf(Trees.line(tree) + 1)
+					)
+			);
+
+	/**
+	 * A compiler that compiles the root.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler DC_ROT =
+			new KindCompiler(Kind.DC_ROT, (compiler, compilation, tree) -> {
+				String line = String.valueOf(Trees.line(tree) + 1);
+				String file = tree.document().toString();
+				String dir = new File(file).getParent();
+				return new IterXinstr(
+						new FallocAddrConst(
+								tree,
+								Address.PATH,
+								file
+						),
+						new FallocAddrConst(
+								tree,
+								Address.DIR,
+								dir == null ? "" : dir
+						),
+						new FallocAddrConst(
+								tree,
+								Address.FILE,
+								new File(file).getName()
+						),
+						new AllocAddrConst(
+								tree,
+								Address.LINE,
+								line
+						)
+				);
+			});
 
 	//SX
 

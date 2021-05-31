@@ -46,6 +46,11 @@
  *             allocate Y into heap at X
  *     </li>
  *     <li>
+ *         {@code FALLOC( X : Address , Y : Text | Value ) : Void}
+ *         <p>
+ *             allocate Y into heap of the last frame at X
+ *     </li>
+ *     <li>
  *         {@code REPLLOC( X : Address , Y : Text | Value ) : Void}
  *         <p>
  *             allocate Y into heap at X;
@@ -98,6 +103,11 @@
  *             return imported instruction X;
  *             push frame before execution;
  *             pop frame after execution
+ *     </li>
+ *     <li>
+ *         {@code ITER( X : Instruction[] ) : Void}
+ *         <p>
+ *             Execute the instructions in X
  *     </li>
  *     <li>
  *         {@code IEXEC( X : Instruction[] ) : Void}

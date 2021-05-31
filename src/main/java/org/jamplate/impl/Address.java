@@ -35,6 +35,54 @@ public final class Address {
 	public static final String DEFINE = "__define__";
 
 	/**
+	 * An address used to allocate the current directory.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String DIR = "__DIR__";
+
+	/**
+	 * An address used to allocate the current file name.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String FILE = "__FILE__";
+
+	/**
+	 * The address used to allocate the jamplate version.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String JAMPLATE = "__JAMPLATE__";
+
+	/**
+	 * An address used to allocate the current line.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String LINE = "__LINE__";
+
+	/**
+	 * An address used to allocate the current path.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String PATH = "__PATH__";
+
+	/**
+	 * An address used to store the project directory.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String PROJECT = "__PROJECT__";
+
+	/**
 	 * Utility classes must not be initialized.
 	 *
 	 * @throws AssertionError when called.
