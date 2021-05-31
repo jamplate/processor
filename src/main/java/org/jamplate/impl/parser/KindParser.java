@@ -20,38 +20,47 @@ import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * A parser that parses using another parser then add to the results the result of parsing
- * each tree using this parser (which will make it parse recursively).
+ * A parser that parses using another parser and only parses trees with a kind equal to a
+ * pre-specified kind.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.29
+ * @since 0.2.0 ~2021.05.31
  */
-public class RecursiveParser implements Parser {
+public class KindParser implements Parser {
+	/**
+	 * The target kind.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	protected final String kind;
 	/**
 	 * The wrapped parser.
 	 *
-	 * @since 0.2.0 ~2021.05.29
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
 	protected final Parser parser;
 
 	/**
-	 * Construct a new recursive parser that parses using the given {@code parser}.
+	 * Construct a new parser that only parses trees that have the given {@code kind} and
+	 * parses using the given {@code parser}.
 	 *
+	 * @param kind   the targeted kind.
 	 * @param parser the wrapped parser.
-	 * @throws NullPointerException if the given {@code parser} is null.
-	 * @since 0.2.0 ~2021.05.29
+	 * @throws NullPointerException if the given {@code kind} or {@code parser} is null.
+	 * @since 0.2.0 ~2021.05.31
 	 */
-	public RecursiveParser(@NotNull Parser parser) {
+	public KindParser(@NotNull String kind, @NotNull Parser parser) {
+		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(parser, "parser");
+		this.kind = kind;
 		this.parser = parser;
 	}
 
@@ -60,14 +69,9 @@ public class RecursiveParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		return new HashSet<>(this.parser.parse(compilation, tree))
-				.parallelStream()
-				.flatMap(t ->
-						Stream.concat(
-								Stream.of(t),
-								this.parse(compilation, t).stream()
-						)
-				)
-				.collect(Collectors.toSet());
+		if (tree.getSketch().getKind().equals(this.kind))
+			return this.parser.parse(compilation, tree);
+
+		return Collections.emptySet();
 	}
 }
