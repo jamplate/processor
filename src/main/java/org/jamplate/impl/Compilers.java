@@ -134,6 +134,42 @@ public final class Compilers {
 				);
 			});
 
+	/**
+	 * A compiler that compiles undec commands.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_UNDEC =
+			new KindCompiler(Kind.CX_CMD_UNDEC, (compiler, compilation, tree) -> {
+				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
+
+				String address = Trees.read(keyT).toString();
+
+				return new FreeAddr(
+						tree,
+						address
+				);
+			});
+
+	/**
+	 * A compiler that compiles undef commands.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_UNDEF =
+			new KindCompiler(Kind.CX_CMD_UNDEF, (compiler, compilation, tree) -> {
+				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
+
+				String address = Trees.read(keyT).toString();
+
+				return new RepreeAddr(
+						tree,
+						address
+				);
+			});
+
 	//CX FLW
 
 	/**
