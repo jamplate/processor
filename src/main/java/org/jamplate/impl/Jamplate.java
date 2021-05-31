@@ -76,6 +76,10 @@ public final class Jamplate {
 					Compilers.CX_CMD_DECLARE,
 					/* Define commands */
 					Compilers.CX_CMD_DEFINE,
+					/* Undec commands */
+					Compilers.CX_CMD_UNDEC,
+					/* Undef commands */
+					Compilers.CX_CMD_UNDEF,
 					/* If flow */
 					Compilers.CX_FLW_IF,
 					/* Injections */
@@ -180,7 +184,11 @@ public final class Jamplate {
 													/* Parse Ifndef command components */
 													Parsers.CX_CMD_IFNDEF,
 													/* Parse Include command components */
-													Parsers.CX_CMD_INCLUDE
+													Parsers.CX_CMD_INCLUDE,
+													/* Parse Undec command components */
+													Parsers.CX_CMD_UNDEC,
+													/* Parse Undef command components */
+													Parsers.CX_CMD_UNDEF
 											))
 									)
 							),
