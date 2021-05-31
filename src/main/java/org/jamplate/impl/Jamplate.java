@@ -47,33 +47,6 @@ public final class Jamplate {
 			new SequentialAnalyzer(
 					/* Suppressed EOL First, before `CX_CMD`s get convert */
 					new RecursiveAnalyzer(Analyzers.SX_EOL_SUPPRESSED)
-					//					/* Commands */
-					//					new RecursiveAnalyzer(new SequentialAnalyzer(
-					//							/* Console command */
-					//							Analyzers.CX_CMD_CONSOLE,
-					//							/* Declare command */
-					//							Analyzers.CX_CMD_DECLARE,
-					//							/* Define command */
-					//							Analyzers.CX_CMD_DEFINE,
-					//							/* Elif command */
-					//							Analyzers.CX_CMD_ELIF,
-					//							/* Elifdef command */
-					//							Analyzers.CX_CMD_ELIFDEF,
-					//							/* Elifndef command */
-					//							Analyzers.CX_CMD_ELIFNDEF,
-					//							/* Else command */
-					//							Analyzers.CX_CMD_ELSE,
-					//							/* Endif command */
-					//							Analyzers.CX_CMD_ENDIF,
-					//							/* If command */
-					//							Analyzers.CX_CMD_IF,
-					//							/* Ifdef command */
-					//							Analyzers.CX_CMD_IFDEF,
-					//							/* Ifndef command */
-					//							Analyzers.CX_CMD_IFNDEF,
-					//							/* Include command */
-					//							Analyzers.CX_CMD_INCLUDE
-					//					))
 			);
 
 	/**
