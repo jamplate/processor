@@ -180,7 +180,7 @@ public final class Kind {
 	public static final String CX_CMD_INCLUDE = "cx/cmd.include";
 
 	/**
-	 * The kind of the key part of the parameter of a command.
+	 * The kind of the key part of a command.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
