@@ -361,7 +361,7 @@ public final class Memory implements Closeable {
 		 * @since 0.2.0 ~2021.05.23
 		 */
 		@NotNull
-		private final Queue<Value> stack;
+		private final Deque<Value> stack;
 
 		/**
 		 * The instruction of this frame.
@@ -468,7 +468,7 @@ public final class Memory implements Closeable {
 		@NotNull
 		@Contract(mutates = "this")
 		public Value pop() {
-			Value value = this.stack.poll();
+			Value value = this.stack.pollLast();
 			return value == null ? Value.NULL : value;
 		}
 
@@ -482,7 +482,7 @@ public final class Memory implements Closeable {
 		@Contract(mutates = "this")
 		public void push(@NotNull Value value) {
 			Objects.requireNonNull(value, "value");
-			this.stack.add(value);
+			this.stack.addLast(value);
 		}
 
 		/**
