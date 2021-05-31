@@ -15,17 +15,17 @@
  */
 package org.jamplate.impl.parser;
 
+import org.jamplate.impl.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
-import org.jamplate.model.Sketch;
+import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
-import org.jamplate.impl.util.Parsing;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
  */
 public class PatternParser implements Parser {
 	/**
-	 * The constructor to be used to construct new sketches.
+	 * The constructor to be used to construct new trees.
 	 *
 	 * @since 0.2.0 ~2021.05.20
 	 */
 	@NotNull
-	protected final Supplier<Sketch> constructor;
+	protected final BiFunction<Document, Reference, Tree> constructor;
 	/**
 	 * A pattern matching the literal.
 	 *
@@ -51,6 +51,13 @@ public class PatternParser implements Parser {
 	 */
 	@NotNull
 	protected final Pattern pattern;
+
+	/**
+	 * The z-index to accept.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	protected final int zIndex;
 
 	/**
 	 * Construct a new literal parser that parses the sketches looking for areas that
@@ -63,27 +70,65 @@ public class PatternParser implements Parser {
 	 */
 	public PatternParser(@NotNull Pattern pattern) {
 		Objects.requireNonNull(pattern, "pattern");
-		this.constructor = Sketch::new;
 		this.pattern = pattern;
+		this.zIndex = 0;
+		this.constructor = Tree::new;
 	}
 
 	/**
 	 * Construct a new literal parser that parses the sketches looking for areas that
 	 * matches the given {@code pattern}.
 	 *
-	 * @param constructor the constructor to be used by the constructed parser to
-	 *                    constructed the sketches of the matches.
+	 * @param pattern the pattern matching the areas the constructed parser will be
+	 *                looking for.
+	 * @param zIndex  the z-index to accept.
+	 * @throws NullPointerException if the given {@code pattern} is null.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	public PatternParser(@NotNull Pattern pattern, int zIndex) {
+		Objects.requireNonNull(pattern, "pattern");
+		this.pattern = pattern;
+		this.zIndex = zIndex;
+		this.constructor = Tree::new;
+	}
+
+	/**
+	 * Construct a new literal parser that parses the sketches looking for areas that
+	 * matches the given {@code pattern}.
+	 *
 	 * @param pattern     the pattern matching the areas the constructed parser will be
 	 *                    looking for.
-	 * @throws NullPointerException if the given {@code constructor} or {@code pattern} is
+	 * @param constructor the constructor.
+	 * @throws NullPointerException if the given {@code pattern} or {@code constructor} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public PatternParser(@NotNull Supplier<Sketch> constructor, @NotNull Pattern pattern) {
-		Objects.requireNonNull(constructor, "constructor");
+	public PatternParser(@NotNull Pattern pattern, @NotNull BiFunction<Document, Reference, Tree> constructor) {
 		Objects.requireNonNull(pattern, "pattern");
-		this.constructor = constructor;
+		Objects.requireNonNull(constructor, "constructor");
 		this.pattern = pattern;
+		this.zIndex = 0;
+		this.constructor = constructor;
+	}
+
+	/**
+	 * Construct a new literal parser that parses the sketches looking for areas that
+	 * matches the given {@code pattern}.
+	 *
+	 * @param pattern     the pattern matching the areas the constructed parser will be
+	 *                    looking for.
+	 * @param zIndex      the z-index to accept.
+	 * @param constructor the constructor.
+	 * @throws NullPointerException if the given {@code pattern} or {@code constructor} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	public PatternParser(@NotNull Pattern pattern, int zIndex, @NotNull BiFunction<Document, Reference, Tree> constructor) {
+		Objects.requireNonNull(pattern, "pattern");
+		Objects.requireNonNull(constructor, "constructor");
+		this.pattern = pattern;
+		this.zIndex = zIndex;
+		this.constructor = constructor;
 	}
 
 	@NotNull
@@ -91,15 +136,9 @@ public class PatternParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "sketch");
-		return Parsing.parseAll(tree, this.pattern)
+		return Parsing.parseAll(tree, this.pattern, this.zIndex)
 					  .parallelStream()
-					  .map(m -> {
-						  Document d = tree.document();
-						  Sketch s = this.constructor.get();
-						  Tree t = new Tree(d, m, s);
-						  s.setTree(t);
-						  return t;
-					  })
+					  .map(m -> this.constructor.apply(tree.document(), m))
 					  .collect(Collectors.toSet());
 	}
 }
