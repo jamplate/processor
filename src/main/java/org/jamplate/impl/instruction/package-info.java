@@ -52,6 +52,17 @@
  *             replace X to Y in all REPRINTS
  *     </li>
  *     <li>
+ *         {@code FREE( X : Address ) : Void}
+ *         <p>
+ *             delete the value at X in the heap
+ *     </li>
+ *     <li>
+ *         {@code REPREE( X : Address ) : Void}
+ *         <p>
+ *             delete the value at X in the heap;
+ *             revoke any replacing order for X
+ *     </li>
+ *     <li>
  *         {@code DEF( X : Address ) : Text}
  *         <p>
  *             return {@code true} if the address is defined, {@code false} otherwise.
