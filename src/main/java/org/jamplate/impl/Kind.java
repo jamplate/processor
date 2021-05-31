@@ -121,6 +121,7 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ELIF = "cx/cmd.elif";
+
 	/**
 	 * The kind of the {@code elifdef} command.
 	 *
@@ -128,6 +129,7 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ELIFDEF = "cx/cmd.elifdef";
+
 	/**
 	 * The kind of the {@code elifndef} command.
 	 *
@@ -135,6 +137,7 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ELIFNDEF = "cx/cmd.elifndef";
+
 	/**
 	 * The command kind of the {@code else} command.
 	 *
@@ -142,6 +145,15 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ELSE = "cx/cmd.else";
+
+	/**
+	 * The command kind of the {@code endfor} command.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_CMD_ENDFOR = "cx/cmd.endfor";
+
 	/**
 	 * The command kind of the {@code endif} command.
 	 *
@@ -149,6 +161,15 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ENDIF = "cx/cmd.endif";
+
+	/**
+	 * The command kind of the {@code for} command.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_CMD_FOR = "cx/cmd.for";
+
 	/**
 	 * The command kind of the {@code #if} command.
 	 *
@@ -156,6 +177,7 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_IF = "cx/cmd.if";
+
 	/**
 	 * The kind of the {@code #ifdef} command.
 	 *
@@ -163,6 +185,7 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_IFDEF = "cx/cmd.ifdef";
+
 	/**
 	 * The kind of the {@code #ifndef} command.
 	 *
@@ -210,6 +233,14 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_TYPE = "cx/cmd.type";
+
+	/**
+	 * The command kind of the {@code #undef} command.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final String CX_CMD_UNDEF = "cx/cmd.undef";
 
 	//CX FLW
 
