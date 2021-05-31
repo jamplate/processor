@@ -307,6 +307,24 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses {@code #endfor} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ENDFOR = new GroupParser(
+			Pattern.compile("^#((?i)endfor)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDFOR), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
 	 * A parser that parses {@code #endif} commands.
 	 *
 	 * @since 0.2.0 ~2021.05.30
@@ -321,6 +339,40 @@ public final class Parsers {
 					t.getSketch()
 					 .get(Component.TYPE)
 					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #for} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Parser CX_CMD_FOR = new GroupParser(
+			Pattern.compile("^#((?i)for)\\s(\\S+)\\s?(.*)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_FOR), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
 			))
 	);
 
