@@ -17,8 +17,8 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.util.Trees;
 import org.jamplate.model.CompileException;
-import org.jamplate.model.Dominance;
 import org.jamplate.model.Reference;
+import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,35 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.2.0 ~2021.05.20
  */
 public final class Processors {
-	//CX
+	//CX CMD
+
+	/**
+	 * A processor that processes commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Processor CX_CMD = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> tree.getSketch().getKind().equals(Kind.CX_CMD))
+			 .forEach(tree -> {
+				 Tree child = tree.getChild();
+
+				 if (child == null || child.getNext() != null)
+					 throw new CompileException(
+							 "Unrecognized command",
+							 tree
+					 );
+
+				 tree.pop();
+				 modified[0] = true;
+			 });
+		return modified[0];
+	};
+
+	//CX FLW
 
 	/**
 	 * A processor that parses if context.
@@ -106,17 +134,11 @@ public final class Processors {
 										  t.reference().length() -
 										  position;
 
-							 if (Dominance.compute(
-									 tree, position, position + length
-							 ) == Dominance.EXACT) {
-								 tree.getSketch().setKind(Kind.CX_FLW_IF);
-								 modified[0] = true;
-								 return;
-							 }
-
-							 Tree contextTree = new Tree(tree.document(), new Reference(position, length));
-							 contextTree.getSketch().setKind(Kind.CX_FLW_IF);
-							 tree.offer(contextTree);
+							 tree.offer(new Tree(
+									 tree.document(),
+									 new Reference(position, length),
+									 new Sketch(Kind.CX_FLW_IF)
+							 ));
 							 modified[0] = true;
 							 return;
 					 }
