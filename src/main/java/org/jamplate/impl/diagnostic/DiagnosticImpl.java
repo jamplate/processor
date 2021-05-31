@@ -22,6 +22,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -114,6 +116,19 @@ public class DiagnosticImpl implements Diagnostic {
 				   .append(":")
 				   .append(Trees.line(trace))
 				   .append(")");
+
+		if (message.getPriority().equals(MessagePriority.DEBUG)) {
+			Throwable exception = message.getException();
+
+			if (exception != null) {
+				StringWriter buffer = new StringWriter();
+
+				exception.printStackTrace(new PrintWriter(buffer));
+
+				builder.append("\n\n")
+					   .append(buffer);
+			}
+		}
 
 		return builder.toString();
 	}
