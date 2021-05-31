@@ -40,7 +40,7 @@ public class MergeParser implements Parser {
 	 * @since 0.2.0 ~2021.05.18
 	 */
 	@NotNull
-	protected Parser parser;
+	protected final Parser parser;
 
 	/**
 	 * Construct a sequential clash merging parser merging the results of invoking the
@@ -100,7 +100,6 @@ public class MergeParser implements Parser {
 	protected boolean check(@NotNull Tree previous, @NotNull Tree next) {
 		Objects.requireNonNull(previous, "previous");
 		Objects.requireNonNull(next, "next");
-		//noinspection DuplicatedCode
 		switch (Dominance.compute(previous, next)) {
 			case CONTAIN:
 				//the previous fits on the next

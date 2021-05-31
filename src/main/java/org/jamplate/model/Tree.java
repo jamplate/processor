@@ -893,7 +893,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 *                                  tree in the structure of this tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	@SuppressWarnings({"DuplicatedCode", "OverlyComplexMethod", "OverlyLongMethod"})
+	@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
 	@Contract(mutates = "this,param")
 	private void offerParent(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
