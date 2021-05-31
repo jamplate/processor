@@ -76,9 +76,10 @@ public class FlatOrderParser extends OrderParser {
 				//the primary is the superior, as usual :P
 			case SHARE:
 				//a clash!!
+				return false;
 			case EXACT:
 				//takeover
-				return false;
+				return primary.getZIndex() != secondary.getZIndex();
 			default:
 				//unexpected
 				throw new InternalError();

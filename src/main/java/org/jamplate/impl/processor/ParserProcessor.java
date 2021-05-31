@@ -65,11 +65,7 @@ public class ParserProcessor implements Processor {
 				return modified;
 
 			for (Tree tree : treeSet)
-				if (tree.reference().equals(root.reference()))
-					//its OK baby its OK to takeover :)
-					root.setSketch(tree.getSketch());
-				else
-					root.offer(tree);
+				root.offer(tree);
 
 			modified = true;
 		}

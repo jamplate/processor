@@ -134,7 +134,7 @@ public class RandomMergeParser implements Parser {
 				return true;
 			case SAME:
 				//make the other win
-				return false;
+				return tree.getZIndex() != other.getZIndex();
 			default:
 				//unknown relation
 				throw new InternalError();

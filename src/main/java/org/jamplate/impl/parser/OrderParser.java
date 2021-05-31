@@ -157,9 +157,10 @@ public class OrderParser implements Parser {
 				//the two trees do not intersect
 				return true;
 			case SHARE:
-			case EXACT:
 				//the secondary cannot be with the primary, the secondary must be removed
 				return false;
+			case EXACT:
+				return primary.getZIndex() != secondary.getZIndex();
 			default:
 				//unexpected
 				throw new InternalError();

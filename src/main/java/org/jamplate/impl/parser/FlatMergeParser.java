@@ -57,9 +57,10 @@ public class FlatMergeParser extends MergeParser {
 				//the previous is the superior
 			case SHARE:
 				//a clash!!
+				return false;
 			case EXACT:
 				//takeover
-				return false;
+				return previous.getZIndex() != next.getZIndex();
 			default:
 				//unexpected
 				throw new InternalError();

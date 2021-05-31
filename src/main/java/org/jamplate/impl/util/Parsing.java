@@ -85,6 +85,45 @@ public final class Parsing {
 	}
 
 	/**
+	 * Parse the whole given {@code tree} with the given {@code pattern} and return the
+	 * references of the groups in the given {@code pattern}.
+	 *
+	 * @param tree    the tree to be parsed.
+	 * @param pattern the pattern to look for.
+	 * @return an ordered list containing the references of the parsed groups. Or {@code
+	 * 		null} if the given {@code tree} does not match the given {@code pattern}.
+	 * @throws NullPointerException if the given {@code tree} or {@code pattern} is null.
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@Nullable
+	@Contract(pure = true)
+	public static List<Reference> parse(@NotNull Tree tree, @NotNull Pattern pattern) {
+		Objects.requireNonNull(tree, "tree");
+		Objects.requireNonNull(pattern, "pattern");
+
+		Matcher matcher = Parsing.matcher(tree, pattern);
+		Reference reference = tree.reference();
+
+		if (matcher.matches()) {
+			List<Reference> results = new ArrayList<>();
+
+			for (int i = 1, l = matcher.groupCount(); i <= l; i++) {
+				int start = matcher.start(i);
+				int end = matcher.end(i);
+
+				results.add(new Reference(
+						start,
+						end - start
+				));
+			}
+
+			return results;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Parse all the ranges matching the given {@code pattern} in the given {@code tree}.
 	 * <br>
 	 * The returned ranges will all have a dominance of {@link Dominance#NONE NONE}
@@ -95,6 +134,7 @@ public final class Parsing {
 	 *
 	 * @param tree    the tree to parse in.
 	 * @param pattern the pattern to look for.
+	 * @param zIndex  the z-index to accept.
 	 * @return a set of references that matches the given {@code pattern} in the given
 	 *        {@code tree}.
 	 * @throws NullPointerException  if the given {@code tree} or {@code pattern} is
@@ -108,8 +148,8 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
-	@Contract(value = "_,_->new", pure = true)
-	public static Set<Reference> parseAll(@NotNull Tree tree, @NotNull Pattern pattern) {
+	@Contract(value = "_,_,_->new", pure = true)
+	public static Set<Reference> parseAll(@NotNull Tree tree, @NotNull Pattern pattern, int zIndex) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
 
@@ -123,7 +163,7 @@ public final class Parsing {
 			int j = matcher.end();
 
 			//validate match
-			if (Parsing.check(tree, i, j))
+			if (Parsing.check(tree, i, j, zIndex))
 				//bingo!
 				results.add(
 						new Reference(i, j - i)
@@ -151,6 +191,7 @@ public final class Parsing {
 	 * @param tree         the tree to parse in.
 	 * @param startPattern the pattern matching the start of the ranges to look for.
 	 * @param endPattern   the pattern matching the end of the ranges to look for.
+	 * @param zIndex       the z-index to accept.
 	 * @return a set of sets of ranges that matches the given {@code pattern} in the given
 	 *        {@code tree}.
 	 * @throws NullPointerException  if the given {@code tree} or {@code startPattern} or
@@ -164,8 +205,8 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
-	@Contract(value = "_,_,_->new", pure = true)
-	public static Set<List<Reference>> parseAll(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	@Contract(value = "_,_,_,_->new", pure = true)
+	public static Set<List<Reference>> parseAll(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern, int zIndex) {
 		//-E--S-S-S-S---E-E-E-S-E-S-E---S---
 		//<>  : : : :   : : : : : : :
 		//    < : : :   > : : : : : :
@@ -198,7 +239,7 @@ public final class Parsing {
 			int e = endMatcher.end();
 
 			//validate the range of the end
-			if (Parsing.check(tree, s, e)) {
+			if (Parsing.check(tree, s, e, zIndex)) {
 				//the range of the last found start
 				int i = -1;
 				int j = -1;
@@ -213,7 +254,7 @@ public final class Parsing {
 						break;
 
 					//validate the range of the start
-					if (Parsing.check(tree, ii, jj)) {
+					if (Parsing.check(tree, ii, jj, zIndex)) {
 						i = ii;
 						j = jj;
 					}
@@ -254,6 +295,7 @@ public final class Parsing {
 	 *
 	 * @param tree    the tree to parse in.
 	 * @param pattern the pattern to look for.
+	 * @param zIndex  the z-index to accept.
 	 * @return a reference that matches the given {@code pattern} in the given {@code
 	 * 		tree}. Or {@code null} if no match was found.
 	 * @throws NullPointerException  if the given {@code tree} or {@code pattern} is
@@ -267,8 +309,8 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	@Contract(value = "_,_->new", pure = true)
-	public static Reference parseFirst(@NotNull Tree tree, @NotNull Pattern pattern) {
+	@Contract(value = "_,_,_->new", pure = true)
+	public static Reference parseFirst(@NotNull Tree tree, @NotNull Pattern pattern, int zIndex) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
 
@@ -278,7 +320,7 @@ public final class Parsing {
 			int i = matcher.start();
 			int j = matcher.end();
 
-			if (Parsing.check(tree, i, j))
+			if (Parsing.check(tree, i, j, zIndex))
 				//bingo!
 				return new Reference(i, j - i);
 		}
@@ -303,6 +345,7 @@ public final class Parsing {
 	 * @param tree         the tree to parse in.
 	 * @param startPattern the pattern matching the start of the range to look for.
 	 * @param endPattern   the pattern matching the end of the range to look for.
+	 * @param zIndex       the z-index to accept.
 	 * @return a set of the references matching the given {@code pattern} in the given
 	 *        {@code tree}.
 	 * @throws NullPointerException  if the given {@code tree} or {@code startPattern} or
@@ -316,8 +359,8 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@NotNull
-	@Contract(value = "_,_,_->new", pure = true)
-	public static List<Reference> parseFirst(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern) {
+	@Contract(value = "_,_,_,_->new", pure = true)
+	public static List<Reference> parseFirst(@NotNull Tree tree, @NotNull Pattern startPattern, @NotNull Pattern endPattern, int zIndex) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(startPattern, "startPattern");
 		Objects.requireNonNull(endPattern, "endPattern");
@@ -335,7 +378,7 @@ public final class Parsing {
 			int e = endMatcher.end();
 
 			//validate the range of the end
-			if (Parsing.check(tree, s, e)) {
+			if (Parsing.check(tree, s, e, zIndex)) {
 				//the range of the last found start
 				int i = -1;
 				int j = -1;
@@ -350,7 +393,7 @@ public final class Parsing {
 						break;
 
 					//validate the range of the start
-					if (Parsing.check(tree, ii, jj)) {
+					if (Parsing.check(tree, ii, jj, zIndex)) {
 						i = ii;
 						j = jj;
 					}
@@ -385,9 +428,10 @@ public final class Parsing {
 	 * Check if the given range fits in the given {@code tree} and does not clash and is
 	 * not taken by any child in the given {@code tree}.
 	 *
-	 * @param tree the tree to be checked.
-	 * @param i    the first index in the range to be checked.
-	 * @param j    one past the last index in range to be checked.
+	 * @param tree   the tree to be checked.
+	 * @param i      the first index in the range to be checked.
+	 * @param j      one past the last index in range to be checked.
+	 * @param zIndex the z-index to accept.
 	 * @return true, if the given range is within the given {@code tree} and does not
 	 * 		clash and is not taken by any tree in it.
 	 * @throws NullPointerException     if the given {@code tree} is null.
@@ -395,23 +439,28 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Contract(pure = true)
-	private static boolean check(@NotNull Tree tree, int i, int j) {
+	private static boolean check(@NotNull Tree tree, int i, int j, int zIndex) {
 		Objects.requireNonNull(tree, "tree");
 		if (i < 0 || j < i)
 			throw new IllegalArgumentException("i=" + i + " j=" + j);
 
 		switch (Dominance.compute(tree, i, j)) {
+			case EXACT:
+				if (tree.getZIndex() >= zIndex)
+					return false;
 			case PART:
 				//if the range is within `tree`
 				for (Tree s : tree)
 					switch (Dominance.compute(s, i, j)) {
+						case EXACT:
+							if (s.getZIndex() <= zIndex)
+								return false;
 						case CONTAIN:
 						case NONE:
 							//if the range does not clash with `n`
 							continue;
-						case PART:
-						case EXACT:
 						case SHARE:
+						case PART:
 							return false;
 						default:
 							throw new InternalError();
@@ -419,7 +468,6 @@ public final class Parsing {
 
 				return true;
 			case NONE:
-			case EXACT:
 			case SHARE:
 			case CONTAIN:
 				return false;

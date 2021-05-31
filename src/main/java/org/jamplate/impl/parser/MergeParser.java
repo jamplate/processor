@@ -126,9 +126,10 @@ public class MergeParser implements Parser {
 				//the two trees do not intersect
 				return true;
 			case SHARE:
-			case EXACT:
 				//the next cannot be with the previous, the next must be removed
 				return false;
+			case EXACT:
+				return previous.getZIndex() != next.getZIndex();
 			default:
 				//unexpected
 				throw new InternalError();
