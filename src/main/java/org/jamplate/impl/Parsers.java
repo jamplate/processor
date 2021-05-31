@@ -429,6 +429,32 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses {@code #undec} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Parser CX_CMD_UNDEC = new GroupParser(
+			Pattern.compile("^#((?i)undec)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_UNDEC), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
 	 * A parser that parses {@code #undef} commands.
 	 *
 	 * @since 0.2.0 ~2021.05.31
