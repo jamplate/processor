@@ -95,6 +95,8 @@ public final class Jamplate {
 							Compilers.CX_CMD_UNDEC,
 							/* Undef commands */
 							Compilers.CX_CMD_UNDEF,
+							/* Capture flow */
+							Compilers.CX_FLW_CAPTURE,
 							/* If flow */
 							Compilers.CX_FLW_IF,
 							/* For flow */
@@ -178,6 +180,8 @@ public final class Jamplate {
 									Parsers.CX_CMD,
 									/* each command kind */
 									new CollectParser(new CombineParser(
+											/* Parse Capture command components */
+											Parsers.CX_CMD_CAPTURE,
 											/* Parse Console command components */
 											Parsers.CX_CMD_CONSOLE,
 											/* Parse Declare command components */
@@ -192,6 +196,8 @@ public final class Jamplate {
 											Parsers.CX_CMD_ELIFNDEF,
 											/* Parse Else command components */
 											Parsers.CX_CMD_ELSE,
+											/* Parse Endcapture command components */
+											Parsers.CX_CMD_ENDCAPTURE,
 											/* Parse Endfor command components */
 											Parsers.CX_CMD_ENDFOR,
 											/* Parse Endif command components */
@@ -257,6 +263,8 @@ public final class Jamplate {
 			new SequentialProcessor(
 					/* Commands */
 					Processors.CX_CMD,
+					/* Detect capture flows */
+					Processors.CX_FLW_CAPTURE,
 					/* Detect for flows */
 					Processors.CX_FLW_FOR,
 					/* Detect if flows */

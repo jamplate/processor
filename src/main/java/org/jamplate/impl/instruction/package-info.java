@@ -62,6 +62,13 @@
  *             replace X to Y in all REPRINTS
  *     </li>
  *     <li>
+ *         {@code CPED( X : Address , Y : Instruction[] ) : Void}
+ *         <p>
+ *             Allocate captured console when executing Y into the heap at X;
+ *             Push frame before each execution;
+ *             Dump frame after each execution
+ *     </li>
+ *     <li>
  *         {@code FREE( X : Address ) : Void}
  *         <p>
  *             delete the value at X in the heap

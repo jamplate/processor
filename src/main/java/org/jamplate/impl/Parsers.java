@@ -117,6 +117,32 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses {@code #capture} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final Parser CX_CMD_CAPTURE = new GroupParser(
+			Pattern.compile("^#((?i)capture)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_CAPTURE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
 	 * A parser that parses {@code #console} commands.
 	 *
 	 * @since 0.2.0 ~2021.05.30
@@ -297,6 +323,24 @@ public final class Parsers {
 	public static final Parser CX_CMD_ELSE = new GroupParser(
 			Pattern.compile("^#((?i)else)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELSE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #endcapture} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ENDCAPTURE = new GroupParser(
+			Pattern.compile("^#((?i)endcapture)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDCAPTURE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,

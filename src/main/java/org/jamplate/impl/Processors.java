@@ -62,6 +62,65 @@ public final class Processors {
 	//CX FLW
 
 	/**
+	 * A processor that parses capture context.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_FLW_CAPTURE = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> {
+				 if (!tree.getSketch().getKind().equals(Kind.CX_FLW_CAPTURE))
+					 for (Tree t : tree)
+						 switch (t.getSketch().getKind()) {
+							 case Kind.CX_CMD_CAPTURE:
+							 case Kind.CX_CMD_ENDCAPTURE:
+								 return true;
+						 }
+
+				 return false;
+			 })
+			 .forEach(tree -> {
+				 Tree captureTree = null;
+
+				 for (Tree t : tree)
+					 switch (t.getSketch().getKind()) {
+						 case Kind.CX_CMD_CAPTURE:
+							 captureTree = t;
+							 break;
+						 case Kind.CX_CMD_ENDCAPTURE:
+							 //bingo
+							 if (captureTree == null)
+								 throw new CompileException(
+										 "Endcapture command outside capture context"
+								 );
+
+							 int position = captureTree.reference().position();
+							 int length = t.reference().position() +
+										  t.reference().length() -
+										  position;
+
+							 tree.offer(new Tree(
+									 tree.document(),
+									 new Reference(position, length),
+									 new Sketch(Kind.CX_FLW_CAPTURE)
+							 ));
+							 modified[0] = true;
+							 return;
+					 }
+
+				 throw new CompileException(
+						 "Unclosed capture context",
+						 captureTree
+				 );
+			 });
+		return modified[0];
+	};
+
+	/**
 	 * A processor that parses for context.
 	 *
 	 * @since 0.2.0 ~2021.05.31

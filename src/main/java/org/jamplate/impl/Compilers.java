@@ -198,6 +198,52 @@ public final class Compilers {
 	//CX FLW
 
 	/**
+	 * A compiler that compiles capture-contexts. (including the capture and endcapture in
+	 * it)
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Compiler CX_FLW_CAPTURE =
+			new KindCompiler(Kind.CX_FLW_CAPTURE, (compiler, compilation, tree) -> {
+				String address = null;
+				List<Instruction> instructions = new ArrayList<>();
+
+				//assert FOR is the first and ENDFOR is the last
+				for (Tree t : Trees.flatChildren(tree))
+					switch (t.getSketch().getKind()) {
+						case Kind.CX_CMD_CAPTURE: {
+							Tree keyT = t.getSketch().get(Component.KEY).getTree();
+
+							address = Trees.read(keyT).toString();
+							break;
+						}
+						case Kind.CX_CMD_ENDCAPTURE: {
+							//done
+							break;
+						}
+						default: {
+							//instruction
+							instructions.add(compiler.compile(compiler, compilation, t));
+							break;
+						}
+					}
+
+				if (address == null)
+					throw new CompileException(
+							"Capture context is missing some components",
+							tree
+					);
+
+				return new CpedAddrXinstr(
+						tree,
+						address,
+						instructions
+				);
+			});
+
+	/**
 	 * A compiler that compiles for-contexts. (including the for and endfor in it)
 	 *
 	 * @since 0.2.0 ~2021.05.31

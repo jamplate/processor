@@ -82,6 +82,14 @@ public final class Kind {
 	public static final String CX_CMD = "cx/cmd";
 
 	/**
+	 * The command kind of the {@code #capture} command.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final String CX_CMD_CAPTURE = "cx/cmd.capture";
+
+	/**
 	 * The kind of the closing anchor of a single-line command.
 	 *
 	 * @since 0.2.0 ~2021.05.19
@@ -145,6 +153,14 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_ELSE = "cx/cmd.else";
+
+	/**
+	 * The command kind of the {@code #endcapture} command.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final String CX_CMD_ENDCAPTURE = "cx/cmd.endcapture";
 
 	/**
 	 * The command kind of the {@code endfor} command.
@@ -259,6 +275,14 @@ public final class Kind {
 	public static final String CX_CMD_UNDEF = "cx/cmd.undef";
 
 	//CX FLW
+
+	/**
+	 * The capture command context kind.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final String CX_FLW_CAPTURE = "cx/flw.capture";
 
 	/**
 	 * The for command context kind.
