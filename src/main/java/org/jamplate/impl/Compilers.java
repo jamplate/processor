@@ -63,17 +63,21 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler CX_CMD_DECLARE =
 			new KindCompiler(Kind.CX_CMD_DECLARE, (compiler, compilation, tree) -> {
-				Tree keyT = tree.getSketch().get(Component.PARAMETER).get(Component.KEY).getTree();
-				Tree valueT = tree.getSketch().get(Component.PARAMETER).get(Component.VALUE).getTree();
+				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
 				String address = Trees.read(keyT).toString();
-				Instruction instruction = compiler.compile(compiler, compilation, valueT);
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
-				return new AllocAddrExecInstr(
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized parameter",
+							paramT
+					);
+
+				return new RepllocAddrExecInstr(
 						tree,
 						address,
-						instruction == null ?
-						Instruction.empty(valueT) :
 						instruction
 				);
 			});
@@ -86,17 +90,21 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler CX_CMD_DEFINE =
 			new KindCompiler(Kind.CX_CMD_DEFINE, (compiler, compilation, tree) -> {
-				Tree keyT = tree.getSketch().get(Component.PARAMETER).get(Component.KEY).getTree();
-				Tree valueT = tree.getSketch().get(Component.PARAMETER).get(Component.VALUE).getTree();
+				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
 				String address = Trees.read(keyT).toString();
-				Instruction instruction = compiler.compile(compiler, compilation, valueT);
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized parameter",
+							paramT
+					);
 
 				return new RepllocAddrExecInstr(
 						tree,
 						address,
-						instruction == null ?
-						Instruction.empty(valueT) :
 						instruction
 				);
 			});
@@ -109,17 +117,20 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler CX_CMD_INCLUDE =
 			new KindCompiler(Kind.CX_CMD_INCLUDE, (compiler, compilation, tree) -> {
-				Tree parameterT = tree.getSketch().get(Component.PARAMETER).getTree();
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
-				Instruction instruction = compiler.compile(compiler, compilation, parameterT);
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
 				if (instruction == null)
 					throw new CompileException(
 							"Unrecognized parameter",
-							parameterT
+							paramT
 					);
 
-				return new ExecImportExecInstr(tree, instruction);
+				return new ExecImportExecInstr(
+						tree,
+						instruction
+				);
 			});
 
 	//CX FLW
@@ -150,32 +161,18 @@ public final class Compilers {
 						}
 						case Kind.CX_CMD_IFDEF:
 						case Kind.CX_CMD_ELIFDEF: {
-							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
-							String address = Trees.read(paramT).toString().trim();
+							Tree keyT = t.getSketch().get(Component.KEY).getTree();
+							String address = Trees.read(keyT).toString();
 
-							//noinspection DynamicRegexReplaceableByCompiledPattern
-							if (!address.matches("\\S+"))
-								throw new CompileException(
-										"IllegalAddress",
-										paramT
-								);
-
-							instructions.put(new DefAddr(paramT, address), current = new ArrayList<>());
+							instructions.put(new DefAddr(keyT, address), current = new ArrayList<>());
 							break;
 						}
 						case Kind.CX_CMD_IFNDEF:
 						case Kind.CX_CMD_ELIFNDEF: {
-							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
-							String address = Trees.read(paramT).toString().trim();
+							Tree keyT = t.getSketch().get(Component.KEY).getTree();
+							String address = Trees.read(keyT).toString();
 
-							//noinspection DynamicRegexReplaceableByCompiledPattern
-							if (!address.matches("\\S+"))
-								throw new CompileException(
-										"IllegalAddress",
-										paramT
-								);
-
-							instructions.put(new NdefAddr(paramT, address), current = new ArrayList<>());
+							instructions.put(new NdefAddr(keyT, address), current = new ArrayList<>());
 							break;
 						}
 						case Kind.CX_CMD_ELSE: {
@@ -239,7 +236,7 @@ public final class Compilers {
 
 				if (instruction == null)
 					throw new CompileException(
-							"Unrecognized value",
+							"Unrecognized parameter",
 							parameterT
 					);
 

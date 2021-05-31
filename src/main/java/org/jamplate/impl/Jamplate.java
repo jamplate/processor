@@ -46,34 +46,34 @@ public final class Jamplate {
 	public static final Analyzer ANALYZER =
 			new SequentialAnalyzer(
 					/* Suppressed EOL First, before `CX_CMD`s get convert */
-					new RecursiveAnalyzer(Analyzers.SX_EOL_SUPPRESSED),
-					/* Commands */
-					new RecursiveAnalyzer(new SequentialAnalyzer(
-							/* Console command */
-							Analyzers.CX_CMD_CONSOLE,
-							/* Declare command */
-							Analyzers.CX_CMD_DECLARE,
-							/* Define command */
-							Analyzers.CX_CMD_DEFINE,
-							/* Elif command */
-							Analyzers.CX_CMD_ELIF,
-							/* Elifdef command */
-							Analyzers.CX_CMD_ELIFDEF,
-							/* Elifndef command */
-							Analyzers.CX_CMD_ELIFNDEF,
-							/* Else command */
-							Analyzers.CX_CMD_ELSE,
-							/* Endif command */
-							Analyzers.CX_CMD_ENDIF,
-							/* If command */
-							Analyzers.CX_CMD_IF,
-							/* Ifdef command */
-							Analyzers.CX_CMD_IFDEF,
-							/* Ifndef command */
-							Analyzers.CX_CMD_IFNDEF,
-							/* Include command */
-							Analyzers.CX_CMD_INCLUDE
-					))
+					new RecursiveAnalyzer(Analyzers.SX_EOL_SUPPRESSED)
+					//					/* Commands */
+					//					new RecursiveAnalyzer(new SequentialAnalyzer(
+					//							/* Console command */
+					//							Analyzers.CX_CMD_CONSOLE,
+					//							/* Declare command */
+					//							Analyzers.CX_CMD_DECLARE,
+					//							/* Define command */
+					//							Analyzers.CX_CMD_DEFINE,
+					//							/* Elif command */
+					//							Analyzers.CX_CMD_ELIF,
+					//							/* Elifdef command */
+					//							Analyzers.CX_CMD_ELIFDEF,
+					//							/* Elifndef command */
+					//							Analyzers.CX_CMD_ELIFNDEF,
+					//							/* Else command */
+					//							Analyzers.CX_CMD_ELSE,
+					//							/* Endif command */
+					//							Analyzers.CX_CMD_ENDIF,
+					//							/* If command */
+					//							Analyzers.CX_CMD_IF,
+					//							/* Ifdef command */
+					//							Analyzers.CX_CMD_IFDEF,
+					//							/* Ifndef command */
+					//							Analyzers.CX_CMD_IFNDEF,
+					//							/* Include command */
+					//							Analyzers.CX_CMD_INCLUDE
+					//					))
 			);
 
 	/**
@@ -147,8 +147,6 @@ public final class Jamplate {
 			new CollectParser(new OrderParser(
 					/* Separate the file by lines. */
 					Parsers.SX_EOL,
-					/* Always ignore commented end-of-lines */
-					Parsers.CM_SLN,
 					/* Wild Block Battles (first occurs win) */
 					new MergeParser(new CombineParser(
 							/* Comment blocks */
@@ -164,13 +162,44 @@ public final class Jamplate {
 									Parsers.VL_STR_ESCAPE
 							)
 					)),
+					/* Always ignore commented end-of-lines */
+					Parsers.CM_SLN,
 					/* Runtime elements, encapsulated to parse inner components */
 					new FlatOrderParser(
 							/* Injections, injection must win over commands */
 							Parsers.CX_INJ,
-							/* Commands */
-							Parsers.CX_CMD
-					).then(new RecursiveParser(new MergeParser(new CombineParser(
+							new ThenOfferParser(
+									/* Commands */
+									Parsers.CX_CMD,
+									/* each command kind */
+									new CollectParser(new CombineParser(
+											/* Parse Console command components */
+											Parsers.CX_CMD_CONSOLE,
+											/* Parse Declare command components */
+											Parsers.CX_CMD_DECLARE,
+											/* Parse Define command components */
+											Parsers.CX_CMD_DEFINE,
+											/* Parse Elif command components */
+											Parsers.CX_CMD_ELIF,
+											/* Parse Elifdef command components */
+											Parsers.CX_CMD_ELIFDEF,
+											/* Parse Elifndef command components */
+											Parsers.CX_CMD_ELIFNDEF,
+											/* Parse Else command components */
+											Parsers.CX_CMD_ELSE,
+											/* Parse Endif command components */
+											Parsers.CX_CMD_ENDIF,
+											/* Parse If command components */
+											Parsers.CX_CMD_IF,
+											/* Parse Ifdef command components */
+											Parsers.CX_CMD_IFDEF,
+											/* Parse Ifndef command components */
+											Parsers.CX_CMD_IFNDEF,
+											/* Parse Include command components */
+											Parsers.CX_CMD_INCLUDE
+									))
+							)
+					).then(new RecursiveParser(new MergeParser(new OrderParser(
 							/* References */
 							Parsers.VL_REF,
 							/* Numbers */
@@ -202,6 +231,8 @@ public final class Jamplate {
 	@NotNull
 	public static final Processor PROCESSOR =
 			new SequentialProcessor(
+					/* Commands */
+					Processors.CX_CMD,
 					/* Detect if flows */
 					Processors.CX_FLW_IF,
 					/* Detect strings */

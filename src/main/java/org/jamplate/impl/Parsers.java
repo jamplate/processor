@@ -15,11 +15,11 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.parser.CommandParser;
 import org.jamplate.impl.parser.DoublePatternParser;
-import org.jamplate.impl.parser.InjectionParser;
+import org.jamplate.impl.parser.GroupParser;
 import org.jamplate.impl.parser.PatternParser;
 import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,12 +43,23 @@ public final class Parsers {
 	@NotNull
 	public static final Parser CM_BLK = new DoublePatternParser(
 			Pattern.compile("/\\*"),
-			Pattern.compile("\\*/")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.CM_BLK);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.CM_BLK_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.CM_BLK_CLOSE);
-	});
+			Pattern.compile("\\*/"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_BLK)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.CM_BLK_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.CM_BLK_CLOSE)
+			))
+	);
 
 	/**
 	 * A parser that parses commented lines.
@@ -58,37 +69,366 @@ public final class Parsers {
 	@NotNull
 	public static final Parser CM_SLN = new DoublePatternParser(
 			Pattern.compile("//"),
-			Pattern.compile("(?=[\r\n]|$)")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.CM_SLN);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.CM_SLN_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.CM_SLN_CLOSE);
-		tree.getSketch().get(Component.OPEN).getTree().pop();
-	});
+			Pattern.compile("(?=[\r\n]|$)"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_SLN)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.CM_SLN_OPEN),
+					1
+			)),
+			(t, r) -> new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.CM_SLN_CLOSE)
+			)
+	);
 
-	//CX
+	//CX CMD
 
 	/**
 	 * A parser that parses a single-line command.
 	 *
 	 * @since 0.2.0 ~2021.05.19
 	 */
-	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
-	public static final Parser CX_CMD = new CommandParser(
+	public static final Parser CX_CMD = new DoublePatternParser(
 			Pattern.compile("(?<=^|[\r\n])#"),
-			Pattern.compile("(?=[\r\n]|$)")
-	).then((compilation, tree) -> {
-		Sketch sketch = tree.getSketch();
-		sketch.setKind(Kind.CX_CMD);
-		sketch.get(Component.OPEN).setKind(Kind.CX_CMD_OPEN);
-		sketch.get(Component.CLOSE).setKind(Kind.CX_CMD_CLOSE);
-		sketch.get(Component.CLOSE).getTree().pop();
-		sketch.get(Component.TYPE).setKind(Kind.CX_CMD_TYPE);
-		sketch.get(Component.PARAMETER).setKind(Kind.CX_PRM);
-		sketch.get(Component.PARAMETER).get(Component.KEY).setKind(Kind.CX_CMD_KEY);
-		sketch.get(Component.PARAMETER).get(Component.VALUE).setKind(Kind.CX_PRM);
-	});
+			Pattern.compile("(?=[\r\n]|$)"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.CX_CMD_OPEN)
+			)),
+			(t, r) -> new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.CX_CMD_CLOSE)
+			)
+	);
+
+	/**
+	 * A parser that parses {@code #console} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_CONSOLE = new GroupParser(
+			Pattern.compile("^#((?i)console)\\s?(.*)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_CONSOLE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #declare} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_DECLARE = new GroupParser(
+			Pattern.compile("^#((?i)declare)\\s(\\S+)\\s?(.*)$", Pattern.DOTALL),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_DECLARE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #define} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_DEFINE = new GroupParser(
+			Pattern.compile("^#((?i)define)\\s(\\S+)\\s?(.*)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_DEFINE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #elif} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ELIF = new GroupParser(
+			Pattern.compile("^#((?i)elif)\\s(.+)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #elifdef} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ELIFDEF = new GroupParser(
+			Pattern.compile("^#((?i)elifdef)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIFDEF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #elifndef} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ELIFNDEF = new GroupParser(
+			Pattern.compile("^#((?i)elifndef)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIFNDEF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #else} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ELSE = new GroupParser(
+			Pattern.compile("^#((?i)else)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELSE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #endif} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ENDIF = new GroupParser(
+			Pattern.compile("^#((?i)endif)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDIF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #if} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_IF = new GroupParser(
+			Pattern.compile("^#((?i)if)\\s(.+)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #ifdef} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_IFDEF = new GroupParser(
+			Pattern.compile("^#((?i)ifdef)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IFDEF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #ifndef} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_IFNDEF = new GroupParser(
+			Pattern.compile("^#((?i)ifndef)\\s(\\S+)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IFNDEF), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.KEY)
+					 .setKind(Kind.CX_CMD_KEY),
+					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #include} commands.
+	 *
+	 * @since 0.2.0 ~2021.05.30
+	 */
+	@NotNull
+	public static final Parser CX_CMD_INCLUDE = new GroupParser(
+			Pattern.compile("^#((?i)include)\\s(.+)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_INCLUDE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
+
+	//CX INJ
 
 	/**
 	 * A parser parsing injection sequences.
@@ -96,16 +436,33 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CX_INJ = new InjectionParser(
+	public static final Parser CX_INJ = new DoublePatternParser(
 			Pattern.compile("#\\{"),
-			Pattern.compile("\\}#")
-	).then((compilation, tree) -> {
-		Sketch sketch = tree.getSketch();
-		sketch.setKind(Kind.CX_INJ);
-		sketch.get(Component.OPEN).setKind(Kind.CX_INJ_OPEN);
-		sketch.get(Component.CLOSE).setKind(Kind.CX_INJ_CLOSE);
-		sketch.get(Component.PARAMETER).setKind(Kind.CX_PRM);
-	});
+			Pattern.compile("\\}#"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_INJ)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.CX_INJ_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.CX_INJ_CLOSE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-1
+			))
+	);
 
 	//OP
 
@@ -155,12 +512,23 @@ public final class Parsers {
 	@NotNull
 	public static final Parser SX_CUR = new DoublePatternParser(
 			Pattern.compile("\\{"),
-			Pattern.compile("\\}")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_CUR);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.SX_CUR_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.SX_CUR_CLOSE);
-	});
+			Pattern.compile("\\}"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CUR)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.SX_CUR_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.SX_CUR_CLOSE)
+			))
+	);
 
 	/**
 	 * A parser parsing double quotes.
@@ -169,12 +537,24 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser SX_DQT = new DoublePatternParser(
-			Pattern.compile("(?<!(?<!\\\\)\\\\)\"")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_DQT);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.SX_DQT_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.SX_DQT_CLOSE);
-	});
+			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
+			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_DQT)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.SX_DQT_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.SX_DQT_CLOSE)
+			))
+	);
 
 	/**
 	 * A parser parsing line separators ({@code \n} or {@code \r} or {@code \r\n}).
@@ -183,10 +563,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser SX_EOL = new PatternParser(
-			Pattern.compile("\r\n|\r|\n")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_EOL);
-	});
+			Pattern.compile("\r\n|\r|\n"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_EOL))
+	);
 
 	/**
 	 * A parser parsing quotes.
@@ -195,12 +574,24 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser SX_QTE = new DoublePatternParser(
-			Pattern.compile("(?<!(?<!\\\\)\\\\)'")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_QTE);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.SX_QTE_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.SX_QTE_CLOSE);
-	});
+			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
+			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_QTE)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.SX_QTE_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.SX_QTE_CLOSE)
+			))
+	);
 
 	/**
 	 * A parser parsing round brackets.
@@ -210,12 +601,23 @@ public final class Parsers {
 	@NotNull
 	public static final Parser SX_RND = new DoublePatternParser(
 			Pattern.compile("\\("),
-			Pattern.compile("\\)")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_RND);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.SX_RND_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.SX_RND_CLOSE);
-	});
+			Pattern.compile("\\)"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_RND)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.SX_RND_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.SX_RND_CLOSE)
+			))
+	);
 
 	/**
 	 * A parser parsing square brackets.
@@ -225,12 +627,23 @@ public final class Parsers {
 	@NotNull
 	public static final Parser SX_SQR = new DoublePatternParser(
 			Pattern.compile("\\["),
-			Pattern.compile("\\]")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_SQR);
-		tree.getSketch().get(Component.OPEN).setKind(Kind.SX_SQR_OPEN);
-		tree.getSketch().get(Component.CLOSE).setKind(Kind.SX_SQR_CLOSE);
-	});
+			Pattern.compile("\\]"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_SQR)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.OPEN)
+					 .setKind(Kind.SX_SQR_OPEN)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.CLOSE)
+					 .setKind(Kind.SX_SQR_CLOSE)
+			))
+	);
 
 	//VL
 
@@ -241,10 +654,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser VL_NUM = new PatternParser(
-			Pattern.compile("(?:0[xb])?[0-9_][1-9]*[DdLlFf]?")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.VL_NUM);
-	});
+			Pattern.compile("(?:0[xb])?[0-9_][1-9]*[DdLlFf]?"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_NUM))
+	);
 
 	/**
 	 * A parser that parses references.
@@ -253,10 +665,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser VL_REF = new PatternParser(
-			Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.VL_REF);
-	});
+			Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_REF))
+	);
 
 	/**
 	 * A parser parsing escaped sequences.
@@ -265,10 +676,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser VL_STR_ESCAPE = new PatternParser(
-			Pattern.compile("\\\\.")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.VL_STR_ESCAPE);
-	});
+			Pattern.compile("\\\\."),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_STR_ESCAPE))
+	);
 
 	/**
 	 * Utility classes must not be initialized.
