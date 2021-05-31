@@ -148,7 +148,7 @@ public class EnvironmentImpl implements Environment {
 	public Compilation optCompilation(@NotNull Document document) {
 		Objects.requireNonNull(document, "document");
 		return this.compilations.computeIfAbsent(document, k ->
-				new CompilationImpl(this, new Tree(document))
+				new CompilationImpl(this, new Tree(document, -1))
 		);
 	}
 
