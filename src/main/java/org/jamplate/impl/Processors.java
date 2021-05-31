@@ -62,11 +62,71 @@ public final class Processors {
 	//CX FLW
 
 	/**
+	 * A processor that parses for context.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_FLW_FOR = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> {
+				 if (!tree.getSketch().getKind().equals(Kind.CX_FLW_FOR))
+					 for (Tree t : tree)
+						 switch (t.getSketch().getKind()) {
+							 case Kind.CX_CMD_FOR:
+							 case Kind.CX_CMD_ENDFOR:
+								 return true;
+						 }
+
+				 return false;
+			 })
+			 .forEach(tree -> {
+				 Tree forTree = null;
+
+				 for (Tree t : tree)
+					 switch (t.getSketch().getKind()) {
+						 case Kind.CX_CMD_FOR:
+							 forTree = t;
+							 break;
+						 case Kind.CX_CMD_ENDFOR:
+							 //bingo
+							 if (forTree == null)
+								 throw new CompileException(
+										 "Endfor command outside for context"
+								 );
+
+							 int position = forTree.reference().position();
+							 int length = t.reference().position() +
+										  t.reference().length() -
+										  position;
+
+							 tree.offer(new Tree(
+									 tree.document(),
+									 new Reference(position, length),
+									 new Sketch(Kind.CX_FLW_FOR)
+							 ));
+							 modified[0] = true;
+							 return;
+					 }
+
+				 throw new CompileException(
+						 "Unclosed for context",
+						 forTree
+				 );
+			 });
+		return modified[0];
+	};
+
+	/**
 	 * A processor that parses if context.
 	 *
 	 * @since 0.2.0 ~2021.05.24
 	 */
 	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
 	public static final Processor CX_FLW_IF = compilation -> {
 		boolean[] modified = {false};
 		Trees.collect(compilation.getRootTree())
