@@ -82,6 +82,8 @@ public final class Jamplate {
 					Compilers.CX_CMD_UNDEF,
 					/* If flow */
 					Compilers.CX_FLW_IF,
+					/* For flow */
+					Compilers.CX_FLW_FOR,
 					/* Injections */
 					Compilers.CX_INJ,
 					/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
@@ -175,8 +177,12 @@ public final class Jamplate {
 													Parsers.CX_CMD_ELIFNDEF,
 													/* Parse Else command components */
 													Parsers.CX_CMD_ELSE,
+													/* Parse Endfor command components */
+													Parsers.CX_CMD_ENDFOR,
 													/* Parse Endif command components */
 													Parsers.CX_CMD_ENDIF,
+													/* Parse For command components */
+													Parsers.CX_CMD_FOR,
 													/* Parse If command components */
 													Parsers.CX_CMD_IF,
 													/* Parse Ifdef command components */
@@ -233,6 +239,8 @@ public final class Jamplate {
 			new SequentialProcessor(
 					/* Commands */
 					Processors.CX_CMD,
+					/* Detect for flows */
+					Processors.CX_FLW_FOR,
 					/* Detect if flows */
 					Processors.CX_FLW_IF
 			);
