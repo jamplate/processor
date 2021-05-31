@@ -16,7 +16,7 @@
 package org.jamplate.impl;
 
 import cufy.util.Node;
-import cufy.util.Nodes;
+import org.jamplate.model.Sketch;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,42 +33,35 @@ public final class Component {
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	@NotNull
-	public static final Node.Key CLOSE = Nodes.key("Close", "");
+	public static final Node.Key CLOSE = Sketch.component("close");
 	/**
-	 * The key of the "key" component.
+	 * The key of the key component.
 	 *
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	@NotNull
-	public static final Node.Key KEY = Nodes.key("Key", "");
+	public static final Node.Key KEY = Sketch.component("key");
 	/**
 	 * The key of the opening anchor component.
 	 *
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	@NotNull
-	public static final Node.Key OPEN = Nodes.key("Open", "");
+	public static final Node.Key OPEN = Sketch.component("open");
 	/**
 	 * The key of the parameter component.
 	 *
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	@NotNull
-	public static final Node.Key PARAMETER = Nodes.key("Parameter", "");
+	public static final Node.Key PARAMETER = Sketch.component("parameter");
 	/**
 	 * The key of the type component.
 	 *
 	 * @since 0.2.0 ~2021.05.25
 	 */
 	@NotNull
-	public static final Node.Key TYPE = Nodes.key("Type", "");
-	/**
-	 * The key of the value component.
-	 *
-	 * @since 0.2.0 ~2021.05.25
-	 */
-	@NotNull
-	public static final Node.Key VALUE = Nodes.key("Value", "");
+	public static final Node.Key TYPE = Sketch.component("type");
 
 	/**
 	 * Utility classes must not be initialized.
