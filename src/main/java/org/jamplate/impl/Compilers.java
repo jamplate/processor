@@ -239,6 +239,7 @@ public final class Compilers {
 					);
 
 				return new FpedAddrExecInstrXinstr(
+						tree,
 						address,
 						instruction,
 						instructions
