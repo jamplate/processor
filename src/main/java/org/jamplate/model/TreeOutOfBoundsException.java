@@ -101,8 +101,9 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
+	@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
 	public TreeOutOfBoundsException(@Nullable Tree bounds, @Nullable Tree illegal) {
-		super(illegal);
+		super(bounds, illegal);
 		this.bounds = bounds;
 	}
 
@@ -115,8 +116,9 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
+	@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
 	public TreeOutOfBoundsException(@Nullable String message, @Nullable Tree bounds, @Nullable Tree illegal) {
-		super(message, illegal);
+		super(message, bounds, illegal);
 		this.bounds = bounds;
 	}
 
@@ -130,8 +132,9 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
+	@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
 	public TreeOutOfBoundsException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree bounds, @Nullable Tree illegal) {
-		super(message, cause, illegal);
+		super(message, cause, bounds, illegal);
 		this.bounds = bounds;
 	}
 
@@ -144,8 +147,9 @@ public class TreeOutOfBoundsException extends IllegalTreeException {
 	 * @param illegal the illegal tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
+	@SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
 	public TreeOutOfBoundsException(@Nullable Throwable cause, @Nullable Tree bounds, @Nullable Tree illegal) {
-		super(cause, illegal);
+		super(cause, bounds, illegal);
 		this.bounds = bounds;
 	}
 

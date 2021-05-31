@@ -15,7 +15,6 @@
  */
 package org.jamplate.model;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,14 +28,6 @@ import org.jetbrains.annotations.Nullable;
 public class TreeClashException extends IllegalTreeException {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -7585834524850028148L;
-
-	/**
-	 * The primary tree.
-	 *
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	protected Tree primary;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message. The cause is
@@ -101,8 +92,7 @@ public class TreeClashException extends IllegalTreeException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable Tree primary, @Nullable Tree illegal) {
-		super(illegal);
-		this.primary = primary;
+		super(primary, illegal);
 	}
 
 	/**
@@ -115,8 +105,7 @@ public class TreeClashException extends IllegalTreeException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable String message, @Nullable Tree primary, @Nullable Tree illegal) {
-		super(message, illegal);
-		this.primary = primary;
+		super(message, primary, illegal);
 	}
 
 	/**
@@ -130,8 +119,7 @@ public class TreeClashException extends IllegalTreeException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable String message, @Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
-		super(message, cause, illegal);
-		this.primary = primary;
+		super(message, cause, primary, illegal);
 	}
 
 	/**
@@ -144,19 +132,6 @@ public class TreeClashException extends IllegalTreeException {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	public TreeClashException(@Nullable Throwable cause, @Nullable Tree primary, @Nullable Tree illegal) {
-		super(cause, illegal);
-		this.primary = primary;
-	}
-
-	/**
-	 * Return the primary tree that the illegal tree clashed with.
-	 *
-	 * @return the primary tree. Or {@code null} if unknown or non-existing.
-	 * @since 0.2.0 ~2021.05.15
-	 */
-	@Nullable
-	@Contract(pure = true)
-	public Tree getPrimaryTree() {
-		return this.primary;
+		super(cause, primary, illegal);
 	}
 }
