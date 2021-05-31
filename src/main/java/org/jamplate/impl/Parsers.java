@@ -493,16 +493,26 @@ public final class Parsers {
 	//SX
 
 	/**
+	 * A parser parsing colons.
+	 *
+	 * @since 0.2.0 ~2021.05.16
+	 */
+	@NotNull
+	public static final Parser SX_CLN = new PatternParser(
+			Pattern.compile(":"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CLN))
+	);
+
+	/**
 	 * A parser parsing commas.
 	 *
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
 	public static final Parser SX_CMA = new PatternParser(
-			Pattern.compile(",")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.SX_CMA);
-	});
+			Pattern.compile(","),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CMA))
+	);
 
 	/**
 	 * A parser parsing curly brackets.
@@ -565,6 +575,28 @@ public final class Parsers {
 	public static final Parser SX_EOL = new PatternParser(
 			Pattern.compile("\r\n|\r|\n"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_EOL))
+	);
+
+	/**
+	 * A parser that parses names.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Parser SX_NME = new PatternParser(
+			Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_NME))
+	);
+
+	/**
+	 * A parser parsing numbers.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	public static final Parser SX_NUM = new PatternParser(
+			Pattern.compile("(?:0[xb])?[0-9_][1-9]*[DdLlFf]?"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_NUM))
 	);
 
 	/**
@@ -643,41 +675,6 @@ public final class Parsers {
 					 .get(Component.CLOSE)
 					 .setKind(Kind.SX_SQR_CLOSE)
 			))
-	);
-
-	//VL
-
-	/**
-	 * A parser parsing numbers.
-	 *
-	 * @since 0.2.0 ~2021.05.25
-	 */
-	@NotNull
-	public static final Parser VL_NUM = new PatternParser(
-			Pattern.compile("(?:0[xb])?[0-9_][1-9]*[DdLlFf]?"),
-			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_NUM))
-	);
-
-	/**
-	 * A parser that parses references.
-	 *
-	 * @since 0.2.0 ~2021.05.24
-	 */
-	@NotNull
-	public static final Parser VL_REF = new PatternParser(
-			Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*"),
-			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_REF))
-	);
-
-	/**
-	 * A parser parsing escaped sequences.
-	 *
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	public static final Parser VL_STR_ESCAPE = new PatternParser(
-			Pattern.compile("\\\\."),
-			(d, r) -> new Tree(d, r, new Sketch(Kind.VL_STR_ESCAPE))
 	);
 
 	/**
