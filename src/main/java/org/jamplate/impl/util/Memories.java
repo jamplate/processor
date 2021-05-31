@@ -55,12 +55,12 @@ public final class Memories {
 		Objects.requireNonNull(memory, "memory");
 		Value value = memory.pop();
 		while (true) {
-			Value next = memory.pop();
+			Value prev = memory.pop();
 
-			if (next == Value.NULL)
+			if (prev == Value.NULL)
 				return value;
 
-			Value prev = value;
+			Value next = value;
 			value = m ->
 					prev.evaluate(m) +
 					next.evaluate(m);
