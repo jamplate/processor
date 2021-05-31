@@ -18,11 +18,14 @@ package org.jamplate.impl.model;
 import org.jamplate.model.Document;
 import org.jamplate.model.DocumentNotFoundError;
 import org.jamplate.model.DocumentNotFoundException;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A document that delegates to a {@link File}.
@@ -73,6 +76,70 @@ public class FileDocument implements Document {
 	public FileDocument(@NotNull File file) {
 		Objects.requireNonNull(file, "file");
 		this.file = file;
+	}
+
+	/**
+	 * Return an array of all the document in the hierarchy of the given {@code file}
+	 * (including itself).
+	 *
+	 * @param file the file to collect the documents in its hierarchy (including itself).
+	 * @return an array of all the documents in the hierarchy of the given {@code file}.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Document[] hierarchy(@NotNull File file) {
+		Objects.requireNonNull(file, "file");
+		//noinspection ZeroLengthArrayAllocation
+		return FileDocument.hierarchySet(file).toArray(new Document[0]);
+	}
+
+	/**
+	 * Return a set of all the document in the hierarchy of the given {@code file}
+	 * (including itself).
+	 *
+	 * @param file the file to collect the documents in its hierarchy (including itself).
+	 * @return a set of all the documents in the hierarchy of the given {@code file}.
+	 * @throws NullPointerException if the given {@code file} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Set<Document> hierarchySet(@NotNull File file) {
+		Objects.requireNonNull(file, "file");
+		Set<Document> documentSet = new HashSet<>();
+		FileDocument.hierarchySet(documentSet, file);
+		return documentSet;
+	}
+
+	/**
+	 * Collect all the documents in the hierarchy of the given {@code file} and add them
+	 * to the given {@code documentSet}. Or if the given {@code file} is not a directory
+	 * then add a document for it to the given {@code documentSet}.
+	 *
+	 * @param documentSet the results set.
+	 * @param file        the file to collect the documents in its hierarchy (including
+	 *                    itself).
+	 * @throws NullPointerException if the given {@code documentSet} or {@code file} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "param1")
+	private static void hierarchySet(@NotNull Set<Document> documentSet, @NotNull File file) {
+		Objects.requireNonNull(documentSet, "documentSet");
+		Objects.requireNonNull(file, "file");
+		if (file.isDirectory()) {
+			File[] children = file.listFiles();
+
+			if (children != null)
+				for (File child : children)
+					FileDocument.hierarchySet(documentSet, child);
+
+			return;
+		}
+
+		documentSet.add(new FileDocument(file));
 	}
 
 	@Override
@@ -145,6 +212,6 @@ public class FileDocument implements Document {
 	@NotNull
 	@Override
 	public String toString() {
-		return this.file.toString();
+		return this.file.toString().replace('\\', '/');
 	}
 }
