@@ -173,6 +173,54 @@ public final class Compilers {
 	//CX FLW
 
 	/**
+	 * A compiler that compiles for-contexts. (including the for and endfor in it)
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Compiler CX_FLW_FOR =
+			new KindCompiler(Kind.CX_FLW_FOR, (compiler, compilation, tree) -> {
+				String address = null;
+				Instruction instruction = null;
+				List<Instruction> instructions = new ArrayList<>();
+
+				//assert FOR is the first and ENDFOR is the last
+				for (Tree t : Trees.flatChildren(tree))
+					switch (t.getSketch().getKind()) {
+						case Kind.CX_CMD_FOR: {
+							Tree keyT = t.getSketch().get(Component.KEY).getTree();
+							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
+
+							address = Trees.read(keyT).toString();
+							instruction = compiler.compile(compiler, compilation, paramT);
+							break;
+						}
+						case Kind.CX_CMD_ENDFOR: {
+							//done
+							break;
+						}
+						default: {
+							//instruction
+							instructions.add(compiler.compile(compiler, compilation, t));
+							break;
+						}
+					}
+
+				if (address == null || instruction == null)
+					throw new CompileException(
+							"For context is missing some components",
+							tree
+					);
+
+				return new FpedAddrExecInstrXinstr(
+						address,
+						instruction,
+						instructions
+				);
+			});
+
+	/**
 	 * A compiler that compiles if-contexts. (including the if, elif-s, else and endif in
 	 * it)
 	 *
