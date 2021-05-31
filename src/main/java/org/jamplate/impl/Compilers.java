@@ -77,7 +77,7 @@ public final class Compilers {
 							paramT
 					);
 
-				return new RepllocAddrExecInstr(
+				return new AllocAddrExecInstr(
 						tree,
 						address,
 						instruction
