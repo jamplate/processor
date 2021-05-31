@@ -473,10 +473,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser OP_ADD = new PatternParser(
-			Pattern.compile("\\+")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.OP_ADD);
-	});
+			Pattern.compile("\\+"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_ADD))
+	);
 
 	/**
 	 * A parser that parses subtraction symbols.
@@ -485,10 +484,9 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser OP_SUB = new PatternParser(
-			Pattern.compile("\\-")
-	).then((compilation, tree) -> {
-		tree.getSketch().setKind(Kind.OP_SUB);
-	});
+			Pattern.compile("\\-"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_SUB))
+	);
 
 	//SX
 
