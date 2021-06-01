@@ -130,7 +130,12 @@ public final class Jamplate {
 											/* Parentheses */
 											Compilers.SX_RND,
 											/* Array */
-											Compilers.SX_SQR
+											Compilers.SX_SQR,
+											/* Nested Parameter */
+											new KindCompiler(Kind.CX_PRM, new FlattenCompiler(
+													FallbackCompiler.INSTANCE,
+													FallbackCompiler.INSTANCE
+											))
 									)
 							)),
 							/* Fallthrough, convert into REPRNT */
