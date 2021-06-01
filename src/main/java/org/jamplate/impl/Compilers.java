@@ -423,6 +423,33 @@ public final class Compilers {
 				);
 			});
 
+	/**
+	 * A compiler that compiles references.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final Compiler CX_PCM_REF =
+			new KindCompiler(Kind.CX_PCM_REF, (compiler, compilation, tree) -> {
+				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
+				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
+
+				String address = Trees.read(keyT).toString();
+				Instruction instruction = compiler.compile(compiler, compilation, accessorT);
+
+				if (instruction == null)
+					throw new CompileException(
+							"Unrecognized accessor",
+							accessorT
+					);
+
+				return new PushGetAddrExecInstr(
+						tree,
+						address,
+						instruction
+				);
+			});
+
 	//CX TXT
 
 	/**
@@ -518,11 +545,7 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler SX_CUR =
 			new KindCompiler(Kind.SX_CUR, new FlattenCompiler(
-					new OrderCompiler(
-							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
-							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
-							FallbackCompiler.INSTANCE
-					),
+					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
 							new KindCompiler(Kind.SX_CUR_OPEN, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_CUR_CLOSE, PushConstCompiler.INSTANCE),
@@ -582,11 +605,7 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler SX_RND =
 			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
-					new OrderCompiler(
-							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
-							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
-							FallbackCompiler.INSTANCE
-					),
+					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
 							new KindCompiler(Kind.SX_RND_OPEN, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_RND_CLOSE, PushConstCompiler.INSTANCE),
@@ -602,11 +621,7 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler SX_SQR =
 			new KindCompiler(Kind.SX_SQR, new FlattenCompiler(
-					new OrderCompiler(
-							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
-							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
-							FallbackCompiler.INSTANCE
-					),
+					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
 							new KindCompiler(Kind.SX_SQR_OPEN, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_SQR_CLOSE, PushConstCompiler.INSTANCE),

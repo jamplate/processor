@@ -327,6 +327,14 @@ public final class Kind {
 	//CX PRM
 
 	/**
+	 * The kind of the reference parameter combination.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final String CX_PCM_REF = "cx/pcm.ref";
+
+	/**
 	 * The kind of parameter context.
 	 *
 	 * @since 0.2.0 ~2021.05.20

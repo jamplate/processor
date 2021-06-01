@@ -102,6 +102,11 @@
  *             return name of X if failed
  *     </li>
  *     <li>
+ *         {@code GET( X : Address , Y : Value | Text ) : Value}
+ *         <p>
+ *             return the value at Y in the result of the evaluation of X.
+ *     </li>
+ *     <li>
  *         {@code EXEC( X : Instruction ) : Value}
  *         <p>
  *             return result of executing X;

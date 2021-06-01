@@ -117,6 +117,8 @@ public final class Jamplate {
 									),
 									/* Compile recognized logic */
 									new OrderCompiler(
+											/* References */
+											Compilers.CX_PCM_REF,
 											/* Object */
 											Compilers.SX_CUR,
 											/* Reference */
@@ -275,7 +277,9 @@ public final class Jamplate {
 					/* Detect for flows */
 					Processors.CX_FLW_FOR,
 					/* Detect if flows */
-					Processors.CX_FLW_IF
+					Processors.CX_FLW_IF,
+					/* Detect references */
+					Processors.CX_PCM_REF
 			);
 
 	/**

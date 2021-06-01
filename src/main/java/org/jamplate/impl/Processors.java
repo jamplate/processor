@@ -367,6 +367,124 @@ public final class Processors {
 		return modified[0];
 	};
 
+	//SX
+
+	/**
+	 * A processor that parses references.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_PCM_REF = compilation -> {
+		boolean[] modified = {false};
+		//noinspection OverlyLongLambda
+		Trees.collect(compilation.getRootTree())
+			 .parallelStream()
+			 .filter(tree -> {
+				 if (!tree.getSketch().getKind().equals(Kind.CX_PCM_REF))
+					 for (Tree t : tree)
+						 switch (t.getSketch().getKind()) {
+							 case Kind.SX_NME:
+								 return true;
+						 }
+
+				 return false;
+			 })
+			 .forEach(tree -> {
+				 Tree nmeTree = null;
+				 Tree firstSqr = null;
+				 Tree lastSqr = null;
+
+				 for0:
+				 for (Tree t : tree)
+					 //noinspection SwitchStatementDensity
+					 switch (t.getSketch().getKind()) {
+						 case Kind.SX_NME:
+							 if (nmeTree != null && firstSqr != null)
+								 //reached the next tree, stop
+								 break for0;
+
+							 firstSqr = null;
+							 lastSqr = null;
+							 nmeTree = t;
+							 break;
+						 case Kind.SX_SQR:
+							 if (nmeTree != null) {
+								 if (lastSqr != null) {
+									 if (Intersection.compute(lastSqr, t) !=
+										 Intersection.NEXT)
+										 //reached last valid square
+										 break for0;
+
+									 lastSqr = t;
+									 break;
+								 }
+
+								 if (Intersection.compute(nmeTree, t) !=
+									 Intersection.NEXT)
+									 //no valid square
+									 return;
+
+								 //first valid square
+								 firstSqr = t;
+								 lastSqr = t;
+								 break;
+							 }
+
+							 //previous square
+							 break;
+						 default:
+							 if (nmeTree != null)
+								 //no more valid squares
+								 break;
+					 }
+
+				 if (firstSqr == null)
+					 //no valid square
+					 return;
+
+				 int pointPos = firstSqr.reference().position();
+				 int pointLength = lastSqr.reference().position() +
+								   lastSqr.reference().length() -
+								   pointPos;
+
+				 int refPosition = nmeTree.reference().position();
+				 int refLength = lastSqr.reference().position() +
+								 lastSqr.reference().length() -
+								 refPosition;
+
+				 Sketch sketch = new Sketch(Kind.CX_PCM_REF);
+				 nmeTree.setSketch(
+						 sketch.get(Component.KEY)
+							   .setKind(Kind.SX_NME)
+							   .setTree(nmeTree)
+				 );
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 refPosition,
+								 refLength
+						 ),
+						 sketch,
+						 -1
+				 ));
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 pointPos,
+								 pointLength
+						 ),
+						 sketch.get(Component.ACCESSOR)
+							   .setKind(Kind.CX_PRM),
+						 -100
+				 ));
+
+				 modified[0] = true;
+			 });
+		return modified[0];
+	};
+
 	/**
 	 * Utility classes must not be initialized.
 	 *
