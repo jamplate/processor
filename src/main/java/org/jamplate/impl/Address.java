@@ -32,7 +32,7 @@ public final class Address {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	public static final String DEFINE = "__define__";
+	public static final String DEFINE = "__DEFINE__";
 
 	/**
 	 * An address used to allocate the current directory.
