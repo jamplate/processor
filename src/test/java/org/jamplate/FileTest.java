@@ -28,7 +28,7 @@ public class FileTest {
 			System.err.println("Compilation Error");
 			System.err.println();
 			environment.getDiagnostic()
-					   .flush();
+					   .flush(true);
 		}
 
 		Compilation[] jamplates = environment
@@ -43,7 +43,7 @@ public class FileTest {
 			System.err.println("Runtime Error");
 			System.err.println();
 			environment.getDiagnostic()
-					   .flush();
+					   .flush(true);
 		}
 
 		environment.getDiagnostic()
