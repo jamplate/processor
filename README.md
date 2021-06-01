@@ -22,8 +22,8 @@ other commands.
   declared address will result to overwriting it. Declaring a `#define`-ed address will
   only change the value at the heap, but not the replacement.
 
-- `#DECLARE <Address>[Key]* <Parameter>` this command puts the results of evaluating the
-  parameter given to it to the key (pass the key sequence to access a
+- `#DECLARE <Address>[Parameter]* <Parameter>` this command puts the results of evaluating
+  the parameter given to it to the key (pass the key sequence to access a
   nested `json object`) given to it at the `json object` in the heap at the address given
   to it. If there was no valid `json object` already declared at the address, then a
   new `json object` will be allocated. If a required nested `json object` is missing, or
@@ -44,7 +44,7 @@ other commands.
 
 - `#SPREAD <Parameter>` this command will evaluate the parameter given to it and parse it
   as `json object`. If the parsing was successful, the mappings in the parsed object will
-  be transferred to the heap. Otherwise, the call is ignored.
+  be transferred to the heap.
 
 
 - `#UNDEC <Address>` this command will allocate `NULL` to the heap at the address given to
@@ -92,13 +92,13 @@ scopes.
     - If this command was not between an `#IF`, `#IFDEF` or `#IFNDEF` and an `#ENDIF`
       , then a `Compile` error will occur.
 
-- `#ELIFDEF <Parameter>` this command executes the instructions between it, and the next
+- `#ELIFDEF <Address>` this command executes the instructions between it, and the next
   branch command (or the closing command). if the branch previous to it was not executed,
   and the address given to it was not `NULL`.
     - If this command was not between an `#IF`, `#IFDEF` or `#IFNDEF` and an `#ENDIF`
       , then a `Compile` error will occur.
 
-- `#ELIFNDEF <Parameter>` this command executes the instructions between it, and the next
+- `#ELIFNDEF <Address>` this command executes the instructions between it, and the next
   branch command (or the closing command). if the branch previous to it was not executed,
   and the address given to it was `NULL`.
     - If this command was not between an `#IF`, `#IFDEF` or `#IFNDEF` and an `#ENDIF`
@@ -116,8 +116,7 @@ scopes.
       a `Compile` error will occur.
 
 
-- `#FOR <Address> <Parameter>` this command evaluates the parameter given to it and parses
-  it as a `json array`, then foreach item in the parsed array, this command will allocate
+- `#FOR <Address> <Array>` foreach item in the given array, this command will allocate
   that item to the heap at the address given to it and executes the instructions between
   it and its closing command.
     - If this command was not closed with an `#ENDFOR`, then a `Compile` error will occur.
@@ -126,28 +125,114 @@ scopes.
 - `#ENDFOR` this command closes the `#FOR` command.
     - If this command was not closing a `#FOR` , then a `Compile` error will occur.
 
+
+- `#{ <Parameter> }#` this is called 'injection', and it injects the parameter given to it
+  to the console. Different from commands, injections can be placed anywhere (but not
+  clashing inside another injection or inside a command), and it does not suppress the
+  line separators before nor after it.
+
 ### Processor Variables
 
 These variables are managed (allocated) automatically by the processor.
 
-- `__LINE__` this variable holds the line number exactly where it was accessed.
+- `__LINE__ : Number` this variable holds the line number exactly where it was accessed.
 
 
-- `__FILE__` this variable holds the name of the file it was accessed at.
+- `__FILE__ : Text` this variable holds the name of the file it was accessed at.
 
 
-- `__PATH__` this variable holds the path of the file it was accessed at.
+- `__PATH__ : Text` this variable holds the path of the file it was accessed at.
 
 
-- `__DIR__` this variable holds the path of the directory of the file it was accessed at.
+- `__DIR__ : Text` this variable holds the path of the directory of the file it was
+  accessed at.
 
 
-- `__PROJECT__` this variable holds the path of the project.
+- `__PROJECT__ : Text` this variable holds the path of the project.
 
 
-- `__JAMPLATE__` this variable contains the version of the jamplate processor.
+- `__JAMPLATE__ : Text` this variable contains the version of the jamplate processor.
 
 
-- `__DEFINE__` this is an internal variable for the processor to manage replace and
+- `__DEFINE__ : Object` an internal variable for the processor to manage replace and
   replacements done by the `#define` command.
 
+### Data Types
+
+Jamplate has no actual data types, since jamplate stores the data in plain text, but some
+operations treat the data given to it differently depending on the text and the operation
+itself.
+
+- `Parameter` applies to any text. In commands, means that the command will evaluate the
+  parameter logically.
+
+
+- `Address` applies to any text, In commands, means that the command will take it AS-IS.
+  Also, in commands, only whitespace-free addresses will be taken.
+
+
+- `Number` applies to numeric text.
+
+
+- `Object` applies to valid JSON object text. When passed as an array, the resultant array
+  will be an array of the keys in the object.
+
+
+- `Array` applies to valid JSON array text. When passed as an object, the resultant object
+  will be each item mapped to its index.
+
+### Syntax
+
+- To reference a variable, write the variable name.
+    - Example `MyVariable`.
+
+
+- To reference a property of a variable, write the variable name followed by two square
+  brackets (`[]`) with the name of the property inside the two brackets.
+    - Example `MyVariable['MyProperty']`
+
+
+- A `Number` is defined by writing its value.
+    - Example `12`
+
+
+- A `String` is defined by encapsulating a text inside two double-quotes (`""`).
+    - Example `"My String"`
+
+
+- An escaped `String` is defined by encapsulating a text inside two quotes (`''`).
+    - Example `'My Escaped String'`
+
+
+- An `Array` is defined with two square brackets (`[]`) with its items between the two
+  brackets and separated by a comma (`,`).
+    - Example `[A, B, C]`.
+
+
+- An `Object` is defined with two curly braces (`{}`) with its mappings between the two
+  braces and separated by a comma (`,`). Also, with the `:` separating the key and value
+  of each mapping.
+    - Example `{A: X, B: Y, C: Z}`.
+
+### Project Info
+
+- GitHub Repository: https://github.com/cufyorg/jamplate-procesor
+- Website: https://jamplate.org
+- Author: [LSafer](https://lsafer.net)
+- Licences: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+### Licence
+
+    Copyright 2021 Cufy
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
