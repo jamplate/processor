@@ -519,7 +519,7 @@ public final class Compilers {
 	public static final Compiler SX_CUR =
 			new KindCompiler(Kind.SX_CUR, new FlattenCompiler(
 					new OrderCompiler(
-							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
 							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
 							FallbackCompiler.INSTANCE
 					),
@@ -539,13 +539,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_DQT =
-			new KindCompiler(Kind.SX_DQT, new FlattenCompiler(
-					new OrderCompiler(
-							new KindCompiler(Kind.SX_DQT_OPEN, EmptyCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_DQT_CLOSE, EmptyCompiler.INSTANCE)
-					),
-					PushConstCompiler.INSTANCE
-			));
+			new KindCompiler(Kind.SX_DQT, PushUnescapeConstCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles name instructions.
@@ -589,7 +583,7 @@ public final class Compilers {
 	public static final Compiler SX_RND =
 			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
 					new OrderCompiler(
-							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
 							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
 							FallbackCompiler.INSTANCE
 					),
@@ -609,7 +603,7 @@ public final class Compilers {
 	public static final Compiler SX_SQR =
 			new KindCompiler(Kind.SX_SQR, new FlattenCompiler(
 					new OrderCompiler(
-							new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
+							//new KindCompiler(Kind.SX_DQT, PushConstCompiler.INSTANCE),
 							//new KindCompiler(Kind.SX_QTE, PushConstCompiler.INSTANCE),
 							FallbackCompiler.INSTANCE
 					),
