@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -214,6 +215,52 @@ public final class JSONUtil {
 	}
 
 	/**
+	 * Delegates to {@link #get(Object, List)} with the keys being the result of invoking
+	 * {@link #keys(String)} with the given {@code keys}.
+	 *
+	 * @param object the object to get from.
+	 * @param keys   the source of the keys.
+	 * @return the value nested with the given {@code keys} in the given {@code object}.
+	 * @throws NullPointerException if the given {@code object} or {@code keys} is null.
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static Object get(@NotNull Object object, @NotNull String keys) {
+		Objects.requireNonNull(object, "object");
+		Objects.requireNonNull(keys, "keys");
+		return JSONUtil.get(object, JSONUtil.keys(keys));
+	}
+
+	/**
+	 * Convert the given string into a nesting keys list.
+	 *
+	 * @param keys the source.
+	 * @return a nesting keys list from the given source.
+	 * @throws NullPointerException if the given {@code keys} is null.
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static List<String> keys(@NotNull String keys) {
+		Objects.requireNonNull(keys, "array");
+		//noinspection DynamicRegexReplaceableByCompiledPattern
+		return Arrays.stream(keys.split("(?<=\\])(?=\\[)"))
+					 .map(key -> {
+						 try {
+							 return new JSONArray(key)
+									 .toList()
+									 .stream()
+									 .map(String::valueOf)
+									 .collect(Collectors.joining());
+						 } catch (JSONException e) {
+							 return "";
+						 }
+					 })
+					 .collect(Collectors.toList());
+	}
+
+	/**
 	 * Assuming the given {@code object} is a {@link JSONArray} or a {@link JSONObject},
 	 * put the given {@code value} at given nesting {@code keys}.
 	 *
@@ -337,5 +384,23 @@ public final class JSONUtil {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Delegates to {@link #put(Object, List, Object)} with the keys being the result of
+	 * invoking {@link #keys(String)} with the given {@code keys}.
+	 *
+	 * @param object the object to put to.
+	 * @param keys   the source of the nesting keys.
+	 * @param value  the value to be put.
+	 * @return the given {@code object} if the value can be put, or a replacement object.
+	 * @throws NullPointerException if the given {@code object} or {@code keys} or {@code
+	 *                              value} is null.
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	@Contract(mutates = "param")
+	public static Object put(@NotNull Object object, @NotNull String keys, @NotNull Object value) {
+		return JSONUtil.put(object, JSONUtil.keys(keys), value);
 	}
 }
