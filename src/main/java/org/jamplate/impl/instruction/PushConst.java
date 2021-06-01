@@ -15,11 +15,11 @@
  */
 package org.jamplate.impl.instruction;
 
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Memory;
 import org.jamplate.model.Tree;
-import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,11 +63,7 @@ public class PushConst implements Instruction {
 	public PushConst(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
-		//noinspection DynamicRegexReplaceableByCompiledPattern
-		this.constant = Trees
-				.read(tree)
-				.toString()
-				.replaceAll("\\\\(.)", "$1");
+		this.constant = Trees.read(tree).toString();
 	}
 
 	/**
