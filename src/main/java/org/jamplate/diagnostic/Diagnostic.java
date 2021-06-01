@@ -39,7 +39,50 @@ public interface Diagnostic extends Iterable<Message>, Serializable {
 	@Contract(value = "->this", mutates = "this")
 	default Diagnostic flush() {
 		//noinspection UseOfSystemOutOrSystemErr
-		return this.flush(System.out, System.err);
+		return this.flush(false, System.out, System.err);
+	}
+
+	/**
+	 * Flush the printed messages to the default print stream.
+	 *
+	 * @param debug pass true to force debug mode.
+	 * @return this.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(value = "_->this", mutates = "this")
+	default Diagnostic flush(boolean debug) {
+		//noinspection UseOfSystemOutOrSystemErr
+		return this.flush(debug, System.out, System.err);
+	}
+
+	/**
+	 * Flush the printed messages to the default print stream.
+	 *
+	 * @param out the default output stream.
+	 * @param err the error stream.
+	 * @return this.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(value = "_,_->this", mutates = "this,param1,param2")
+	default Diagnostic flush(PrintStream out, PrintStream err) {
+		return this.flush(false, out, err);
+	}
+
+	/**
+	 * Format the given {@code message}.
+	 *
+	 * @param message the message to be formatted.
+	 * @return a string representation of the given {@code message} in the style of this
+	 * 		diagnostic system.
+	 * @throws NullPointerException if the given {@code message} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	default String format(@NotNull Message message) {
+		return this.format(false, message);
 	}
 
 	/**
@@ -55,18 +98,20 @@ public interface Diagnostic extends Iterable<Message>, Serializable {
 	/**
 	 * Flush the printed messages to the default print stream.
 	 *
-	 * @param out the default output stream.
-	 * @param err the error stream.
+	 * @param debug pass true to force debug mode.
+	 * @param out   the default output stream.
+	 * @param err   the error stream.
 	 * @return this.
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	@Contract(value = "_,_->this", mutates = "this,param1,param2")
-	Diagnostic flush(PrintStream out, PrintStream err);
+	@Contract(value = "_,_,_->this", mutates = "this,param2,param3")
+	Diagnostic flush(boolean debug, PrintStream out, PrintStream err);
 
 	/**
 	 * Format the given {@code message}.
 	 *
+	 * @param debug   pass ture to force debug mode.
 	 * @param message the message to be formatted.
 	 * @return a string representation of the given {@code message} in the style of this
 	 * 		diagnostic system.
@@ -74,8 +119,8 @@ public interface Diagnostic extends Iterable<Message>, Serializable {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	@Contract(value = "_->new", pure = true)
-	String format(@NotNull Message message);
+	@Contract(value = "_,_->new", pure = true)
+	String format(boolean debug, @NotNull Message message);
 
 	/**
 	 * Print the given {@code message}.

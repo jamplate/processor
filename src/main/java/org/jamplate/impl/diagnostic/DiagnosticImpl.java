@@ -54,7 +54,7 @@ public class DiagnosticImpl implements Diagnostic {
 
 	@NotNull
 	@Override
-	public Diagnostic flush(PrintStream out, PrintStream err) {
+	public Diagnostic flush(boolean debug, PrintStream out, PrintStream err) {
 		Objects.requireNonNull(out, "out");
 		Objects.requireNonNull(err, "err");
 		while (true) {
@@ -63,7 +63,7 @@ public class DiagnosticImpl implements Diagnostic {
 			if (message == null)
 				return this;
 
-			String formatted = this.format(message);
+			String formatted = this.format(debug, message);
 
 			if (message.isFetal())
 				err.println(formatted);
@@ -74,7 +74,7 @@ public class DiagnosticImpl implements Diagnostic {
 
 	@NotNull
 	@Override
-	public String format(@NotNull Message message) {
+	public String format(boolean debug, @NotNull Message message) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(message.getMessagePhrase());
@@ -117,7 +117,7 @@ public class DiagnosticImpl implements Diagnostic {
 				   .append(Trees.line(trace))
 				   .append(")");
 
-		if (message.getPriority().equals(MessagePriority.DEBUG)) {
+		if (debug || message.getPriority().equals(MessagePriority.DEBUG)) {
 			Throwable exception = message.getException();
 
 			if (exception != null) {
