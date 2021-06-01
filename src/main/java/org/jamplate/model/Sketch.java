@@ -255,6 +255,26 @@ public class Sketch implements Serializable {
 	}
 
 	/**
+	 * Replace the component of this sketch with the given {@code key} with another
+	 * sketch.
+	 *
+	 * @param key the key of the component.
+	 * @return the replacement sketch.
+	 * @throws NullPointerException if the given {@code key} is null.
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	@Contract(mutates = "this")
+	public Sketch replace(@NotNull Node.Key key) {
+		Objects.requireNonNull(key, "key");
+		Sketch sketch = new Sketch();
+
+		this.components.put(key, sketch.components);
+
+		return sketch;
+	}
+
+	/**
 	 * Set the kind of this sketch to be the given {@code kind}.
 	 *
 	 * @param kind the kind of this sketch.
