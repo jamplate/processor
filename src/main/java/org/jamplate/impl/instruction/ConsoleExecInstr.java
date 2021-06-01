@@ -116,7 +116,7 @@ public class ConsoleExecInstr implements Instruction {
 			File file = new File(text);
 			File parent = file.getParentFile();
 
-			if (!parent.exists())
+			if (parent != null && !parent.exists())
 				Files.createDirectories(parent.toPath());
 
 			memory.setConsole(new FileWriter(file));

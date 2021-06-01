@@ -51,6 +51,6 @@ public class PushEvalAddrCompiler implements Compiler {
 		Objects.requireNonNull(tree, "tree");
 		String address = Trees.read(tree).toString();
 
-		return new PushEvalAddr(address);
+		return new PushEvalAddr(tree, address);
 	}
 }
