@@ -46,6 +46,12 @@
  *             allocate Y into heap at X
  *     </li>
  *     <li>
+ *         {@code PUT( X : Address , Y : Value | Text , Z : Value : Text )}
+ *         <p>
+ *             Put Z to Y in the object stored at X in the heap;
+ *             Allocate a new object if not allocated
+ *     </li>
+ *     <li>
  *         {@code FALLOC( X : Address , Y : Text | Value ) : Void}
  *         <p>
  *             allocate Y into heap of the last frame at X

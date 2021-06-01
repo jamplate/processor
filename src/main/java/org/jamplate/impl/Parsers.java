@@ -175,7 +175,7 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser CX_CMD_DECLARE = new GroupParser(
-			Pattern.compile("^#((?i)declare)\\s(\\S+)\\s?(.*)$", Pattern.DOTALL),
+			Pattern.compile("^#((?i)declare)\\s([^\\s\\[\\]]+)\\s?(.*)$", Pattern.DOTALL),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_DECLARE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),

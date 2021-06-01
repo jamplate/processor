@@ -263,6 +263,8 @@ public final class Jamplate {
 			new SequentialProcessor(
 					/* Commands */
 					Processors.CX_CMD,
+					/* Accessors in #declare  */
+					Processors.CX_CMD_DECLARE,
 					/* Detect capture flows */
 					Processors.CX_FLW_CAPTURE,
 					/* Detect for flows */

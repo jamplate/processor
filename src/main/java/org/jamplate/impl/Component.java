@@ -28,6 +28,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class Component {
 	/**
+	 * The key of the accessor component.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@NotNull
+	public static final Node.Key ACCESSOR = Sketch.component("accessor");
+	/**
 	 * The key of the closing anchor.
 	 *
 	 * @since 0.2.0 ~2021.05.25

@@ -16,12 +16,11 @@
 package org.jamplate.impl;
 
 import org.jamplate.impl.util.Trees;
-import org.jamplate.model.CompileException;
-import org.jamplate.model.Reference;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
+import org.jamplate.model.*;
 import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * The post-parse processors.
@@ -54,6 +53,100 @@ public final class Processors {
 					 );
 
 				 tree.pop();
+				 modified[0] = true;
+			 });
+		return modified[0];
+	};
+
+	/**
+	 * Since the declare command can take a pointer in the address given to it, this
+	 * processor will take the first tree in the parameter, if it is a square and if it
+	 * was exactly next to the address, then change it into a pointer and shrink the
+	 * address.
+	 *
+	 * @since 0.2.0 ~2021.06.01
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_CMD_DECLARE = compilation -> {
+		Objects.requireNonNull(compilation, "compilation");
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .parallelStream()
+			 .filter(tree -> tree.getSketch().getKind().equals(Kind.CX_CMD_DECLARE))
+			 .filter(tree -> tree.getSketch().get(Component.ACCESSOR).getTree() == null)
+			 .forEach(tree -> {
+				 Tree key = tree.getSketch().get(Component.KEY).getTree();
+				 Tree oldParam = tree.getSketch().get(Component.PARAMETER).getTree();
+				 Tree firstSqr = oldParam.getChild();
+				 Tree lastSqr = firstSqr;
+
+				 if (Intersection.compute(key, firstSqr) != Intersection.NEXT)
+					 //chain lost at the beginning, no processing
+					 return;
+
+				 while (true) {
+					 Tree nextTree = lastSqr.getNext();
+
+					 if (nextTree == null)
+						 //reached the end, stop
+						 break;
+
+					 if (!nextTree.getSketch().getKind().equals(Kind.SX_SQR)) {
+						 if (Intersection.compute(lastSqr, nextTree) !=
+							 Intersection.AFTER)
+							 //chain interrupted, no processing
+							 return;
+
+						 //chain ended, lastSqr is the last []
+						 break;
+					 }
+
+					 if (Intersection.compute(lastSqr, nextTree) != Intersection.NEXT)
+						 //chain lost, lastSqr is the last chained []
+						 break;
+
+					 lastSqr = nextTree;
+				 }
+
+				 //bingo
+				 int oldParamPos = oldParam.reference().position();
+				 int oldParamLen = oldParam.reference().length();
+
+				 int pointPos = firstSqr.reference().position();
+				 int pointLen = firstSqr.reference().length() +
+								(lastSqr == firstSqr ? 0 : lastSqr.reference().length());
+
+				 int gapLen = pointPos - oldParamPos;
+
+				 int newParamPos = pointPos + pointLen;
+				 int newParamLength = oldParamLen - pointLen - gapLen;
+
+				 oldParam.pop();
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 newParamPos,
+								 newParamLength
+						 ),
+						 tree.getSketch()
+							 .replace(Component.PARAMETER)
+							 .setKind(Kind.CX_PRM),
+						 -1
+				 ));
+
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 pointPos,
+								 pointLen
+						 ),
+						 tree.getSketch()
+							 .get(Component.ACCESSOR)
+							 .setKind(Kind.CX_PRM),
+						 -1
+				 ));
+
 				 modified[0] = true;
 			 });
 		return modified[0];

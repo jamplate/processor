@@ -62,25 +62,45 @@ public final class Compilers {
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
+	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_CMD_DECLARE =
 			new KindCompiler(Kind.CX_CMD_DECLARE, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
+				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
 
 				String address = Trees.read(keyT).toString();
-				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
-				if (instruction == null)
+				if (accessorT == null) {
+					Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+					return new AllocAddrExecInstr(
+							tree,
+							address,
+							instruction
+					);
+				}
+
+				Instruction instruction0 = compiler.compile(compiler, compilation, accessorT);
+				Instruction instruction1 = compiler.compile(compiler, compilation, paramT);
+
+				if (instruction0 == null)
+					throw new CompileException(
+							"Unrecognized accessor",
+							accessorT
+					);
+				if (instruction1 == null)
 					throw new CompileException(
 							"Unrecognized parameter",
 							paramT
 					);
 
-				return new AllocAddrExecInstr(
+				return new PutAddrExecInstr0ExecInstr1(
 						tree,
 						address,
-						instruction
+						instruction0,
+						instruction1
 				);
 			});
 
