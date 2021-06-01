@@ -16,10 +16,10 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -85,20 +85,19 @@ public class RepreeAddr implements Instruction {
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
+
 		//REPREE( ADDR )
 		String address = this.address;
 		memory.set(address, Value.NULL);
-		memory.compute(Address.DEFINE, oldValue -> {
-			try {
-				JSONObject object = new JSONObject(oldValue.evaluate(memory));
+		memory.compute(Address.DEFINE, value -> {
+			String text0 = value.evaluate(memory);
 
-				object.remove(address);
+			JSONObject object = JSONUtil.asJSONObject(text0);
 
-				String newValue = object.toString();
-				return m -> newValue;
-			} catch (JSONException e) {
-				return oldValue;
-			}
+			object.remove(address);
+
+			String text1 = object.toString();
+			return m -> text1;
 		});
 	}
 

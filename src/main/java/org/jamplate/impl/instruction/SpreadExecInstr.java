@@ -15,11 +15,11 @@
  */
 package org.jamplate.impl.instruction;
 
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.impl.util.Memories;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -93,16 +93,12 @@ public class SpreadExecInstr implements Instruction {
 
 		//SPREAD( EXEC( INSTR ) )
 		String text0 = value.evaluate(memory);
+		JSONObject object = JSONUtil.asJSONObject(text0);
 
-		try {
-			JSONObject object = new JSONObject(text0);
+		for (String address : object.keySet()) {
+			String text1 = object.optString(address, "");
 
-			for (String address : object.keySet()) {
-				String text1 = object.optString(address, "");
-
-				memory.set(address, m -> text1);
-			}
-		} catch (JSONException ignored) {
+			memory.set(address, m -> text1);
 		}
 	}
 

@@ -16,11 +16,11 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
-import org.jamplate.model.*;
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.impl.util.Trees;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -104,25 +104,18 @@ public class ReprntConst implements Instruction {
 
 		//REPRNT( CONST )
 		Value value = memory.get(Address.DEFINE);
-		JSONObject replaces;
+		String text0 = value.evaluate(memory);
+		JSONObject object = JSONUtil.asJSONObject(text0);
 
-		try {
-			String replace = value.evaluate(memory);
+		String text1 = this.constant;
 
-			replaces = new JSONObject(replace);
-		} catch (JSONException e) {
-			replaces = new JSONObject();
+		for (String replace : object.keySet()) {
+			String replacement = object.getString(replace);
+
+			text1 = text1.replace(replace, replacement);
 		}
 
-		String text = this.constant;
-
-		for (String replace : replaces.keySet()) {
-			String replacement = replaces.getString(replace);
-
-			text = text.replace(replace, replacement);
-		}
-
-		memory.print(text);
+		memory.print(text1);
 	}
 
 	@Nullable

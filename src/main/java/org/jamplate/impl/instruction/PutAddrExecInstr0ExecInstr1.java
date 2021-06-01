@@ -15,15 +15,12 @@
  */
 package org.jamplate.impl.instruction;
 
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.impl.util.Memories;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -124,9 +121,6 @@ public class PutAddrExecInstr0ExecInstr1 implements Instruction {
 		this.instruction1 = instruction1;
 	}
 
-	@SuppressWarnings({"DynamicRegexReplaceableByCompiledPattern", "OverlyLongLambda",
-					   "OverlyLongMethod"
-	})
 	@Override
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
 		Objects.requireNonNull(environment, "environment");
@@ -145,42 +139,18 @@ public class PutAddrExecInstr0ExecInstr1 implements Instruction {
 		memory.popFrame();
 
 		//PUT( ADDR , EXEC( INSTR0 ) , EXEC( INSTR1 ) )
+		String text0 = value0.evaluate(memory);
+		String text1 = value1.evaluate(memory);
+
 		String address = this.address;
-		String accessor = value0.evaluate(memory);
-		String[] keys = Arrays
-				.stream(accessor.split("(?<=\\])(?=\\[)"))
-				.map(key -> {
-					try {
-						return new JSONArray(key).join("");
-					} catch (JSONException e) {
-						return "";
-					}
-				})
-				.toArray(String[]::new);
-		String value = value1.evaluate(memory);
-		memory.compute(address, oldObj -> {
-			JSONObject object;
 
-			try {
-				object = new JSONObject(oldObj);
-			} catch (JSONException e) {
-				object = new JSONObject();
-			}
+		memory.compute(address, value2 -> {
+			String text2 = value2.evaluate(memory);
 
-			JSONObject ptr = object;
-			for (String key : Arrays.asList(keys).subList(0, keys.length - 1)) {
-				JSONObject it = ptr.optJSONObject(key);
+			Object object = JSONUtil.put(text2, text0, text1);
 
-				if (it == null)
-					ptr.put(key, it = new JSONObject());
-
-				ptr = it;
-			}
-
-			ptr.put(keys[keys.length - 1], value);
-
-			String newValue = object.toString();
-			return m -> newValue;
+			String text3 = object.toString();
+			return m -> text3;
 		});
 	}
 

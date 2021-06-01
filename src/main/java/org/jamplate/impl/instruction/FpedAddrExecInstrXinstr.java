@@ -15,12 +15,12 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.model.*;
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.impl.util.Memories;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,19 +191,14 @@ public class FpedAddrExecInstrXinstr implements Instruction {
 		memory.popFrame();
 
 		//FPED( ADDR , EXEC( INSTR ) , XINSTR )
-		JSONArray items;
+		String text0 = value.evaluate(memory);
+		JSONArray object = JSONUtil.asJSONArray(text0);
 
-		try {
-			items = new JSONArray(value.evaluate(memory));
-		} catch (JSONException e) {
-			items = new JSONArray();
-		}
-
-		for (Object item : items) {
-			String text = String.valueOf(item);
+		for (Object item : object) {
+			String text1 = String.valueOf(item);
 
 			memory.pushFrame(new Frame(this));
-			memory.getFrame().set(this.address, m -> text);
+			memory.getFrame().set(this.address, m -> text1);
 
 			for (Instruction instruction : this.instructions) {
 				memory.pushFrame(new Frame(instruction));

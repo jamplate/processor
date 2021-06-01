@@ -16,11 +16,11 @@
 package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
-import org.jamplate.model.*;
+import org.jamplate.impl.util.JSONUtil;
 import org.jamplate.impl.util.Memories;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -108,26 +108,22 @@ public class RepllocAddrExecInstr implements Instruction {
 		//EXEC( INSTR )
 		memory.pushFrame(new Frame(this.instruction));
 		this.instruction.exec(environment, memory);
-		Value value = Memories.joinPop(memory);
+		Value value0 = Memories.joinPop(memory);
 		memory.popFrame();
 
 		//REPLLOC( ADDR , EXEC( INSTR ) )
 		String address = this.address;
-		String text = value.evaluate(memory);
-		memory.set(address, m -> text);
-		memory.compute(Address.DEFINE, oldValue -> {
-			JSONObject object;
+		String text0 = value0.evaluate(memory);
+		memory.set(address, m -> text0);
+		memory.compute(Address.DEFINE, value1 -> {
+			String text1 = value1.evaluate(memory);
 
-			try {
-				object = new JSONObject(oldValue.evaluate(memory));
-			} catch (JSONException e) {
-				object = new JSONObject();
-			}
+			JSONObject object = JSONUtil.asJSONObject(text1);
 
-			object.put(address, text);
+			object.put(address, text0);
 
-			String newValue = object.toString();
-			return m -> newValue;
+			String text2 = object.toString();
+			return m -> text2;
 		});
 	}
 
