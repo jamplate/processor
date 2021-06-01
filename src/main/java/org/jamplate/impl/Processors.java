@@ -227,6 +227,11 @@ public final class Processors {
 										 "Elif command outside if context",
 										 t
 								 );
+							 if (elseTree != null)
+								 throw new CompileException(
+										 "Elif command after else command",
+										 t
+								 );
 
 							 break;
 						 case Kind.CX_CMD_ELSE:
