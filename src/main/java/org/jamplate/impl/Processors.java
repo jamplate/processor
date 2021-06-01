@@ -132,7 +132,7 @@ public final class Processors {
 						 tree.getSketch()
 							 .replace(Component.PARAMETER)
 							 .setKind(Kind.CX_PRM),
-						 -1
+						 -100
 				 ));
 
 				 tree.offer(new Tree(
@@ -144,7 +144,7 @@ public final class Processors {
 						 tree.getSketch()
 							 .get(Component.ACCESSOR)
 							 .setKind(Kind.CX_PRM),
-						 -1
+						 -100
 				 ));
 
 				 modified[0] = true;
