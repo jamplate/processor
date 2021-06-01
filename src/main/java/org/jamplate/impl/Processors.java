@@ -114,13 +114,12 @@ public final class Processors {
 				 int oldParamLen = oldParam.reference().length();
 
 				 int pointPos = firstSqr.reference().position();
-				 int pointLen = firstSqr.reference().length() +
-								(lastSqr == firstSqr ? 0 : lastSqr.reference().length());
-
-				 int gapLen = pointPos - oldParamPos;
+				 int pointLen = lastSqr.reference().position() +
+								lastSqr.reference().length() -
+								pointPos;
 
 				 int newParamPos = pointPos + pointLen;
-				 int newParamLength = oldParamLen - pointLen - gapLen;
+				 int newParamLength = oldParamLen - pointLen - (pointPos - oldParamPos);
 
 				 oldParam.pop();
 				 tree.offer(new Tree(
