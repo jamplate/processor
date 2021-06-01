@@ -50,6 +50,9 @@ other commands.
 
 ### Flow Control Commands
 
+This section contains the flow controlling commands that demand other commands and perform
+scopes.
+
 - `#CAPTURE <Address>` this command captures the printing of the instructions between it
   and its closing command, then allocate the captured text to the address given to it.
     - If this command was not closed with an `#ENDCAPTURE`, then a `Compile` error will
