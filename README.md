@@ -22,6 +22,13 @@ other commands.
   declared address will result to overwriting it. Declaring a `#define`-ed address will
   only change the value at the heap, but not the replacement.
 
+- `#DECLARE <Address>[Key]* <Parameter>` this command puts the results of evaluating the
+  parameter given to it to the key (pass the key sequence to access a
+  nested `json object`) given to it at the `json object` in the heap at the address given
+  to it. If there was no valid `json object` already declared at the address, then a
+  new `json object` will be allocated. If a required nested `json object` is missing, or
+  is not a `json object`, then a new object will be put at the required place.
+
 
 - `#DEFINE <Address> <Parameter>` this command allocates the results of evaluating the
   parameter given to it into the heap at the address given to it. Additionally, this
