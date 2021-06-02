@@ -35,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -402,6 +404,18 @@ public final class Jamplate {
 				memory.set(
 						Address.JAMPLATE,
 						s -> "0.2.0"
+				);
+				//noinspection UseOfObsoleteDateTimeApi
+				memory.set(
+						Address.TIME,
+						m -> new SimpleDateFormat("HH:mm:ss")
+								.format(new Date())
+				);
+				//noinspection UseOfObsoleteDateTimeApi
+				memory.set(
+						Address.DATE,
+						m -> new SimpleDateFormat("MMM dd yyyy")
+								.format(new Date())
 				);
 
 				try {

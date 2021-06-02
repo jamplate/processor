@@ -26,6 +26,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class Address {
 	/**
+	 * An address used to store the date at the time of the execution.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final String DATE = "__DATE__";
+
+	/**
 	 * An address used to allocate a json string containing the sequences to be replaced
 	 * and their replacement.
 	 *
@@ -81,6 +89,14 @@ public final class Address {
 	 */
 	@NotNull
 	public static final String PROJECT = "__PROJECT__";
+
+	/**
+	 * An address used to store the time at the time of the execution.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final String TIME = "__TIME__";
 
 	/**
 	 * Utility classes must not be initialized.

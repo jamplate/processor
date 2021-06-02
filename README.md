@@ -154,6 +154,14 @@ These variables are managed (allocated) automatically by the processor.
 - `__JAMPLATE__ : Text` this variable contains the version of the jamplate processor.
 
 
+- `__DATE__ : Text` this variable contains the current date at the time accessing it
+  in `MMM dd yyyy` format.
+
+
+- `__TIME__ : Text` this variable contains the current time at the time accessing it
+  in `HH:mm:ss` format.
+
+
 - `__DEFINE__ : Object` an internal variable for the processor to manage replace and
   replacements done by the `#define` command.
 
