@@ -234,7 +234,7 @@ itself.
 ### Project Info
 
 - GitHub Repository:
-  [https://github.com/cufyorg/jamplate-procesor](https://github.com/cufyorg/jamplate-procesor)
+  [https://github.com/cufyorg/jamplate-processor](https://github.com/cufyorg/jamplate-processor)
 - Website: [https://jamplate.org](https://jamplate.org)
 - Author: [LSafer](https://lsafer.net)
 - Licences: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
