@@ -132,6 +132,25 @@ public final class Compilers {
 			});
 
 	/**
+	 * A compiler that compiles error commands.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_ERROR =
+			new KindCompiler(Kind.CX_CMD_ERROR, (compiler, compilation, tree) -> {
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+				return new SerrExecInstr(
+						tree,
+						instruction == null ?
+						Instruction.empty(paramT) :
+						instruction
+				);
+			});
+
+	/**
 	 * A compiler that compiles include commands.
 	 *
 	 * @since 0.2.0 ~2021.05.21
@@ -151,6 +170,25 @@ public final class Compilers {
 
 				return new ExecImportExecInstr(
 						tree,
+						instruction
+				);
+			});
+
+	/**
+	 * A compiler that compiles message commands.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Compiler CX_CMD_MESSAGE =
+			new KindCompiler(Kind.CX_CMD_MESSAGE, (compiler, compilation, tree) -> {
+				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
+				Instruction instruction = compiler.compile(compiler, compilation, paramT);
+
+				return new SoutExecInstr(
+						tree,
+						instruction == null ?
+						Instruction.empty(paramT) :
 						instruction
 				);
 			});

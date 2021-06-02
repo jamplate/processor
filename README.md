@@ -131,6 +131,15 @@ scopes.
   clashing inside another injection or inside a command), and it does not suppress the
   line separators before nor after it.
 
+### Debugging
+
+- `#MESSAGE <Parameter>` evaluates the parameter given to it and print the evaluated text
+  to the `System.out`.
+
+
+- `#ERROR <Parameter>` evaluates the parameter given to it and print the evaluated text to
+  the `System.error`.
+
 ### Processor Variables
 
 These variables are managed (allocated) automatically by the processor.

@@ -179,6 +179,14 @@ public final class Kind {
 	public static final String CX_CMD_ENDIF = "cx/cmd.endif";
 
 	/**
+	 * The command kind of the {@code #error} command.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final String CX_CMD_ERROR = "cx/cmd.error";
+
+	/**
 	 * The command kind of the {@code for} command.
 	 *
 	 * @since 0.2.0 ~2021.05.31
@@ -233,6 +241,14 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_MAKE = "cx/cmd.make";
+
+	/**
+	 * The command kind of the {@code #message} command.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final String CX_CMD_MESSAGE = "cx/cmd.message";
 
 	/**
 	 * The kind of the opening anchor of a single-line command.

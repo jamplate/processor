@@ -25,6 +25,16 @@
  *             change the console to X
  *     </li>
  *     <li>
+ *         {@code SOUT( X : Text | Value ) : Void}
+ *         <p>
+ *             print X to the system console.
+ *     </li>
+ *     <li>
+ *         {@code SERR( X : Text | Value ) : Void}
+ *         <p>
+ *             print X to the system error console.
+ *     </li>
+ *     <li>
  *         {@code PRINT( X : Text | Vale ) : Void}
  *         <p>
  *             prints X to console

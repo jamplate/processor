@@ -91,6 +91,10 @@ public final class Jamplate {
 							Compilers.CX_CMD_DECLARE,
 							/* Define commands */
 							Compilers.CX_CMD_DEFINE,
+							/* Error commands */
+							Compilers.CX_CMD_ERROR,
+							/* Message commands */
+							Compilers.CX_CMD_MESSAGE,
 							/* Spread commands */
 							Compilers.CX_CMD_SPREAD,
 							/* Undec commands */
@@ -211,6 +215,8 @@ public final class Jamplate {
 											Parsers.CX_CMD_ENDFOR,
 											/* Parse Endif command components */
 											Parsers.CX_CMD_ENDIF,
+											/* Parse Error command components */
+											Parsers.CX_CMD_ERROR,
 											/* Parse For command components */
 											Parsers.CX_CMD_FOR,
 											/* Parse If command components */
@@ -221,6 +227,8 @@ public final class Jamplate {
 											Parsers.CX_CMD_IFNDEF,
 											/* Parse Include command components */
 											Parsers.CX_CMD_INCLUDE,
+											/* Parse Message command components */
+											Parsers.CX_CMD_MESSAGE,
 											/* Parse Spread command components */
 											Parsers.CX_CMD_SPREAD,
 											/* Parse Undec command components */

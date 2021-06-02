@@ -387,6 +387,32 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses {@code #error} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ERROR = new GroupParser(
+			Pattern.compile("^#((?i)error)\\s?(.*)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ERROR), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-100
+			))
+	);
+
+	/**
 	 * A parser that parses {@code #for} commands.
 	 *
 	 * @since 0.2.0 ~2021.05.31
@@ -507,6 +533,32 @@ public final class Parsers {
 	public static final Parser CX_CMD_INCLUDE = new GroupParser(
 			Pattern.compile("^#((?i)include)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_INCLUDE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-100
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #message} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser CX_CMD_MESSAGE = new GroupParser(
+			Pattern.compile("^#((?i)message)\\s?(.*)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_MESSAGE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
