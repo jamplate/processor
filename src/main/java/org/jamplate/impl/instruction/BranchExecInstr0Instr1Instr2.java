@@ -15,8 +15,9 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.model.*;
 import org.jamplate.impl.util.Memories;
+import org.jamplate.impl.util.Values;
+import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -165,20 +166,14 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 
 		//BRANCH( EXEC( INSTR0 ) , INSTR1 , INSTR2 )
 		String text = value.evaluate(memory);
-		switch (text) {
-			case "":
-			case "0":
-			case "\0":
-			case "false":
-				memory.pushFrame(new Frame(this.instruction2));
-				this.instruction2.exec(environment, memory);
-				memory.popFrame();
-				break;
-			default:
-				memory.pushFrame(new Frame(this.instruction1));
-				this.instruction1.exec(environment, memory);
-				memory.popFrame();
-				break;
+		if (Values.toBoolean(text)) {
+			memory.pushFrame(new Frame(this.instruction1));
+			this.instruction1.exec(environment, memory);
+			memory.popFrame();
+		} else {
+			memory.pushFrame(new Frame(this.instruction2));
+			this.instruction2.exec(environment, memory);
+			memory.popFrame();
 		}
 	}
 
