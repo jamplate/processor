@@ -1,4 +1,4 @@
-### Jamplate
+# Jamplate [![](https://jitpack.io/v/jamplate/processor.svg)](https://jitpack.io/#jamplate/processor)
 
 Jamplate is a C-Style pre-processor. Although it is a C-Style, this does not mean it is
 following the C standard. This pre-processor has almost the same expected behaviour as a
@@ -338,10 +338,28 @@ contains the supported operators.
 - `||` (`logical or`) this operator will evaluate to `true` if the value before it, or the
   value after it either evaluated to true.
 
+### Distribution
+
+This repository is the core processor and contain no application. You might use the
+[Jamplate Gradle Plugin](https://github.com/Jamplate/gradle) instead. If you want to use
+the processor directly or just extend it, you might download the repository or
+use `jitpack.io`.
+
+```gradle
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	//replace `Tag` with the targeted version.
+	implementation 'com.github.jamplate:processor:Tag'
+}
+```
+
 ### Project Info
 
 - GitHub Repository:
-  [https://github.com/cufyorg/jamplate-processor](https://github.com/cufyorg/jamplate-processor)
+  [https://github.com/jamplate/processor](https://github.com/jamplate/processor)
 - Website: [https://jamplate.org](https://jamplate.org)
 - Author: [LSafer](https://lsafer.net)
 - Licences: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
