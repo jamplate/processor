@@ -40,6 +40,7 @@ other commands.
 - `#INCLUDE <Parameter>` this command will search for a compilation its document's name
   equal to the result of evaluating the parameter given to it.
     - If the command couldn't find such compilation, an `Execution` error will occur.
+    - Note: direct circular including will throw `StackOverflowError`.
 
 
 - `#SPREAD <Parameter>` this command will evaluate the parameter given to it and parse it
@@ -130,6 +131,9 @@ scopes.
   closing command until the parameter given to it evaluates to false.
     - If this command was not closed with an `#ENDWHILE`, then a `Compile` error will
       occur.
+    - Note: infinite loops will trigger any error and this might lead to unnoticed severe
+      errors. Like, consuming a lot of RAM, or files do not get closed, or unstoppable
+      processes.
 
 
 - `#ENDWHILE` this command closes the `#WHILE` command.
