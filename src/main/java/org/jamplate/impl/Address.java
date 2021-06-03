@@ -75,6 +75,14 @@ public final class Address {
 	public static final String LINE = "__LINE__";
 
 	/**
+	 * An address used to store the output directory.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OUTPUT = "__OUTPUT__";
+
+	/**
 	 * An address used to allocate the current path.
 	 *
 	 * @since 0.2.0 ~2021.05.31

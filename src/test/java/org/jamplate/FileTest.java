@@ -1,8 +1,8 @@
 //Use this class to manually test the directory test_input
 package org.jamplate;
 
-import org.jamplate.impl.Address;
 import org.jamplate.impl.Jamplate;
+import org.jamplate.impl.Meta;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.impl.model.FileDocument;
 import org.jamplate.impl.model.PseudoDocument;
@@ -26,7 +26,7 @@ public class FileTest {
 
 		Environment environment = new EnvironmentImpl();
 
-		environment.getMeta().put(Address.PROJECT, new File("test_input"));
+		environment.getMeta().put(Meta.PROJECT, new File("test_input"));
 
 		boolean compiled = Jamplate.compile(environment, documents);
 
@@ -68,7 +68,7 @@ public class FileTest {
 
 		Environment environment = new EnvironmentImpl();
 
-		environment.getMeta().put(Address.PROJECT, new File("test_input"));
+		environment.getMeta().put(Meta.PROJECT, new File("test_input"));
 
 		boolean compiled = Jamplate.compile(environment, documents);
 

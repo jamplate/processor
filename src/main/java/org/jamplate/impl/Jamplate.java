@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -446,10 +447,23 @@ public final class Jamplate {
 			if (instruction != null) {
 				Memory memory = new Memory();
 
+				Object memoryDefaults = environment.getMeta().get(Meta.MEMORY);
+
+				if (memoryDefaults instanceof Map)
+					((Map<?, ?>) memoryDefaults).forEach((key, value) -> {
+						String address = String.valueOf(key);
+						String text = String.valueOf(value);
+						memory.set(address, v -> text);
+					});
+
 				//set project dir
 				memory.set(
 						Address.PROJECT,
-						m -> String.valueOf(environment.getMeta().getOrDefault(Address.PROJECT, ""))
+						m -> String.valueOf(environment.getMeta().getOrDefault(Meta.PROJECT, ""))
+				);
+				memory.set(
+						Address.OUTPUT,
+						m -> String.valueOf(environment.getMeta().getOrDefault(Meta.OUTPUT, ""))
 				);
 				memory.set(
 						Address.JAMPLATE,
