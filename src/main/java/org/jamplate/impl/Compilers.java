@@ -462,6 +462,195 @@ public final class Compilers {
 			});
 
 	/**
+	 * A compiler that compiles logical contexts.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Compiler CX_PCM_LGC =
+			new KindCompiler(Kind.CX_PCM_LGC, (compiler, compilation, tree) -> {
+				Tree leftT = tree.getSketch().get(Component.LEFT).getTree();
+				Tree rightT = tree.getSketch().get(Component.RIGHT).getTree();
+				Tree operatorT = tree.getSketch().get(Component.KEY).getTree();
+
+				Instruction leftI =
+						leftT.getChild() == null ? null :
+						compiler.compile(compiler, compilation, leftT);
+				Instruction rightI =
+						rightT.getChild() == null ? null :
+						compiler.compile(compiler, compilation, rightT);
+
+				switch (operatorT.getSketch().getKind()) {
+					// '!'
+					case Kind.OP_NEG:
+						if (leftI != null || rightI == null)
+							break;
+
+						return new PushNegExecInstr(
+								operatorT,
+								rightI
+						);
+					// '*'
+					case Kind.OP_MUL:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushMulExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '/'
+					case Kind.OP_DIV:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushDivExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '%'
+					case Kind.OP_MOD:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushModExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '+'
+					case Kind.OP_ADD:
+						if (rightI == null)
+							break;
+
+						return new PushAddExecInstr0ExecInstr1(
+								operatorT,
+								leftI == null ?
+								new PushConst("0") :
+								leftI,
+								rightI
+						);
+					// '-'
+					case Kind.OP_SUB:
+						if (rightI == null)
+							break;
+
+						if (leftI == null)
+							return new PushMulExecInstr0ExecInstr1(
+									operatorT,
+									new PushConst("-1"),
+									rightI
+							);
+
+						return new PushSubExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '<'
+					case Kind.OP_LTN:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushCmpExecInstr0ExecInstr1(
+								operatorT,
+								rightI,
+								leftI
+						);
+					// '<='
+					case Kind.OP_LEQ:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushLorExecInstr0ExecInstr1(
+								operatorT,
+								new PushCmpExecInstr0ExecInstr1(operatorT, rightI, leftI),
+								new PushEqlExecInstr0ExecInstr1(operatorT, rightI, leftI)
+						);
+					// '>'
+					case Kind.OP_MTN:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushCmpExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '>='
+					case Kind.OP_MEQ:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushLorExecInstr0ExecInstr1(
+								operatorT,
+								new PushCmpExecInstr0ExecInstr1(operatorT, leftI, rightI),
+								new PushEqlExecInstr0ExecInstr1(operatorT, leftI, rightI)
+						);
+					// '=='
+					case Kind.OP_EQL:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushEqlExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '!='
+					case Kind.OP_NQL:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushNegExecInstr(
+								operatorT,
+								new PushEqlExecInstr0ExecInstr1(operatorT, leftI, rightI)
+						);
+					// '&&'
+					case Kind.OP_LND:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushLndExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					// '||'
+					case Kind.OP_LOR:
+						if (leftI == null || rightI == null)
+							break;
+
+						return new PushLorExecInstr0ExecInstr1(
+								operatorT,
+								leftI,
+								rightI
+						);
+					default:
+						throw new CompileException(
+								"Unrecognized operator (" +
+								Trees.read(operatorT) +
+								")",
+								operatorT
+						);
+				}
+
+				throw new CompileException(
+						"The operator (" +
+						Trees.read(operatorT) +
+						") cannot be applied to <" +
+						Trees.read(leftT) +
+						"> and <" +
+						Trees.read(rightT) +
+						">",
+						operatorT
+				);
+			});
+
+	/**
 	 * A compiler that compiles references.
 	 *
 	 * @since 0.2.0 ~2021.06.01
@@ -645,8 +834,8 @@ public final class Compilers {
 			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_OPEN, EmptyCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_CLOSE, EmptyCompiler.INSTANCE),
 							WhitespaceCompiler.INSTANCE
 					))
 			));

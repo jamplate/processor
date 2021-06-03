@@ -953,7 +953,7 @@ public final class Parsers {
 	 */
 	@NotNull
 	public static final Parser SX_NUM = new PatternParser(
-			Pattern.compile("(?:0[xb])?[0-9_][1-9]*[DdLlFf]?"),
+			Pattern.compile("(?:0[xb]|[0-9.])[0-9A-Fa-f_.]*(?:[Ee][0-9]*)?"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_NUM))
 	);
 

@@ -303,6 +303,14 @@ public final class Kind {
 	//CX PCM
 
 	/**
+	 * The kind of the logic parameter combination.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final String CX_PCM_LGC = "cx/pcm.lgc";
+
+	/**
 	 * The kind of the reference parameter combination.
 	 *
 	 * @since 0.2.0 ~2021.06.01

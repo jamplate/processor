@@ -20,6 +20,7 @@ import org.jamplate.model.*;
 import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -370,6 +371,175 @@ public final class Processors {
 	//SX
 
 	/**
+	 * A processor that solves logic trees.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_PCM_LGC = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> {
+				 if (!tree.getSketch().getKind().equals(Kind.CX_PCM_LGC))
+					 for (Tree t : tree)
+						 switch (t.getSketch().getKind()) {
+							 case Kind.OP_ADD:
+							 case Kind.OP_DIV:
+							 case Kind.OP_EQL:
+							 case Kind.OP_LEQ:
+							 case Kind.OP_LND:
+							 case Kind.OP_LOR:
+							 case Kind.OP_LTN:
+							 case Kind.OP_MEQ:
+							 case Kind.OP_MOD:
+							 case Kind.OP_MTN:
+							 case Kind.OP_MUL:
+							 case Kind.OP_NEG:
+							 case Kind.OP_NQL:
+							 case Kind.OP_SUB:
+								 return true;
+						 }
+
+				 return false;
+			 })
+			 .forEach(tree -> {
+				 Tree logicTree = null;
+				 Tree openTree = null;
+				 Tree closeTree = null;
+				 int mode = -1;
+
+				 for0:
+				 for (Tree t : tree)
+					 //first to wrap -> first to evaluate
+					 switch (t.getSketch().getKind()) {
+						 case Kind.OP_NEG: // '!'
+							 if (mode < 0) {
+								 logicTree = t;
+								 mode = 0;
+							 }
+							 break;
+						 case Kind.OP_MUL: // '*'
+						 case Kind.OP_DIV: // '/'
+						 case Kind.OP_MOD: // '%'
+							 if (mode < 1) {
+								 logicTree = t;
+								 mode = 1;
+							 }
+							 break;
+						 case Kind.OP_ADD: // '+'
+						 case Kind.OP_SUB: // '-'
+							 if (mode < 2) {
+								 logicTree = t;
+								 mode = 2;
+							 }
+							 break;
+						 case Kind.OP_LTN: // '<'
+						 case Kind.OP_LEQ: // '<='
+						 case Kind.OP_MTN: // '>'
+						 case Kind.OP_MEQ: // '>='
+							 if (mode < 3) {
+								 logicTree = t;
+								 mode = 3;
+							 }
+							 break;
+						 case Kind.OP_EQL: // '=='
+						 case Kind.OP_NQL: // '!='
+							 if (mode < 4) {
+								 logicTree = t;
+								 mode = 4;
+							 }
+							 break;
+						 case Kind.OP_LND: // '&&'
+							 if (mode < 5) {
+								 logicTree = t;
+								 mode = 5;
+							 }
+							 break;
+						 case Kind.OP_LOR: // '||'
+							 if (mode < 6) {
+								 logicTree = t;
+								 mode = 6;
+							 }
+							 break;
+						 case Kind.CX_ANC_OPEN:
+							 logicTree = null;
+							 openTree = t;
+							 break;
+						 case Kind.CX_ANC_CLOSE:
+							 closeTree = t;
+							 break for0;
+						 default:
+							 break;
+					 }
+
+				 if (logicTree == null)
+					 return;
+
+				 int position =
+						 openTree == null ?
+						 tree.reference().position() :
+						 openTree.reference().position() +
+						 openTree.reference().length();
+				 int length =
+						 closeTree == null ?
+						 tree.reference().position() +
+						 tree.reference().length() -
+						 position :
+						 closeTree.reference().position() -
+						 position;
+				 int leftPos = position;
+				 int leftLen = logicTree.reference().position() -
+							   leftPos;
+				 int rightPos = logicTree.reference().position() +
+								logicTree.reference().length();
+				 int rightLen = position +
+								length -
+								rightPos;
+
+				 //results
+				 Sketch sketch = logicTree.getSketch()
+										  .get(Component.KEY.opposite())
+										  .setKind(Kind.CX_PCM_LGC);
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 position,
+								 length
+						 ),
+						 sketch,
+						 100
+				 ));
+				 //left
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 leftPos,
+								 leftLen
+						 ),
+						 sketch.get(Component.LEFT)
+							   .setKind(Kind.CX_PRM),
+						 -100
+				 ));
+				 //right
+				 tree.offer(new Tree(
+						 tree.document(),
+						 new Reference(
+								 rightPos,
+								 rightLen
+						 ),
+						 sketch.get(Component.RIGHT)
+							   .setKind(Kind.CX_PRM),
+						 -100
+				 ));
+
+				 modified[0] = true;
+			 });
+		return modified[0];
+	};
+
+	/**
 	 * A processor that parses references.
 	 *
 	 * @since 0.2.0 ~2021.06.01
@@ -481,6 +651,48 @@ public final class Processors {
 				 ));
 
 				 modified[0] = true;
+			 });
+		return modified[0];
+	};
+
+	//OZ
+
+	/**
+	 * A processor that cleans unwanted trees.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor OZ_CLEAN = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> {
+				 switch (tree.getSketch().getKind()) {
+					 case Kind.SX_QTE:
+					 case Kind.SX_DQT:
+					 case Kind.SX_NME:
+					 case Kind.SX_NUM:
+					 case Kind.CX_CMD_TYPE:
+					 case Kind.CX_CMD_KEY:
+						 return true;
+					 default:
+						 return false;
+				 }
+			 })
+			 .forEach(tree -> {
+				 Iterator<Tree> iterator = tree.iterator();
+
+				 while (iterator.hasNext())
+					 switch (iterator.next().getSketch().getKind()) {
+						 case Kind.CX_ANC_OPEN:
+						 case Kind.CX_ANC_CLOSE:
+							 break;
+						 default:
+							 iterator.remove();
+							 modified[0] = true;
+					 }
 			 });
 		return modified[0];
 	};

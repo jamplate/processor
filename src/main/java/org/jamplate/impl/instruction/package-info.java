@@ -20,6 +20,56 @@
  * Doc Methods:
  * <ul>
  *     <li>
+ *         {@code ADD( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return the result of adding Y to X.
+ *     </li>
+ *     <li>
+ *         {@code SUB( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return the result of subtracting Y from X.
+ *     </li>
+ *     <li>
+ *         {@code MUL( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return the result of multiplying X by Y
+ *     </li>
+ *     <li>
+ *         {@code DIV( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return the result of dividing X by Y
+ *     </li>
+ *     <li>
+ *         {@code MOD( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return the remainder of dividing X by Y
+ *     </li>
+ *     <li>
+ *         {@code CMP( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return 'true' if X is greater than Y, and 'false' otherwise.
+ *     </li>
+ *     <li>
+ *         {@code EQL( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return 'true' if X equals Y, and 'false' otherwise.
+ *     </li>
+ *     <li>
+ *         {@code LND( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return 'true' if X and Y are true, and 'false' otherwise.
+ *     </li>
+ *     <li>
+ *         {@code LOR( X : Text | Value , Y : Text | Value ) : Text}
+ *         <p>
+ *             return 'true' if X or Y are true, and 'false' otherwise.
+ *     </li>
+ *     <li>
+ *         {@code NEG( X : Text | Value ) : Text}
+ *         <p>
+ *             return 'true' if X is false, and 'false' if X is true.
+ *     </li>
+ *     <li>
  *         {@code CONSOLE( X : Text | Value ) : Void}
  *         <p>
  *             change the console to X

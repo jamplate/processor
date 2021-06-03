@@ -125,6 +125,8 @@ public final class Jamplate {
 									new OrderCompiler(
 											/* References */
 											Compilers.CX_PCM_REF,
+											/* Logic (Math) */
+											Compilers.CX_PCM_LGC,
 											/* Object */
 											Compilers.SX_CUR,
 											/* Reference */
@@ -306,6 +308,8 @@ public final class Jamplate {
 	@NotNull
 	public static final Processor PROCESSOR =
 			new SequentialProcessor(
+					/* Clean unwanted children */
+					Processors.OZ_CLEAN,
 					/* Commands */
 					Processors.CX_CMD,
 					/* Accessors in #declare  */
@@ -317,7 +321,9 @@ public final class Jamplate {
 					/* Detect if flows */
 					Processors.CX_FLW_IF,
 					/* Detect references */
-					Processors.CX_PCM_REF
+					Processors.CX_PCM_REF,
+					/* Solve logic */
+					Processors.CX_PCM_LGC
 			);
 
 	/**

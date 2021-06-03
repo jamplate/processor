@@ -231,6 +231,99 @@ itself.
   of each mapping.
     - Example `{A: X, B: Y, C: Z}`.
 
+### Operators
+
+Just like any basic programming language, jamplate support value operators. This section
+contains the supported operators.
+
+- `!` (`NOT`) this operator negates the value after it.
+    - If this operator has a value before it, then a `Compile` error will occur.
+
+
+- `*` (`Multiply`) this operator multiplies the value before it with the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+    - If the value before or after it is not a number, then an `Execution` error will
+      occur.
+
+
+- `/` (`Divide`) this operator divides the value before it by the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+    - If the value before or after it is not a number, then an `Execution` error will
+      occur.
+    - If the value after it is `0`, then an `Execution` error will occur with the
+      face (`:P`).
+
+
+- `%` (`Division Remainder`) this operator evaluates to the remainder of dividing value
+  before it by the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+    - If the value before or after it is not a number, then an `Execution` error will
+      occur.
+    - If the value after it is `0`, then an `Execution` error will occur with the
+      face (`:P`).
+
+
+- `+` (`Add`) this operator will add the value before it with the value after it. If one
+  of the two values is not a number, then the values will be concatenated.
+    - If this operator does not have a value after it, then a `Compiler` error will occur.
+
+
+- `-` (`Subtract`) this operator will subtract the value after it from the value before
+  it. If no value before it (at compile time), then it will flip the sign of the value
+  after it.
+    - If this operator does not have a value after it, then a `Compiler` error will occur.
+    - If the value before or after it is not a number, then an `Execution` error will
+      occur.
+
+
+- `<` (`less than`) this operator will evaluate to `true` if the value before it is less
+  than the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `<=` (`less than or equal`) this operator will evaluate to `true` if the value before it
+  is less than or equal the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `>` (`more than`) this operator will evaluate to `true` if the value before it is more
+  than the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `>=` (`more than or equal`) this operator will evaluate to `true` if the value before it
+  is more than or equal the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `==` (`equals`) this operator will evaluate to `true` if the value before it equals the
+  value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `!=` (`not equals`) this operator will evaluate to `true` if the value before it does
+  not equal the value after it.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `&&` (`logical and`) this operator will evaluate to `true` if the value before it and
+  after it both evaluated to `true`.
+    - If this operator does not have a value before and after it, then a `Compiler` error
+      will occur.
+
+
+- `||` (`logical or`) this operator will evaluate to `true` if the value before it, or the
+  value after it either evaluated to true.
+
 ### Project Info
 
 - GitHub Repository:

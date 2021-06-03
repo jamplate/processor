@@ -49,6 +49,13 @@ public final class Component {
 	@NotNull
 	public static final Node.Key KEY = Sketch.component("key");
 	/**
+	 * The key of the component at the left.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final Node.Key LEFT = Sketch.component("left");
+	/**
 	 * The key of the opening anchor component.
 	 *
 	 * @since 0.2.0 ~2021.05.25
@@ -62,6 +69,13 @@ public final class Component {
 	 */
 	@NotNull
 	public static final Node.Key PARAMETER = Sketch.component("parameter");
+	/**
+	 * The key of the component at the right.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final Node.Key RIGHT = Sketch.component("right");
 	/**
 	 * The key of the type component.
 	 *
