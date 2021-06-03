@@ -117,7 +117,7 @@ public class EnvironmentImpl implements Environment {
 		return this.compilations.get(document);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
 	public Compilation getCompilation(@NotNull String name) {
 		Objects.requireNonNull(name, "name");
