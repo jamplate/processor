@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ParsersTest {
 	@Test
 	public void ifs() {
-		Document document = new PseudoDocument("#declare [HI =] true");
+		Document document = new PseudoDocument("#define [HI =] true");
 		Environment environment = new EnvironmentImpl();
 		Compilation compilation = environment.optCompilation(document);
 
@@ -40,9 +40,9 @@ public class ParsersTest {
 		Processors.CX_CMD.process(compilation);
 
 		assertEquals(
-				Kind.CX_CMD_DECLARE,
+				Kind.CX_CMD_DEFINE,
 				compilation.getRootTree().getChild().getSketch().getKind(),
-				"Declare not recognized"
+				"Define not recognized"
 		);
 	}
 }
