@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 }
 
-group 'org.cufy'
+group 'org.jamplate'
 version '0.2.0'
 
 repositories {
