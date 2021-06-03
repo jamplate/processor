@@ -1,4 +1,4 @@
-# Jamplate [![](https://jitpack.io/v/jamplate/processor.svg)](https://jitpack.io/#jamplate/processor)
+# Jamplate [![](https://jitpack.io/v/org.jamplate/processor.svg)](https://jitpack.io/#org.jamplate/processor)
 
 Jamplate is a C-Style pre-processor. Although it is a C-Style, this does not mean it is
 following the C standard. This pre-processor has almost the same expected behaviour as a
@@ -341,7 +341,7 @@ contains the supported operators.
 ### Distribution
 
 This repository is the core processor and contain no application. You might use the
-[Jamplate Gradle Plugin](https://github.com/Jamplate/gradle) instead. If you want to use
+[Jamplate Gradle Plugin](https://github.com/jamplate/gradle) instead. If you want to use
 the processor directly or just extend it, you might download the repository or
 use `jitpack.io`.
 
@@ -352,7 +352,7 @@ repositories {
 
 dependencies {
 	//replace `Tag` with the targeted version.
-	implementation 'com.github.jamplate:processor:Tag'
+	implementation 'org.jamplate:processor:Tag'
 }
 ```
 
