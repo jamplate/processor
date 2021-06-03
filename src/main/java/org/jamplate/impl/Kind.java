@@ -383,12 +383,44 @@ public final class Kind {
 	public static final String OP_EQL = "op/eql";
 
 	/**
+	 * The kind for the less-than-or-equals (<=) operator.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OP_LEQ = "op/leq";
+
+	/**
+	 * The kind for the logical and (&&) operator.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OP_LND = "op/lnd";
+
+	/**
+	 * The kind for the logical-or (||) operator.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OP_LOR = "op/lor";
+
+	/**
 	 * The kind for the less-than symbol.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	public static final String OP_LTN = "op/ltn";
+
+	/**
+	 * The kind for the more-than-or-equals (>=) operator.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OP_MEQ = "op/meq";
 
 	/**
 	 * The kind for the more-than symbol.

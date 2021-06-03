@@ -739,6 +739,39 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses less than or equals symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_LEQ = new PatternParser(
+			Pattern.compile("<="),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LEQ))
+	);
+
+	/**
+	 * A parser that parses logical and symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_LND = new PatternParser(
+			Pattern.compile("&&"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LND))
+	);
+
+	/**
+	 * A parser that parses logical or symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_LOR = new PatternParser(
+			Pattern.compile("\\|\\|"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LOR))
+	);
+
+	/**
 	 * A parser that parses less than symbols.
 	 *
 	 * @since 0.2.0 ~2021.06.02
@@ -747,6 +780,17 @@ public final class Parsers {
 	public static final Parser OP_LTN = new PatternParser(
 			Pattern.compile("<"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LTN))
+	);
+
+	/**
+	 * A parser that parses more than or equals symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_MEQ = new PatternParser(
+			Pattern.compile(">="),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MEQ))
 	);
 
 	/**

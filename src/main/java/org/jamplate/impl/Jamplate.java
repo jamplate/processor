@@ -262,8 +262,16 @@ public final class Jamplate {
 									Parsers.OP_DIV,
 									/* The equals (==) operator */
 									Parsers.OP_EQL,
+									/* The less-than-or-equals (<=) operator */
+									Parsers.OP_LEQ,
+									/* The logical-and (&&) operator */
+									Parsers.OP_LND,
+									/* The logical-or (||) operator */
+									Parsers.OP_LOR,
 									/* The less-than (<) operator */
 									Parsers.OP_LTN,
+									/* The more-than-or-equals (>=) operator */
+									Parsers.OP_MEQ,
 									/* The more-than (>) operator */
 									Parsers.OP_MTN,
 									/* The multiply (*) operator */
