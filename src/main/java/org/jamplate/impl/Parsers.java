@@ -717,13 +717,90 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses division symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_DIV = new PatternParser(
+			Pattern.compile("\\/"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_DIV))
+	);
+
+	/**
+	 * A parser that parses equal symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_EQL = new PatternParser(
+			Pattern.compile("=="),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_EQL))
+	);
+
+	/**
+	 * A parser that parses less than symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_LTN = new PatternParser(
+			Pattern.compile("<"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LTN))
+	);
+
+	/**
+	 * A parser that parses more than symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_MTN = new PatternParser(
+			Pattern.compile(">"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MTN))
+	);
+
+	/**
+	 * A parser that parses multiplication symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_MUL = new PatternParser(
+			Pattern.compile("\\*"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MUL))
+	);
+
+	/**
+	 * A parser that parses negation symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_NEG = new PatternParser(
+			Pattern.compile("!"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_NEG))
+	);
+
+	/**
+	 * A parser that parses not-equals symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_NQL = new PatternParser(
+			Pattern.compile("!="),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_NQL))
+	);
+
+	/**
 	 * A parser that parses subtraction symbols.
 	 *
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	public static final Parser OP_SUB = new PatternParser(
-			Pattern.compile("\\-"),
+			Pattern.compile("-"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_SUB))
 	);
 

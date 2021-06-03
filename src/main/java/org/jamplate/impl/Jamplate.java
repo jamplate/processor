@@ -255,7 +255,25 @@ public final class Jamplate {
 									/* Colons */
 									Parsers.SX_CLN,
 									/* Commas */
-									Parsers.SX_CMA
+									Parsers.SX_CMA,
+									/* The add (+) operator */
+									Parsers.OP_ADD,
+									/* The divide (/) operator */
+									Parsers.OP_DIV,
+									/* The equals (==) operator */
+									Parsers.OP_EQL,
+									/* The less-than (<) operator */
+									Parsers.OP_LTN,
+									/* The more-than (>) operator */
+									Parsers.OP_MTN,
+									/* The multiply (*) operator */
+									Parsers.OP_MUL,
+									/* The not-equals (!=) operator */
+									Parsers.OP_NQL,
+									/* The not (!) operator; check for NQL first */
+									Parsers.OP_NEG,
+									/* The subtract (-) operator */
+									Parsers.OP_SUB
 							)))
 					)
 			));

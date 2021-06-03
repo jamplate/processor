@@ -340,7 +340,7 @@ public final class Kind {
 	@NotNull
 	public static final String CX_INJ_OPEN = "cx/inj:open";
 
-	//CX PRM
+	//CX PCM
 
 	/**
 	 * The kind of the reference parameter combination.
@@ -349,6 +349,8 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_PCM_REF = "cx/pcm.ref";
+
+	//CX PRM
 
 	/**
 	 * The kind of parameter context.
@@ -403,13 +405,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String OP_ADD = "op/add";
-	/**
-	 * The kind for the context of an addition operation.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	public static final String OP_ADD_CONTEXT = "op/add:context";
 
 	/**
 	 * The kind for the division symbol.
@@ -448,6 +443,14 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String OP_MUL = "op/mul";
+
+	/**
+	 * The kind for the negation symbol.
+	 *
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	public static final String OP_NEG = "op/neg";
 
 	/**
 	 * The kind for the not-equals symbol.
