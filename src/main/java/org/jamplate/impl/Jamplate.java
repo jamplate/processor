@@ -107,6 +107,8 @@ public final class Jamplate {
 							Compilers.CX_FLW_IF,
 							/* For flow */
 							Compilers.CX_FLW_FOR,
+							/* While flow */
+							Compilers.CX_FLW_WHILE,
 							/* Injections */
 							Compilers.CX_INJ,
 							/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
@@ -217,6 +219,8 @@ public final class Jamplate {
 											Parsers.CX_CMD_ENDFOR,
 											/* Parse Endif command components */
 											Parsers.CX_CMD_ENDIF,
+											/* Parser Endwhile command components */
+											Parsers.CX_CMD_ENDWHILE,
 											/* Parse Error command components */
 											Parsers.CX_CMD_ERROR,
 											/* Parse For command components */
@@ -236,7 +240,9 @@ public final class Jamplate {
 											/* Parse Undec command components */
 											Parsers.CX_CMD_UNDEC,
 											/* Parse Undef command components */
-											Parsers.CX_CMD_UNDEF
+											Parsers.CX_CMD_UNDEF,
+											/* Parse While command components */
+											Parsers.CX_CMD_WHILE
 									))
 							)
 					),
@@ -318,6 +324,8 @@ public final class Jamplate {
 					Processors.CX_FLW_CAPTURE,
 					/* Detect for flows */
 					Processors.CX_FLW_FOR,
+					/* Detect while flows */
+					Processors.CX_FLW_WHILE,
 					/* Detect if flows */
 					Processors.CX_FLW_IF,
 					/* Detect references */

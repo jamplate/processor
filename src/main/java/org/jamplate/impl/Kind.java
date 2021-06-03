@@ -161,6 +161,14 @@ public final class Kind {
 	public static final String CX_CMD_ENDIF = "cx/cmd.endif";
 
 	/**
+	 * The command kind of the {@code #endwhile} command.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String CX_CMD_ENDWHILE = "cx/cmd.endwhile";
+
+	/**
 	 * The command kind of the {@code #error} command.
 	 *
 	 * @since 0.2.0 ~2021.06.02
@@ -264,6 +272,14 @@ public final class Kind {
 	@NotNull
 	public static final String CX_CMD_UNDEF = "cx/cmd.undef";
 
+	/**
+	 * The command kind of the {@code #while} command.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String CX_CMD_WHILE = "cx/cmd.while";
+
 	//CX FLW
 
 	/**
@@ -289,6 +305,14 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_FLW_IF = "cx/flw.if";
+
+	/**
+	 * The while command context kind.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String CX_FLW_WHILE = "cx/flw.while";
 
 	//CX INJ
 

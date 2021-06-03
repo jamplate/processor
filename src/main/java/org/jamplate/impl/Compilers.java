@@ -435,6 +435,51 @@ public final class Compilers {
 				return instruction;
 			});
 
+	/**
+	 * A compiler that compiles while-contexts. (including the while and endwhile in it)
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Compiler CX_FLW_WHILE =
+			new KindCompiler(Kind.CX_FLW_WHILE, (compiler, compilation, tree) -> {
+				Instruction instruction = null;
+				List<Instruction> instructions = new ArrayList<>();
+
+				//assert FOR is the first and ENDFOR is the last
+				for (Tree t : Trees.flatChildren(tree))
+					switch (t.getSketch().getKind()) {
+						case Kind.CX_CMD_WHILE: {
+							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
+
+							instruction = compiler.compile(compiler, compilation, paramT);
+							break;
+						}
+						case Kind.CX_CMD_ENDWHILE: {
+							//done
+							break;
+						}
+						default: {
+							//instruction
+							instructions.add(compiler.compile(compiler, compilation, t));
+							break;
+						}
+					}
+
+				if (instruction == null)
+					throw new CompileException(
+							"While context is missing some components",
+							tree
+					);
+
+				return new WpedInstrXinstr(
+						tree,
+						instruction,
+						instructions
+				);
+			});
+
 	//CX INJ
 
 	/**

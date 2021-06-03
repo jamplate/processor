@@ -387,6 +387,24 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that parses {@code #endwhile} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final Parser CX_CMD_ENDWHILE = new GroupParser(
+			Pattern.compile("^#((?i)endwhile)\\s*$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDWHILE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			))
+	);
+
+	/**
 	 * A parser that parses {@code #error} commands.
 	 *
 	 * @since 0.2.0 ~2021.06.02
@@ -651,6 +669,32 @@ public final class Parsers {
 					 .get(Component.KEY)
 					 .setKind(Kind.CX_CMD_KEY),
 					-1
+			))
+	);
+
+	/**
+	 * A parser that parses {@code #while} commands.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final Parser CX_CMD_WHILE = new GroupParser(
+			Pattern.compile("^#((?i)while)\\s(.+)$"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_WHILE), 1),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.TYPE)
+					 .setKind(Kind.CX_CMD_TYPE)
+			)),
+			(t, r) -> t.offer(new Tree(
+					t.document(),
+					r,
+					t.getSketch()
+					 .get(Component.PARAMETER)
+					 .setKind(Kind.CX_PRM),
+					-100
 			))
 	);
 

@@ -1,5 +1,6 @@
 /test_input
 /test_output
+/out
 .gradle
 .idea
 /build/

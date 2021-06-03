@@ -368,6 +368,65 @@ public final class Processors {
 		return modified[0];
 	};
 
+	/**
+	 * A processor that parses while context.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@SuppressWarnings("OverlyLongLambda")
+	@NotNull
+	public static final Processor CX_FLW_WHILE = compilation -> {
+		boolean[] modified = {false};
+		Trees.collect(compilation.getRootTree())
+			 .stream()
+			 .filter(tree -> {
+				 if (!tree.getSketch().getKind().equals(Kind.CX_FLW_WHILE))
+					 for (Tree t : tree)
+						 switch (t.getSketch().getKind()) {
+							 case Kind.CX_CMD_WHILE:
+							 case Kind.CX_CMD_ENDWHILE:
+								 return true;
+						 }
+
+				 return false;
+			 })
+			 .forEach(tree -> {
+				 Tree whileTree = null;
+
+				 for (Tree t : tree)
+					 switch (t.getSketch().getKind()) {
+						 case Kind.CX_CMD_WHILE:
+							 whileTree = t;
+							 break;
+						 case Kind.CX_CMD_ENDWHILE:
+							 //bingo
+							 if (whileTree == null)
+								 throw new CompileException(
+										 "Endwhile command outside while context"
+								 );
+
+							 int position = whileTree.reference().position();
+							 int length = t.reference().position() +
+										  t.reference().length() -
+										  position;
+
+							 tree.offer(new Tree(
+									 tree.document(),
+									 new Reference(position, length),
+									 new Sketch(Kind.CX_FLW_WHILE)
+							 ));
+							 modified[0] = true;
+							 return;
+					 }
+
+				 throw new CompileException(
+						 "Unclosed while context",
+						 whileTree
+				 );
+			 });
+		return modified[0];
+	};
+
 	//SX
 
 	/**

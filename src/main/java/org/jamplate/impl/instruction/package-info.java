@@ -220,6 +220,17 @@
  *         <p>
  *             FPED stands for Foreach-Push-Execute-Dump
  *     </li>
+ *     <li>
+ *         {@code WPED( X : Instruction , Y : Instruction[] ) : Void }
+ *         <p>
+ *             Executes the instructions in Y while result of X evaluates to true;
+ *             Push frame on each iteration;
+ *             Push frame before each execution;
+ *             Dump frame after each execution;
+ *             Pop frame after each iteration
+ *         <p>
+ *             WPED stands for While-Push-Execute-Dump
+ *     </li>
  * </ul>
  * <br><br>
  * Doc Variables:
