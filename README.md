@@ -126,6 +126,16 @@ scopes.
     - If this command was not closing a `#FOR` , then a `Compile` error will occur.
 
 
+- `#WHILE <Parameter>` this command keeps executing the instructions between it and its
+  closing command until the parameter given to it evaluates to false.
+    - If this command was not closed with an `#ENDWHILE`, then a `Compile` error will
+      occur.
+
+
+- `#ENDWHILE` this command closes the `#WHILE` command.
+    - If this command was not closing a `#WHILE` , then a `Compile` error will occur.
+
+
 - `#{ <Parameter> }#` this is called 'injection', and it injects the parameter given to it
   to the console. Different from commands, injections can be placed anywhere (but not
   clashing inside another injection or inside a command), and it does not suppress the
