@@ -794,6 +794,17 @@ public final class Parsers {
 	);
 
 	/**
+	 * A parser that modulo symbols.
+	 *
+	 * @since 0.2.0 ~2021.06.02
+	 */
+	@NotNull
+	public static final Parser OP_MOD = new PatternParser(
+			Pattern.compile("%"),
+			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MOD))
+	);
+
+	/**
 	 * A parser that parses more than symbols.
 	 *
 	 * @since 0.2.0 ~2021.06.02

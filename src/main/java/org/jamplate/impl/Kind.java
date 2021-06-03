@@ -423,6 +423,14 @@ public final class Kind {
 	public static final String OP_MEQ = "op/meq";
 
 	/**
+	 * The kind for the modulo symbol.
+	 *
+	 * @since 0.2.0 ~2021.06.03
+	 */
+	@NotNull
+	public static final String OP_MOD = "op/mod";
+
+	/**
 	 * The kind for the more-than symbol.
 	 *
 	 * @since 0.2.0 ~2021.05.23

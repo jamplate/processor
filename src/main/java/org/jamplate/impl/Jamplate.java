@@ -270,6 +270,8 @@ public final class Jamplate {
 									Parsers.OP_LOR,
 									/* The less-than (<) operator */
 									Parsers.OP_LTN,
+									/* The modulo (%) operator */
+									Parsers.OP_MOD,
 									/* The more-than-or-equals (>=) operator */
 									Parsers.OP_MEQ,
 									/* The more-than (>) operator */
