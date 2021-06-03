@@ -54,7 +54,7 @@ public class JamplateTest {
 				"Expected the command being recognized as an include command"
 		);
 		assertEquals(
-				Kind.CX_CMD_OPEN,
+				Kind.CX_ANC_OPEN,
 				command2.getChild().getSketch().getKind(),
 				"Expected the other command not being recognized as any command"
 		);

@@ -585,8 +585,8 @@ public final class Compilers {
 			new KindCompiler(Kind.SX_CUR, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.SX_CUR_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_CUR_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_CLN, PushConstCompiler.INSTANCE),
 							WhitespaceCompiler.INSTANCE
@@ -629,8 +629,8 @@ public final class Compilers {
 	public static final Compiler SX_QTE =
 			new KindCompiler(Kind.SX_QTE, new FlattenCompiler(
 					new OrderCompiler(
-							new KindCompiler(Kind.SX_QTE_OPEN, EmptyCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_QTE_CLOSE, EmptyCompiler.INSTANCE)
+							new KindCompiler(Kind.CX_ANC_OPEN, EmptyCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_CLOSE, EmptyCompiler.INSTANCE)
 					),
 					PushConstCompiler.INSTANCE
 			));
@@ -645,8 +645,8 @@ public final class Compilers {
 			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.SX_RND_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_RND_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
 							WhitespaceCompiler.INSTANCE
 					))
 			));
@@ -661,8 +661,8 @@ public final class Compilers {
 			new KindCompiler(Kind.SX_SQR, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
 					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.SX_SQR_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_SQR_CLOSE, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
+							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
 							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
 							WhitespaceCompiler.INSTANCE
 					))

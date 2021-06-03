@@ -50,14 +50,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.CM_BLK_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.CM_BLK_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 
@@ -76,7 +76,7 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.CM_SLN_OPEN),
+					 .setKind(Kind.CX_ANC_OPEN),
 					1
 			)),
 			(t, r) -> new Tree(
@@ -84,7 +84,7 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.CM_SLN_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			)
 	);
 
@@ -105,14 +105,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.CX_CMD_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.CX_CMD_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			)
 	);
 
@@ -671,14 +671,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.CX_INJ_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.CX_INJ_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -843,14 +843,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.SX_CUR_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.SX_CUR_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 
@@ -869,14 +869,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.SX_DQT_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.SX_DQT_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 
@@ -917,14 +917,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.SX_QTE_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.SX_QTE_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 
@@ -943,14 +943,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.SX_RND_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.SX_RND_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 
@@ -969,14 +969,14 @@ public final class Parsers {
 					r,
 					t.getSketch()
 					 .get(Component.OPEN)
-					 .setKind(Kind.SX_SQR_OPEN)
+					 .setKind(Kind.CX_ANC_OPEN)
 			)),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
 					r,
 					t.getSketch()
 					 .get(Component.CLOSE)
-					 .setKind(Kind.SX_SQR_CLOSE)
+					 .setKind(Kind.CX_ANC_CLOSE)
 			))
 	);
 

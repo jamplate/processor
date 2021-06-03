@@ -34,20 +34,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CM_BLK = "cm/blk";
-	/**
-	 * The kind of the closing anchor of comment blocks.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CM_BLK_CLOSE = "cm/blk:close";
-	/**
-	 * The kind of the opening anchor of comment blocks.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CM_BLK_OPEN = "cm/blk:open";
 
 	/**
 	 * The kind of commented lines.
@@ -56,20 +42,24 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CM_SLN = "cm/sln";
+
+	//CX ANC
+
 	/**
-	 * The kind of the closing anchor of commented lines.
+	 * The kind for closing anchors.
 	 *
-	 * @since 0.2.0 ~2021.05.19
+	 * @since 0.2.0 ~2021.06.03
 	 */
 	@NotNull
-	public static final String CM_SLN_CLOSE = "cm/sln:close";
+	public static final String CX_ANC_CLOSE = "cx/anc:close";
+
 	/**
-	 * The kind of the opening anchor of commented lines.
+	 * The kind for opening anchors.
 	 *
-	 * @since 0.2.0 ~2021.05.19
+	 * @since 0.2.0 ~2021.06.03
 	 */
 	@NotNull
-	public static final String CM_SLN_OPEN = "cm/sln:open";
+	public static final String CX_ANC_OPEN = "cx/anc:open";
 
 	//CX CMD
 
@@ -88,14 +78,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_CMD_CAPTURE = "cx/cmd.capture";
-
-	/**
-	 * The kind of the closing anchor of a single-line command.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CX_CMD_CLOSE = "cx/cmd:close";
 
 	/**
 	 * The command kind of the {@code #console} command.
@@ -251,20 +233,12 @@ public final class Kind {
 	public static final String CX_CMD_MESSAGE = "cx/cmd.message";
 
 	/**
-	 * The kind of the opening anchor of a single-line command.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CX_CMD_OPEN = "cx/cmd:open";
-
-	/**
 	 * The command kind of the {@code #spread} command.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final String CX_CMD_SPREAD = "cx/cmd:spread";
+	public static final String CX_CMD_SPREAD = "cx/cmd.spread";
 
 	/**
 	 * The kind of the type of a single-line command.
@@ -325,20 +299,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String CX_INJ = "cx/inj";
-	/**
-	 * The kind of the closing anchor of an injection.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CX_INJ_CLOSE = "cx/inj:close";
-	/**
-	 * The kind of the opening anchor of an injection.
-	 *
-	 * @since 0.2.0 ~2021.05.19
-	 */
-	@NotNull
-	public static final String CX_INJ_OPEN = "cx/inj:open";
 
 	//CX PCM
 
@@ -493,20 +453,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_CUR = "sx/cur";
-	/**
-	 * The kind for curly brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_CUR_CLOSE = "sx/cur:close";
-	/**
-	 * The kind for curly brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_CUR_OPEN = "sx/cur:open";
 
 	/**
 	 * The kind for double-quotes.
@@ -515,20 +461,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_DQT = "sx/dqt";
-	/**
-	 * The kind for double-quotes.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_DQT_CLOSE = "sx/dqt:close";
-	/**
-	 * The kind for double-quotes.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_DQT_OPEN = "sx/dqt:open";
 
 	/**
 	 * The kind for names.
@@ -553,20 +485,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_QTE = "sx/qte";
-	/**
-	 * The kind for quotes.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_QTE_CLOSE = "sx/qte:close";
-	/**
-	 * The kind for quotes.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_QTE_OPEN = "sx/qte:open";
 
 	/**
 	 * The kind for round brackets.
@@ -575,20 +493,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_RND = "sx/rnd";
-	/**
-	 * The kind for round brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_RND_CLOSE = "sx/rnd:close";
-	/**
-	 * The kind for round brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_RND_OPEN = "sx/rnd:open";
 
 	/**
 	 * The kind for square brackets.
@@ -597,20 +501,6 @@ public final class Kind {
 	 */
 	@NotNull
 	public static final String SX_SQR = "sx/sqr";
-	/**
-	 * The kind for square brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_SQR_CLOSE = "sx/sqr:close";
-	/**
-	 * The kind for square brackets.
-	 *
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	@NotNull
-	public static final String SX_SQR_OPEN = "sx/sqr:open";
 
 	/**
 	 * Utility classes must not be initialized.
