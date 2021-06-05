@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * An all-in-one jamplate processor.
@@ -441,7 +441,7 @@ public final class Jamplate {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(compilations, "compilations");
 		//noinspection OverlyLongLambda
-		return Jamplate.execute(environment, () -> {
+		return Jamplate.execute(environment, compilation -> {
 			Memory memory = new Memory();
 
 			Object memoryDefaults = environment.getMeta().get(Meta.MEMORY);
@@ -506,7 +506,7 @@ public final class Jamplate {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@Contract(mutates = "param1,param2")
-	public static boolean execute(@NotNull Environment environment, @NotNull Supplier<Memory> memorySupplier, @Nullable Compilation @NotNull ... compilations) {
+	public static boolean execute(@NotNull Environment environment, @NotNull Function<Compilation, Memory> memorySupplier, @Nullable Compilation @NotNull ... compilations) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(compilations, "compilations");
 		boolean success = true;
@@ -515,7 +515,7 @@ public final class Jamplate {
 			Instruction instruction = compilation.getInstruction();
 
 			if (instruction != null) {
-				Memory memory = memorySupplier.get();
+				Memory memory = memorySupplier.apply(compilation);
 
 				try {
 					memory.pushFrame(new Frame(instruction));
