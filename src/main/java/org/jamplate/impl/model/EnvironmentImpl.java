@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -124,7 +125,10 @@ public class EnvironmentImpl implements Environment {
 		return this.compilations
 				.entrySet()
 				.parallelStream()
-				.filter(entry -> entry.getKey().toString().equals(name))
+				.filter(entry ->
+						new File(String.valueOf(entry.getKey()))
+								.equals(new File(name))
+				)
 				.map(Map.Entry::getValue)
 				.findAny()
 				.orElse(null);
