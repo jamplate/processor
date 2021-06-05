@@ -472,7 +472,7 @@ public final class Jamplate {
 			);
 			memory.set(
 					Address.JAMPLATE,
-					s -> "0.2.2"
+					s -> "0.2.3"
 			);
 			//noinspection UseOfObsoleteDateTimeApi
 			memory.set(
