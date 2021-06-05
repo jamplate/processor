@@ -568,7 +568,7 @@ public final class Processors {
 								 length
 						 ),
 						 sketch,
-						 100
+						 -1
 				 ));
 				 //left
 				 tree.offer(new Tree(
@@ -729,30 +729,43 @@ public final class Processors {
 			 .stream()
 			 .filter(tree -> {
 				 switch (tree.getSketch().getKind()) {
-					 case Kind.SX_QTE:
-					 case Kind.SX_DQT:
-					 case Kind.SX_NME:
-					 case Kind.SX_NUM:
-					 case Kind.CX_CMD_TYPE:
-					 case Kind.CX_CMD_KEY:
+					 case Kind.CX_CMD:
+					 case Kind.CX_INJ:
 						 return true;
 					 default:
 						 return false;
 				 }
 			 })
-			 .forEach(tree -> {
-				 Iterator<Tree> iterator = tree.iterator();
+			 .forEach(tree ->
+					 Trees.children(tree)
+						  .stream()
+						  .filter(t -> {
+							  switch (t.getSketch().getKind()) {
+								  case Kind.SX_QTE:
+								  case Kind.SX_DQT:
+								  case Kind.SX_NME:
+								  case Kind.SX_NUM:
+								  case Kind.CX_CMD_TYPE:
+								  case Kind.CX_CMD_KEY:
+									  return true;
+								  default:
+									  return false;
+							  }
+						  })
+						  .forEach(t -> {
+							  Iterator<Tree> iterator = t.iterator();
 
-				 while (iterator.hasNext())
-					 switch (iterator.next().getSketch().getKind()) {
-						 case Kind.CX_ANC_OPEN:
-						 case Kind.CX_ANC_CLOSE:
-							 break;
-						 default:
-							 iterator.remove();
-							 modified[0] = true;
-					 }
-			 });
+							  while (iterator.hasNext())
+								  switch (iterator.next().getSketch().getKind()) {
+									  case Kind.CX_ANC_OPEN:
+									  case Kind.CX_ANC_CLOSE:
+										  break;
+									  default:
+										  iterator.remove();
+										  modified[0] = true;
+								  }
+						  })
+			 );
 		return modified[0];
 	};
 

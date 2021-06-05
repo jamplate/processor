@@ -45,14 +45,14 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_CONSOLE =
-			new KindCompiler(Kind.CX_CMD_CONSOLE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_CONSOLE, (compiler, compilation, tree) -> {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
 				return new ConsoleExecInstr(
 						tree,
 						instruction == null ?
-						Instruction.empty(paramT) :
+						new Idle(paramT) :
 						instruction
 				);
 			});
@@ -65,7 +65,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_CMD_DECLARE =
-			new KindCompiler(Kind.CX_CMD_DECLARE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_DECLARE, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
@@ -111,7 +111,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_DEFINE =
-			new KindCompiler(Kind.CX_CMD_DEFINE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_DEFINE, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
@@ -138,14 +138,14 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_ERROR =
-			new KindCompiler(Kind.CX_CMD_ERROR, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_ERROR, (compiler, compilation, tree) -> {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
 				return new SerrExecInstr(
 						tree,
 						instruction == null ?
-						Instruction.empty(paramT) :
+						new Idle(paramT) :
 						instruction
 				);
 			});
@@ -157,7 +157,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_INCLUDE =
-			new KindCompiler(Kind.CX_CMD_INCLUDE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_INCLUDE, (compiler, compilation, tree) -> {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
@@ -181,14 +181,14 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_MESSAGE =
-			new KindCompiler(Kind.CX_CMD_MESSAGE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_MESSAGE, (compiler, compilation, tree) -> {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
 				return new SoutExecInstr(
 						tree,
 						instruction == null ?
-						Instruction.empty(paramT) :
+						new Idle(paramT) :
 						instruction
 				);
 			});
@@ -200,7 +200,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_SPREAD =
-			new KindCompiler(Kind.CX_CMD_SPREAD, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_SPREAD, (compiler, compilation, tree) -> {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
@@ -224,7 +224,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_UNDEC =
-			new KindCompiler(Kind.CX_CMD_UNDEC, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_UNDEC, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 
 				String address = Trees.read(keyT).toString();
@@ -242,7 +242,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_CMD_UNDEF =
-			new KindCompiler(Kind.CX_CMD_UNDEF, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_CMD_UNDEF, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 
 				String address = Trees.read(keyT).toString();
@@ -264,7 +264,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_FLW_CAPTURE =
-			new KindCompiler(Kind.CX_FLW_CAPTURE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_FLW_CAPTURE, (compiler, compilation, tree) -> {
 				String address = null;
 				List<Instruction> instructions = new ArrayList<>();
 
@@ -309,7 +309,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_FLW_FOR =
-			new KindCompiler(Kind.CX_FLW_FOR, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_FLW_FOR, (compiler, compilation, tree) -> {
 				String address = null;
 				Instruction instruction = null;
 				List<Instruction> instructions = new ArrayList<>();
@@ -359,7 +359,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_FLW_IF =
-			new KindCompiler(Kind.CX_FLW_IF, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_FLW_IF, (compiler, compilation, tree) -> {
 				Map<Instruction, List<Instruction>> instructions = new LinkedHashMap<>();
 				List<Instruction> current = null;
 
@@ -443,7 +443,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_FLW_WHILE =
-			new KindCompiler(Kind.CX_FLW_WHILE, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_FLW_WHILE, (compiler, compilation, tree) -> {
 				Instruction instruction = null;
 				List<Instruction> instructions = new ArrayList<>();
 
@@ -489,7 +489,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_INJ =
-			new KindCompiler(Kind.CX_INJ, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_INJ, (compiler, compilation, tree) -> {
 				Tree parameterT = tree.getSketch().get(Component.PARAMETER).getTree();
 
 				Instruction instruction = compiler.compile(compiler, compilation, parameterT);
@@ -514,7 +514,7 @@ public final class Compilers {
 	@SuppressWarnings("OverlyLongLambda")
 	@NotNull
 	public static final Compiler CX_PCM_LGC =
-			new KindCompiler(Kind.CX_PCM_LGC, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_PCM_LGC, (compiler, compilation, tree) -> {
 				Tree leftT = tree.getSketch().get(Component.LEFT).getTree();
 				Tree rightT = tree.getSketch().get(Component.RIGHT).getTree();
 				Tree operatorT = tree.getSketch().get(Component.KEY).getTree();
@@ -702,7 +702,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler CX_PCM_REF =
-			new KindCompiler(Kind.CX_PCM_REF, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.CX_PCM_REF, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
 
@@ -733,7 +733,7 @@ public final class Compilers {
 	public static final Compiler CX_TXT =
 			new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
-					ReprntConstCompiler.INSTANCE
+					ToReprntConstCompiler.INSTANCE
 			);
 
 	//DC
@@ -745,7 +745,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler DC_EOL =
-			new KindCompiler(Kind.DC_EOL, (compiler, compilation, tree) ->
+			new FilterByKindCompiler(Kind.DC_EOL, (compiler, compilation, tree) ->
 					new IpedXinstr(
 							tree,
 							new AllocAddrConst(
@@ -764,7 +764,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler DC_EOL_SUPPRESSED =
-			new KindCompiler(Kind.DC_EOL_SUPPRESSED, (compiler, compilation, tree) ->
+			new FilterByKindCompiler(Kind.DC_EOL_SUPPRESSED, (compiler, compilation, tree) ->
 					new AllocAddrConst(
 							tree,
 							Address.LINE,
@@ -779,7 +779,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler DC_ROT =
-			new KindCompiler(Kind.DC_ROT, (compiler, compilation, tree) -> {
+			new FilterByKindCompiler(Kind.DC_ROT, (compiler, compilation, tree) -> {
 				String line = String.valueOf(Trees.line(tree) + 1);
 				String file = tree.document().toString();
 				String dir = new File(file).getParent();
@@ -816,14 +816,14 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_CUR =
-			new KindCompiler(Kind.SX_CUR, new FlattenCompiler(
+			new FilterByKindCompiler(Kind.SX_CUR, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
-					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_CLN, PushConstCompiler.INSTANCE),
-							WhitespaceCompiler.INSTANCE
+					new MandatoryCompiler(new FirstCompileCompiler(
+							new FilterByKindCompiler(Kind.CX_ANC_OPEN, ToPushConstCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.CX_ANC_CLOSE, ToPushConstCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.SX_CMA, ToPushConstCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.SX_CLN, ToPushConstCompiler.INSTANCE),
+							ToIdleWhitespaceCompiler.INSTANCE
 					))
 			));
 
@@ -834,7 +834,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_DQT =
-			new KindCompiler(Kind.SX_DQT, PushUnescapeConstCompiler.INSTANCE);
+			new FilterByKindCompiler(Kind.SX_DQT, ToPushConstUnescapeCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles name instructions.
@@ -843,7 +843,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_NME =
-			new KindCompiler(Kind.SX_NME, PushEvalAddrCompiler.INSTANCE);
+			new FilterByKindCompiler(Kind.SX_NME, ToPushEvalAddrCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles numbers.
@@ -852,7 +852,7 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_NUM =
-			new KindCompiler(Kind.SX_NUM, PushConstCompiler.INSTANCE);
+			new FilterByKindCompiler(Kind.SX_NUM, ToPushConstCompiler.INSTANCE);
 
 	/**
 	 * A compiler that compiles quotes.
@@ -861,12 +861,12 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_QTE =
-			new KindCompiler(Kind.SX_QTE, new FlattenCompiler(
-					new OrderCompiler(
-							new KindCompiler(Kind.CX_ANC_OPEN, EmptyCompiler.INSTANCE),
-							new KindCompiler(Kind.CX_ANC_CLOSE, EmptyCompiler.INSTANCE)
+			new FilterByKindCompiler(Kind.SX_QTE, new FlattenCompiler(
+					new FirstCompileCompiler(
+							new FilterByKindCompiler(Kind.CX_ANC_OPEN, ToIdleCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.CX_ANC_CLOSE, ToIdleCompiler.INSTANCE)
 					),
-					PushConstCompiler.INSTANCE
+					ToPushConstCompiler.INSTANCE
 			));
 
 	/**
@@ -876,12 +876,12 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_RND =
-			new KindCompiler(Kind.SX_RND, new FlattenCompiler(
+			new FilterByKindCompiler(Kind.SX_RND, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
-					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.CX_ANC_OPEN, EmptyCompiler.INSTANCE),
-							new KindCompiler(Kind.CX_ANC_CLOSE, EmptyCompiler.INSTANCE),
-							WhitespaceCompiler.INSTANCE
+					new MandatoryCompiler(new FirstCompileCompiler(
+							new FilterByKindCompiler(Kind.CX_ANC_OPEN, ToIdleCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.CX_ANC_CLOSE, ToIdleCompiler.INSTANCE),
+							ToIdleWhitespaceCompiler.INSTANCE
 					))
 			));
 
@@ -892,13 +892,13 @@ public final class Compilers {
 	 */
 	@NotNull
 	public static final Compiler SX_SQR =
-			new KindCompiler(Kind.SX_SQR, new FlattenCompiler(
+			new FilterByKindCompiler(Kind.SX_SQR, new FlattenCompiler(
 					FallbackCompiler.INSTANCE,
-					new MandatoryCompiler(new OrderCompiler(
-							new KindCompiler(Kind.CX_ANC_OPEN, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.CX_ANC_CLOSE, PushConstCompiler.INSTANCE),
-							new KindCompiler(Kind.SX_CMA, PushConstCompiler.INSTANCE),
-							WhitespaceCompiler.INSTANCE
+					new MandatoryCompiler(new FirstCompileCompiler(
+							new FilterByKindCompiler(Kind.CX_ANC_OPEN, ToPushConstCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.CX_ANC_CLOSE, ToPushConstCompiler.INSTANCE),
+							new FilterByKindCompiler(Kind.SX_CMA, ToPushConstCompiler.INSTANCE),
+							ToIdleWhitespaceCompiler.INSTANCE
 					))
 			));
 

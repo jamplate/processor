@@ -15,6 +15,8 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.impl.instruction.PushEvalAddr;
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -25,53 +27,30 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * A compiler that targets a pre-specified kind of trees and compiles using another
- * compiler.
+ * A compiler that always compiles into a {@link PushEvalAddr} with the address being the
+ * result of reading the tree given to it.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.28
+ * @since 0.2.0 ~2021.05.31
  */
-public class KindCompiler implements Compiler {
+public class ToPushEvalAddrCompiler implements Compiler {
 	/**
-	 * The wrapped compiler.
+	 * A global instance of this class.
 	 *
-	 * @since 0.2.0 ~2021.05.28
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	protected final Compiler compiler;
-	/**
-	 * The kind of the trees to accept.
-	 *
-	 * @since 0.2.0 ~2021.05.28
-	 */
-	@NotNull
-	protected final String kind;
-
-	/**
-	 * Construct a new kind-filtered compiler that compiles trees with the given {@code
-	 * kind} using the given {@code compiler}.
-	 *
-	 * @param kind     the kind of trees the constructed compiler will target.
-	 * @param compiler the wrapped compiler.
-	 * @throws NullPointerException if the given {@code kind} or {@code compiler} is
-	 *                              null.
-	 * @since 0.2.0 ~2021.05.28
-	 */
-	public KindCompiler(@NotNull String kind, @NotNull Compiler compiler) {
-		Objects.requireNonNull(kind, "kind");
-		Objects.requireNonNull(compiler, "compiler");
-		this.kind = kind;
-		this.compiler = compiler;
-	}
+	public static final ToPushEvalAddrCompiler INSTANCE = new ToPushEvalAddrCompiler();
 
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
+		Objects.requireNonNull(compiler, "compiler");
+		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (tree.getSketch().getKind().equals(this.kind))
-			return this.compiler.compile(compiler, compilation, tree);
+		String address = Trees.read(tree).toString();
 
-		return null;
+		return new PushEvalAddr(tree, address);
 	}
 }

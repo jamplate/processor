@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
-public class OrderCompiler implements Compiler {
+public class FirstCompileCompiler implements Compiler {
 	/**
 	 * The compilers backing this compiler. (ordered)
 	 *
@@ -54,7 +54,7 @@ public class OrderCompiler implements Compiler {
 	 * @throws NullPointerException if the given {@code compilers} is null.
 	 * @since 0.2.0 ~2021.05.21
 	 */
-	public OrderCompiler(@Nullable Compiler @NotNull ... compilers) {
+	public FirstCompileCompiler(@Nullable Compiler @NotNull ... compilers) {
 		Objects.requireNonNull(compilers, "compilers");
 		this.compilers = Arrays
 				.stream(compilers)
@@ -71,7 +71,7 @@ public class OrderCompiler implements Compiler {
 	 * @throws NullPointerException if the given {@code compilers} is null.
 	 * @since 0.2.0 ~2021.05.21
 	 */
-	public OrderCompiler(@NotNull List<Compiler> compilers) {
+	public FirstCompileCompiler(@NotNull List<Compiler> compilers) {
 		Objects.requireNonNull(compilers, "compilers");
 		this.compilers = new ArrayList<>();
 		for (Compiler compiler : compilers)

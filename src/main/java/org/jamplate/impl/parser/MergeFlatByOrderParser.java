@@ -30,7 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.19
  */
-public class FlatMergeParser extends MergeParser {
+public class MergeFlatByOrderParser extends MergeByOrderParser {
 	/**
 	 * Construct a new parser that filters the results to have no dominance between
 	 * etcher.
@@ -39,7 +39,7 @@ public class FlatMergeParser extends MergeParser {
 	 * @throws NullPointerException if the given {@code parser} is null.
 	 * @since 0.2.0 ~2021.05.20
 	 */
-	public FlatMergeParser(@NotNull Parser parser) {
+	public MergeFlatByOrderParser(@NotNull Parser parser) {
 		super(parser);
 	}
 

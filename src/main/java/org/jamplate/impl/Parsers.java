@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.parser.DoublePatternParser;
-import org.jamplate.impl.parser.GroupParser;
+import org.jamplate.impl.parser.PatternGroupParser;
 import org.jamplate.impl.parser.PatternParser;
+import org.jamplate.impl.parser.PatternRangeParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
@@ -41,7 +41,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CM_BLK = new DoublePatternParser(
+	public static final Parser CM_BLK = new PatternRangeParser(
 			Pattern.compile("/\\*"),
 			Pattern.compile("\\*/"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_BLK)),
@@ -67,7 +67,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CM_SLN = new DoublePatternParser(
+	public static final Parser CM_SLN = new PatternRangeParser(
 			Pattern.compile("//"),
 			Pattern.compile("(?=[\r\n]|$)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_SLN)),
@@ -96,8 +96,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CX_CMD = new DoublePatternParser(
-			Pattern.compile("(?<=^|[\r\n])#"),
+	public static final Parser CX_CMD = new PatternRangeParser(
+			Pattern.compile("(?<=^|[\r\n])[\\t ]*#"),
 			Pattern.compile("(?=[\r\n]|$)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD)),
 			(t, r) -> t.offer(new Tree(
@@ -122,8 +122,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.01
 	 */
 	@NotNull
-	public static final Parser CX_CMD_CAPTURE = new GroupParser(
-			Pattern.compile("^#((?i)capture)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_CAPTURE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)capture)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_CAPTURE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -148,8 +148,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_CONSOLE = new GroupParser(
-			Pattern.compile("^#((?i)console)\\s?(.*)$"),
+	public static final Parser CX_CMD_CONSOLE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)console)\\s?(.*)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_CONSOLE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -174,8 +174,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_DECLARE = new GroupParser(
-			Pattern.compile("^#((?i)declare)\\s([^\\s\\[\\]]+)\\s?(.*)$", Pattern.DOTALL),
+	public static final Parser CX_CMD_DECLARE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)declare)\\s([^\\s\\[\\]]+)\\s?(.*)$", Pattern.DOTALL),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_DECLARE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -208,8 +208,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_DEFINE = new GroupParser(
-			Pattern.compile("^#((?i)define)\\s(\\S+)\\s?(.*)$"),
+	public static final Parser CX_CMD_DEFINE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)define)\\s(\\S+)\\s?(.*)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_DEFINE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -242,8 +242,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ELIF = new GroupParser(
-			Pattern.compile("^#((?i)elif)\\s(.+)$"),
+	public static final Parser CX_CMD_ELIF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)elif)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -268,8 +268,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ELIFDEF = new GroupParser(
-			Pattern.compile("^#((?i)elifdef)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_ELIFDEF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)elifdef)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIFDEF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -294,8 +294,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ELIFNDEF = new GroupParser(
-			Pattern.compile("^#((?i)elifndef)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_ELIFNDEF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)elifndef)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELIFNDEF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -320,8 +320,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ELSE = new GroupParser(
-			Pattern.compile("^#((?i)else)\\s*$"),
+	public static final Parser CX_CMD_ELSE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)else)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ELSE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -338,8 +338,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.01
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ENDCAPTURE = new GroupParser(
-			Pattern.compile("^#((?i)endcapture)\\s*$"),
+	public static final Parser CX_CMD_ENDCAPTURE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)endcapture)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDCAPTURE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -356,8 +356,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ENDFOR = new GroupParser(
-			Pattern.compile("^#((?i)endfor)\\s*$"),
+	public static final Parser CX_CMD_ENDFOR = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)endfor)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDFOR), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -374,8 +374,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ENDIF = new GroupParser(
-			Pattern.compile("^#((?i)endif)\\s*$"),
+	public static final Parser CX_CMD_ENDIF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)endif)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDIF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -392,8 +392,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.03
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ENDWHILE = new GroupParser(
-			Pattern.compile("^#((?i)endwhile)\\s*$"),
+	public static final Parser CX_CMD_ENDWHILE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)endwhile)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ENDWHILE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -410,8 +410,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser CX_CMD_ERROR = new GroupParser(
-			Pattern.compile("^#((?i)error)\\s?(.*)$"),
+	public static final Parser CX_CMD_ERROR = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)error)\\s?(.*)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_ERROR), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -436,8 +436,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser CX_CMD_FOR = new GroupParser(
-			Pattern.compile("^#((?i)for)\\s(\\S+)\\s?(.*)$"),
+	public static final Parser CX_CMD_FOR = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)for)\\s(\\S+)\\s?(.*)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_FOR), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -470,8 +470,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_IF = new GroupParser(
-			Pattern.compile("^#((?i)if)\\s(.+)$"),
+	public static final Parser CX_CMD_IF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)if)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -496,8 +496,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_IFDEF = new GroupParser(
-			Pattern.compile("^#((?i)ifdef)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_IFDEF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)ifdef)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IFDEF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -522,8 +522,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_IFNDEF = new GroupParser(
-			Pattern.compile("^#((?i)ifndef)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_IFNDEF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)ifndef)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_IFNDEF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -548,8 +548,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
-	public static final Parser CX_CMD_INCLUDE = new GroupParser(
-			Pattern.compile("^#((?i)include)\\s(.+)$"),
+	public static final Parser CX_CMD_INCLUDE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)include)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_INCLUDE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -574,8 +574,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser CX_CMD_MESSAGE = new GroupParser(
-			Pattern.compile("^#((?i)message)\\s?(.*)$"),
+	public static final Parser CX_CMD_MESSAGE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)message)\\s?(.*)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_MESSAGE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -600,8 +600,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser CX_CMD_SPREAD = new GroupParser(
-			Pattern.compile("^#((?i)spread)\\s(.+)$"),
+	public static final Parser CX_CMD_SPREAD = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)spread)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_SPREAD), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -626,8 +626,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser CX_CMD_UNDEC = new GroupParser(
-			Pattern.compile("^#((?i)undec)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_UNDEC = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)undec)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_UNDEC), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -652,8 +652,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser CX_CMD_UNDEF = new GroupParser(
-			Pattern.compile("^#((?i)undef)\\s(\\S+)\\s*$"),
+	public static final Parser CX_CMD_UNDEF = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)undef)\\s(\\S+)\\s*$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_UNDEF), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -678,8 +678,8 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.03
 	 */
 	@NotNull
-	public static final Parser CX_CMD_WHILE = new GroupParser(
-			Pattern.compile("^#((?i)while)\\s(.+)$"),
+	public static final Parser CX_CMD_WHILE = new PatternGroupParser(
+			Pattern.compile("^[\\t ]*#((?i)while)\\s(.+)$"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD_WHILE), 1),
 			(t, r) -> t.offer(new Tree(
 					t.document(),
@@ -706,7 +706,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CX_INJ = new DoublePatternParser(
+	public static final Parser CX_INJ = new PatternRangeParser(
 			Pattern.compile("#\\{"),
 			Pattern.compile("\\}#"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_INJ)),
@@ -933,7 +933,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_CUR = new DoublePatternParser(
+	public static final Parser SX_CUR = new PatternRangeParser(
 			Pattern.compile("\\{"),
 			Pattern.compile("\\}"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CUR)),
@@ -959,7 +959,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_DQT = new DoublePatternParser(
+	public static final Parser SX_DQT = new PatternRangeParser(
 			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
 			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_DQT)),
@@ -1007,7 +1007,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_QTE = new DoublePatternParser(
+	public static final Parser SX_QTE = new PatternRangeParser(
 			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
 			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_QTE)),
@@ -1033,7 +1033,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_RND = new DoublePatternParser(
+	public static final Parser SX_RND = new PatternRangeParser(
 			Pattern.compile("\\("),
 			Pattern.compile("\\)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_RND)),
@@ -1059,7 +1059,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_SQR = new DoublePatternParser(
+	public static final Parser SX_SQR = new PatternRangeParser(
 			Pattern.compile("\\["),
 			Pattern.compile("\\]"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_SQR)),

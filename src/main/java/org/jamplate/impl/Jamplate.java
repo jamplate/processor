@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * An all-in-one jamplate processor.
@@ -79,7 +80,7 @@ public final class Jamplate {
 	public static final Compiler COMPILER =
 			new CombineCompiler(
 					Compilers.DC_ROT,
-					new ExclusiveCompiler(new OrderCompiler(
+					new ExclusiveCompiler(new FirstCompileCompiler(
 							/* Non suppressed EOL */
 							Compilers.DC_EOL,
 							/* suppressed EOL */
@@ -113,7 +114,7 @@ public final class Jamplate {
 							/* Injections */
 							Compilers.CX_INJ,
 							/* Parameters, encapsulated to ignore outer compilers (ex. CX_TXT) */
-							new KindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
+							new FilterByKindCompiler(Kind.CX_PRM, new ExclusiveCompiler(
 									/* Cleanup ws and throw if unrecognized */
 									new FlattenCompiler(
 											/* parsed areas */
@@ -121,11 +122,11 @@ public final class Jamplate {
 											/* non parsed areas */
 											new MandatoryCompiler(
 													/* Ignore whitespace */
-													WhitespaceCompiler.INSTANCE
+													ToIdleWhitespaceCompiler.INSTANCE
 											)
 									),
 									/* Compile recognized logic */
-									new OrderCompiler(
+									new FirstCompileCompiler(
 											/* References */
 											Compilers.CX_PCM_REF,
 											/* Logic (Math) */
@@ -145,7 +146,7 @@ public final class Jamplate {
 											/* Array */
 											Compilers.SX_SQR,
 											/* Nested Parameter */
-											new KindCompiler(Kind.CX_PRM, new FlattenCompiler(
+											new FilterByKindCompiler(Kind.CX_PRM, new FlattenCompiler(
 													FallbackCompiler.INSTANCE,
 													FallbackCompiler.INSTANCE
 											))
@@ -172,11 +173,11 @@ public final class Jamplate {
 	 */
 	@NotNull
 	public static final Parser PARSER =
-			new CollectParser(new OrderParser(
+			new CollectParser(new MergeByWeightParser(
 					/* Separate the file by lines. */
 					Parsers.DC_EOL,
 					/* Wild Block Battles (first occurs win) */
-					new MergeParser(new CombineParser(
+					new MergeByOrderParser(new CombineParser(
 							/* Comment blocks */
 							Parsers.CM_BLK,
 							/* Strings, encapsulated to parse inner components */
@@ -190,7 +191,7 @@ public final class Jamplate {
 					/* Always ignore commented end-of-lines */
 					Parsers.CM_SLN,
 					/* Runtime elements */
-					new FlatOrderParser(
+					new MergeFlatByWeightParser(
 							/* Injections, injection must win over commands */
 							Parsers.CX_INJ,
 							new ThenOfferParser(
@@ -248,9 +249,9 @@ public final class Jamplate {
 							)
 					),
 					/* Parameters */
-					new HierarchyKindParser(
+					new FilterHierarchyByKindParser(
 							Kind.CX_PRM,
-							new MergeParser(new HierarchyParser(new OrderParser(
+							new MergeByOrderParser(new HierarchyParser(new MergeByWeightParser(
 									/* Braces */
 									Parsers.SX_CUR,
 									/* Brackets */
@@ -414,7 +415,8 @@ public final class Jamplate {
 									   e,
 									   MessagePriority.ERROR,
 									   MessageKind.COMPILE,
-									   true
+									   true,
+									   new Tree(document)
 							   ));
 					success = false;
 				}
@@ -435,8 +437,76 @@ public final class Jamplate {
 	 *                              compilations} is null.
 	 * @since 0.2.0 ~2021.05.31
 	 */
-	@Contract(mutates = "param1,param2")
 	public static boolean execute(@NotNull Environment environment, @Nullable Compilation @NotNull ... compilations) {
+		Objects.requireNonNull(environment, "environment");
+		Objects.requireNonNull(compilations, "compilations");
+		//noinspection OverlyLongLambda
+		return Jamplate.execute(environment, () -> {
+			Memory memory = new Memory();
+
+			Object memoryDefaults = environment.getMeta().get(Meta.MEMORY);
+
+			if (memoryDefaults instanceof Map)
+				((Map<?, ?>) memoryDefaults).forEach((k, v) -> {
+					String address = String.valueOf(k);
+
+					if (v instanceof Value) {
+						Value value = (Value) v;
+
+						memory.set(address, value);
+					} else {
+						String text = String.valueOf(v);
+
+						memory.set(address, m -> text);
+					}
+				});
+
+			//set project dir
+			memory.set(
+					Address.PROJECT,
+					m -> String.valueOf(environment.getMeta().getOrDefault(Meta.PROJECT, ""))
+			);
+			memory.set(
+					Address.OUTPUT,
+					m -> String.valueOf(environment.getMeta().getOrDefault(Meta.OUTPUT, ""))
+			);
+			memory.set(
+					Address.JAMPLATE,
+					s -> "0.2.0"
+			);
+			//noinspection UseOfObsoleteDateTimeApi
+			memory.set(
+					Address.TIME,
+					m -> new SimpleDateFormat("HH:mm:ss")
+							.format(new Date())
+			);
+			//noinspection UseOfObsoleteDateTimeApi
+			memory.set(
+					Address.DATE,
+					m -> new SimpleDateFormat("MMM dd yyyy")
+							.format(new Date())
+			);
+
+			return memory;
+		}, compilations);
+	}
+
+	/**
+	 * Execute the given {@code compilations} in order with respect to the given {@code
+	 * environment}.
+	 * <br>
+	 * Null compilations or non-compiled compilations in the given array are ignored.
+	 *
+	 * @param environment    the environment to execute on.
+	 * @param memorySupplier a supplier used to create new memory instances.
+	 * @param compilations   the compilations to be executed (in order).
+	 * @return true, if all of the given {@code compilations} was successfully executed.
+	 * @throws NullPointerException if the given {@code environment} or {@code
+	 *                              memorySupplier} or {@code compilations} is null.
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@Contract(mutates = "param1,param2")
+	public static boolean execute(@NotNull Environment environment, @NotNull Supplier<Memory> memorySupplier, @Nullable Compilation @NotNull ... compilations) {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(compilations, "compilations");
 		boolean success = true;
@@ -445,42 +515,7 @@ public final class Jamplate {
 			Instruction instruction = compilation.getInstruction();
 
 			if (instruction != null) {
-				Memory memory = new Memory();
-
-				Object memoryDefaults = environment.getMeta().get(Meta.MEMORY);
-
-				if (memoryDefaults instanceof Map)
-					((Map<?, ?>) memoryDefaults).forEach((key, value) -> {
-						String address = String.valueOf(key);
-						String text = String.valueOf(value);
-						memory.set(address, v -> text);
-					});
-
-				//set project dir
-				memory.set(
-						Address.PROJECT,
-						m -> String.valueOf(environment.getMeta().getOrDefault(Meta.PROJECT, ""))
-				);
-				memory.set(
-						Address.OUTPUT,
-						m -> String.valueOf(environment.getMeta().getOrDefault(Meta.OUTPUT, ""))
-				);
-				memory.set(
-						Address.JAMPLATE,
-						s -> "0.2.0"
-				);
-				//noinspection UseOfObsoleteDateTimeApi
-				memory.set(
-						Address.TIME,
-						m -> new SimpleDateFormat("HH:mm:ss")
-								.format(new Date())
-				);
-				//noinspection UseOfObsoleteDateTimeApi
-				memory.set(
-						Address.DATE,
-						m -> new SimpleDateFormat("MMM dd yyyy")
-								.format(new Date())
-				);
+				Memory memory = memorySupplier.get();
 
 				try {
 					memory.pushFrame(new Frame(instruction));
@@ -506,7 +541,8 @@ public final class Jamplate {
 									   memory,
 									   MessagePriority.ERROR,
 									   MessageKind.EXECUTION,
-									   true
+									   true,
+									   compilation.getRootTree()
 							   ));
 					success = false;
 				} finally {
@@ -519,7 +555,8 @@ public final class Jamplate {
 										   memory,
 										   MessagePriority.WARNING,
 										   MessageKind.EXECUTION,
-										   false
+										   false,
+										   compilation.getRootTree()
 								   ));
 					}
 				}

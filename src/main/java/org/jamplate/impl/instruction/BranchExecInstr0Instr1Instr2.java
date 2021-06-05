@@ -126,7 +126,7 @@ public class BranchExecInstr0Instr1Instr2 implements Instruction {
 		this.tree = tree;
 		this.instruction0 = instruction0;
 		this.instruction1 = instruction1;
-		this.instruction2 = Instruction.empty(tree);
+		this.instruction2 = new Idle(tree);
 	}
 
 	/**

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.17
  */
-public class OrderParser implements Parser {
+public class MergeByWeightParser implements Parser {
 	/**
 	 * The parsers in order.
 	 *
@@ -55,7 +55,7 @@ public class OrderParser implements Parser {
 	 * @throws NullPointerException if the given {@code parsers} is null.
 	 * @since 0.2.0 ~2021.05.18
 	 */
-	public OrderParser(@Nullable Parser @NotNull ... parsers) {
+	public MergeByWeightParser(@Nullable Parser @NotNull ... parsers) {
 		Objects.requireNonNull(parsers, "parsers");
 		this.parsers = Arrays.stream(parsers)
 							 .filter(Objects::nonNull)
@@ -73,7 +73,7 @@ public class OrderParser implements Parser {
 	 * @throws NullPointerException if the given {@code parsers} is null.
 	 * @since 0.2.0 ~2021.05.18
 	 */
-	public OrderParser(@NotNull List<Parser> parsers) {
+	public MergeByWeightParser(@NotNull List<Parser> parsers) {
 		Objects.requireNonNull(parsers, "parsers");
 		this.parsers = new ArrayList<>();
 		for (Parser parser : parsers)

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
-public class MergeParser implements Parser {
+public class MergeByOrderParser implements Parser {
 	/**
 	 * The parser this parser is wrapping.
 	 *
@@ -50,7 +50,7 @@ public class MergeParser implements Parser {
 	 * @throws NullPointerException if the given {@code parser} is null.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public MergeParser(@NotNull Parser parser) {
+	public MergeByOrderParser(@NotNull Parser parser) {
 		Objects.requireNonNull(parser, "parser");
 		this.parser = parser;
 	}

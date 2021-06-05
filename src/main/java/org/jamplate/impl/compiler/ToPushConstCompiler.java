@@ -15,6 +15,7 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.impl.instruction.PushConst;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -25,20 +26,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * A compiler that compiles an empty instruction.
+ * A compiler that always compiles into a {@link PushConst} with the constant being the
+ * result of reading the tree given to it.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class EmptyCompiler implements Compiler {
+public class ToPushConstCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final EmptyCompiler INSTANCE = new EmptyCompiler();
+	public static final ToPushConstCompiler INSTANCE = new ToPushConstCompiler();
 
 	@Nullable
 	@Override
@@ -46,6 +48,6 @@ public class EmptyCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		return Instruction.empty(tree);
+		return new PushConst(tree);
 	}
 }

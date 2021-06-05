@@ -20,6 +20,11 @@
  * Doc Methods:
  * <ul>
  *     <li>
+ *         {@code IDLE}
+ *         <p>
+ *             Do nothing.
+ *     </li>
+ *     <li>
  *         {@code ADD( X : Text | Value , Y : Text | Value ) : Text}
  *         <p>
  *             return the result of adding Y to X.

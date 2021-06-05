@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public class DoublePatternParser implements Parser {
+public class PatternRangeParser implements Parser {
 	/**
 	 * The constructor of the resultant tree.
 	 *
@@ -96,7 +96,7 @@ public class DoublePatternParser implements Parser {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@SafeVarargs
-	public DoublePatternParser(
+	public PatternRangeParser(
 			@NotNull Pattern startPattern,
 			@NotNull Pattern endPattern,
 			int zIndex,
@@ -135,7 +135,7 @@ public class DoublePatternParser implements Parser {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@SafeVarargs
-	public DoublePatternParser(
+	public PatternRangeParser(
 			@NotNull Pattern startPattern,
 			@NotNull Pattern endPattern,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
@@ -161,7 +161,6 @@ public class DoublePatternParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		//noinspection OverlyLongLambda
 		return Parsing.parseAll(tree, this.startPattern, this.endPattern, this.zIndex)
 					  .parallelStream()
 					  .map(m -> {

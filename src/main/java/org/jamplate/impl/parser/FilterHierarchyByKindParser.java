@@ -20,44 +20,45 @@ import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 /**
- * A parser that parses using another parser and only parses trees with a kind equal to a
- * pre-specified kind.
+ * A parser that searches in the hierarchy of the tree given to it (including the tree
+ * itself) looking for trees with a pre-specified kind. Then, parses those trees and
+ * returns the results.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.31
+ * @since 0.2.0 ~2021.06.01
  */
-public class KindParser implements Parser {
+public class FilterHierarchyByKindParser implements Parser {
 	/**
-	 * The target kind.
+	 * The kind this parser is looking for.
 	 *
-	 * @since 0.2.0 ~2021.05.31
+	 * @since 0.2.0 ~2021.06.01
 	 */
 	@NotNull
 	protected final String kind;
 	/**
 	 * The wrapped parser.
 	 *
-	 * @since 0.2.0 ~2021.05.31
+	 * @since 0.2.0 ~2021.06.01
 	 */
 	@NotNull
 	protected final Parser parser;
 
 	/**
-	 * Construct a new parser that only parses trees that have the given {@code kind} and
-	 * parses using the given {@code parser}.
+	 * Construct a new parser that parses the trees with the given {@code kind} in the
+	 * tree given to it (including the tree itself) using the given {@code parser}.
 	 *
-	 * @param kind   the targeted kind.
-	 * @param parser the wrapped parser.
+	 * @param kind   the kind of the trees the constructed parser will look for.
+	 * @param parser the parser to be used by the constructed parser.
 	 * @throws NullPointerException if the given {@code kind} or {@code parser} is null.
-	 * @since 0.2.0 ~2021.05.31
+	 * @since 0.2.0 ~2021.06.01
 	 */
-	public KindParser(@NotNull String kind, @NotNull Parser parser) {
+	public FilterHierarchyByKindParser(@NotNull String kind, @NotNull Parser parser) {
 		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(parser, "parser");
 		this.kind = kind;
@@ -69,9 +70,14 @@ public class KindParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (tree.getSketch().getKind().equals(this.kind))
-			return this.parser.parse(compilation, tree);
+		Set<Tree> results = new HashSet<>();
 
-		return Collections.emptySet();
+		if (tree.getSketch().getKind().equals(this.kind))
+			results.addAll(this.parser.parse(compilation, tree));
+
+		for (Tree child : tree)
+			results.addAll(this.parse(compilation, child));
+
+		return results;
 	}
 }

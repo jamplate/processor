@@ -16,12 +16,15 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.PushConst;
+import org.jamplate.impl.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONException;
+import org.json.JSONTokener;
 
 import java.util.Objects;
 
@@ -33,14 +36,14 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class PushConstCompiler implements Compiler {
+public class ToPushConstUnescapeCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final PushConstCompiler INSTANCE = new PushConstCompiler();
+	public static final ToPushConstUnescapeCompiler INSTANCE = new ToPushConstUnescapeCompiler();
 
 	@Nullable
 	@Override
@@ -48,6 +51,14 @@ public class PushConstCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		return new PushConst(tree);
+		try {
+			String text = new JSONTokener(Trees.read(tree).toString())
+					.nextValue()
+					.toString();
+
+			return new PushConst(tree, text);
+		} catch (JSONException e) {
+			return new PushConst(tree);
+		}
 	}
 }

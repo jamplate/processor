@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.compiler;
 
-import org.jamplate.impl.instruction.PushConst;
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.impl.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
@@ -23,27 +23,24 @@ import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONTokener;
 
 import java.util.Objects;
 
 /**
- * A compiler that always compiles into a {@link PushConst} with the constant being the
- * result of reading the tree given to it.
+ * A compiler that compiles whitespaces.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.31
+ * @since 0.2.0 ~2021.05.28
  */
-public class PushUnescapeConstCompiler implements Compiler {
+public class ToIdleWhitespaceCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final PushUnescapeConstCompiler INSTANCE = new PushUnescapeConstCompiler();
+	public static final ToIdleWhitespaceCompiler INSTANCE = new ToIdleWhitespaceCompiler();
 
 	@Nullable
 	@Override
@@ -51,14 +48,9 @@ public class PushUnescapeConstCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		try {
-			String text = new JSONTokener(Trees.read(tree).toString())
-					.nextValue()
-					.toString();
+		if (Trees.read(tree).toString().trim().isEmpty())
+			return new Idle(tree);
 
-			return new PushConst(tree, text);
-		} catch (JSONException e) {
-			return new PushConst(tree);
-		}
+		return null;
 	}
 }

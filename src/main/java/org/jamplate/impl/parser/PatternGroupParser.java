@@ -40,7 +40,7 @@ import java.util.stream.IntStream;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.30
  */
-public class GroupParser implements Parser {
+public class PatternGroupParser implements Parser {
 	/**
 	 * The constructor of the resultant tree.
 	 *
@@ -75,7 +75,7 @@ public class GroupParser implements Parser {
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@SafeVarargs
-	public GroupParser(
+	public PatternGroupParser(
 			@NotNull Pattern pattern,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Reference> @NotNull ... constructors

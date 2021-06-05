@@ -19,36 +19,58 @@ import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Compiler;
-import org.jamplate.impl.util.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * A compiler that compiles whitespaces.
+ * A compiler that targets a pre-specified kind of trees and compiles using another
+ * compiler.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.28
  */
-public class WhitespaceCompiler implements Compiler {
+public class FilterByKindCompiler implements Compiler {
 	/**
-	 * A global instance of this class.
+	 * The wrapped compiler.
 	 *
-	 * @since 0.2.0 ~2021.05.31
+	 * @since 0.2.0 ~2021.05.28
 	 */
 	@NotNull
-	public static final WhitespaceCompiler INSTANCE = new WhitespaceCompiler();
+	protected final Compiler compiler;
+	/**
+	 * The kind of the trees to accept.
+	 *
+	 * @since 0.2.0 ~2021.05.28
+	 */
+	@NotNull
+	protected final String kind;
+
+	/**
+	 * Construct a new kind-filtered compiler that compiles trees with the given {@code
+	 * kind} using the given {@code compiler}.
+	 *
+	 * @param kind     the kind of trees the constructed compiler will target.
+	 * @param compiler the wrapped compiler.
+	 * @throws NullPointerException if the given {@code kind} or {@code compiler} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.28
+	 */
+	public FilterByKindCompiler(@NotNull String kind, @NotNull Compiler compiler) {
+		Objects.requireNonNull(kind, "kind");
+		Objects.requireNonNull(compiler, "compiler");
+		this.kind = kind;
+		this.compiler = compiler;
+	}
 
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
-		Objects.requireNonNull(compiler, "compiler");
-		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (Trees.read(tree).toString().trim().isEmpty())
-			return Instruction.empty(tree);
+		if (tree.getSketch().getKind().equals(this.kind))
+			return this.compiler.compile(compiler, compilation, tree);
 
 		return null;
 	}

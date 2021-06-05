@@ -13,35 +13,40 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.impl.compiler;
 
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.model.Compilation;
+import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
+import org.jamplate.model.function.Compiler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.Objects;
 
 /**
- * A parser that always parses nothing.
+ * A compiler that compiles an empty instruction.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class EmptyParser implements Parser {
+public class ToIdleCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final EmptyParser INSTANCE = new EmptyParser();
+	public static final ToIdleCompiler INSTANCE = new ToIdleCompiler();
 
-	@NotNull
+	@Nullable
 	@Override
-	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
-		return Collections.emptySet();
+	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
+		Objects.requireNonNull(compiler, "compiler");
+		Objects.requireNonNull(compilation, "compilation");
+		Objects.requireNonNull(tree, "tree");
+		return new Idle(tree);
 	}
 }

@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * An {@link OrderParser} that does not allow any dominance between the results.
+ * An {@link MergeByWeightParser} that does not allow any dominance between the results.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
-public class FlatOrderParser extends OrderParser {
+public class MergeFlatByWeightParser extends MergeByWeightParser {
 	/**
 	 * Construct a new parser that uses the given {@code parsers} preferring the results
 	 * from the parsers at the start that the results from the parsers that at the end
@@ -43,7 +43,7 @@ public class FlatOrderParser extends OrderParser {
 	 * @throws NullPointerException if the given {@code parsers} is null.
 	 * @since 0.2.0 ~2021.05.18
 	 */
-	public FlatOrderParser(@Nullable Parser @NotNull ... parsers) {
+	public MergeFlatByWeightParser(@Nullable Parser @NotNull ... parsers) {
 		super(parsers);
 	}
 
@@ -58,7 +58,7 @@ public class FlatOrderParser extends OrderParser {
 	 * @throws NullPointerException if the given {@code parsers} is null.
 	 * @since 0.2.0 ~2021.05.18
 	 */
-	public FlatOrderParser(@NotNull List<Parser> parsers) {
+	public MergeFlatByWeightParser(@NotNull List<Parser> parsers) {
 		super(parsers);
 	}
 

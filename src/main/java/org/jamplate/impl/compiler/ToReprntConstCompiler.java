@@ -15,8 +15,7 @@
  */
 package org.jamplate.impl.compiler;
 
-import org.jamplate.impl.instruction.PushEvalAddr;
-import org.jamplate.impl.util.Trees;
+import org.jamplate.impl.instruction.ReprntConst;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -27,21 +26,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * A compiler that always compiles into a {@link PushEvalAddr} with the address being the
+ * A compiler that always compiles into a {@link ReprntConst} with the constant being the
  * result of reading the tree given to it.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class PushEvalAddrCompiler implements Compiler {
+public class ToReprntConstCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final PushEvalAddrCompiler INSTANCE = new PushEvalAddrCompiler();
+	public static final ToReprntConstCompiler INSTANCE = new ToReprntConstCompiler();
 
 	@Nullable
 	@Override
@@ -49,8 +48,6 @@ public class PushEvalAddrCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		String address = Trees.read(tree).toString();
-
-		return new PushEvalAddr(tree, address);
+		return new ReprntConst(tree);
 	}
 }
