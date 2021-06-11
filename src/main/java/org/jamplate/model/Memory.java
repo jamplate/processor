@@ -236,6 +236,21 @@ public final class Memory implements Closeable {
 	}
 
 	/**
+	 * Return the last pushed value to the stack.
+	 * <br>
+	 * The stack of the last frame will be accessed.
+	 *
+	 * @return the last value pushed to the stack. Or {@link Value#NULL} if the stack was
+	 * 		empty.
+	 * @since 0.3.0 ~2021.06.11
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Value peek() {
+		return this.frames.getLast().peek();
+	}
+
+	/**
 	 * Return and remove the last pushed value to the stack.
 	 * <br>
 	 * The stack of the last frame will be modified.

@@ -141,6 +141,20 @@ public final class Frame {
 	}
 
 	/**
+	 * Return the last pushed value to the stack.
+	 *
+	 * @return the last value pushed to the stack. Or {@link Value#NULL} if the stack was
+	 * 		empty.
+	 * @since 0.3.0 ~2021.06.11
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Value peek() {
+		Value value = this.stack.peekLast();
+		return value == null ? Value.NULL : value;
+	}
+
+	/**
 	 * Return and remove the last pushed value to the stack.
 	 *
 	 * @return the last value pushed to the stack. Or {@link Value#NULL} if the stack was
