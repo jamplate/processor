@@ -15,10 +15,14 @@
  */
 package org.jamplate.api;
 
+import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.function.Processor;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Environment;
+import org.jamplate.model.Memory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,7 +102,7 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpecAfter(@NotNull Spec ref, @NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
+		throw new UnsupportedOperationException("addSpecAfter");
 	}
 
 	/**
@@ -120,7 +124,7 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpecBefore(@NotNull Spec ref, @NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
+		throw new UnsupportedOperationException("addSpecBefore");
 	}
 
 	/**
@@ -139,7 +143,7 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpecFirst(@NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
+		throw new UnsupportedOperationException("addSpecFirst");
 	}
 
 	/**
@@ -158,7 +162,7 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpecLast(@NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
+		throw new UnsupportedOperationException("addSpecLast");
 	}
 
 	/**
@@ -240,6 +244,20 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
+	 * Return the qualified name of this spec. The qualified name of a spec is the string
+	 * that identifies the spec from other specs.
+	 *
+	 * @return the qualified name of this spec. Or an empty string if this spec is not
+	 * 		qualified.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@NotNull
+	@Contract(pure = true)
+	default String getQualifiedName() {
+		return "";
+	}
+
+	/**
 	 * Return {@code true} if this spec has the given subspec {@code spec}.
 	 *
 	 * @param spec the subspec to check if in this spec.
@@ -256,6 +274,37 @@ public interface Spec extends Iterable<Spec> {
 			if (value == spec)
 				return true;
 		return false;
+	}
+
+	/**
+	 * A method that get invoked when creating the memory before executing an instruction
+	 * at the unit where this spec is applied.
+	 *
+	 * @param compilation the compilation its instruction to be executed.
+	 * @param memory      the memory to be used when executing the instruction of the
+	 *                    given {@code compilation}.
+	 * @throws NullPointerException  if the given {@code compilation} or {@code memory} is
+	 *                               null.
+	 * @throws IllegalStateException if the given {@code compilation} has no instruction
+	 *                               set to it.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "param1,param2")
+	default void onCreateMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
+	}
+
+	/**
+	 * A method that get invoked when a handled error occurred at the unit where this spec
+	 * is applied.
+	 *
+	 * @param environment the environment where the error occurred.
+	 * @param message     the message of the error.
+	 * @throws NullPointerException if the given {@code environment} or {@code message} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(pure = true)
+	default void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
 	}
 
 	/**
@@ -277,5 +326,103 @@ public interface Spec extends Iterable<Spec> {
 				return true;
 			}
 		return false;
+	}
+
+	/**
+	 * Set the pre-analyze processor of this spec to be the given {@code processor}.
+	 *
+	 * @param processor the new pre-analyze processor.
+	 * @throws NullPointerException          if the given {@code processor} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       pre-analyze processor.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setAnalyzeProcessor(@NotNull Processor processor) {
+		throw new UnsupportedOperationException("setAnalyzeProcessor");
+	}
+
+	/**
+	 * Set the analyzer of this spec to be the given {@code analyzer}.
+	 *
+	 * @param analyzer the new analyzer.
+	 * @throws NullPointerException          if the given {@code analyzer} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       analyzer.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setAnalyzer(@NotNull Analyzer analyzer) {
+		throw new UnsupportedOperationException("setAnalyzer");
+	}
+
+	/**
+	 * Set the pre-compile processor of this spec to be the given {@code processor}.
+	 *
+	 * @param processor the new pre-compile processor.
+	 * @throws NullPointerException          if the given {@code processor} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       pre-compile processor.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setCompileProcessor(@NotNull Processor processor) {
+		throw new UnsupportedOperationException("setCompileProcessor");
+	}
+
+	/**
+	 * Set the compiler of this spec to be the given {@code compiler}.
+	 *
+	 * @param compiler the new compiler.
+	 * @throws NullPointerException          if the given {@code compiler} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       compiler.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setCompiler(@NotNull Compiler compiler) {
+		throw new UnsupportedOperationException("setCompiler");
+	}
+
+	/**
+	 * Set the pre-parse processor of this spec to be the given {@code processor}.
+	 *
+	 * @param processor the new pre-parse processor.
+	 * @throws NullPointerException          if the given {@code processor} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       pre-parse processor.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setParseProcessor(@NotNull Processor processor) {
+		throw new UnsupportedOperationException("setParseProcessor");
+	}
+
+	/**
+	 * Set the parser of this spec to be the given {@code parser}.
+	 *
+	 * @param parser the new parser.
+	 * @throws NullPointerException          if the given {@code parser} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       parser.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setParser(@NotNull Parser parser) {
+		throw new UnsupportedOperationException("setParser");
+	}
+
+	/**
+	 * Set the qualified name of this spec to be the given {@code name}.
+	 *
+	 * @param name the new qualified name.
+	 * @throws NullPointerException          if the given {@code name} is null.
+	 * @throws UnsupportedOperationException if this spec does not support changing its
+	 *                                       qualified name.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default void setQualifiedName(@NotNull String name) {
+		throw new UnsupportedOperationException("setQualifiedName");
 	}
 }
