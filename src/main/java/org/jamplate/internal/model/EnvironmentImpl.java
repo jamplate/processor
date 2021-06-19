@@ -13,11 +13,11 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.model;
+package org.jamplate.internal.model;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.impl.Kind;
-import org.jamplate.impl.diagnostic.DiagnosticImpl;
+import org.jamplate.internal.diagnostic.DiagnosticImpl;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

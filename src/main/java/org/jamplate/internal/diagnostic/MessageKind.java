@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.diagnostic;
+package org.jamplate.internal.diagnostic;
 
 import org.jetbrains.annotations.NotNull;
 

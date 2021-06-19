@@ -13,26 +13,33 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.internal.util.parser.wrapper;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jamplate.model.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
 /**
- * A parser that attempt to parse every tree in the hierarchy of the tree provided to it
- * (including the tree itself) and parses using another parser.
+ * A parser that parses using another parser and only parses trees with a kind equal to a
+ * pre-specified kind.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class HierarchyParser implements Parser {
+public class FilterByKindParser implements Parser {
+	/**
+	 * The target kind.
+	 *
+	 * @since 0.2.0 ~2021.05.31
+	 */
+	@NotNull
+	protected final String kind;
 	/**
 	 * The wrapped parser.
 	 *
@@ -42,14 +49,18 @@ public class HierarchyParser implements Parser {
 	protected final Parser parser;
 
 	/**
-	 * Construct a new hierarchy parser that uses the given {@code parser}.
+	 * Construct a new parser that only parses trees that have the given {@code kind} and
+	 * parses using the given {@code parser}.
 	 *
+	 * @param kind   the targeted kind.
 	 * @param parser the wrapped parser.
-	 * @throws NullPointerException if the given {@code parser} is null.
+	 * @throws NullPointerException if the given {@code kind} or {@code parser} is null.
 	 * @since 0.2.0 ~2021.05.31
 	 */
-	public HierarchyParser(@NotNull Parser parser) {
+	public FilterByKindParser(@NotNull String kind, @NotNull Parser parser) {
+		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(parser, "parser");
+		this.kind = kind;
 		this.parser = parser;
 	}
 
@@ -58,11 +69,9 @@ public class HierarchyParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		Set<Tree> treeSet = new HashSet<>(this.parser.parse(compilation, tree));
+		if (tree.getSketch().getKind().equals(this.kind))
+			return this.parser.parse(compilation, tree);
 
-		for (Tree child : tree)
-			treeSet.addAll(this.parse(compilation, child));
-
-		return treeSet;
+		return Collections.emptySet();
 	}
 }

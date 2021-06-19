@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.compiler;
+package org.jamplate.internal.util.compiler.wrapper;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;

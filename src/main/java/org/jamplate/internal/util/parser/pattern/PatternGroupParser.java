@@ -13,9 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.internal.util.parser.pattern;
 
-import org.jamplate.impl.util.Parsing;
+import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;

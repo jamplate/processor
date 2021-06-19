@@ -20,4 +20,4 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-package org.jamplate.impl.model;
+package org.jamplate.internal.model;
