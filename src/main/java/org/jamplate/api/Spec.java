@@ -40,7 +40,7 @@ import java.util.Objects;
  * {@link #removeSpec(Spec)} and {@link #hasSpec(Spec)}.
  * <br>
  * For a spec to support variable sub-specs, it must implement the methods {@link
- * #addSpecBefore(Spec)}, {@link #addSpecBefore(Spec, Spec)}, {@link #addSpecAfter(Spec)},
+ * #addSpecFirst(Spec)}, {@link #addSpecBefore(Spec, Spec)}, {@link #addSpecLast(Spec)},
  * {@link #addSpecAfter(Spec, Spec)}.
  *
  * @author LSafer
@@ -72,31 +72,12 @@ public interface Spec extends Iterable<Spec> {
 	 * @return true, if the spec was not already a subspec in this spec.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
-	 * @implSpec this implementation will delegate to {@link #addSpecAfter(Spec)}.
+	 * @implSpec this implementation will delegate to {@link #addSpecLast(Spec)}.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpec(@NotNull Spec spec) {
-		return this.addSpecAfter(spec);
-	}
-
-	/**
-	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
-	 * end.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
-	 *
-	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
-	 * @throws NullPointerException          if the given {@code spec} is null.
-	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
-	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
-	 * 		immediately.
-	 * @since 0.3.0 ~2021.06.19
-	 */
-	@Contract(mutates = "this")
-	default boolean addSpecAfter(@NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
+		return this.addSpecLast(spec);
 	}
 
 	/**
@@ -122,25 +103,6 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
-	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
-	 * start.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
-	 *
-	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
-	 * @throws NullPointerException          if the given {@code spec} is null.
-	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
-	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
-	 * 		immediately.
-	 * @since 0.3.0 ~2021.06.19
-	 */
-	@Contract(mutates = "this")
-	default boolean addSpecBefore(@NotNull Spec spec) {
-		throw new UnsupportedOperationException("addSpec");
-	}
-
-	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added before
 	 * the given {@code ref} spec.
 	 * <br>
@@ -159,6 +121,44 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "this")
 	default boolean addSpecBefore(@NotNull Spec ref, @NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpec");
+	}
+
+	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
+	 * start.
+	 * <br>
+	 * If the spec is already added to this spec, this method call will be ignored.
+	 *
+	 * @param spec the spec to be added.
+	 * @return true, if the spec was not already a subspec in this spec.
+	 * @throws NullPointerException          if the given {@code spec} is null.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default boolean addSpecFirst(@NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpec");
+	}
+
+	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
+	 * end.
+	 * <br>
+	 * If the spec is already added to this spec, this method call will be ignored.
+	 *
+	 * @param spec the spec to be added.
+	 * @return true, if the spec was not already a subspec in this spec.
+	 * @throws NullPointerException          if the given {@code spec} is null.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	@Contract(mutates = "this")
+	default boolean addSpecLast(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpec");
 	}
 
