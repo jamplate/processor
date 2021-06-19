@@ -111,6 +111,7 @@ public interface Environment extends Serializable {
 	 */
 	@NotNull
 	@Contract(mutates = "this")
+	@Deprecated
 	Compilation optCompilation(@NotNull Document document);
 
 	/**
