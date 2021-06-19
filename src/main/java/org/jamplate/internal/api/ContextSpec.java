@@ -69,6 +69,18 @@ public class ContextSpec implements Spec {
 		this.qualifiedName = Spec.super.getQualifiedName();
 	}
 
+	/**
+	 * Construct a new subspec supporting spec.
+	 *
+	 * @param qualifiedName the qualified name of the constructed spec.
+	 * @throws NullPointerException if the given {@code qualifiedName} is null.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	public ContextSpec(@NotNull String qualifiedName) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		this.qualifiedName = qualifiedName;
+	}
+
 	@Override
 	public boolean addSpecAfter(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");

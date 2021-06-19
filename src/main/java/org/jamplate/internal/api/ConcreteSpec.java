@@ -97,6 +97,24 @@ public class ConcreteSpec implements Spec {
 		this.compiler = Spec.super.getCompiler();
 	}
 
+	/**
+	 * Construct a new variable functions spec.
+	 *
+	 * @param qualifiedName the qualified name of the constructed spec.
+	 * @throws NullPointerException if the given {@code qualifiedName} is null.
+	 * @since 0.3.0 ~2021.06.19
+	 */
+	public ConcreteSpec(@NotNull String qualifiedName) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		this.qualifiedName = qualifiedName;
+		this.parseProcessor = Spec.super.getParseProcessor();
+		this.parser = Spec.super.getParser();
+		this.analyzeProcessor = Spec.super.getAnalyzeProcessor();
+		this.analyzer = Spec.super.getAnalyzer();
+		this.compileProcessor = Spec.super.getCompileProcessor();
+		this.compiler = Spec.super.getCompiler();
+	}
+
 	@NotNull
 	@Override
 	public Processor getAnalyzeProcessor() {
