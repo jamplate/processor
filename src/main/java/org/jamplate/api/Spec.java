@@ -36,8 +36,7 @@ import java.util.Objects;
  * Other than registering sub-specs, the user of a spec must not query nor modify the
  * sub-specs since the spec already delegates to the sub-specs its own way.
  * <br>
- * For a spec to support sub-specs, it must implement the methods {@link #iterator()},
- * {@link #removeSpec(Spec)} and {@link #hasSpec(Spec)}.
+ * For a spec to support sub-specs, it must implement the method {@link #iterator()}.
  * <br>
  * For a spec to support variable sub-specs, it must implement the methods {@link
  * #addSpecFirst(Spec)}, {@link #addSpecBefore(Spec, Spec)}, {@link #addSpecLast(Spec)},
