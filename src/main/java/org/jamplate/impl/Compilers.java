@@ -17,12 +17,13 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
+import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Compiler;
+import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

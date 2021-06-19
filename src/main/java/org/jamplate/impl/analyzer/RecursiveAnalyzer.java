@@ -17,7 +17,7 @@ package org.jamplate.impl.analyzer;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Analyzer;
+import org.jamplate.function.Analyzer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

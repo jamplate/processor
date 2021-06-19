@@ -20,7 +20,7 @@ import org.jamplate.impl.parser.PatternParser;
 import org.jamplate.internal.util.parser.pattern.PatternRangeParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
+import org.jamplate.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;

@@ -17,8 +17,8 @@ package org.jamplate.impl.processor;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Parser;
+import org.jamplate.function.Processor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

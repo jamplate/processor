@@ -17,7 +17,7 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.analyzer.ConditionTransformAnalyzer;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Analyzer;
+import org.jamplate.function.Analyzer;
 import org.jetbrains.annotations.NotNull;
 
 /**

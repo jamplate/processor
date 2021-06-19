@@ -17,7 +17,7 @@ package org.jamplate.impl.parser;
 
 import org.jamplate.model.Dominance;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
+import org.jamplate.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

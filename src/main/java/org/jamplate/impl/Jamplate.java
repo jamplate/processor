@@ -16,7 +16,7 @@
 package org.jamplate.impl;
 
 import org.jamplate.impl.analyzer.RecursiveAnalyzer;
-import org.jamplate.impl.analyzer.SequentialAnalyzer;
+import org.jamplate.internal.util.analyzer.group.SequentialAnalyzer;
 import org.jamplate.impl.compiler.*;
 import org.jamplate.internal.diagnostic.MessageImpl;
 import org.jamplate.internal.diagnostic.MessageKind;
@@ -26,12 +26,14 @@ import org.jamplate.impl.parser.*;
 import org.jamplate.impl.processor.AnalyzerProcessor;
 import org.jamplate.impl.processor.CompilerProcessor;
 import org.jamplate.impl.processor.ParserProcessor;
-import org.jamplate.impl.processor.SequentialProcessor;
+import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
+import org.jamplate.internal.util.parser.group.CombineParser;
+import org.jamplate.internal.util.processor.group.SequentialProcessor;
 import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.parser.wrapper.HierarchyParser;
 import org.jamplate.model.*;
-import org.jamplate.model.function.Compiler;
-import org.jamplate.model.function.*;
+import org.jamplate.function.Compiler;
+import org.jamplate.function.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

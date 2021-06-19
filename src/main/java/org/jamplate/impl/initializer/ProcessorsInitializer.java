@@ -18,8 +18,8 @@ package org.jamplate.impl.initializer;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
-import org.jamplate.model.function.Initializer;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Initializer;
+import org.jamplate.function.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

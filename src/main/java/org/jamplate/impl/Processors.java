@@ -17,7 +17,7 @@ package org.jamplate.impl;
 
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Processor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;

@@ -15,7 +15,7 @@
  */
 /**
  * A package containing implementations of the interface {@link
- * org.jamplate.model.function.Compiler}.
+ * org.jamplate.function.Compiler}.
  *
  * @author LSafer
  * @version 0.2.0
