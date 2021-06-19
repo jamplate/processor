@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.compiler;
+package org.jamplate.internal.util.compiler.group;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Compiler;
+import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -13,11 +13,11 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.analyzer;
+package org.jamplate.internal.util.analyzer.group;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Analyzer;
+import org.jamplate.function.Analyzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

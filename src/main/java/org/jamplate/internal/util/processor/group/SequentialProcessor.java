@@ -13,10 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.processor;
+package org.jamplate.internal.util.processor.group;
 
 import org.jamplate.model.Compilation;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
