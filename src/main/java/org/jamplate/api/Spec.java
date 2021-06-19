@@ -57,6 +57,7 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@NotNull
 	@Contract(value = "->new", pure = true)
+	@Override
 	default Iterator<Spec> iterator() {
 		return Collections.emptyIterator();
 	}
