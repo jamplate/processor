@@ -6,7 +6,7 @@ import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.impl.processor.ParserProcessor;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Processor;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
