@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.2.0 ~2021.05.29
  */
 @FunctionalInterface
+@Deprecated
 public interface Initializer {
 	/**
 	 * Initialize compilations for the given {@code documents} in the given {@code

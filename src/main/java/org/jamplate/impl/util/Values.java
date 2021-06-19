@@ -27,6 +27,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.03
  */
+@Deprecated
 public final class Values {
 	/**
 	 * Utility classes must not be initialized.

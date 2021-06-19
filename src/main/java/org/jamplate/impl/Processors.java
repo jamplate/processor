@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.impl.util.Trees;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
+@Deprecated
 public final class Processors {
 	//CX CMD
 

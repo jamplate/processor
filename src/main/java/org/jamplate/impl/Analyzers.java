@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.28
  */
+@Deprecated
 public final class Analyzers {
 	//DC
 

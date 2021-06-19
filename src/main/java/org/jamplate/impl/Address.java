@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
+@Deprecated
 public final class Address {
 	/**
 	 * An address used to store the date at the time of the execution.

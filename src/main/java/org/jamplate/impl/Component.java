@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.25
  */
+@Deprecated
 public final class Component {
 	/**
 	 * The key of the accessor component.

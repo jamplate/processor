@@ -17,7 +17,7 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
-import org.jamplate.impl.util.Trees;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -35,6 +35,7 @@ import java.util.*;
  * @since 0.2.0 ~2021.05.21
  */
 @SuppressWarnings("OverlyCoupledClass")
+@Deprecated
 public final class Compilers {
 	//CX CMD
 

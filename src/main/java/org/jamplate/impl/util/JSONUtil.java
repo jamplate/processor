@@ -34,6 +34,7 @@ import java.util.stream.IntStream;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.01
  */
+@Deprecated
 public final class JSONUtil {
 	/**
 	 * Utility classes must not be initialized.

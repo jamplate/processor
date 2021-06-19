@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
+@Deprecated
 public final class Parsers {
 	//CM
 

@@ -49,6 +49,7 @@ import java.util.function.Function;
  * @since 0.2.0 ~2021.05.23
  */
 @SuppressWarnings("OverlyCoupledClass")
+@Deprecated
 public final class Jamplate {
 	/**
 	 * The default jamplate analyzer.

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.03
  */
+@Deprecated
 public final class Meta {
 	/**
 	 * The key for the memory default allocations. The stored value must be of type {@link
