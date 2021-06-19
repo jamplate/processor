@@ -139,39 +139,6 @@
  *         </ul>
  *     </li>
  * </ul>
- * <br>
- * Functions:
- * <ul>
- *     <li>
- *         {@link org.jamplate.model.function.Initializer Initializer}
- *         <br>
- *         A function that initializes a {@link org.jamplate.model.Document} into an
- *         {@link org.jamplate.model.Environment}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Parser Parser}
- *         <br>
- *         A function tries to constructs a set of {@link org.jamplate.model.Tree Trees}
- *         from a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Analyzer Analyzer}
- *         <br>
- *         A function that analyzes and modifies a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Compiler Compiler}
- *         <br>
- *         A function tires to construct an {@link org.jamplate.model.Instruction
- *         Instruction} from a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Processor Processor}
- *         <br>
- *         An function that processes a {@link org.jamplate.model.Compilation
- *         Compilation}.
- *     </li>
- * </ul>
  *
  * @author LSafer
  * @version 0.2.0

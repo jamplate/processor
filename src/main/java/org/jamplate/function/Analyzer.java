@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model.function;
+package org.jamplate.function;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.CompileException;
