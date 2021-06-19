@@ -21,12 +21,10 @@ import org.jamplate.model.function.Parser;
 import org.jamplate.model.function.Processor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A spec is a unit containing functions necessary to apply a syntax/runtime
@@ -164,89 +162,81 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the processors that must be executed
-	 * before the analyzing stage to apply this specification.
+	 * Return the processor that must be executed before the analyzing stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the pre-analyzing processors to apply this
-	 * 		spec.
+	 * @return the pre-analyzing processor to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Processor> getAnalyzeProcessors() {
-		return Collections.emptySet();
+	default Processor getAnalyzeProcessor() {
+		return compilation -> false;
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the analyzers that must be executed
-	 * at the analyzing stage to apply this specification.
+	 * Return the analyzer that must be executed at the analyzing stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the analyzers to apply this spec.
+	 * @return the analyzer to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Analyzer> getAnalyzers() {
-		return Collections.emptySet();
+	default Analyzer getAnalyzer() {
+		return (compilation, tree) -> false;
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the processors that must be executed
-	 * before the compiling stage to apply this specification.
+	 * Return the processor that must be executed before the compiling stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the pre-compiling processors to apply this
-	 * 		spec.
+	 * @return the pre-compiling processor to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Processor> getCompileProcessors() {
-		return Collections.emptySet();
+	default Processor getCompileProcessor() {
+		return compilation -> false;
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the compilers that must be executed
-	 * at the compiling stage to apply this specification.
+	 * Return the analyzer that must be executed at the compiling stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the compilers to apply this spec.
+	 * @return the compiler to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Compiler> getCompilers() {
-		return Collections.emptySet();
+	default Compiler getCompiler() {
+		return (compiler, compilation, tree) -> null;
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the processors that must be executed
-	 * before the parsing stage to apply this specification.
+	 * Return the processor that must be executed before the parsing stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the pre-parsing processors to apply this spec.
+	 * @return the pre-parsing processor to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Processor> getParseProcessors() {
-		return Collections.emptySet();
+	default Processor getParseProcessor() {
+		return compilation -> false;
 	}
 
 	/**
-	 * Return an (possibly unmodifiable view) set of the parsers that must be executed at
-	 * the parsing stage to apply this specification.
+	 * Return the parser that must be executed at the parsing stage to apply this
+	 * specification.
 	 *
-	 * @return an unmodifiable view set of the parsers to apply this spec.
+	 * @return the parser to apply this spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	@UnmodifiableView
 	@Contract(pure = true)
-	default Set<Parser> getParsers() {
-		return Collections.emptySet();
+	default Parser getParser() {
+		return (compilation, tree) -> Collections.emptySet();
 	}
 
 	/**
