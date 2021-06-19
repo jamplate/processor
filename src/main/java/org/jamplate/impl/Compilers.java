@@ -17,6 +17,7 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
+import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;

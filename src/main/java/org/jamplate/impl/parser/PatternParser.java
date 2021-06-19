@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.parser;
 
-import org.jamplate.impl.util.Parsing;
+import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;

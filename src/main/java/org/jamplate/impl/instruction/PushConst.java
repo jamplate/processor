@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.impl.util.Trees;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Memory;

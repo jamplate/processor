@@ -16,7 +16,7 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.PushEvalAddr;
-import org.jamplate.impl.util.Trees;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
