@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model;
+package org.jamplate.api;
 
-import org.jamplate.model.function.Analyzer;
-import org.jamplate.model.function.Compiler;
-import org.jamplate.model.function.Parser;
-import org.jamplate.model.function.Processor;
+import org.jamplate.function.Analyzer;
+import org.jamplate.function.Compiler;
+import org.jamplate.function.Parser;
+import org.jamplate.function.Processor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
