@@ -15,7 +15,8 @@
  */
 package org.jamplate.impl.util;
 
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.internal.util.Parsing;
+import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;

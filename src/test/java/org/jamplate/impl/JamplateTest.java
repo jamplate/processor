@@ -1,10 +1,10 @@
 package org.jamplate.impl;
 
-import org.jamplate.impl.model.CompilationImpl;
-import org.jamplate.impl.model.EnvironmentImpl;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.internal.model.CompilationImpl;
+import org.jamplate.internal.model.EnvironmentImpl;
+import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.impl.processor.ParserProcessor;
-import org.jamplate.impl.util.Trees;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jamplate.model.function.Processor;
 import org.junit.jupiter.api.RepeatedTest;

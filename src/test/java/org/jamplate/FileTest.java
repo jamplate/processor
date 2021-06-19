@@ -3,9 +3,9 @@ package org.jamplate;
 
 import org.jamplate.impl.Jamplate;
 import org.jamplate.impl.Meta;
-import org.jamplate.impl.model.EnvironmentImpl;
-import org.jamplate.impl.model.FileDocument;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.internal.model.EnvironmentImpl;
+import org.jamplate.internal.model.FileDocument;
+import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
