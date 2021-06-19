@@ -28,7 +28,6 @@ import org.jamplate.internal.diagnostic.MessageKind;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
-import org.jamplate.internal.spec.RootSpec;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -292,7 +291,7 @@ public class ProcessImpl implements Process {
 
 		Compilation compilation = new CompilationImpl(
 				environment,
-				new Tree(document, new Sketch(RootSpec.KIND), -1)
+				new Tree(document, new Sketch(), -1)
 		);
 
 		environment.setCompilation(document, compilation);
