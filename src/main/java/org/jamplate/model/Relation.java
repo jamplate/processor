@@ -288,7 +288,7 @@ public enum Relation {
 	}
 
 	/**
-	 * Calculate the direction from the given {@code sketch} to the area {@code [s, e)}.
+	 * Calculate the direction from the given {@code tree} to the area {@code [s, e)}.
 	 * <br>
 	 * The direction will be the direction to head from the first area to the second
 	 * area.
@@ -296,11 +296,11 @@ public enum Relation {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
-	 * @param tree the sketch (first area).
+	 * @param tree the tree (first area).
 	 * @param s    the first index of the second area.
 	 * @param e    one past the last index of the second area.
-	 * @return the direction from the given {@code sketch} to the second area given.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
+	 * @return the direction from the given {@code tree} to the second area given.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
@@ -308,12 +308,12 @@ public enum Relation {
 	@Nullable
 	@Contract(pure = true)
 	public static Relation compute(@NotNull Tree tree, int s, int e) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		return Relation.compute(tree.reference(), s, e);
 	}
 
 	/**
-	 * Calculate the direction from the given {@code sketch} to the {@code other}.
+	 * Calculate the direction from the given {@code tree} to the {@code other}.
 	 * <br>
 	 * The direction will be the direction to head from the first area to the second
 	 * area.
@@ -321,23 +321,23 @@ public enum Relation {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
-	 * @param tree  the first sketch.
-	 * @param other the second sketch.
-	 * @return the direction from the given {@code sketch} to the given {@code other}.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @param tree  the first tree.
+	 * @param other the second reference.
+	 * @return the direction from the given {@code tree} to the given {@code other}.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@Nullable
 	@Contract(pure = true)
 	public static Relation compute(@NotNull Tree tree, @NotNull Reference other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
 		return Relation.compute(tree.reference(), other);
 	}
 
 	/**
-	 * Calculate the direction from the given {@code sketch} to the {@code other}.
+	 * Calculate the direction from the given {@code tree} to the {@code other}.
 	 * <br>
 	 * The direction will be the direction to head from the first area to the second
 	 * area.
@@ -345,17 +345,17 @@ public enum Relation {
 	 * For example: if {@code A} is inside {@code B} then the direction from {@code A} to
 	 * {@code B} will be {@link Relation#PARENT}.
 	 *
-	 * @param tree  the first sketch.
-	 * @param other the second sketch.
-	 * @return the direction from the given {@code sketch} to the given {@code other}.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return the direction from the given {@code tree} to the given {@code other}.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Relation#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@Nullable
 	@Contract(pure = true)
 	public static Relation compute(@NotNull Tree tree, @NotNull Tree other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
 		return Relation.compute(tree.reference(), other.reference());
 	}
@@ -377,6 +377,104 @@ public enum Relation {
 	@Contract(pure = true)
 	public Dominance dominance() {
 		return this.dominance;
+	}
+
+	/**
+	 * Invoke {@link #compute(int, int, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param i the first index of the first area.
+	 * @param j one past the last index of the first area.
+	 * @param s the first index of the second area.
+	 * @param e one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
+	 *                                  if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(int i, int j, int s, int e) {
+		return Relation.compute(i, j, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the reference (first area).
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code reference} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, int s, int e) {
+		return Relation.compute(reference, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, Reference)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the first reference.
+	 * @param other     the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code reference} or {@code other} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, Reference other) {
+		return Relation.compute(reference, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, int, int)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree the tree (first area).
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, int s, int e) {
+		return Relation.compute(tree, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Reference)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Reference other) {
+		return Relation.compute(tree, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Tree)} with the given parameters and return true if
+	 * the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Tree other) {
+		return Relation.compute(tree, other) == this;
 	}
 
 	/**

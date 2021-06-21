@@ -553,15 +553,15 @@ public enum Intersection {
 	}
 
 	/**
-	 * Calculate what is the intersection between the given {@code sketch} and the given
+	 * Calculate what is the intersection between the given {@code tree} and the given
 	 * area {@code [s, e)}.
 	 *
-	 * @param tree the sketch (first area).
+	 * @param tree the tree (first area).
 	 * @param s    the first index of the second area.
 	 * @param e    one past the last index of the second area.
 	 * @return the intersection constant describing the intersection of the second area to
-	 * 		the sketch.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
+	 * 		the tree.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
@@ -569,44 +569,45 @@ public enum Intersection {
 	@NotNull
 	@Contract(pure = true)
 	public static Intersection compute(@NotNull Tree tree, int s, int e) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		return Intersection.compute(tree.reference(), s, e);
 	}
 
 	/**
-	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
+	 * Calculate the intersection between the tree {@code tree} and the reference {@code
+	 * other}.
 	 *
-	 * @param tree  the first sketch.
-	 * @param other the second sketch.
-	 * @return the intersection constant describing the intersection of the second sketch
-	 * 		to the first sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @param tree  the first tree.
+	 * @param other the second reference.
+	 * @return the intersection constant describing the intersection of the second
+	 * 		reference to the first tree.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
 	public static Intersection compute(@NotNull Tree tree, @NotNull Reference other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
 		return Intersection.compute(tree.reference(), other);
 	}
 
 	/**
-	 * Calculate the intersection between the sketches {@code sketch} and {@code other}.
+	 * Calculate the intersection between the trees {@code tree} and {@code other}.
 	 *
-	 * @param tree  the first sketch.
-	 * @param other the second sketch.
-	 * @return the intersection constant describing the intersection of the second sketch
-	 * 		to the first sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return the intersection constant describing the intersection of the second tree to
+	 * 		the first tree.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Intersection#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
 	public static Intersection compute(@NotNull Tree tree, @NotNull Tree other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
 		return Intersection.compute(tree.reference(), other.reference());
 	}
@@ -641,6 +642,104 @@ public enum Intersection {
 	@Contract(pure = true)
 	public Relation relation() {
 		return this.relation;
+	}
+
+	/**
+	 * Invoke {@link #compute(int, int, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param i the first index of the first area.
+	 * @param j one past the last index of the first area.
+	 * @param s the first index of the second area.
+	 * @param e one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
+	 *                                  if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(int i, int j, int s, int e) {
+		return Intersection.compute(i, j, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the reference (first area).
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code reference} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, int s, int e) {
+		return Intersection.compute(reference, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, Reference)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the first reference.
+	 * @param other     the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code reference} or {@code other} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, Reference other) {
+		return Intersection.compute(reference, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, int, int)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree the tree (first area).
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, int s, int e) {
+		return Intersection.compute(tree, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Reference)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Reference other) {
+		return Intersection.compute(tree, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Tree)} with the given parameters and return true if
+	 * the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Tree other) {
+		return Intersection.compute(tree, other) == this;
 	}
 
 	/**
