@@ -275,6 +275,25 @@ public class Sketch implements Serializable {
 	}
 
 	/**
+	 * Set the component of this sketch with the given {@code key} to be the given {@code
+	 * sketch}.
+	 *
+	 * @param key    the key of the component.
+	 * @param sketch the sketch to be set.
+	 * @return this.
+	 * @throws NullPointerException if the given {@code key} or {@code sketch} is null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@NotNull
+	@Contract(mutates = "this,param2")
+	public Sketch set(@NotNull Node.Key key, @NotNull Sketch sketch) {
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(sketch, "sketch");
+		this.components.put(key, sketch.components);
+		return this;
+	}
+
+	/**
 	 * Set the kind of this sketch to be the given {@code kind}.
 	 *
 	 * @param kind the kind of this sketch.
