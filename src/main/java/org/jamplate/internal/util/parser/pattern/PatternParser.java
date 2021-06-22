@@ -13,14 +13,14 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.internal.util.parser.pattern;
 
+import org.jamplate.function.Parser;
 import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Parser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.04.28
  */
-@Deprecated
 public class PatternParser implements Parser {
 	/**
 	 * The constructor to be used to construct new trees.

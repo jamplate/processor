@@ -13,10 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.compiler;
+package org.jamplate.internal.util.compiler.router;
 
 import org.jamplate.model.Compilation;
-import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jamplate.function.Compiler;
@@ -26,46 +25,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * A compiler that delegates to another compiler and raises an exception if that other
- * compiler failed to compile.
+ * A compiler that delegates to the fallback compiler.
  *
  * @author LSafer
  * @version 0.2.0
- * @since 0.2.0 ~2021.05.28
+ * @since 0.2.0 ~2021.05.31
  */
-public class MandatoryCompiler implements Compiler {
+public class FallbackCompiler implements Compiler {
 	/**
-	 * The wrapped compiler.
+	 * A global instance of this class.
 	 *
-	 * @since 0.2.0 ~2021.05.28
+	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	protected final Compiler compiler;
-
-	/**
-	 * Construct a new compiler wrapper that wraps the given {@code compiler} and throws
-	 * an exception if it fails to compile.
-	 *
-	 * @param compiler the compiler to be wrapped.
-	 * @throws NullPointerException if the given {@code compiler} is null.
-	 * @since 0.2.0 ~2021.05.28
-	 */
-	public MandatoryCompiler(@NotNull Compiler compiler) {
-		Objects.requireNonNull(compiler, "compiler");
-		this.compiler = compiler;
-	}
+	public static final FallbackCompiler INSTANCE = new FallbackCompiler();
 
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
-		Instruction instruction = this.compiler.compile(compiler, compilation, tree);
-
-		if (instruction == null)
-			throw new CompileException(
-					"Unrecognized token",
-					tree
-			);
-
-		return instruction;
+		Objects.requireNonNull(compiler, "compiler");
+		Objects.requireNonNull(compilation, "compilation");
+		Objects.requireNonNull(tree, "tree");
+		return compiler.compile(compiler, compilation, tree);
 	}
 }

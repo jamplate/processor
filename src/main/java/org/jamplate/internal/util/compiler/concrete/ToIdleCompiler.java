@@ -13,8 +13,9 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.compiler;
+package org.jamplate.internal.util.compiler.concrete;
 
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -25,20 +26,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * A compiler that delegates to the fallback compiler.
+ * A compiler that compiles an empty instruction.
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
-public class FallbackCompiler implements Compiler {
+public class ToIdleCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
 	 *
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final FallbackCompiler INSTANCE = new FallbackCompiler();
+	public static final ToIdleCompiler INSTANCE = new ToIdleCompiler();
 
 	@Nullable
 	@Override
@@ -46,6 +47,6 @@ public class FallbackCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		return compiler.compile(compiler, compilation, tree);
+		return new Idle(tree);
 	}
 }
