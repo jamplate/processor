@@ -152,6 +152,29 @@ public final class Trees {
 	}
 
 	/**
+	 * Return the head tree of the given {@code tree}.
+	 *
+	 * @param tree the tree to get its head tree.
+	 * @return the head tree of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static Tree head(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Tree head = tree;
+		while (true) {
+			Tree previous = head.getPrevious();
+
+			if (previous == null)
+				return head;
+
+			head = previous;
+		}
+	}
+
+	/**
 	 * Get the line of the given {@code tree} on its document.
 	 *
 	 * @param tree the tree to get its line.
@@ -337,6 +360,29 @@ public final class Trees {
 				return root;
 
 			root = parent;
+		}
+	}
+
+	/**
+	 * Return the tail tree of the given {@code tree}.
+	 *
+	 * @param tree the tree to get its tail tree.
+	 * @return the tail tree of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static Tree tail(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Tree tail = tree;
+		while (true) {
+			Tree next = tail.getNext();
+
+			if (next == null)
+				return tail;
+
+			tail = next;
 		}
 	}
 
