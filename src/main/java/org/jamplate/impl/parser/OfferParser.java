@@ -34,6 +34,7 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+@Deprecated
 public class OfferParser implements Parser {
 	/**
 	 * The wrapped parser.

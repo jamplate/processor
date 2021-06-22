@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
+@Deprecated
 public class MergeByOrderParser implements Parser {
 	/**
 	 * The parser this parser is wrapping.

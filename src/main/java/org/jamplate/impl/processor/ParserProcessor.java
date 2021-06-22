@@ -31,6 +31,7 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.18
  */
+@Deprecated
 public class ParserProcessor implements Processor {
 	/**
 	 * The parser of this processor.

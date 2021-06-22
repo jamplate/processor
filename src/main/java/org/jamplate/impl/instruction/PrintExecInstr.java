@@ -31,6 +31,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
+@Deprecated
 public class PrintExecInstr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1584518958362936537L;

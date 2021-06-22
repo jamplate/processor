@@ -31,6 +31,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.02
  */
+@Deprecated
 public class SoutExecInstr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8281068981084721015L;

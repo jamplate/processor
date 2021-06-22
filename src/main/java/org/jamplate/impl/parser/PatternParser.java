@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.04.28
  */
+@Deprecated
 public class PatternParser implements Parser {
 	/**
 	 * The constructor to be used to construct new trees.

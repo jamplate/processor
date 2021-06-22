@@ -30,6 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.19
  */
+@Deprecated
 public class MergeFlatByOrderParser extends MergeByOrderParser {
 	/**
 	 * Construct a new parser that filters the results to have no dominance between

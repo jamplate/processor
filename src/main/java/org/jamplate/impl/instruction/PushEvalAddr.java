@@ -30,6 +30,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.24
  */
+@Deprecated
 public class PushEvalAddr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -3380257902335591663L;

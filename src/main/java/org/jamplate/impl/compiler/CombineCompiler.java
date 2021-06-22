@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+@Deprecated
 public class CombineCompiler implements Compiler {
 	/**
 	 * The compilers used by this.

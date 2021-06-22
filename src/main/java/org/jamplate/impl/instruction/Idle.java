@@ -33,6 +33,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.05
  */
+@Deprecated
 public class Idle implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1121111314421762482L;

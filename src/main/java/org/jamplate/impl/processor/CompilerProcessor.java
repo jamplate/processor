@@ -31,6 +31,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
+@Deprecated
 public class CompilerProcessor implements Processor {
 	/**
 	 * The compiler used by this processor.

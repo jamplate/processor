@@ -32,6 +32,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.03
  */
+@Deprecated
 public class PushLndExecInstr0ExecInstr1 implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -5840219111792127123L;

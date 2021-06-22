@@ -32,6 +32,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.28
  */
+@Deprecated
 public class ExclusiveCompiler implements Compiler {
 	/**
 	 * The fallback compiler.

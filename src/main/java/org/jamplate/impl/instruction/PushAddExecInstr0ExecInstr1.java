@@ -31,6 +31,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.03
  */
+@Deprecated
 public class PushAddExecInstr0ExecInstr1 implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -4444435028244547717L;

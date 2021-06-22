@@ -31,6 +31,7 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.30
  */
+@Deprecated
 public class ThenOfferParser implements Parser {
 	/**
 	 * The parser.

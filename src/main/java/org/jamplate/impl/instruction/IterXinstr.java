@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+@Deprecated
 public class IterXinstr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1714505823832660137L;

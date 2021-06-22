@@ -33,6 +33,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+@Deprecated
 public class ToReprntConstCompiler implements Compiler {
 	/**
 	 * A global instance of this class.

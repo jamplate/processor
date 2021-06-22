@@ -17,9 +17,13 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
+import org.jamplate.internal.util.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
+import org.jamplate.impl.compiler.FlattenCompiler;
+import org.jamplate.internal.util.compiler.router.FallbackCompiler;
 import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.compiler.wrapper.MandatoryCompiler;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;

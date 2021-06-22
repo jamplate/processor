@@ -33,6 +33,7 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.01
  */
+@Deprecated
 public class FilterHierarchyByKindParser implements Parser {
 	/**
 	 * The kind this parser is looking for.

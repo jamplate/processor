@@ -20,4 +20,5 @@
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.29
  */
+@Deprecated
 package org.jamplate.impl.util;

@@ -33,6 +33,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
+@Deprecated
 public class ReprntConst implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 4950811636884162730L;

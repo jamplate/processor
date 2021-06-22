@@ -31,6 +31,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
+@Deprecated
 public class MergeFlatByWeightParser extends MergeByWeightParser {
 	/**
 	 * Construct a new parser that uses the given {@code parsers} preferring the results

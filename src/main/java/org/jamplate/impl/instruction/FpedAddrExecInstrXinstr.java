@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.28
  */
+@Deprecated
 public class FpedAddrExecInstrXinstr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 1740860675009877502L;

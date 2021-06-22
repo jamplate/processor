@@ -34,6 +34,7 @@ import java.util.stream.Stream;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.29
  */
+@Deprecated
 public class RecursiveParser implements Parser {
 	/**
 	 * The wrapped parser.

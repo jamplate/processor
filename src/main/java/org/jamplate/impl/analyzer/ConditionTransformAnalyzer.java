@@ -31,6 +31,7 @@ import java.util.function.BiPredicate;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.29
  */
+@Deprecated
 public class ConditionTransformAnalyzer implements Analyzer {
 	/**
 	 * The testing predicate.

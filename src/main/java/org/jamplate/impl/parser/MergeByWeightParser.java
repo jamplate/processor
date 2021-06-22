@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.17
  */
+@Deprecated
 public class MergeByWeightParser implements Parser {
 	/**
 	 * The parsers in order.

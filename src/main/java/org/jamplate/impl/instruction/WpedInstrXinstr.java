@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.03
  */
+@Deprecated
 public class WpedInstrXinstr implements Instruction {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -5104109791490011236L;
