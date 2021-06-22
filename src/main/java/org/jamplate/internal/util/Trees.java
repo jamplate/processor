@@ -102,13 +102,15 @@ public final class Trees {
 		if (iterator.hasNext()) {
 			Tree previous = iterator.next();
 
-			if (Intersection.compute(tree, previous) != Intersection.START) {
+			if (!Intersection.START.test(tree, previous)) {
 				int p = tree.reference().position();
 				int l = previous.reference().position() - p;
 
-				Tree gap = new Tree(tree.document(), new Reference(p, l));
+				if (l > 0) {
+					Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-				children.add(gap);
+					children.add(gap);
+				}
 			}
 
 			children.add(previous);
@@ -116,29 +118,33 @@ public final class Trees {
 			while (iterator.hasNext()) {
 				Tree next = iterator.next();
 
-				if (Intersection.compute(previous, next) != Intersection.NEXT) {
+				if (!Intersection.NEXT.test(previous, next)) {
 					int p = previous.reference().position() +
 							previous.reference().length();
 					int l = next.reference().position() - p;
 
-					Tree gap = new Tree(tree.document(), new Reference(p, l));
+					if (l > 0) {
+						Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-					children.add(gap);
+						children.add(gap);
+					}
 				}
 
 				children.add(next);
 				previous = next;
 			}
 
-			if (Intersection.compute(tree, previous) != Intersection.END) {
+			if (!Intersection.END.test(tree, previous)) {
 				int p = previous.reference().position() +
 						previous.reference().length();
 				int l = tree.reference().position() +
 						tree.reference().length() - p;
 
-				Tree gap = new Tree(tree.document(), new Reference(p, l));
+				if (l > 0) {
+					Tree gap = new Tree(tree.document(), new Reference(p, l));
 
-				children.add(gap);
+					children.add(gap);
+				}
 			}
 		}
 
