@@ -36,7 +36,21 @@ public interface Value extends Serializable {
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	Value NULL = memory -> "";
+	Value NULL = new Value() {
+		@SuppressWarnings("JavaDoc")
+		private static final long serialVersionUID = -5499638541705572487L;
+
+		@NotNull
+		@Override
+		public String evaluate(@NotNull Memory memory) {
+			return "";
+		}
+
+		@Override
+		public String toString() {
+			return "Value.NULL";
+		}
+	};
 
 	/**
 	 * Evaluate this value with the given {@code memory}.
