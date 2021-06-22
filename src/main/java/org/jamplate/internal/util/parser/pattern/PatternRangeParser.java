@@ -149,7 +149,7 @@ public class PatternRangeParser implements Parser {
 		this.zIndex = 0;
 		this.constructor = constructor;
 		if (constructors.length > 3)
-			throw new IllegalStateException(
+			throw new IllegalArgumentException(
 					"Too many constructors: " +
 					constructors.length
 			);
