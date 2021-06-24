@@ -38,14 +38,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Multiply implements Instruction {
+public class Product implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Multiply INSTANCE = new Multiply();
+	public static final Product INSTANCE = new Product();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 5283147403748694714L;
@@ -64,7 +64,7 @@ public class Multiply implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Multiply() {
+	public Product() {
 		this.tree = null;
 	}
 
@@ -76,7 +76,7 @@ public class Multiply implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Multiply(@NotNull Tree tree) {
+	public Product(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
