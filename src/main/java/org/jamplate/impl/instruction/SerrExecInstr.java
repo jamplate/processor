@@ -67,7 +67,7 @@ public class SerrExecInstr implements Instruction {
 
 	/**
 	 * Construct a new instruction that executes the given {@code instruction} and outputs
-	 * its results to the system erro console.
+	 * its results to the system error console.
 	 *
 	 * @param tree        the tree of the constructed instruction.
 	 * @param instruction the instruction to be executed.

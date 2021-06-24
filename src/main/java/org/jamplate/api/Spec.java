@@ -311,7 +311,7 @@ public interface Spec extends Iterable<Spec> {
 	 *
 	 * @param compilation the compilation its instruction got executed.
 	 * @param memory      the memory that has been used to executed the instruction.
-	 * @throws NullPointerException if the given {@code compilation} or {@code memroy} is
+	 * @throws NullPointerException if the given {@code compilation} or {@code memory} is
 	 *                              null.
 	 * @since 0.3.0 ~2021.06.22
 	 */
