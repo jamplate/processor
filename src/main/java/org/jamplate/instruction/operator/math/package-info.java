@@ -14,7 +14,7 @@
  *	limitations under the License.
  */
 /**
- * Structures operations. (arrays and objects)
+ * Mathematical operations instructions.
  * <br>
  * This package contains the instructions that manipulate the last values in the stack.
  * The instructions on this package starts popping last values, do an operation on the
@@ -24,4 +24,4 @@
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.15
  */
-package org.jamplate.instruction.struct;
+package org.jamplate.instruction.operator.math;

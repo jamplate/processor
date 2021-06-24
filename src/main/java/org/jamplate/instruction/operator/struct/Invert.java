@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.struct;
+package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -21,38 +21,38 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * An instruction that pops the top value at the stack and splits the items in it
- * (assuming its an array) and push every item to the stack.
+ * An instruction that pops the top value at the stack and invert it (assuming its an
+ * array).
  * <br>
- * The items will be pushed from the first to the last, so popping the stack will result
- * to reading the array backwards.
- * <br>
- * If the popped value is not an array, an {@link ExecutionException} will be thrown.
+ * If the popped value was not an array, an {@link ExecutionException} will be thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct: array]
- *     [..., item0:text, item1:text, item2:text, ...]
+ *     [..., struct:array:lazy]
+ *     [...]
+ *     [..., inverted:array:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.15
  */
-public class Split implements Instruction {
+public class Invert implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
-	public static final Split INSTANCE = new Split();
+	public static final Invert INSTANCE = new Invert();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 3303241345074920017L;
+	private static final long serialVersionUID = 2382162307023568944L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -63,24 +63,24 @@ public class Split implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that pops the top value in the stack and splits it
-	 * (assuming its an array) and pushes every item in it to the stack.
+	 * An instruction that pops the top value at the stack and invert it. (assuming its an
+	 * array)
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Split() {
+	public Invert() {
 		this.tree = null;
 	}
 
 	/**
-	 * Construct a new instruction that pops the top value in the stack and splits it
-	 * (assuming its an array) and pushes every item in it to the stack.
+	 * An instruction that pops the top value at the stack and invert it. (assuming its an
+	 * array)
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Split(@NotNull Tree tree) {
+	public Invert(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -91,22 +91,26 @@ public class Split implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.evaluate(memory);
 
-		try {
-			JSONArray array = new JSONArray(text0);
+		memory.push(m -> {
+			String text0 = value0.evaluate(m);
 
-			for (int i = 0, l = array.length(); i < l; i++) {
-				String text1 = array.optString(i);
+			try {
+				JSONArray array0 = new JSONArray(text0);
+				List list0 = array0.toList();
 
-				memory.push(m -> text1);
+				Collections.reverse(list0);
+
+				JSONArray array1 = new JSONArray(list0);
+
+				return String.valueOf(array1);
+			} catch (JSONException ignored0) {
+				throw new ExecutionException(
+						"INVERT expected an array but got: " + text0,
+						this.tree
+				);
 			}
-		} catch (JSONException ignored0) {
-			throw new ExecutionException(
-					"SPLIT expected an array but got: " + text0,
-					this.tree
-			);
-		}
+		});
 	}
 
 	@Nullable

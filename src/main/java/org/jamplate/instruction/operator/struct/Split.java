@@ -13,73 +13,74 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.math;
+package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.Objects;
 
 /**
- * An instruction that pops the last two values and pushes a value that evaluates to the
- * results of adding/joining the result of evaluating the two popped values.
+ * An instruction that pops the top value at the stack and splits the items in it
+ * (assuming its an array) and push every item to the stack.
  * <br>
- * If the two values are both numbers, the two values will be added mathematically.
+ * The items will be pushed from the first to the last, so popping the stack will result
+ * to reading the array backwards.
  * <br>
- * If one of the values is not a number, the two values will be concatenated with the
- * first being the last popped and the last being the first popped.
+ * If the popped value is not an array, an {@link ExecutionException} will be thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., left:text:lazy, right:text:lazy]
- *     [...]
- *     [..., result:text:lazy]
+ *     [..., struct: array]
+ *     [..., item0:text, item1:text, item2:text, ...]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.11
+ * @since 0.3.0 ~2021.06.15
  */
-public class Add implements Instruction {
+public class Split implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.11
+	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
-	public static final Add INSTANCE = new Add();
+	public static final Split INSTANCE = new Split();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 3448952003441559955L;
+	private static final long serialVersionUID = 3303241345074920017L;
 
 	/**
 	 * A reference of this instruction in the source code.
 	 *
-	 * @since 0.3.0 ~2021.06.11
+	 * @since 0.3.0 ~2021.06.15
 	 */
 	@Nullable
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that pops the last two values and pushes the results of
-	 * adding them.
+	 * Construct a new instruction that pops the top value in the stack and splits it
+	 * (assuming its an array) and pushes every item in it to the stack.
 	 *
-	 * @since 0.3.0 ~2021.06.12
+	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Add() {
+	public Split() {
 		this.tree = null;
 	}
 
 	/**
-	 * Construct a new instruction that pops the last two values and pushes the results of
-	 * adding them.
+	 * Construct a new instruction that pops the top value in the stack and splits it
+	 * (assuming its an array) and pushes every item in it to the stack.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.3.0 ~2021.06.12
+	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Add(@NotNull Tree tree) {
+	public Split(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -89,33 +90,23 @@ public class Add implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		//right
 		Value value0 = memory.pop();
-		//left
-		Value value1 = memory.pop();
+		String text0 = value0.evaluate(memory);
 
-		memory.push(m -> {
-			//right
-			String text0 = value0.evaluate(m);
-			//left
-			String text1 = value1.evaluate(m);
+		try {
+			JSONArray array = new JSONArray(text0);
 
-			try {
-				//right
-				double num0 = Double.parseDouble(text0);
-				//left
-				double num1 = Double.parseDouble(text1);
+			for (int i = 0, l = array.length(); i < l; i++) {
+				String text1 = array.optString(i);
 
-				//result
-				double num3 = num1 + num0;
-
-				return num3 % 1 == 0 ?
-					   Long.toString((long) num3) :
-					   Double.toString(num3);
-			} catch (NumberFormatException ignored0) {
-				return text1 + text0;
+				memory.push(m -> text1);
 			}
-		});
+		} catch (JSONException ignored0) {
+			throw new ExecutionException(
+					"SPLIT expected an array but got: " + text0,
+					this.tree
+			);
+		}
 	}
 
 	@Nullable

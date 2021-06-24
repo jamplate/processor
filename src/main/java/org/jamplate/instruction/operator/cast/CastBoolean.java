@@ -13,22 +13,17 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.cast;
+package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
- * to the popped value interpreted as an object.
+ * to the popped value interpreted as a boolean.
  * <br>
  * <table>
  *     <tr>
@@ -36,16 +31,32 @@ import java.util.stream.IntStream;
  *         <th>Interpretation</th>
  *     </tr>
  *     <tr>
- *         <td>Object</td>
- *         <td>The object</td>
+ *         <td>""</td>
+ *         <td>false</td>
  *     </tr>
  *     <tr>
- *         <td>Array</td>
- *         <td>An object mapping each item to its index (item=index)</td>
+ *         <td>"0"</td>
+ *         <td>false</td>
  *     </tr>
  *     <tr>
- *         <td>The rest</td>
- *         <td>A singleton object containing the text.</td>
+ *         <td>"false"</td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td>"null"</td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td>"1"</td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td>"true"</td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td>The Rest</td>
+ *         <td>true</td>
  *     </tr>
  * </table>
  * <br><br>
@@ -53,24 +64,24 @@ import java.util.stream.IntStream;
  * <pre>
  *     [..., input:text:lazy]
  *     [...]
- *     [..., output:object:lazy]
+ *     [..., output:boolean:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.13
  */
-public class CastObject implements Instruction {
+public class CastBoolean implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
 	@NotNull
-	public static final CastObject INSTANCE = new CastObject();
+	public static final CastBoolean INSTANCE = new CastBoolean();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 9027069127434903248L;
+	private static final long serialVersionUID = 4663666280068528631L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -82,23 +93,23 @@ public class CastObject implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * value that evaluate to the popped value interpreted as a boolean.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastObject() {
+	public CastBoolean() {
 		this.tree = null;
 	}
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * value that evaluate to the popped value interpreted as a boolean.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastObject(@NotNull Tree tree) {
+	public CastBoolean(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -113,29 +124,16 @@ public class CastObject implements Instruction {
 		memory.push(m -> {
 			String text0 = value0.evaluate(m);
 
-			try {
-				JSONObject object0 = new JSONObject(text0);
-
-				return String.valueOf(object0);
-			} catch (JSONException ignored0) {
-				try {
-					JSONArray array0 = new JSONArray(text0);
-					JSONObject object0 = array0.toJSONObject(
-							new JSONArray(
-									IntStream.range(0, array0.length())
-											 .mapToObj(Integer::toString)
-											 .collect(Collectors.toList())
-							)
-					);
-
-					return String.valueOf(object0);
-				} catch (JSONException ignored1) {
-					JSONObject object0 = new JSONObject();
-
-					object0.put(text0, 0);
-
-					return String.valueOf(object0);
-				}
+			switch (text0) {
+				case "":
+				case "0":
+				case "false":
+				case "null":
+					return "false";
+				case "1":
+				case "true":
+				default:
+					return "true";
 			}
 		});
 	}

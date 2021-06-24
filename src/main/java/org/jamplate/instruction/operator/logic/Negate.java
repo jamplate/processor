@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.logic;
+package org.jamplate.instruction.operator.logic;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;

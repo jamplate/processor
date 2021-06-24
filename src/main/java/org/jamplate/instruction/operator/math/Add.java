@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.math;
+package org.jamplate.instruction.operator.math;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -23,32 +23,35 @@ import java.util.Objects;
 
 /**
  * An instruction that pops the last two values and pushes a value that evaluates to the
- * result of subtracting the first popped value from the second one.
+ * results of adding/joining the result of evaluating the two popped values.
  * <br>
- * If one of the values is not a number, an {@link ExecutionException} will occur.
+ * If the two values are both numbers, the two values will be added mathematically.
+ * <br>
+ * If one of the values is not a number, the two values will be concatenated with the
+ * first being the last popped and the last being the first popped.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., left:number:lazy, right:number:lazy]
+ *     [..., left:text:lazy, right:text:lazy]
  *     [...]
- *     [..., result:number:lazy]
+ *     [..., result:text:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Subtract implements Instruction {
+public class Add implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Subtract INSTANCE = new Subtract();
+	public static final Add INSTANCE = new Add();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 8918042984392129152L;
+	private static final long serialVersionUID = 3448952003441559955L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -60,23 +63,23 @@ public class Subtract implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last two values and pushes the results of
-	 * subtract the first popped value from the second popped value.
+	 * adding them.
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Subtract() {
+	public Add() {
 		this.tree = null;
 	}
 
 	/**
 	 * Construct a new instruction that pops the last two values and pushes the results of
-	 * subtract the first popped value from the second popped value.
+	 * adding them.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Subtract(@NotNull Tree tree) {
+	public Add(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -104,17 +107,13 @@ public class Subtract implements Instruction {
 				double num1 = Double.parseDouble(text1);
 
 				//result
-				double num3 = num1 - num0;
+				double num3 = num1 + num0;
 
 				return num3 % 1 == 0 ?
 					   Long.toString((long) num3) :
 					   Double.toString(num3);
 			} catch (NumberFormatException ignored0) {
-				throw new ExecutionException(
-						"SUB (-) expected two numbers but got: " + text0 + " and " +
-						text1,
-						this.tree
-				);
+				return text1 + text0;
 			}
 		});
 	}

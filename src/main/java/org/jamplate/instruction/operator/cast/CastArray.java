@@ -13,17 +13,21 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.cast;
+package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
- * to the popped value interpreted as a boolean.
+ * to the popped value interpreted as an array.
  * <br>
  * <table>
  *     <tr>
@@ -31,32 +35,16 @@ import java.util.Objects;
  *         <th>Interpretation</th>
  *     </tr>
  *     <tr>
- *         <td>""</td>
- *         <td>false</td>
+ *         <td>Array</td>
+ *         <td>The array</td>
  *     </tr>
  *     <tr>
- *         <td>"0"</td>
- *         <td>false</td>
+ *         <td>Object</td>
+ *         <td>The keys of the object sorted as by {@link String#compareTo(String)}</td>
  *     </tr>
  *     <tr>
- *         <td>"false"</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"null"</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"1"</td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td>"true"</td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td>The Rest</td>
- *         <td>true</td>
+ *         <td>The rest</td>
+ *         <td>A singleton array containing the text.</td>
  *     </tr>
  * </table>
  * <br><br>
@@ -64,24 +52,24 @@ import java.util.Objects;
  * <pre>
  *     [..., input:text:lazy]
  *     [...]
- *     [..., output:boolean:lazy]
+ *     [..., output:array:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.13
  */
-public class CastBoolean implements Instruction {
+public class CastArray implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
 	@NotNull
-	public static final CastBoolean INSTANCE = new CastBoolean();
+	public static final CastArray INSTANCE = new CastArray();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 4663666280068528631L;
+	private static final long serialVersionUID = -8004089805216287695L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -93,23 +81,23 @@ public class CastBoolean implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as a boolean.
+	 * value that evaluate to the popped value interpreted as an array.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastBoolean() {
+	public CastArray() {
 		this.tree = null;
 	}
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as a boolean.
+	 * value that evaluate to the popped value interpreted as an array.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastBoolean(@NotNull Tree tree) {
+	public CastArray(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -124,16 +112,30 @@ public class CastBoolean implements Instruction {
 		memory.push(m -> {
 			String text0 = value0.evaluate(m);
 
-			switch (text0) {
-				case "":
-				case "0":
-				case "false":
-				case "null":
-					return "false";
-				case "1":
-				case "true":
-				default:
-					return "true";
+			try {
+				JSONArray array0 = new JSONArray(text0);
+
+				return String.valueOf(array0);
+			} catch (JSONException ignored0) {
+				try {
+					JSONObject object0 = new JSONObject(text0);
+					JSONArray array0 = object0.toJSONArray(
+							new JSONArray(
+									object0.keySet()
+										   .stream()
+										   .sorted()
+										   .collect(Collectors.toList())
+							)
+					);
+
+					return String.valueOf(array0);
+				} catch (JSONException ignored1) {
+					JSONArray array0 = new JSONArray();
+
+					array0.put(0, text0);
+
+					return String.valueOf(array0);
+				}
 			}
 		});
 	}

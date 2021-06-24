@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.math;
+package org.jamplate.instruction.operator.math;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.Objects;
 
 /**
  * An instruction that pops the last two values and pushes a value that evaluates to the
- * results of multiplying the result of evaluating the two popped values.
+ * remainder of dividing the second popped value by the first one.
  * <br>
  * If one of the values is not a number, an {@link ExecutionException} will occur.
  * <br><br>
@@ -38,17 +38,17 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Multiply implements Instruction {
+public class Modulo implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Multiply INSTANCE = new Multiply();
+	public static final Modulo INSTANCE = new Modulo();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 5283147403748694714L;
+	private static final long serialVersionUID = 3391431842000542070L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -59,24 +59,24 @@ public class Multiply implements Instruction {
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that pops the last two values and pushes the product of
-	 * them.
+	 * Construct a new instruction that pops the last two values and pushes the remainder
+	 * of dividing the second popped value by the first popped value.
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Multiply() {
+	public Modulo() {
 		this.tree = null;
 	}
 
 	/**
-	 * Construct a new instruction that pops the last two values and pushes the product of
-	 * them.
+	 * Construct a new instruction that pops the last two values and pushes the remainder
+	 * of dividing the second popped value by the first popped value.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Multiply(@NotNull Tree tree) {
+	public Modulo(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -103,15 +103,21 @@ public class Multiply implements Instruction {
 				//left
 				double num1 = Double.parseDouble(text1);
 
+				if (num0 == 0)
+					throw new ExecutionException(
+							"Division by zero is kinda illegal :P",
+							this.tree
+					);
+
 				//result
-				double num3 = num1 * num0;
+				double num3 = num1 % num0;
 
 				return num3 % 1 == 0 ?
 					   Long.toString((long) num3) :
 					   Double.toString(num3);
 			} catch (NumberFormatException ignored0) {
 				throw new ExecutionException(
-						"MUL (*) expected two numbers but got: " + text0 + " and " +
+						"MOD (%) expected two numbers but got: " + text0 + " and " +
 						text1,
 						this.tree
 				);

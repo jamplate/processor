@@ -13,74 +13,70 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.struct;
+package org.jamplate.instruction.operator.math;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 /**
- * An instruction that pops the top value at the stack and invert it (assuming its an
- * array).
+ * An instruction that pops the last two values and pushes a value that evaluates to the
+ * result of subtracting the first popped value from the second one.
  * <br>
- * If the popped value was not an array, an {@link ExecutionException} will be thrown.
+ * If one of the values is not a number, an {@link ExecutionException} will occur.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:array:lazy]
+ *     [..., left:number:lazy, right:number:lazy]
  *     [...]
- *     [..., inverted:array:lazy]
+ *     [..., result:number:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.15
+ * @since 0.3.0 ~2021.06.11
  */
-public class Invert implements Instruction {
+public class Subtract implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.15
+	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Invert INSTANCE = new Invert();
+	public static final Subtract INSTANCE = new Subtract();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 2382162307023568944L;
+	private static final long serialVersionUID = 8918042984392129152L;
 
 	/**
 	 * A reference of this instruction in the source code.
 	 *
-	 * @since 0.3.0 ~2021.06.15
+	 * @since 0.3.0 ~2021.06.11
 	 */
 	@Nullable
 	protected final Tree tree;
 
 	/**
-	 * An instruction that pops the top value at the stack and invert it. (assuming its an
-	 * array)
+	 * Construct a new instruction that pops the last two values and pushes the results of
+	 * subtract the first popped value from the second popped value.
 	 *
-	 * @since 0.3.0 ~2021.06.15
+	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Invert() {
+	public Subtract() {
 		this.tree = null;
 	}
 
 	/**
-	 * An instruction that pops the top value at the stack and invert it. (assuming its an
-	 * array)
+	 * Construct a new instruction that pops the last two values and pushes the results of
+	 * subtract the first popped value from the second popped value.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.3.0 ~2021.06.15
+	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Invert(@NotNull Tree tree) {
+	public Subtract(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -90,23 +86,33 @@ public class Invert implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//right
 		Value value0 = memory.pop();
+		//left
+		Value value1 = memory.pop();
 
 		memory.push(m -> {
+			//right
 			String text0 = value0.evaluate(m);
+			//left
+			String text1 = value1.evaluate(m);
 
 			try {
-				JSONArray array0 = new JSONArray(text0);
-				List list0 = array0.toList();
+				//right
+				double num0 = Double.parseDouble(text0);
+				//left
+				double num1 = Double.parseDouble(text1);
 
-				Collections.reverse(list0);
+				//result
+				double num3 = num1 - num0;
 
-				JSONArray array1 = new JSONArray(list0);
-
-				return String.valueOf(array1);
-			} catch (JSONException ignored0) {
+				return num3 % 1 == 0 ?
+					   Long.toString((long) num3) :
+					   Double.toString(num3);
+			} catch (NumberFormatException ignored0) {
 				throw new ExecutionException(
-						"INVERT expected an array but got: " + text0,
+						"SUB (-) expected two numbers but got: " + text0 + " and " +
+						text1,
 						this.tree
 				);
 			}

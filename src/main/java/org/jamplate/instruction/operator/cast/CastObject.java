@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.cast;
+package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -24,10 +24,11 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
- * to the popped value interpreted as an array.
+ * to the popped value interpreted as an object.
  * <br>
  * <table>
  *     <tr>
@@ -35,16 +36,16 @@ import java.util.stream.Collectors;
  *         <th>Interpretation</th>
  *     </tr>
  *     <tr>
- *         <td>Array</td>
- *         <td>The array</td>
+ *         <td>Object</td>
+ *         <td>The object</td>
  *     </tr>
  *     <tr>
- *         <td>Object</td>
- *         <td>The keys of the object sorted as by {@link String#compareTo(String)}</td>
+ *         <td>Array</td>
+ *         <td>An object mapping each item to its index (item=index)</td>
  *     </tr>
  *     <tr>
  *         <td>The rest</td>
- *         <td>A singleton array containing the text.</td>
+ *         <td>A singleton object containing the text.</td>
  *     </tr>
  * </table>
  * <br><br>
@@ -52,24 +53,24 @@ import java.util.stream.Collectors;
  * <pre>
  *     [..., input:text:lazy]
  *     [...]
- *     [..., output:array:lazy]
+ *     [..., output:object:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.13
  */
-public class CastArray implements Instruction {
+public class CastObject implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
 	@NotNull
-	public static final CastArray INSTANCE = new CastArray();
+	public static final CastObject INSTANCE = new CastObject();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -8004089805216287695L;
+	private static final long serialVersionUID = 9027069127434903248L;
 
 	/**
 	 * A reference of this instruction in the source code.
@@ -81,23 +82,23 @@ public class CastArray implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an array.
+	 * value that evaluate to the popped value interpreted as an object.
 	 *
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastArray() {
+	public CastObject() {
 		this.tree = null;
 	}
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an array.
+	 * value that evaluate to the popped value interpreted as an object.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.13
 	 */
-	public CastArray(@NotNull Tree tree) {
+	public CastObject(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -113,28 +114,27 @@ public class CastArray implements Instruction {
 			String text0 = value0.evaluate(m);
 
 			try {
-				JSONArray array0 = new JSONArray(text0);
+				JSONObject object0 = new JSONObject(text0);
 
-				return String.valueOf(array0);
+				return String.valueOf(object0);
 			} catch (JSONException ignored0) {
 				try {
-					JSONObject object0 = new JSONObject(text0);
-					JSONArray array0 = object0.toJSONArray(
+					JSONArray array0 = new JSONArray(text0);
+					JSONObject object0 = array0.toJSONObject(
 							new JSONArray(
-									object0.keySet()
-										   .stream()
-										   .sorted()
-										   .collect(Collectors.toList())
+									IntStream.range(0, array0.length())
+											 .mapToObj(Integer::toString)
+											 .collect(Collectors.toList())
 							)
 					);
 
-					return String.valueOf(array0);
+					return String.valueOf(object0);
 				} catch (JSONException ignored1) {
-					JSONArray array0 = new JSONArray();
+					JSONObject object0 = new JSONObject();
 
-					array0.put(0, text0);
+					object0.put(text0, 0);
 
-					return String.valueOf(array0);
+					return String.valueOf(object0);
 				}
 			}
 		});

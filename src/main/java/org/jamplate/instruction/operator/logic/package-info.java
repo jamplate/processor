@@ -14,11 +14,14 @@
  *	limitations under the License.
  */
 /**
- * Instructions that pops the last value and pushes a value that evaluate to the popped
- * value interpreted in a different way.
+ * Logical operations instruction. (boolean based)
+ * <br>
+ * This package contains the instructions that manipulate the last values in the stack.
+ * The instructions on this package starts popping last values, do an operation on the
+ * popped values, push a lazy evaluated results to the stack.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.13
+ * @since 0.3.0 ~2021.06.15
  */
-package org.jamplate.instruction.cast;
+package org.jamplate.instruction.operator.logic;
