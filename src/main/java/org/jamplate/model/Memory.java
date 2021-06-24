@@ -88,9 +88,7 @@ public final class Memory implements Closeable {
 	 * If the given {@code operator} thrown any exception when invoked by this method. The
 	 * thrown exception will fall throw this method with nothing changed.
 	 * <br>
-	 * The computing will be performed on the last frame that contain an allocation to the
-	 * given {@code address}. If no frame has an allocation to the given {@code address}
-	 * then the result of the computation will be store in the base frame.
+	 * The computing will be performed at the heap of the first frame.
 	 *
 	 * @param address  the address to replace the value at.
 	 * @param operator the function to be invoked to acquire the replacement value.
@@ -103,21 +101,7 @@ public final class Memory implements Closeable {
 	public Value compute(@NotNull String address, @NotNull UnaryOperator<Value> operator) {
 		Objects.requireNonNull(address, "address");
 		Objects.requireNonNull(operator, "operator");
-		Iterator<Frame> iterator = this.frames.descendingIterator();
-		while (iterator.hasNext()) {
-			Frame frame = iterator.next();
-			Value value = frame.heap.getOrDefault(address, null);
-
-			if (value != null) {
-				Value v = operator.apply(value);
-				frame.set(address, v);
-				return v;
-			}
-		}
-
-		Value v = operator.apply(Value.NULL);
-		this.frames.getFirst().set(address, v);
-		return v;
+		return this.frames.getFirst().compute(address, operator);
 	}
 
 	/**

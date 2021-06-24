@@ -109,7 +109,10 @@ public final class Frame {
 	public Value compute(@NotNull String address, @NotNull UnaryOperator<Value> operator) {
 		Objects.requireNonNull(address, "address");
 		Objects.requireNonNull(operator, "operator");
-		return this.heap.compute(address, (k, v) -> operator.apply(v));
+		return this.heap.compute(address, (k, v) -> {
+			Value value = operator.apply(v);
+			return value == null ? Value.NULL : value;
+		});
 	}
 
 	/**
