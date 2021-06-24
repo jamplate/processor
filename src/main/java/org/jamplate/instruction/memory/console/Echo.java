@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.io;
+package org.jamplate.instruction.memory.console;
 
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -43,14 +43,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.15
  */
-public class Console implements Instruction {
+public class Echo implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
-	public static final Console INSTANCE = new Console();
+	public static final Echo INSTANCE = new Echo();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -4360149130636815580L;
@@ -69,7 +69,7 @@ public class Console implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Console() {
+	public Echo() {
 		this.tree = null;
 	}
 
@@ -81,7 +81,7 @@ public class Console implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Console(@NotNull Tree tree) {
+	public Echo(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -91,19 +91,18 @@ public class Console implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		Value value0 = memory.pop();
-
 		try {
 			memory.close();
 		} catch (IOException ignored0) {
 		}
 
+		Value value0 = memory.pop();
+		String text0 = value0.evaluate(memory);
+
 		if (value0 == Value.NULL) {
 			memory.setConsole(new StringBuilder());
 			return;
 		}
-
-		String text0 = value0.evaluate(memory);
 
 		try {
 			File file = new File(text0);
