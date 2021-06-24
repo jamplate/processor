@@ -12,6 +12,7 @@ import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.stream.StreamSupport;
 
 public class FileTest {
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
@@ -38,11 +39,10 @@ public class FileTest {
 			return;
 		}
 
-		Compilation[] jamplates = environment
-				.compilationSet()
-				.stream()
-				.filter(compilation -> compilation.getRootTree().document().toString().endsWith(".jamplate"))
-				.toArray(Compilation[]::new);
+		Compilation[] jamplates =
+				StreamSupport.stream(environment.spliterator(), false)
+							 .filter(compilation -> compilation.getRootTree().document().toString().endsWith(".jamplate"))
+							 .toArray(Compilation[]::new);
 
 		boolean executed = Jamplate.execute(environment, jamplates);
 
@@ -80,11 +80,10 @@ public class FileTest {
 			return;
 		}
 
-		Compilation[] jamplates = environment
-				.compilationSet()
-				.stream()
-				.filter(compilation -> compilation.getRootTree().document().toString().endsWith(".jamplate"))
-				.toArray(Compilation[]::new);
+		Compilation[] jamplates =
+				StreamSupport.stream(environment.spliterator(), false)
+							 .filter(compilation -> compilation.getRootTree().document().toString().endsWith(".jamplate"))
+							 .toArray(Compilation[]::new);
 
 		boolean executed = Jamplate.execute(environment, jamplates);
 

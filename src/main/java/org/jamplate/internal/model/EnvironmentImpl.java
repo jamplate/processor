@@ -23,7 +23,6 @@ import org.jamplate.model.Environment;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.io.File;
 import java.util.*;
@@ -46,7 +45,6 @@ public class EnvironmentImpl implements Environment {
 	 */
 	@NotNull
 	protected final Map<Document, Compilation> compilations = new HashMap<>();
-
 	/**
 	 * The diagnostic manager in this enlivenment.
 	 *
@@ -61,57 +59,6 @@ public class EnvironmentImpl implements Environment {
 	 */
 	@NotNull
 	protected final Map<String, Object> meta = new HashMap<>();
-
-	/**
-	 * A set of the compilations in this environment.
-	 *
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@Nullable
-	@UnmodifiableView
-	protected Set<Compilation> compilationSet;
-
-	@NotNull
-	@Override
-	public Set<Compilation> compilationSet() {
-		if (this.compilationSet == null) {
-			Collection<Compilation> compilations = this.compilations.values();
-			this.compilationSet = new AbstractSet<Compilation>() {
-				@Override
-				public boolean contains(@Nullable Object object) {
-					return compilations.contains(object);
-				}
-
-				@Override
-				public Iterator<Compilation> iterator() {
-					Iterator<Compilation> iterator = compilations.iterator();
-					return new Iterator<Compilation>() {
-						@Override
-						public boolean hasNext() {
-							return iterator.hasNext();
-						}
-
-						@Override
-						public Compilation next() {
-							return iterator.next();
-						}
-
-						@Override
-						public void remove() {
-							iterator.remove();
-						}
-					};
-				}
-
-				@Override
-				public int size() {
-					return compilations.size();
-				}
-			};
-		}
-
-		return this.compilationSet;
-	}
 
 	@Nullable
 	@Override
@@ -146,6 +93,12 @@ public class EnvironmentImpl implements Environment {
 	@Override
 	public Map<String, Object> getMeta() {
 		return Collections.checkedMap(this.meta, String.class, Object.class);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compilation> iterator() {
+		return this.compilations.values().iterator();
 	}
 
 	@NotNull

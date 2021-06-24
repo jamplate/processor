@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
@@ -34,16 +34,19 @@ import java.util.Set;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public interface Environment extends Serializable {
+public interface Environment extends Iterable<Compilation>, Serializable {
 	/**
-	 * Return a set view containing the compilations in this environment.
+	 * An iterator iterating over the compilations in this environment.
+	 * <br>
+	 * The mutability of the iterator is mutable by default unless the implementation
+	 * specifies otherwise.
 	 *
-	 * @return a view of the compilations in this.
-	 * @since 0.2.0 ~2021.05.23
+	 * @return an iterator iterating over the compilations in this environment.
+	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	@Contract(pure = true)
-	Set<Compilation> compilationSet();
+	@Override
+	Iterator<Compilation> iterator();
 
 	/**
 	 * Get the compilation set to this environment with the given {@code document} or

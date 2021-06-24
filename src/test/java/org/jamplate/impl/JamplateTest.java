@@ -1,13 +1,13 @@
 package org.jamplate.impl;
 
+import org.jamplate.function.Processor;
+import org.jamplate.impl.processor.ParserProcessor;
 import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
-import org.jamplate.impl.processor.ParserProcessor;
 import org.jamplate.internal.util.IO;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
-import org.jamplate.function.Processor;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +83,7 @@ public class JamplateTest {
 				new PseudoDocument("Hi", "Included")
 		);
 
-		for (Compilation compilation : environment.compilationSet()) {
+		for (Compilation compilation : environment) {
 			Instruction instruction = compilation.getInstruction();
 
 			Memory memory = new Memory();
@@ -205,7 +205,7 @@ public class JamplateTest {
 					)
 			);
 
-			for (Compilation compilation : environment.compilationSet()) {
+			for (Compilation compilation : environment) {
 				Instruction instruction = compilation.getInstruction();
 
 				memory = new Memory();
@@ -313,7 +313,7 @@ public class JamplateTest {
 					)
 			);
 
-			for (Compilation compilation : environment.compilationSet()) {
+			for (Compilation compilation : environment) {
 				Instruction instruction = compilation.getInstruction();
 
 				memory = new Memory();
