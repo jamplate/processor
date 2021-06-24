@@ -16,7 +16,7 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.Idle;
-import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -49,7 +49,7 @@ public class ToIdleWhitespaceCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		if (Trees.read(tree).toString().trim().isEmpty())
+		if (IO.read(tree).toString().trim().isEmpty())
 			return new Idle(tree);
 
 		return null;

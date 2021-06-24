@@ -15,15 +15,12 @@
  */
 package org.jamplate.internal.util;
 
-import org.jamplate.model.*;
+import org.jamplate.model.Intersection;
+import org.jamplate.model.Reference;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.LineNumberReader;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -171,172 +168,6 @@ public final class Trees {
 				return head;
 
 			head = previous;
-		}
-	}
-
-	/**
-	 * Get the line of the given {@code tree} on its document.
-	 *
-	 * @param tree the tree to get its line.
-	 * @return the line of the given {@code tree}.
-	 * @throws NullPointerException  if the given {@code tree} is null.
-	 * @throws IOError               if any I/O error occurred while reading.
-	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
-	 *                               unavailable.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@Contract(pure = true)
-	public static int line(@NotNull Tree tree) {
-		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
-		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
-			while ((p -= reader.skip(p)) != 0) {
-				if (reader.read() == -1)
-					break;
-
-				p--;
-			}
-
-			return reader.getLineNumber() + 1;
-		} catch (IOException e) {
-			throw new IOError(e);
-		}
-	}
-
-	/**
-	 * Return the position of the given {@code tree} on its line.
-	 *
-	 * @param tree the tree to get its position in its line.
-	 * @return the position of the given {@code tree} on its line.
-	 * @throws NullPointerException  if the given {@code tree} is null.
-	 * @throws IOError               if any I/O error occurred while reading.
-	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
-	 *                               unavailable.
-	 * @since 0.2.0 ~2021.05.24
-	 */
-	@SuppressWarnings("OverlyLongMethod")
-	@Contract(pure = true)
-	public static int positionInLine(@NotNull Tree tree) {
-		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
-		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
-			char[] b = new char[2];
-			while (true) {
-				reader.mark(Math.max(10, p << 1));
-				String line = reader.readLine();
-
-				if (line == null)
-					return 0;
-
-				reader.reset();
-				long skipped = reader.skip(line.length());
-
-				while (skipped++ < line.length())
-					if (reader.read() == -1)
-						return 0;
-
-				int ctrl = 0;
-				reader.mark(2);
-				reader.read(b);
-				if (b[0] == '\n')
-					ctrl++;
-				if (b[0] == '\r') {
-					ctrl++;
-
-					if (b[1] == '\n')
-						ctrl++;
-				}
-				reader.reset();
-				long skipped2 = reader.skip(ctrl);
-				while (skipped2++ < ctrl)
-					if (reader.read() == -1)
-						return p;
-
-				if ((p -= line.length() + ctrl) < 0)
-					return line.length() + p + ctrl;
-			}
-		} catch (IOException e) {
-			return Math.max(0, p);
-		}
-	}
-
-	/**
-	 * Read the source-code of the given {@code tree}.
-	 *
-	 * @param tree the tree to read its source-code.
-	 * @return the source code of the given {@code tree}.
-	 * @throws NullPointerException  if the given {@code tree} is null.
-	 * @throws IOError               if any I/O error occurred while reading.
-	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
-	 *                               unavailable.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public static CharSequence read(@NotNull Tree tree) {
-		Objects.requireNonNull(tree, "tree");
-		Document document = tree.document();
-		Reference reference = tree.reference();
-		return document.read(reference);
-	}
-
-	/**
-	 * Read the whole line that the given {@code tree} is at on its document.
-	 *
-	 * @param tree the tree to read the line it is in.
-	 * @return the text of the line the given {@code tree} is at.
-	 * @throws NullPointerException  if the given {@code tree} is null.
-	 * @throws IOError               if any I/O error occurred while reading.
-	 * @throws DocumentNotFoundError if the document of the given {@code tree} is
-	 *                               unavailable.
-	 * @since 0.2.0 ~2021.05.24
-	 */
-	@SuppressWarnings("OverlyLongMethod")
-	@Nullable
-	@Contract(pure = true)
-	public static CharSequence readLine(@NotNull Tree tree) {
-		Objects.requireNonNull(tree, "tree");
-		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
-		String line = "";
-		try (BufferedReader reader = new BufferedReader(tree.document().openReader())) {
-			char[] b = new char[2];
-			while (true) {
-				reader.mark(Math.max(10, p << 1));
-				line = reader.readLine();
-
-				if (line == null)
-					return null;
-
-				reader.reset();
-				long skipped = reader.skip(line.length());
-
-				while (skipped++ < line.length())
-					if (reader.read() == -1)
-						return "";
-
-				int ctrl = 0;
-				reader.mark(2);
-				reader.read(b);
-				if (b[0] == '\n')
-					ctrl++;
-				if (b[0] == '\r') {
-					ctrl++;
-
-					if (b[1] == '\n')
-						ctrl++;
-				}
-				reader.reset();
-				long skipped2 = reader.skip(ctrl);
-				while (skipped2++ < ctrl)
-					if (reader.read() == -1)
-						return line;
-
-				if ((p -= line.length() + ctrl) < 0)
-					return line;
-			}
-		} catch (IOException e) {
-			return line;
 		}
 	}
 

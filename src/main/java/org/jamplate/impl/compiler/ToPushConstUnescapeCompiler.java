@@ -16,7 +16,7 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.PushConst;
-import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -53,7 +53,7 @@ public class ToPushConstUnescapeCompiler implements Compiler {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		try {
-			String text = new JSONTokener(Trees.read(tree).toString())
+			String text = new JSONTokener(IO.read(tree).toString())
 					.nextValue()
 					.toString();
 

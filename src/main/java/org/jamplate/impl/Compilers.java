@@ -17,6 +17,7 @@ package org.jamplate.impl;
 
 import org.jamplate.impl.compiler.*;
 import org.jamplate.impl.instruction.*;
+import org.jamplate.internal.util.IO;
 import org.jamplate.internal.util.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
 import org.jamplate.impl.compiler.FlattenCompiler;
@@ -77,7 +78,7 @@ public final class Compilers {
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
 
-				String address = Trees.read(keyT).toString();
+				String address = IO.read(keyT).toString();
 
 				if (accessorT == null) {
 					Instruction instruction = compiler.compile(compiler, compilation, paramT);
@@ -122,7 +123,7 @@ public final class Compilers {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree paramT = tree.getSketch().get(Component.PARAMETER).getTree();
 
-				String address = Trees.read(keyT).toString();
+				String address = IO.read(keyT).toString();
 				Instruction instruction = compiler.compile(compiler, compilation, paramT);
 
 				if (instruction == null)
@@ -234,7 +235,7 @@ public final class Compilers {
 			new FilterByKindCompiler(Kind.CX_CMD_UNDEC, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 
-				String address = Trees.read(keyT).toString();
+				String address = IO.read(keyT).toString();
 
 				return new FreeAddr(
 						tree,
@@ -252,7 +253,7 @@ public final class Compilers {
 			new FilterByKindCompiler(Kind.CX_CMD_UNDEF, (compiler, compilation, tree) -> {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 
-				String address = Trees.read(keyT).toString();
+				String address = IO.read(keyT).toString();
 
 				return new RepreeAddr(
 						tree,
@@ -281,7 +282,7 @@ public final class Compilers {
 						case Kind.CX_CMD_CAPTURE: {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
 
-							address = Trees.read(keyT).toString();
+							address = IO.read(keyT).toString();
 							break;
 						}
 						case Kind.CX_CMD_ENDCAPTURE: {
@@ -328,7 +329,7 @@ public final class Compilers {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
 							Tree paramT = t.getSketch().get(Component.PARAMETER).getTree();
 
-							address = Trees.read(keyT).toString();
+							address = IO.read(keyT).toString();
 							instruction = compiler.compile(compiler, compilation, paramT);
 							break;
 						}
@@ -384,7 +385,7 @@ public final class Compilers {
 						case Kind.CX_CMD_IFDEF:
 						case Kind.CX_CMD_ELIFDEF: {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
-							String address = Trees.read(keyT).toString();
+							String address = IO.read(keyT).toString();
 
 							instructions.put(new PushDefAddr(keyT, address), current = new ArrayList<>());
 							break;
@@ -392,7 +393,7 @@ public final class Compilers {
 						case Kind.CX_CMD_IFNDEF:
 						case Kind.CX_CMD_ELIFNDEF: {
 							Tree keyT = t.getSketch().get(Component.KEY).getTree();
-							String address = Trees.read(keyT).toString();
+							String address = IO.read(keyT).toString();
 
 							instructions.put(new PushNdefAddr(keyT, address), current = new ArrayList<>());
 							break;
@@ -684,7 +685,7 @@ public final class Compilers {
 					default:
 						throw new CompileException(
 								"Unrecognized operator (" +
-								Trees.read(operatorT) +
+								IO.read(operatorT) +
 								")",
 								operatorT
 						);
@@ -692,11 +693,11 @@ public final class Compilers {
 
 				throw new CompileException(
 						"The operator (" +
-						Trees.read(operatorT) +
+						IO.read(operatorT) +
 						") cannot be applied to <" +
-						Trees.read(leftT) +
+						IO.read(leftT) +
 						"> and <" +
-						Trees.read(rightT) +
+						IO.read(rightT) +
 						">",
 						operatorT
 				);
@@ -713,7 +714,7 @@ public final class Compilers {
 				Tree keyT = tree.getSketch().get(Component.KEY).getTree();
 				Tree accessorT = tree.getSketch().get(Component.ACCESSOR).getTree();
 
-				String address = Trees.read(keyT).toString();
+				String address = IO.read(keyT).toString();
 				Instruction instruction = compiler.compile(compiler, compilation, accessorT);
 
 				if (instruction == null)
@@ -758,7 +759,7 @@ public final class Compilers {
 							new AllocAddrConst(
 									tree,
 									Address.LINE,
-									String.valueOf(Trees.line(tree) + 1)
+									String.valueOf(IO.line(tree) + 1)
 							),
 							new ReprntConst(tree)
 					)
@@ -775,7 +776,7 @@ public final class Compilers {
 					new AllocAddrConst(
 							tree,
 							Address.LINE,
-							String.valueOf(Trees.line(tree) + 1)
+							String.valueOf(IO.line(tree) + 1)
 					)
 			);
 
@@ -787,7 +788,7 @@ public final class Compilers {
 	@NotNull
 	public static final Compiler DC_ROT =
 			new FilterByKindCompiler(Kind.DC_ROT, (compiler, compilation, tree) -> {
-				String line = String.valueOf(Trees.line(tree) + 1);
+				String line = String.valueOf(IO.line(tree) + 1);
 				String file = tree.document().toString();
 				String dir = new File(file).getParent();
 				return new IterXinstr(

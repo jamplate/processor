@@ -17,7 +17,7 @@ package org.jamplate.impl.instruction;
 
 import org.jamplate.impl.Address;
 import org.jamplate.impl.util.JSONUtil;
-import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class ReprntConst implements Instruction {
 	public ReprntConst(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
-		this.constant = Trees.read(tree).toString();
+		this.constant = IO.read(tree).toString();
 	}
 
 	/**

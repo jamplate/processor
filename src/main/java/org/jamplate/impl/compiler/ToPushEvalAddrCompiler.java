@@ -16,7 +16,7 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.impl.instruction.PushEvalAddr;
-import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -50,7 +50,7 @@ public class ToPushEvalAddrCompiler implements Compiler {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		String address = Trees.read(tree).toString();
+		String address = IO.read(tree).toString();
 
 		return new PushEvalAddr(tree, address);
 	}

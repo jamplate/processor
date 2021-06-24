@@ -15,7 +15,7 @@
  */
 package org.jamplate.impl.instruction;
 
-import org.jamplate.internal.util.Trees;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Memory;
@@ -64,7 +64,7 @@ public class PushConst implements Instruction {
 	public PushConst(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
-		this.constant = Trees.read(tree).toString();
+		this.constant = IO.read(tree).toString();
 	}
 
 	/**
