@@ -38,42 +38,42 @@ public class ConcreteSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Processor analyzeProcessor;
+	protected Processor analyzeProcessor = Processor.IDLE;
 	/**
 	 * The current set analyzer.
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Analyzer analyzer;
+	protected Analyzer analyzer = Analyzer.IDLE;
 	/**
 	 * The current set pre-compile processor.
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Processor compileProcessor;
+	protected Processor compileProcessor = Processor.IDLE;
 	/**
 	 * The current set compiler.
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Compiler compiler;
+	protected Compiler compiler = Compiler.IDLE;
 	/**
 	 * The current set pre-parse processor.
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Processor parseProcessor;
+	protected Processor parseProcessor = Processor.IDLE;
 	/**
 	 * The current set parser.
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@NotNull
-	protected Parser parser;
+	protected Parser parser = Parser.IDLE;
 	/**
 	 * The qualified name of this spec.
 	 *
@@ -88,13 +88,7 @@ public class ConcreteSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	public ConcreteSpec() {
-		this.qualifiedName = Spec.super.getQualifiedName();
-		this.parseProcessor = Spec.super.getParseProcessor();
-		this.parser = Spec.super.getParser();
-		this.analyzeProcessor = Spec.super.getAnalyzeProcessor();
-		this.analyzer = Spec.super.getAnalyzer();
-		this.compileProcessor = Spec.super.getCompileProcessor();
-		this.compiler = Spec.super.getCompiler();
+		this.qualifiedName = "ConcreteSpec";
 	}
 
 	/**
@@ -107,12 +101,6 @@ public class ConcreteSpec implements Spec {
 	public ConcreteSpec(@NotNull String qualifiedName) {
 		Objects.requireNonNull(qualifiedName, "qualifiedName");
 		this.qualifiedName = qualifiedName;
-		this.parseProcessor = Spec.super.getParseProcessor();
-		this.parser = Spec.super.getParser();
-		this.analyzeProcessor = Spec.super.getAnalyzeProcessor();
-		this.analyzer = Spec.super.getAnalyzer();
-		this.compileProcessor = Spec.super.getCompileProcessor();
-		this.compiler = Spec.super.getCompiler();
 	}
 
 	@NotNull

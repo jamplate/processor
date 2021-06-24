@@ -66,7 +66,7 @@ public class ContextSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	public ContextSpec() {
-		this.qualifiedName = Spec.super.getQualifiedName();
+		this.qualifiedName = "ContextSpec";
 	}
 
 	/**
