@@ -35,7 +35,7 @@ import java.util.Objects;
  * Memory Visualization:
  * <pre>
  *     [..., struct: array]
- *     [..., item0:text, item1:array, item2:array, ...]
+ *     [..., item0:text, item1:text, item2:text, ...]
  * </pre>
  *
  * @author LSafer
