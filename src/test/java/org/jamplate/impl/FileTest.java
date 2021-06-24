@@ -1,8 +1,6 @@
 //Use this class to manually test the directory test_input
-package org.jamplate;
+package org.jamplate.impl;
 
-import org.jamplate.impl.Jamplate;
-import org.jamplate.impl.Meta;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.FileDocument;
 import org.jamplate.internal.model.PseudoDocument;
@@ -14,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.stream.StreamSupport;
 
+@Deprecated
 public class FileTest {
 	@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 	@Test
