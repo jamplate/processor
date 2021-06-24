@@ -38,14 +38,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Modulo implements Instruction {
+public class Remainder implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Modulo INSTANCE = new Modulo();
+	public static final Remainder INSTANCE = new Remainder();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3391431842000542070L;
@@ -64,7 +64,7 @@ public class Modulo implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Modulo() {
+	public Remainder() {
 		this.tree = null;
 	}
 
@@ -76,7 +76,7 @@ public class Modulo implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Modulo(@NotNull Tree tree) {
+	public Remainder(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
