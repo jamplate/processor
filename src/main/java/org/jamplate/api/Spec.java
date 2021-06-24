@@ -175,7 +175,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Processor getAnalyzeProcessor() {
-		return compilation -> false;
+		return Processor.IDLE;
 	}
 
 	/**
@@ -188,7 +188,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Analyzer getAnalyzer() {
-		return (compilation, tree) -> false;
+		return Analyzer.IDLE;
 	}
 
 	/**
@@ -201,7 +201,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Processor getCompileProcessor() {
-		return compilation -> false;
+		return Processor.IDLE;
 	}
 
 	/**
@@ -214,7 +214,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Compiler getCompiler() {
-		return (compiler, compilation, tree) -> null;
+		return Compiler.IDLE;
 	}
 
 	/**
@@ -227,7 +227,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Processor getParseProcessor() {
-		return compilation -> false;
+		return Processor.IDLE;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default Parser getParser() {
-		return (compilation, tree) -> Collections.emptySet();
+		return Parser.IDLE;
 	}
 
 	/**
@@ -277,6 +277,18 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
+	 * A method that get invoked after the compilation get created for a document at a
+	 * unit where this spec is applied.
+	 *
+	 * @param compilation the created compilation.
+	 * @throws NullPointerException if the given {@code compilation} is null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@Contract(mutates = "param")
+	default void onCreateCompilation(@NotNull Compilation compilation) {
+	}
+
+	/**
 	 * A method that get invoked when creating the memory before executing an instruction
 	 * at the unit where this spec is applied.
 	 *
@@ -294,6 +306,20 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
+	 * A method that get invoked before destroying the memory after executing an
+	 * instruction at a unit where this spec is applied.
+	 *
+	 * @param compilation the compilation its instruction got executed.
+	 * @param memory      the memory that has been used to executed the instruction.
+	 * @throws NullPointerException if the given {@code compilation} or {@code memroy} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@Contract(mutates = "param1,param2")
+	default void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
+	}
+
+	/**
 	 * A method that get invoked when a handled error occurred at the unit where this spec
 	 * is applied.
 	 *
@@ -303,7 +329,7 @@ public interface Spec extends Iterable<Spec> {
 	 *                              null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(pure = true)
+	@Contract(mutates = "param1")
 	default void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
 	}
 

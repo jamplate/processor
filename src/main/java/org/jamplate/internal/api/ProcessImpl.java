@@ -218,16 +218,19 @@ public class ProcessImpl implements Process {
 
 		Memory memory = new Memory();
 
-		//pre-execution
-		spec.onCreateMemory(compilation, memory);
-
 		//execute
 		try {
+			//pre-execution
+			spec.onCreateMemory(compilation, memory);
+
 			memory.pushFrame(new Frame(instruction));
 
 			instruction.exec(environment, memory);
 
 			memory.dumpFrame();
+
+			//post-execution
+			spec.onDestroyMemory(compilation, memory);
 			return true;
 		} catch (ExecutionException e) {
 			environment.getDiagnostic()
@@ -283,6 +286,7 @@ public class ProcessImpl implements Process {
 	public boolean initialize(@NotNull Document document) {
 		Objects.requireNonNull(document, "document");
 		Environment environment = this.environment;
+		Spec spec = this.spec;
 
 		if (environment.getCompilation(document) != null)
 			throw new IllegalStateException(
@@ -295,6 +299,9 @@ public class ProcessImpl implements Process {
 		);
 
 		environment.setCompilation(document, compilation);
+
+		spec.onCreateCompilation(compilation);
+
 		return true;
 	}
 

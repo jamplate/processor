@@ -223,9 +223,21 @@ public class ContextSpec implements Spec {
 	}
 
 	@Override
+	public void onCreateCompilation(@NotNull Compilation compilation) {
+		for (Spec spec : this)
+			spec.onCreateCompilation(compilation);
+	}
+
+	@Override
 	public void onCreateMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
 		for (Spec spec : this)
 			spec.onCreateMemory(compilation, memory);
+	}
+
+	@Override
+	public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
+		for (Spec spec : this)
+			spec.onDestroyMemory(compilation, memory);
 	}
 
 	@Override
