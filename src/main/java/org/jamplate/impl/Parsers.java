@@ -743,7 +743,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser DC_EOL = new PatternParser(
+	public static final Parser DC_EOL = new TermParser(
 			Pattern.compile("\r\n|\r|\n"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.DC_EOL))
 	);
@@ -756,7 +756,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	public static final Parser OP_ADD = new PatternParser(
+	public static final Parser OP_ADD = new TermParser(
 			Pattern.compile("\\+"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_ADD))
 	);
@@ -767,7 +767,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_DIV = new PatternParser(
+	public static final Parser OP_DIV = new TermParser(
 			Pattern.compile("\\/"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_DIV))
 	);
@@ -778,7 +778,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_EQL = new PatternParser(
+	public static final Parser OP_EQL = new TermParser(
 			Pattern.compile("=="),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_EQL))
 	);
@@ -789,7 +789,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_LEQ = new PatternParser(
+	public static final Parser OP_LEQ = new TermParser(
 			Pattern.compile("<="),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LEQ))
 	);
@@ -800,7 +800,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_LND = new PatternParser(
+	public static final Parser OP_LND = new TermParser(
 			Pattern.compile("&&"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LND))
 	);
@@ -811,7 +811,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_LOR = new PatternParser(
+	public static final Parser OP_LOR = new TermParser(
 			Pattern.compile("\\|\\|"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LOR))
 	);
@@ -822,7 +822,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_LTN = new PatternParser(
+	public static final Parser OP_LTN = new TermParser(
 			Pattern.compile("<"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_LTN))
 	);
@@ -833,7 +833,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_MEQ = new PatternParser(
+	public static final Parser OP_MEQ = new TermParser(
 			Pattern.compile(">="),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MEQ))
 	);
@@ -844,7 +844,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_MOD = new PatternParser(
+	public static final Parser OP_MOD = new TermParser(
 			Pattern.compile("%"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MOD))
 	);
@@ -855,7 +855,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_MTN = new PatternParser(
+	public static final Parser OP_MTN = new TermParser(
 			Pattern.compile(">"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MTN))
 	);
@@ -866,7 +866,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_MUL = new PatternParser(
+	public static final Parser OP_MUL = new TermParser(
 			Pattern.compile("\\*"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_MUL))
 	);
@@ -877,7 +877,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_NEG = new PatternParser(
+	public static final Parser OP_NEG = new TermParser(
 			Pattern.compile("!"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_NEG))
 	);
@@ -888,7 +888,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.06.02
 	 */
 	@NotNull
-	public static final Parser OP_NQL = new PatternParser(
+	public static final Parser OP_NQL = new TermParser(
 			Pattern.compile("!="),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_NQL))
 	);
@@ -899,7 +899,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
-	public static final Parser OP_SUB = new PatternParser(
+	public static final Parser OP_SUB = new TermParser(
 			Pattern.compile("-"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.OP_SUB))
 	);
@@ -912,7 +912,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_CLN = new PatternParser(
+	public static final Parser SX_CLN = new TermParser(
 			Pattern.compile(":"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CLN))
 	);
@@ -923,7 +923,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_CMA = new PatternParser(
+	public static final Parser SX_CMA = new TermParser(
 			Pattern.compile(","),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CMA))
 	);
@@ -986,7 +986,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser SX_NME = new PatternParser(
+	public static final Parser SX_NME = new TermParser(
 			Pattern.compile("[A-Za-z_$][A-Za-z_$0-9]*"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_NME))
 	);
@@ -997,7 +997,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.31
 	 */
 	@NotNull
-	public static final Parser SX_NUM = new PatternParser(
+	public static final Parser SX_NUM = new TermParser(
 			Pattern.compile("(?:0[xb]|[0-9.])[0-9A-Fa-f_.]*(?:[Ee][0-9]*)?"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_NUM))
 	);
