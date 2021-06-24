@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.instruction.feature;
+package org.jamplate.instruction.flow;
 
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;

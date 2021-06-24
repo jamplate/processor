@@ -15,7 +15,6 @@
  */
 package org.jamplate.instruction.flow;
 
-import org.jamplate.instruction.feature.Idle;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Memory;
