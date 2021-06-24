@@ -29,7 +29,7 @@ import java.util.Objects;
  * <pre>
  *     [..., address:text]
  *     [...]
- *     [..., value:array]
+ *     [..., value:text]
  * </pre>
  *
  * @author LSafer
