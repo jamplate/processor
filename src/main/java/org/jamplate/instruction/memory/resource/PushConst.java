@@ -35,6 +35,14 @@ import java.util.Objects;
  * @since 0.3.0 ~2021.06.11
  */
 public class PushConst implements Instruction {
+	/**
+	 * A constant push-const instruction that pushes {@link Value#NULL}.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@NotNull
+	public static final PushConst NULL = new PushConst(Value.NULL);
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -6262887458863783425L;
 
