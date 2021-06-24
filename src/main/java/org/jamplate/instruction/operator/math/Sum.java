@@ -41,14 +41,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Add implements Instruction {
+public class Sum implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Add INSTANCE = new Add();
+	public static final Sum INSTANCE = new Sum();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3448952003441559955L;
@@ -67,7 +67,7 @@ public class Add implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Add() {
+	public Sum() {
 		this.tree = null;
 	}
 
@@ -79,7 +79,7 @@ public class Add implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Add(@NotNull Tree tree) {
+	public Sum(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
