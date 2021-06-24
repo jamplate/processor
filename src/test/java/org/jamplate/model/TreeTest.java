@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class TreeTest {
 	@Test
-	public void same1() {
+	public void same0() {
 		Document d = new PseudoDocument();
 
 		Tree bgr = new Tree(d, new Reference(0, 10), 0);

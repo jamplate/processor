@@ -46,7 +46,7 @@ public class ReferenceTest {
 	}
 
 	@Test
-	public void relations() {
+	public void relations0() {
 		Document document = new PseudoDocument("ABC0123");
 		Reference reference = new Reference(0, document.read().length());
 		Reference letters = reference.subReference(0, 3);
