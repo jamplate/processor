@@ -42,7 +42,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CM_BLK = new PatternRangeParser(
+	public static final Parser CM_BLK = new EnclosureParser(
 			Pattern.compile("/\\*"),
 			Pattern.compile("\\*/"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_BLK)),
@@ -68,7 +68,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CM_SLN = new PatternRangeParser(
+	public static final Parser CM_SLN = new EnclosureParser(
 			Pattern.compile("//"),
 			Pattern.compile("(?=[\r\n]|$)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CM_SLN)),
@@ -97,7 +97,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CX_CMD = new PatternRangeParser(
+	public static final Parser CX_CMD = new EnclosureParser(
 			Pattern.compile("(?<=^|[\r\n])[\\t ]*#"),
 			Pattern.compile("(?=[\r\n]|$)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_CMD)),
@@ -707,7 +707,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.19
 	 */
 	@NotNull
-	public static final Parser CX_INJ = new PatternRangeParser(
+	public static final Parser CX_INJ = new EnclosureParser(
 			Pattern.compile("#\\{"),
 			Pattern.compile("\\}#"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.CX_INJ)),
@@ -934,7 +934,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_CUR = new PatternRangeParser(
+	public static final Parser SX_CUR = new EnclosureParser(
 			Pattern.compile("\\{"),
 			Pattern.compile("\\}"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_CUR)),
@@ -960,7 +960,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_DQT = new PatternRangeParser(
+	public static final Parser SX_DQT = new EnclosureParser(
 			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
 			Pattern.compile("(?<!(?<!\\\\)\\\\)\""),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_DQT)),
@@ -1008,7 +1008,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_QTE = new PatternRangeParser(
+	public static final Parser SX_QTE = new EnclosureParser(
 			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
 			Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_QTE)),
@@ -1034,7 +1034,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_RND = new PatternRangeParser(
+	public static final Parser SX_RND = new EnclosureParser(
 			Pattern.compile("\\("),
 			Pattern.compile("\\)"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_RND)),
@@ -1060,7 +1060,7 @@ public final class Parsers {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@NotNull
-	public static final Parser SX_SQR = new PatternRangeParser(
+	public static final Parser SX_SQR = new EnclosureParser(
 			Pattern.compile("\\["),
 			Pattern.compile("\\]"),
 			(d, r) -> new Tree(d, r, new Sketch(Kind.SX_SQR)),

@@ -15,12 +15,12 @@
  */
 package org.jamplate.internal.util.parser.pattern;
 
+import org.jamplate.function.Parser;
 import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Parser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public class PatternRangeParser implements Parser {
+public class EnclosureParser implements Parser {
 	/**
 	 * The constructor of the resultant tree.
 	 *
@@ -96,7 +96,7 @@ public class PatternRangeParser implements Parser {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@SafeVarargs
-	public PatternRangeParser(
+	public EnclosureParser(
 			@NotNull Pattern startPattern,
 			@NotNull Pattern endPattern,
 			int zIndex,
@@ -135,7 +135,7 @@ public class PatternRangeParser implements Parser {
 	 * @since 0.2.0 ~2021.05.16
 	 */
 	@SafeVarargs
-	public PatternRangeParser(
+	public EnclosureParser(
 			@NotNull Pattern startPattern,
 			@NotNull Pattern endPattern,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
