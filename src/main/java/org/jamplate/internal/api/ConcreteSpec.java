@@ -154,7 +154,7 @@ public class ConcreteSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return Spec.super.getQualifiedName();
+		return this.qualifiedName;
 	}
 
 	@Override
