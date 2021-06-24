@@ -68,6 +68,10 @@ public class Block implements Instruction {
 	 * <br>
 	 * Note: if a block instruction is among the given {@code instruction}, the
 	 * constructed block might just flatten that block.
+	 * <br>
+	 * Note: {@link Idle} instructions in the given array might be ignored.
+	 * <br>
+	 * Note: nulls in the given array will be completely ignored.
 	 *
 	 * @param instructions the instructions for the constructed instruction to execute.
 	 * @throws NullPointerException if the given {@code instructions} is null.
@@ -100,6 +104,10 @@ public class Block implements Instruction {
 	 * <br>
 	 * Note: if a block instruction is among the given {@code instruction}, the
 	 * constructed block might just flatten that block.
+	 * <br>
+	 * Note: {@link Idle} instructions in the given array might be ignored.
+	 * <br>
+	 * Note: nulls in the given iterable will be completely ignored.
 	 *
 	 * @param instructions the instructions for the constructed instruction to execute.
 	 * @throws NullPointerException if the given {@code instructions} is null.
@@ -131,6 +139,10 @@ public class Block implements Instruction {
 	 * <br>
 	 * Note: if a block instruction is among the given {@code instruction}, the
 	 * constructed block might just flatten that block.
+	 * <br>
+	 * Note: {@link Idle} instructions in the given array might be ignored.
+	 * <br>
+	 * Note: nulls in the given array will be completely ignored.
 	 *
 	 * @param tree         a reference for the constructed instruction in the source
 	 *                     code.
@@ -166,6 +178,10 @@ public class Block implements Instruction {
 	 * <br>
 	 * Note: if a block instruction is among the given {@code instruction}, the
 	 * constructed block might just flatten that block.
+	 * <br>
+	 * Note: {@link Idle} instructions in the given array might be ignored.
+	 * <br>
+	 * Note: nulls in the given iterable will be completely ignored.
 	 *
 	 * @param tree         a reference for the constructed instruction in the source
 	 *                     code.
