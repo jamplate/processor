@@ -38,14 +38,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Subtract implements Instruction {
+public class Difference implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Subtract INSTANCE = new Subtract();
+	public static final Difference INSTANCE = new Difference();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8918042984392129152L;
@@ -64,7 +64,7 @@ public class Subtract implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Subtract() {
+	public Difference() {
 		this.tree = null;
 	}
 
@@ -76,7 +76,7 @@ public class Subtract implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Subtract(@NotNull Tree tree) {
+	public Difference(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
