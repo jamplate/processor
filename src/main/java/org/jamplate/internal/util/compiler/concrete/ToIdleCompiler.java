@@ -15,11 +15,11 @@
  */
 package org.jamplate.internal.util.compiler.concrete;
 
-import org.jamplate.impl.instruction.Idle;
+import org.jamplate.function.Compiler;
+import org.jamplate.instruction.feature.Idle;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
