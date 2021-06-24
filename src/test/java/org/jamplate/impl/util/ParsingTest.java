@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 public class ParsingTest {
 	@Test
 	public void parse() {

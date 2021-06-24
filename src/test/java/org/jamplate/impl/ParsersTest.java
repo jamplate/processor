@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @version 0.0.0
  * @since 0.0.0 ~2021.05.30
  */
+@Deprecated
 public class ParsersTest {
 	@Test
 	public void ifs() {
