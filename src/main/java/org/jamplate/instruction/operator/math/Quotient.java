@@ -38,14 +38,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.11
  */
-public class Divide implements Instruction {
+public class Quotient implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.11
 	 */
 	@NotNull
-	public static final Divide INSTANCE = new Divide();
+	public static final Quotient INSTANCE = new Quotient();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 3667493368990207838L;
@@ -64,7 +64,7 @@ public class Divide implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Divide() {
+	public Quotient() {
 		this.tree = null;
 	}
 
@@ -76,7 +76,7 @@ public class Divide implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public Divide(@NotNull Tree tree) {
+	public Quotient(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
