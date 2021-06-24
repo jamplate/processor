@@ -4,6 +4,7 @@ import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.impl.processor.ParserProcessor;
+import org.jamplate.internal.util.IO;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jamplate.function.Processor;
@@ -93,7 +94,7 @@ public class JamplateTest {
 			} catch (ExecutionException e) {
 				System.err.print(e.getTree().document());
 				System.err.print(":");
-				System.err.print(Trees.line(e.getTree()));
+				System.err.print(IO.line(e.getTree()));
 				System.err.print(": ");
 				System.err.print(e.getMessage());
 				System.err.println();
@@ -105,7 +106,7 @@ public class JamplateTest {
 					System.err.print("(");
 					System.err.print(tree.document());
 					System.err.print(":");
-					System.err.print(Trees.line(frame.getInstruction().getTree()));
+					System.err.print(IO.line(frame.getInstruction().getTree()));
 					System.err.print(")");
 					System.err.println();
 				}
@@ -168,7 +169,7 @@ public class JamplateTest {
 				System.err.print("(");
 				System.err.print(document);
 				System.err.print(":");
-				System.err.print(Trees.line(frame.getInstruction().getTree()));
+				System.err.print(IO.line(frame.getInstruction().getTree()));
 				System.err.print(")");
 				System.err.println();
 			}
@@ -210,7 +211,7 @@ public class JamplateTest {
 				memory = new Memory();
 				memory.getFrame().setInstruction(instruction);
 
-				Trees.readLine(compilation.getRootTree().getChild().getNext().getNext());
+				IO.readLine(compilation.getRootTree().getChild().getNext().getNext());
 				instruction.exec(environment, memory);
 
 				System.out.println(
@@ -235,11 +236,11 @@ public class JamplateTest {
 				System.err.println(
 						e.getTree().document() +
 						":" +
-						Trees.line(e.getTree()) +
+						IO.line(e.getTree()) +
 						": " +
 						e.getMessage() +
 						"\n\t" +
-						Trees.readLine(e.getTree())
+						IO.readLine(e.getTree())
 				);
 		} catch (ExecutionException e) {
 			Tree eTree = e.getTree();
@@ -254,7 +255,7 @@ public class JamplateTest {
 				System.err.println(
 						eTree.document() +
 						":" +
-						Trees.line(eTree) +
+						IO.line(eTree) +
 						": " +
 						e.getMessage()
 				);
@@ -270,7 +271,7 @@ public class JamplateTest {
 								"(" +
 								frameTree.document() +
 								":" +
-								Trees.line(frame.getInstruction().getTree()) +
+								IO.line(frame.getInstruction().getTree()) +
 								")"
 						);
 				}
@@ -318,7 +319,7 @@ public class JamplateTest {
 				memory = new Memory();
 				memory.getFrame().setInstruction(instruction);
 
-				Trees.readLine(compilation.getRootTree().getChild().getNext().getNext());
+				IO.readLine(compilation.getRootTree().getChild().getNext().getNext());
 				instruction.exec(environment, memory);
 
 				System.out.println(
@@ -343,11 +344,11 @@ public class JamplateTest {
 				System.err.println(
 						e.getTree().document() +
 						":" +
-						Trees.line(e.getTree()) +
+						IO.line(e.getTree()) +
 						": " +
 						e.getMessage() +
 						"\n\t" +
-						Trees.readLine(e.getTree())
+						IO.readLine(e.getTree())
 				);
 		} catch (ExecutionException e) {
 			Tree eTree = e.getTree();
@@ -362,7 +363,7 @@ public class JamplateTest {
 				System.err.println(
 						eTree.document() +
 						":" +
-						Trees.line(eTree) +
+						IO.line(eTree) +
 						": " +
 						e.getMessage()
 				);
@@ -378,7 +379,7 @@ public class JamplateTest {
 								"(" +
 								frameTree.document() +
 								":" +
-								Trees.line(frame.getInstruction().getTree()) +
+								IO.line(frame.getInstruction().getTree()) +
 								")"
 						);
 				}
