@@ -37,8 +37,8 @@ import java.util.stream.IntStream;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:text, key:text, value:text]
- *     [..., result:text]
+ *     [..., struct:text:lazy, key:text:lazy, value:text:lazy]
+ *     [..., result:text:lazy]
  * </pre>
  *
  * @author LSafer

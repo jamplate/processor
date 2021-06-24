@@ -33,9 +33,9 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:array]
+ *     [..., struct:array:lazy]
  *     [...]
- *     [..., inverted:array]
+ *     [..., inverted:array:lazy]
  * </pre>
  *
  * @author LSafer

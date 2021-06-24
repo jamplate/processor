@@ -32,9 +32,9 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [...null?, item0:array, item1:array, item2:array, ...]
+ *     [...null?, item0:array:lazy, item1:array:lazy, item2:array:lazy, ...]
  *     [...null?]
- *     [...null?, joint:array]
+ *     [...null?, joint:array:lazy]
  * </pre>
  *
  * @author LSafer

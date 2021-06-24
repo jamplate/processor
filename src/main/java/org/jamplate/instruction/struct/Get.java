@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:text, key:text]
- *     [..., value:text]
+ *     [..., struct:text:lazy, key:text:lazy]
+ *     [..., value:text:lazy]
  * </pre>
  *
  * @author LSafer

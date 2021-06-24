@@ -50,9 +50,9 @@ import java.util.stream.Collectors;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text]
+ *     [..., input:text:lazy]
  *     [...]
- *     [..., output:array]
+ *     [..., output:array:lazy]
  * </pre>
  *
  * @author LSafer

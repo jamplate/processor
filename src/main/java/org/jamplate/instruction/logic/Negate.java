@@ -31,9 +31,9 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., right:boolean]
+ *     [..., right:boolean:lazy]
  *     [...]
- *     [..., result:boolean]
+ *     [..., result:boolean:lazy]
  * </pre>
  *
  * @author LSafer

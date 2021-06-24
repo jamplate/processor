@@ -62,9 +62,9 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text]
+ *     [..., input:text:lazy]
  *     [...]
- *     [..., output:boolean]
+ *     [..., output:boolean:lazy]
  * </pre>
  *
  * @author LSafer

@@ -51,9 +51,9 @@ import java.util.stream.IntStream;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text]
+ *     [..., input:text:lazy]
  *     [...]
- *     [..., output:object]
+ *     [..., output:object:lazy]
  * </pre>
  *
  * @author LSafer
