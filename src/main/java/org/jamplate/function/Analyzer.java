@@ -32,6 +32,24 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface Analyzer {
 	/**
+	 * An analyzer that does nothing.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@NotNull
+	Analyzer IDLE = new Analyzer() {
+		@Override
+		public boolean analyze(@NotNull Compilation compilation, @NotNull Tree tree) {
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return "Analyzer.IDLE";
+		}
+	};
+
+	/**
 	 * Analyze the given {@code tree} and its relative trees.
 	 *
 	 * @param compilation the compilation of the given {@code tree}.

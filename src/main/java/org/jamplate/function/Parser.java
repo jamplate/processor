@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOError;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -32,6 +33,25 @@ import java.util.Set;
  */
 @FunctionalInterface
 public interface Parser {
+	/**
+	 * A parser that parses nothing.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@NotNull
+	Parser IDLE = new Parser() {
+		@NotNull
+		@Override
+		public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
+			return Collections.emptySet();
+		}
+
+		@Override
+		public String toString() {
+			return "Parser.IDLE";
+		}
+	};
+
 	/**
 	 * Parse the given {@code sketch} with respect to the given {@code compilation}.
 	 *

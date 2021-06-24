@@ -30,6 +30,24 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface Processor {
 	/**
+	 * A processor that does nothing.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@NotNull
+	Processor IDLE = new Processor() {
+		@Override
+		public boolean process(@NotNull Compilation compilation) {
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return "Processor.IDLE";
+		}
+	};
+
+	/**
 	 * Process the given {@code compilation}.
 	 * <br>
 	 * If this method returned {@code true}. The compilation process will have another

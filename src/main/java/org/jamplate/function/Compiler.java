@@ -36,6 +36,25 @@ import java.io.IOError;
 @FunctionalInterface
 public interface Compiler {
 	/**
+	 * A compiler that compiles nothing.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@NotNull
+	Compiler IDLE = new Compiler() {
+		@Nullable
+		@Override
+		public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return "Compiler.IDLE";
+		}
+	};
+
+	/**
 	 * Compile the given {@code tree} and the trees in it. If this compiler cannot If this
 	 * compiler encountered a tree that it cannot compile, this compiler will pass it to
 	 * the given fallback {@code compiler} with the given {@code compiler} as the fallback
