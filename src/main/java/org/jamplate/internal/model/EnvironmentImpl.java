@@ -16,9 +16,11 @@
 package org.jamplate.internal.model;
 
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.impl.Kind;
 import org.jamplate.internal.diagnostic.DiagnosticImpl;
-import org.jamplate.model.*;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Document;
+import org.jamplate.model.Environment;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -151,7 +153,7 @@ public class EnvironmentImpl implements Environment {
 	public Compilation optCompilation(@NotNull Document document) {
 		Objects.requireNonNull(document, "document");
 		return this.compilations.computeIfAbsent(document, k ->
-				new CompilationImpl(this, new Tree(document, new Sketch(Kind.DC_ROT), -1))
+				new CompilationImpl(this, new Tree(document, -1))
 		);
 	}
 
