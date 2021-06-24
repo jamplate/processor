@@ -16,7 +16,6 @@
 package org.jamplate.model;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -114,7 +113,7 @@ public class CompileException extends RuntimeException {
 	 * @param tree    a tree reference where the failure occurred.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public CompileException(@Nullable String message, @NotNull Tree tree) {
+	public CompileException(@Nullable String message, @Nullable Tree tree) {
 		super(message);
 		this.tree = tree;
 	}
