@@ -29,6 +29,7 @@ import org.jamplate.model.Compilation;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Memory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,22 +64,34 @@ public class ContextSpec implements Spec {
 	/**
 	 * Construct a new subspec supporting spec.
 	 *
+	 * @param subspecs initial subspecs.
+	 * @throws NullPointerException if the given {@code subspecs} is null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ContextSpec() {
+	public ContextSpec(@Nullable Spec @NotNull ... subspecs) {
+		Objects.requireNonNull(subspecs, "subspecs");
 		this.qualifiedName = "ContextSpec" + this.hashCode();
+		for (Spec spec : subspecs)
+			if (spec != null)
+				this.specs.add(spec);
 	}
 
 	/**
 	 * Construct a new subspec supporting spec.
 	 *
+	 * @param subspecs      initial subspecs.
 	 * @param qualifiedName the qualified name of the constructed spec.
-	 * @throws NullPointerException if the given {@code qualifiedName} is null.
+	 * @throws NullPointerException if the given {@code qualifiedName} or {@code subspecs}
+	 *                              is null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ContextSpec(@NotNull String qualifiedName) {
+	public ContextSpec(@NotNull String qualifiedName, @Nullable Spec @NotNull ... subspecs) {
 		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		Objects.requireNonNull(subspecs, "subspecs");
 		this.qualifiedName = qualifiedName;
+		for (Spec spec : subspecs)
+			if (spec != null)
+				this.specs.add(spec);
 	}
 
 	@Override
