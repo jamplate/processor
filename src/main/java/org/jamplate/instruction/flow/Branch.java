@@ -19,6 +19,8 @@ import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -129,6 +131,7 @@ public class Branch implements Instruction {
 				this.branch.exec(environment, memory);
 				break;
 			case "false":
+				this.fallback.exec(environment, memory);
 				break;
 			default:
 				throw new ExecutionException(
@@ -142,5 +145,11 @@ public class Branch implements Instruction {
 	@Override
 	public Tree getTree() {
 		return this.tree;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Instruction> iterator() {
+		return Arrays.asList(this.branch, this.fallback).iterator();
 	}
 }

@@ -22,10 +22,7 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -223,5 +220,11 @@ public class Block implements Instruction {
 	@Override
 	public Tree getTree() {
 		return this.tree;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Instruction> iterator() {
+		return Collections.unmodifiableList(this.instructions).iterator();
 	}
 }

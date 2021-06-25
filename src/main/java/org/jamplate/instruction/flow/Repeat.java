@@ -19,6 +19,8 @@ import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -115,5 +117,11 @@ public class Repeat implements Instruction {
 	@Override
 	public Tree getTree() {
 		return this.tree;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Instruction> iterator() {
+		return Collections.singleton(this.instruction).iterator();
 	}
 }
