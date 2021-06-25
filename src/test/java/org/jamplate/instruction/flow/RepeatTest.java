@@ -1,9 +1,5 @@
 package org.jamplate.instruction.flow;
 
-import org.jamplate.instruction.cast.CastArray;
-import org.jamplate.instruction.cast.CastBoolean;
-import org.jamplate.instruction.feature.Idle;
-import org.jamplate.instruction.logic.Compare;
 import org.jamplate.instruction.memory.frame.DumpFrame;
 import org.jamplate.instruction.memory.frame.JoinFrame;
 import org.jamplate.instruction.memory.frame.PushFrame;
@@ -12,8 +8,11 @@ import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.instruction.memory.stack.Dup;
 import org.jamplate.instruction.memory.stack.Pop;
 import org.jamplate.instruction.memory.stack.Swap;
-import org.jamplate.instruction.struct.Invert;
-import org.jamplate.instruction.struct.Split;
+import org.jamplate.instruction.operator.cast.CastArray;
+import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Compare;
+import org.jamplate.instruction.operator.struct.Invert;
+import org.jamplate.instruction.operator.struct.Split;
 import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
