@@ -16,7 +16,7 @@
 package org.jamplate.internal.util.compiler.concrete;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.feature.Idle;
+import org.jamplate.instruction.flow.Idle;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
