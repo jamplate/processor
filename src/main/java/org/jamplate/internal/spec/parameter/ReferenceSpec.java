@@ -25,11 +25,10 @@ import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.instruction.memory.stack.Dup;
 import org.jamplate.instruction.memory.stack.Pop;
 import org.jamplate.instruction.operator.logic.Defined;
-import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.spec.syntax.term.WordSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -76,20 +75,19 @@ public class ReferenceSpec implements Spec {
 							Access.INSTANCE,
 							//duplicate the value to be null checked first
 							Dup.INSTANCE,
-							//null check
+							//null check (true if not null)
 							Defined.INSTANCE,
-							//negate null check result
-							Negate.INSTANCE,
-							//branch if null
+							//branch if not null
 							new Branch(
+									//the value is not null, no need to replace
+									Idle.INSTANCE,
+									//value is null, replace
 									new Block(
 											//pop the duplicate value (it is null)
 											Pop.INSTANCE,
 											//push the name of the reference
 											new PushConst(tree, m -> text)
-									),
-									//otherwise, do nothing
-									Idle.INSTANCE
+									)
 							)
 					);
 				}
