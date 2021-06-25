@@ -37,6 +37,13 @@ public class AnchorSpec implements Spec {
 	public static final AnchorSpec INSTANCE = new AnchorSpec();
 
 	/**
+	 * The key to access the body between opening and closing anchors.
+	 *
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	public static final Node.Key KEY_BODY = Sketch.component("anchor:body");
+	/**
 	 * The key to access the closing anchor.
 	 *
 	 * @since 0.3.0 ~2021.06.20
@@ -51,6 +58,13 @@ public class AnchorSpec implements Spec {
 	@NotNull
 	public static final Node.Key KEY_OPEN = Sketch.component("anchor:open");
 
+	/**
+	 * The kind of the body between opening and closing anchors.
+	 *
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	public static final String KIND_BODY = "anchor:body";
 	/**
 	 * The kind of a closing anchor.
 	 *
@@ -73,6 +87,13 @@ public class AnchorSpec implements Spec {
 	 */
 	@NotNull
 	public static final String NAME = AnchorSpec.class.getSimpleName();
+
+	/**
+	 * The z-index of the body between opening and closing anchors.
+	 *
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	public static final int Z_INDEX_BODY = -100;
 
 	@NotNull
 	@Override

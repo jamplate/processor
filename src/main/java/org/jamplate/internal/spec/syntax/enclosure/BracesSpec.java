@@ -17,10 +17,10 @@ package org.jamplate.internal.spec.syntax.enclosure;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.spec.standard.AnchorSpec;
-import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.internal.function.parser.wrapper.HierarchyParser;
+import org.jamplate.internal.spec.standard.AnchorSpec;
+import org.jamplate.internal.util.Functions;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +69,13 @@ public class BracesSpec implements Spec {
 				p -> new EnclosureParser(
 						Pattern.compile("\\{"),
 						Pattern.compile("\\}"),
-						(d, r) -> new Tree(d, r, new Sketch(BracesSpec.KIND)),
+						//enclosure constructor
+						(d, r) -> new Tree(
+								d,
+								r,
+								new Sketch(BracesSpec.KIND)
+						),
+						//open anchor constructor
 						(t, r) -> t.offer(new Tree(
 								t.document(),
 								r,
@@ -77,12 +83,22 @@ public class BracesSpec implements Spec {
 								 .get(AnchorSpec.KEY_OPEN)
 								 .setKind(AnchorSpec.KIND_OPEN)
 						)),
+						//close anchor constructor
 						(t, r) -> t.offer(new Tree(
 								t.document(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_CLOSE)
 								 .setKind(AnchorSpec.KIND_CLOSE)
+						)),
+						//body wrapper constructor
+						(t, r) -> t.offer(new Tree(
+								t.document(),
+								r,
+								t.getSketch()
+								 .get(AnchorSpec.KEY_BODY)
+								 .setKind(AnchorSpec.KIND_BODY),
+								AnchorSpec.Z_INDEX_BODY
 						))
 				)
 		);

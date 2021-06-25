@@ -17,18 +17,20 @@ package org.jamplate.internal.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.internal.spec.standard.AnchorSpec;
-import org.jamplate.internal.spec.syntax.enclosure.BracketsSpec;
-import org.jamplate.internal.spec.syntax.symbol.CommaSpec;
-import org.jamplate.internal.util.Functions;
+import org.jamplate.instruction.flow.Block;
+import org.jamplate.instruction.memory.frame.DumpFrame;
+import org.jamplate.instruction.memory.frame.JoinFrame;
+import org.jamplate.instruction.memory.frame.PushFrame;
+import org.jamplate.instruction.operator.cast.CastArray;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToPushConstCompiler;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
-import org.jamplate.internal.function.compiler.wrapper.FilterWhitespaceCompiler;
-import org.jamplate.internal.function.compiler.wrapper.MandatoryCompiler;
+import org.jamplate.internal.spec.standard.AnchorSpec;
+import org.jamplate.internal.spec.syntax.enclosure.BracketsSpec;
+import org.jamplate.internal.spec.syntax.symbol.CommaSpec;
+import org.jamplate.internal.util.Functions;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -61,20 +63,43 @@ public class ArraySpec implements Spec {
 		return Functions.compiler(
 				//target brackets
 				c -> new FilterByKindCompiler(BracketsSpec.KIND, c),
-				//flatten non-parsed trees. but first, try to compile with other compilers
-				c -> new FlattenCompiler(FallbackCompiler.INSTANCE, c),
-				//when the condition is met, compile is mandatory
-				MandatoryCompiler::new,
-				//compile if not compiled by other compilers
+				//compile the whole context
+				c -> (compiler, compilation, tree) ->
+						new Block(
+								tree,
+								//push a frame to encapsulate the content of the array
+								new PushFrame(tree),
+								//execute inner parts
+								c.compile(compiler, compilation, tree),
+								//join the execution result
+								JoinFrame.INSTANCE,
+								//reformat the array
+								CastArray.INSTANCE,
+								//dump the frame
+								DumpFrame.INSTANCE
+						),
+				//flatten parts
+				FlattenCompiler::new,
+				//compile anchors, commas, body
 				c -> new FirstCompileCompiler(
-						//if not compiled, compile opening anchors to PushConst
+						//compile opening anchors to PushConst
 						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToPushConstCompiler.INSTANCE),
-						//if not compiled, compile closing anchors to PushConst
+						//compile closing anchors to PushConst
 						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToPushConstCompiler.INSTANCE),
-						//if not compiled, compile commas (,) to PushConst
-						new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
-						//if not compile, compile whitespaces to Idle
-						new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE)
+						//compile body
+						Functions.compiler(
+								//target body
+								cc -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, cc),
+								//flatten body parts
+								FlattenCompiler::new,
+								//compile each part
+								cc -> new FirstCompileCompiler(
+										//compile commas (,) to PushConst
+										new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
+										//compile others using the fallback compiler
+										FallbackCompiler.INSTANCE
+								)
+						)
 				)
 		);
 	}

@@ -17,8 +17,8 @@ package org.jamplate.internal.spec.syntax.comment;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.spec.standard.AnchorSpec;
 import org.jamplate.internal.function.parser.pattern.EnclosureParser;
+import org.jamplate.internal.spec.standard.AnchorSpec;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
@@ -64,12 +64,29 @@ public class CommentLineSpec implements Spec {
 		return new EnclosureParser(
 				Pattern.compile("//"),
 				Pattern.compile("(?=[\r\n])(?<!\\\\)|(?=$)"),
-				(d, r) -> new Tree(d, r, new Sketch(CommentLineSpec.KIND)),
+				//enclosure constructor
+				(d, r) -> new Tree(
+						d,
+						r,
+						new Sketch(CommentLineSpec.KIND)
+				),
+				//open anchor constructor
 				(t, r) -> t.offer(new Tree(
 						t.document(),
 						t.getSketch()
 						 .get(AnchorSpec.KEY_OPEN)
 						 .setKind(AnchorSpec.KIND_OPEN)
+				)),
+				//close anchor constructor
+				null,
+				//body wrapper constructor
+				(t, r) -> t.offer(new Tree(
+						t.document(),
+						r,
+						t.getSketch()
+						 .get(AnchorSpec.KEY_BODY)
+						 .setKind(AnchorSpec.KIND_BODY),
+						AnchorSpec.Z_INDEX_BODY
 				))
 		);
 	}

@@ -17,13 +17,15 @@ package org.jamplate.internal.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
+import org.jamplate.instruction.flow.Block;
+import org.jamplate.instruction.memory.frame.DumpFrame;
+import org.jamplate.instruction.memory.frame.JoinFrame;
+import org.jamplate.instruction.memory.frame.PushFrame;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
-import org.jamplate.internal.function.compiler.wrapper.FilterWhitespaceCompiler;
-import org.jamplate.internal.function.compiler.wrapper.MandatoryCompiler;
 import org.jamplate.internal.spec.standard.AnchorSpec;
 import org.jamplate.internal.spec.syntax.enclosure.ParenthesesSpec;
 import org.jamplate.internal.util.Functions;
@@ -59,18 +61,36 @@ public class GroupSpec implements Spec {
 		return Functions.compiler(
 				//target parentheses
 				c -> new FilterByKindCompiler(ParenthesesSpec.KIND, c),
-				//flatten non-parsed trees. but first, try to compile with other compilers
-				c -> new FlattenCompiler(FallbackCompiler.INSTANCE, c),
-				//when the condition is met, compile is mandatory
-				MandatoryCompiler::new,
-				//compile if not compiled by other compilers
+				//compile the whole context
+				c -> (compiler, compilation, tree) ->
+						new Block(
+								tree,
+								//push a frame to encapsulate the content of the group
+								new PushFrame(tree),
+								//execute inner parts
+								c.compile(compiler, compilation, tree),
+								//join the execution results
+								JoinFrame.INSTANCE,
+								//dump the frame
+								DumpFrame.INSTANCE
+						),
+				//flatten parts
+				FlattenCompiler::new,
+				//compile anchors and body
 				c -> new FirstCompileCompiler(
-						//if not compiled, compile opening anchors to Idle
+						//compile opening anchors to Idle
 						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToIdleCompiler.INSTANCE),
-						//if not compiled, compile closing anchors to Idle
+						//compile closing anchors to Idle
 						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE),
-						//if not compiled, compile whitespace to Idle
-						new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE)
+						//compile body
+						Functions.compiler(
+								//target body
+								cc -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, cc),
+								//flatten body parts
+								FlattenCompiler::new,
+								//compile each part using the fallback compiler
+								cc -> FallbackCompiler.INSTANCE
+						)
 				)
 		);
 	}
