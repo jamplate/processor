@@ -13,12 +13,12 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.compiler;
+package org.jamplate.internal.util.compiler.wrapper;
 
+import org.jamplate.function.Compiler;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,6 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.28
  */
-@Deprecated
 public class ExclusiveCompiler implements Compiler {
 	/**
 	 * The fallback compiler.
