@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
-public final class Memory implements Closeable {
+public final class Memory implements Iterable<Frame>, Closeable {
 	/**
 	 * The frames in this memory. Always not empty.
 	 *
@@ -79,6 +79,19 @@ public final class Memory implements Closeable {
 	public void close() throws IOException {
 		if (this.console instanceof Closeable)
 			((Closeable) this.console).close();
+	}
+
+	/**
+	 * Return an immutable iterator over the frames in this memory. (from the base to the
+	 * top)
+	 *
+	 * @return an iterator over the frames in the memory.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	@Override
+	public Iterator<Frame> iterator() {
+		return Collections.unmodifiableCollection(this.frames).iterator();
 	}
 
 	/**

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.UnaryOperator;
 
 /**
@@ -29,7 +30,7 @@ import java.util.function.UnaryOperator;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
-public final class Frame {
+public final class Frame implements Iterable<Value> {
 	/**
 	 * The heap part of this frame.
 	 *
@@ -92,6 +93,18 @@ public final class Frame {
 	}
 
 	/**
+	 * An iterator that iterates over the values in the stack. (from bottom to top)
+	 *
+	 * @return an iterator over teh values in the stack of this frame.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	@Override
+	public Iterator<Value> iterator() {
+		return this.stack.iterator();
+	}
+
+	/**
 	 * Replace the value at the given {@code address} with the result of invoking the
 	 * given {@code operator} with the current value.
 	 * <br>
@@ -113,6 +126,19 @@ public final class Frame {
 			Value value = operator.apply(v == null ? Value.NULL : v);
 			return value == null ? Value.NULL : value;
 		});
+	}
+
+	/**
+	 * Execute the given {@code consumer} foreach allocation at the heap in this frame.
+	 *
+	 * @param consumer the consumer to be executed.
+	 * @throws NullPointerException if the given {@code consumer} is null.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@Contract(pure = true)
+	public void forEach(@NotNull BiConsumer<String, Value> consumer) {
+		Objects.requireNonNull(consumer, "consumer");
+		this.heap.forEach(consumer);
 	}
 
 	/**
