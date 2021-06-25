@@ -15,6 +15,7 @@
  */
 package org.jamplate.internal.api;
 
+import org.jamplate.api.Process;
 import org.jamplate.api.Spec;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Analyzer;
@@ -236,9 +237,9 @@ public class ContextSpec implements Spec {
 	}
 
 	@Override
-	public void onCreateCompilation(@NotNull Compilation compilation) {
+	public void onCreateCompilation(@Nullable Process process, @NotNull Compilation compilation) {
 		for (Spec spec : this)
-			spec.onCreateCompilation(compilation);
+			spec.onCreateCompilation(process, compilation);
 	}
 
 	@Override

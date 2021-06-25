@@ -25,6 +25,7 @@ import org.jamplate.model.Environment;
 import org.jamplate.model.Memory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -280,12 +281,13 @@ public interface Spec extends Iterable<Spec> {
 	 * A method that get invoked after the compilation get created for a document at a
 	 * unit where this spec is applied.
 	 *
+	 * @param process     the unit where this spec is applied. (optional)
 	 * @param compilation the created compilation.
 	 * @throws NullPointerException if the given {@code compilation} is null.
 	 * @since 0.3.0 ~2021.06.22
 	 */
 	@Contract(mutates = "param")
-	default void onCreateCompilation(@NotNull Compilation compilation) {
+	default void onCreateCompilation(@Nullable Process process, @NotNull Compilation compilation) {
 	}
 
 	/**

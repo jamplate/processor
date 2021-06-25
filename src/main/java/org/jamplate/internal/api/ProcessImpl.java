@@ -299,7 +299,7 @@ public class ProcessImpl implements Process {
 
 		environment.setCompilation(document, compilation);
 
-		spec.onCreateCompilation(compilation);
+		spec.onCreateCompilation(this, compilation);
 
 		return true;
 	}
