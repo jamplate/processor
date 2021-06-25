@@ -27,7 +27,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., address:text:lazy]
+ *     [..., address:text]
  *     [...]
  *     [..., value:text:lazy]
  * </pre>
@@ -85,14 +85,11 @@ public class Access implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
+		String text0 = value0.evaluate(memory);
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
+		Value value1 = memory.get(text0);
 
-			Value value1 = m.get(text0);
-
-			return value1.evaluate(m);
-		});
+		memory.push(value1);
 	}
 
 	@Nullable
