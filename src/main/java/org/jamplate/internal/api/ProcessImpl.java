@@ -28,6 +28,7 @@ import org.jamplate.internal.diagnostic.MessageKind;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -329,7 +330,8 @@ public class ProcessImpl implements Process {
 					break;
 
 				for (Tree tree : treeSet)
-					root.offer(tree);
+					for (Tree relative : Trees.collect(tree))
+						root.offer(relative);
 			}
 
 			return true;
