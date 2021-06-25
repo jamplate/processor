@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl;
 
-import org.jamplate.internal.util.parser.pattern.PatternParser;
-import org.jamplate.internal.util.parser.pattern.TermParser;
-import org.jamplate.internal.util.parser.pattern.EnclosureParser;
+import org.jamplate.internal.function.parser.pattern.PatternParser;
+import org.jamplate.internal.function.parser.pattern.TermParser;
+import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.function.Parser;

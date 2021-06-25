@@ -18,7 +18,7 @@ package org.jamplate.internal.spec.syntax.comment;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.spec.standard.AnchorSpec;
-import org.jamplate.internal.util.parser.pattern.EnclosureParser;
+import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;

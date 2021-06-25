@@ -29,7 +29,7 @@ import org.jamplate.instruction.operator.logic.Negate;
 import org.jamplate.internal.spec.syntax.term.WordSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -17,16 +17,16 @@ package org.jamplate.internal.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
+import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
+import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
+import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
+import org.jamplate.internal.function.compiler.router.FallbackCompiler;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.wrapper.FilterWhitespaceCompiler;
+import org.jamplate.internal.function.compiler.wrapper.MandatoryCompiler;
 import org.jamplate.internal.spec.standard.AnchorSpec;
 import org.jamplate.internal.spec.syntax.enclosure.ParenthesesSpec;
 import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.compiler.branch.FlattenCompiler;
-import org.jamplate.internal.util.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.util.compiler.router.FallbackCompiler;
-import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
-import org.jamplate.internal.util.compiler.wrapper.FilterWhitespaceCompiler;
-import org.jamplate.internal.util.compiler.wrapper.MandatoryCompiler;
 import org.jetbrains.annotations.NotNull;
 
 /**

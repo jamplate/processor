@@ -21,7 +21,7 @@ import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.internal.spec.syntax.enclosure.DoubleQuotesSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.internal.util.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONTokener;
