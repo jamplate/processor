@@ -254,7 +254,7 @@ public interface Spec extends Iterable<Spec> {
 	@NotNull
 	@Contract(pure = true)
 	default String getQualifiedName() {
-		return "Spec";
+		return "Spec" + this.hashCode();
 	}
 
 	/**

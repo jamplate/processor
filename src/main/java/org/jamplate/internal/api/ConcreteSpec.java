@@ -88,7 +88,7 @@ public class ConcreteSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	public ConcreteSpec() {
-		this.qualifiedName = "ConcreteSpec";
+		this.qualifiedName = "ConcreteSpec" + this.hashCode();
 	}
 
 	/**

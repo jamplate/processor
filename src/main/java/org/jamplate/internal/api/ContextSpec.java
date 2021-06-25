@@ -21,10 +21,10 @@ import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.function.Processor;
-import org.jamplate.internal.util.analyzer.group.SequentialAnalyzer;
-import org.jamplate.internal.util.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.util.parser.group.CombineParser;
-import org.jamplate.internal.util.processor.group.SequentialProcessor;
+import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
+import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
+import org.jamplate.internal.function.parser.group.CombineParser;
+import org.jamplate.internal.function.processor.group.SequentialProcessor;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Memory;
@@ -66,7 +66,7 @@ public class ContextSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	public ContextSpec() {
-		this.qualifiedName = "ContextSpec";
+		this.qualifiedName = "ContextSpec" + this.hashCode();
 	}
 
 	/**
