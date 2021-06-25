@@ -18,10 +18,10 @@ package org.jamplate.internal.spec.parameter;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.spec.syntax.enclosure.DoubleQuotesSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -63,7 +63,7 @@ public class StringSpec implements Spec {
 
 					try {
 						//re-interpret the text (unescape, including '\n', "\""... etc)
-						String interpreted = new JSONTokener(IO.read(tree).toString())
+						String interpreted = new JSONTokener(text)
 								.nextValue()
 								.toString();
 
