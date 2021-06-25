@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -31,7 +33,7 @@ import java.util.Objects;
  * @since 0.2.0 ~2021.05.21
  */
 @FunctionalInterface
-public interface Instruction extends Serializable {
+public interface Instruction extends Iterable<Instruction>, Serializable {
 	/**
 	 * Wrap the given {@code instruction} with another instruction delegates to the given
 	 * {@code instruction} when executed.
@@ -89,6 +91,20 @@ public interface Instruction extends Serializable {
 				return tree;
 			}
 		};
+	}
+
+	/**
+	 * Returns an iterator that iterates over the sub-instructions of this instruction.
+	 * This method is very implementation-specific and the default implementation will
+	 * return an empty iterator.
+	 *
+	 * @return an iterator iterating over the sub-instructions of this instruction.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	@Override
+	default Iterator<Instruction> iterator() {
+		return Collections.emptyIterator();
 	}
 
 	/**
