@@ -15,12 +15,14 @@
  */
 package org.jamplate.test.spec;
 
+import org.jamplate.api.Process;
 import org.jamplate.api.Spec;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -55,6 +57,14 @@ public class DebugSpec implements Spec {
 	@Override
 	public String getQualifiedName() {
 		return DebugSpec.NAME;
+	}
+
+	@Override
+	public void onCreateCompilation(@Nullable Process process, @NotNull Compilation compilation) {
+		Objects.requireNonNull(process, "process");
+		Objects.requireNonNull(compilation, "compilation");
+		System.out.println("Specification:");
+		System.out.println(this.format(1, process.getSpec()));
 	}
 
 	@Override
@@ -126,6 +136,23 @@ public class DebugSpec implements Spec {
 	protected String format(int indent, @NotNull Instruction instruction) {
 		StringBuilder buffer = new StringBuilder();
 		this.format(indent, buffer, instruction);
+		return buffer.toString();
+	}
+
+	/**
+	 * Return the graph of the given {@code spec}.
+	 *
+	 * @param indent the indention to indent the graph by.
+	 * @param spec   the spec to draw a graph of it.
+	 * @return a graph of the given {@code spec}.
+	 * @throws NullPointerException     if the given {@code spec} is null.
+	 * @throws IllegalArgumentException if the given {@code indent} is negative.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@Contract(pure = true)
+	protected String format(int indent, @NotNull Spec spec) {
+		StringBuilder buffer = new StringBuilder();
+		this.format(indent, buffer, spec);
 		return buffer.toString();
 	}
 
@@ -212,6 +239,38 @@ public class DebugSpec implements Spec {
 		for (Instruction sub : instruction)
 			//append format sub
 			this.format(indent + 1, buffer, sub);
+	}
+
+	/**
+	 * Draw the graph of the given {@code spec} to the given {@code buffer}.
+	 *
+	 * @param indent the indention to indent the graph by.
+	 * @param buffer the buffer to draw to.
+	 * @param spec   the spec to draw a graph of it.
+	 * @throws NullPointerException     if the given {@code buffer} or {@code spec} is
+	 *                                  null.
+	 * @throws IllegalArgumentException if the given {@code indent} is negative.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@Contract(mutates = "param2")
+	protected void format(int indent, @NotNull StringBuilder buffer, @NotNull Spec spec) {
+		Objects.requireNonNull(buffer, "buffer");
+		Objects.requireNonNull(spec, "spec");
+		if (indent < 0)
+			throw new IllegalArgumentException("indent < 0");
+
+		StringJoiner indentation = new StringJoiner("|\t", "\t", "|- ");
+		for (int i = 0; i < indent; i++)
+			indentation.add("");
+
+		String qualifiedName = spec.getQualifiedName();
+
+		buffer.append(indentation);
+		buffer.append(qualifiedName);
+		buffer.append("\n");
+
+		for (Spec subspec : spec)
+			this.format(indent + 1, buffer, subspec);
 	}
 
 	/**
