@@ -149,7 +149,7 @@ public class ProcessImpl implements Process {
 				environment.getDiagnostic()
 						   .print(new MessageImpl(
 								   "No instruction resulted",
-								   MessagePriority.ERROR,
+								   MessagePriority.WARNING,
 								   MessageKind.COMPILE,
 								   false,
 								   root
@@ -224,11 +224,9 @@ public class ProcessImpl implements Process {
 			//pre-execution
 			spec.onCreateMemory(compilation, memory);
 
-			memory.pushFrame(new Frame(instruction));
+			memory.getFrame().setInstruction(instruction);
 
 			instruction.exec(environment, memory);
-
-			memory.dumpFrame();
 
 			//post-execution
 			spec.onDestroyMemory(compilation, memory);
