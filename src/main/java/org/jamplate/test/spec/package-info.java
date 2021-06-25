@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Special instructions.
+ * Testing specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.15
+ * @since 0.3.0 ~2021.06.25
  */
-package org.jamplate.instruction.feature;
+package org.jamplate.test.spec;
