@@ -363,7 +363,8 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(pure = true)
 	@Override
 	public String toString() {
-		return this.sketch + " " + this.document + this.reference;
+		return this.sketch + " " + this.document + this.reference + "(" + this.zIndex +
+			   ")";
 	}
 
 	/**
