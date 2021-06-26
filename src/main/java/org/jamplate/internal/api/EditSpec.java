@@ -31,7 +31,7 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.19
  */
-public class ConcreteSpec implements Spec {
+public class EditSpec implements Spec {
 	/**
 	 * The current set pre-analyze processor.
 	 *
@@ -87,7 +87,7 @@ public class ConcreteSpec implements Spec {
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ConcreteSpec() {
+	public EditSpec() {
 		this.qualifiedName = "ConcreteSpec" + this.hashCode();
 	}
 
@@ -98,7 +98,7 @@ public class ConcreteSpec implements Spec {
 	 * @throws NullPointerException if the given {@code qualifiedName} is null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ConcreteSpec(@NotNull String qualifiedName) {
+	public EditSpec(@NotNull String qualifiedName) {
 		Objects.requireNonNull(qualifiedName, "qualifiedName");
 		this.qualifiedName = qualifiedName;
 	}
