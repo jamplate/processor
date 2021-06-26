@@ -68,7 +68,7 @@ public class ProcessImpl implements Process {
 	 */
 	public ProcessImpl() {
 		this.environment = new EnvironmentImpl();
-		this.spec = new ContextSpec("MainSpec");
+		this.spec = new MultiSpec("MainSpec");
 	}
 
 	@Override

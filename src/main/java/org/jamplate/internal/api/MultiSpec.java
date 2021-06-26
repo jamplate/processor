@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.19
  */
-public class ContextSpec implements Spec {
+public class MultiSpec implements Spec {
 	/**
 	 * The subspecs in this spec.
 	 *
@@ -69,7 +69,7 @@ public class ContextSpec implements Spec {
 	 * @throws NullPointerException if the given {@code subspecs} is null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ContextSpec(@Nullable Spec @NotNull ... subspecs) {
+	public MultiSpec(@Nullable Spec @NotNull ... subspecs) {
 		Objects.requireNonNull(subspecs, "subspecs");
 		this.qualifiedName = "ContextSpec" + this.hashCode();
 		for (Spec spec : subspecs)
@@ -86,7 +86,7 @@ public class ContextSpec implements Spec {
 	 *                              is null.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ContextSpec(@NotNull String qualifiedName, @Nullable Spec @NotNull ... subspecs) {
+	public MultiSpec(@NotNull String qualifiedName, @Nullable Spec @NotNull ... subspecs) {
 		Objects.requireNonNull(qualifiedName, "qualifiedName");
 		Objects.requireNonNull(subspecs, "subspecs");
 		this.qualifiedName = qualifiedName;
