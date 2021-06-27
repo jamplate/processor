@@ -132,7 +132,7 @@ public class CastObject implements Instruction {
 				} catch (JSONException ignored1) {
 					JSONObject object0 = new JSONObject();
 
-					object0.put(text0, 0);
+					object0.put(text0, "");
 
 					return String.valueOf(object0);
 				}
