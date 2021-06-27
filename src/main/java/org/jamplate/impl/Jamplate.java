@@ -32,6 +32,8 @@ import org.jamplate.internal.function.compiler.wrapper.ExclusiveCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.wrapper.MandatoryCompiler;
 import org.jamplate.internal.function.parser.group.CombineParser;
+import org.jamplate.internal.function.parser.merge.MergeByWeightParser;
+import org.jamplate.internal.function.parser.merge.MergeFlatByWeightParser;
 import org.jamplate.internal.function.processor.group.SequentialProcessor;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.function.parser.wrapper.HierarchyParser;

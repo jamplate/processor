@@ -13,11 +13,11 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.internal.function.parser.merge;
 
+import org.jamplate.function.Parser;
 import org.jamplate.model.Dominance;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Parser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,6 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.20
  */
-@Deprecated
 public class MergeFlatByWeightParser extends MergeByWeightParser {
 	/**
 	 * Construct a new parser that uses the given {@code parsers} preferring the results

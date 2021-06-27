@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.impl.parser;
+package org.jamplate.internal.function.parser.merge;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Dominance;
@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.17
  */
-@Deprecated
 public class MergeByWeightParser implements Parser {
 	/**
 	 * The parsers in order.
