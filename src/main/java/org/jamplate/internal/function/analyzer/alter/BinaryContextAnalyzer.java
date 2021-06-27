@@ -143,7 +143,7 @@ public class BinaryContextAnalyzer implements Analyzer {
 				endT = t;
 		}
 
-		if (startT == null || endT == null) {
+		if (startT != null && endT != null) {
 			Tree wrapper = this.constructor.apply(
 					document,
 					References.inclusive(
