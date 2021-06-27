@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.19
  */
-public interface Process {
+public interface Unit {
 	/**
 	 * Analyze the compilation of the given {@code document} in the environment set for
 	 * this unit using the analyzer of the spec set for this unit.

@@ -15,7 +15,7 @@
  */
 package org.jamplate.internal.api;
 
-import org.jamplate.api.Process;
+import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
@@ -38,14 +38,14 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * An implementation of the interface {@link Process}.
+ * An implementation of the interface {@link Unit}.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.19
  */
 @SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
-public class ProcessImpl implements Process {
+public class UnitImpl implements Unit {
 	/**
 	 * The current environment.
 	 *
@@ -66,7 +66,7 @@ public class ProcessImpl implements Process {
 	 *
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	public ProcessImpl() {
+	public UnitImpl() {
 		this.environment = new EnvironmentImpl();
 		this.spec = new MultiSpec("MainSpec");
 	}

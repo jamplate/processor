@@ -15,7 +15,7 @@
  */
 package org.jamplate.internal.api;
 
-import org.jamplate.api.Process;
+import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Analyzer;
@@ -237,9 +237,9 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public void onCreateCompilation(@Nullable Process process, @NotNull Compilation compilation) {
+	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
 		for (Spec spec : this)
-			spec.onCreateCompilation(process, compilation);
+			spec.onCreateCompilation(unit, compilation);
 	}
 
 	@Override

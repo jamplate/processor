@@ -15,9 +15,10 @@
  */
 package org.jamplate.test.spec;
 
-import org.jamplate.api.Process;
+import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
 import org.jamplate.diagnostic.Message;
+import org.jamplate.function.Processor;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
@@ -55,16 +56,46 @@ public class DebugSpec implements Spec {
 
 	@NotNull
 	@Override
+	public Processor getAnalyzeProcessor() {
+		return compilation -> {
+			System.out.println("Analyzing:");
+			System.out.println(this.format(1, compilation.getRootTree()));
+			return false;
+		};
+	}
+
+	@NotNull
+	@Override
+	public Processor getCompileProcessor() {
+		return compilation -> {
+			System.out.println("Compiling:");
+			System.out.println(this.format(1, compilation.getRootTree()));
+			return false;
+		};
+	}
+
+	@NotNull
+	@Override
+	public Processor getParseProcessor() {
+		return compilation -> {
+			System.out.println("Parsing:");
+			System.out.println(this.format(1, compilation.getRootTree()));
+			return false;
+		};
+	}
+
+	@NotNull
+	@Override
 	public String getQualifiedName() {
 		return DebugSpec.NAME;
 	}
 
 	@Override
-	public void onCreateCompilation(@Nullable Process process, @NotNull Compilation compilation) {
-		Objects.requireNonNull(process, "process");
+	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
+		Objects.requireNonNull(unit, "unit");
 		Objects.requireNonNull(compilation, "compilation");
 		System.out.println("Specification:");
-		System.out.println(this.format(1, process.getSpec()));
+		System.out.println(this.format(1, unit.getSpec()));
 	}
 
 	@Override
@@ -120,6 +151,23 @@ public class DebugSpec implements Spec {
 					break;
 			}
 		}
+	}
+
+	/**
+	 * Return the graph of the given {@code tree}.
+	 *
+	 * @param indent the indention to indent the graph by.
+	 * @param tree   the tree to draw a graph of it.
+	 * @return a graph of the given {@code tree}.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalArgumentException if the given {@code indent} is negative.
+	 * @since 0.3.0 ~2021.06.27
+	 */
+	@Contract(pure = true)
+	protected String format(int indent, @NotNull Tree tree) {
+		StringBuilder buffer = new StringBuilder();
+		this.format(indent, buffer, tree);
+		return buffer.toString();
 	}
 
 	/**
@@ -190,6 +238,38 @@ public class DebugSpec implements Spec {
 		StringBuilder buffer = new StringBuilder();
 		this.format(indent, buffer, console);
 		return buffer.toString();
+	}
+
+	/**
+	 * Draw the graph of the given {@code tree} to the given {@code buffer}.
+	 *
+	 * @param indent the indention to indent the graph by.
+	 * @param buffer the buffer to draw to.
+	 * @param tree   the tree to draw a graph of it.
+	 * @throws NullPointerException     if the given {@code buffer} or {@code tree} is
+	 *                                  null.
+	 * @throws IllegalArgumentException if the given {@code indent} is negative.
+	 * @since 0.3.0 ~2021.06.27
+	 */
+	@Contract(mutates = "param2")
+	protected void format(int indent, @NotNull StringBuilder buffer, @NotNull Tree tree) {
+		Objects.requireNonNull(buffer, "buffer");
+		Objects.requireNonNull(tree, "tree");
+		if (indent < 0)
+			throw new IllegalArgumentException("indent < 0");
+
+		StringJoiner indentation = new StringJoiner("|\t", "\t", "|- ");
+		for (int i = 0; i < indent; i++)
+			indentation.add("");
+
+		String treeString = tree.toString();
+
+		buffer.append(indentation);
+		buffer.append(treeString);
+		buffer.append("\n");
+
+		for (Tree child : tree)
+			this.format(indent + 1, buffer, child);
 	}
 
 	/**
