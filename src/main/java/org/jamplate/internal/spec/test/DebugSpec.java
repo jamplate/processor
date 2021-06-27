@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.test.spec;
+package org.jamplate.internal.spec.test;
 
 import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;

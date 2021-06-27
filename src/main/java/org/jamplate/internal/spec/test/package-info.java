@@ -20,4 +20,4 @@
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-package org.jamplate.test.spec;
+package org.jamplate.internal.spec.test;
