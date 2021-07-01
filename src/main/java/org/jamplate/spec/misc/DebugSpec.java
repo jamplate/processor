@@ -13,10 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.test;
+package org.jamplate.spec.misc;
 
-import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
+import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Processor;
 import org.jamplate.internal.diagnostic.MessagePriority;
@@ -58,8 +58,23 @@ public class DebugSpec implements Spec {
 	@Override
 	public Processor getAnalyzeProcessor() {
 		return compilation -> {
+			Instruction instruction = compilation.getInstruction();
+			Tree tree = compilation.getRootTree();
+			Document document = tree.document();
+
 			System.out.println("Analyzing:");
-			System.out.println(this.format(1, compilation.getRootTree()));
+
+			System.out.println("\t|- Document: " + document);
+
+			System.out.println("\t|- Tree:");
+			System.out.print(this.format(2, tree));
+
+			if (instruction != null) {
+				System.out.println("\t|- Instruction:");
+				System.out.print(this.format(2, compilation.getInstruction()));
+			}
+
+			System.out.println();
 			return false;
 		};
 	}
@@ -68,8 +83,23 @@ public class DebugSpec implements Spec {
 	@Override
 	public Processor getCompileProcessor() {
 		return compilation -> {
+			Instruction instruction = compilation.getInstruction();
+			Tree tree = compilation.getRootTree();
+			Document document = tree.document();
+
 			System.out.println("Compiling:");
-			System.out.println(this.format(1, compilation.getRootTree()));
+
+			System.out.println("\t|- Document: " + document);
+
+			System.out.println("\t|- Tree:");
+			System.out.print(this.format(2, tree));
+
+			if (instruction != null) {
+				System.out.println("\t|- Instruction:");
+				System.out.print(this.format(2, compilation.getInstruction()));
+			}
+
+			System.out.println();
 			return false;
 		};
 	}
@@ -78,8 +108,23 @@ public class DebugSpec implements Spec {
 	@Override
 	public Processor getParseProcessor() {
 		return compilation -> {
+			Instruction instruction = compilation.getInstruction();
+			Tree tree = compilation.getRootTree();
+			Document document = tree.document();
+
 			System.out.println("Parsing:");
-			System.out.println(this.format(1, compilation.getRootTree()));
+
+			System.out.println("\t|- Document: " + document);
+
+			System.out.println("\t|- Tree:");
+			System.out.print(this.format(2, tree));
+
+			if (instruction != null) {
+				System.out.println("\t|- Instruction:");
+				System.out.print(this.format(2, compilation.getInstruction()));
+			}
+
+			System.out.println();
 			return false;
 		};
 	}
@@ -94,28 +139,70 @@ public class DebugSpec implements Spec {
 	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
 		Objects.requireNonNull(unit, "unit");
 		Objects.requireNonNull(compilation, "compilation");
-		System.out.println("Specification:");
-		System.out.println(this.format(1, unit.getSpec()));
+		Spec spec = unit.getSpec();
+		Instruction instruction = compilation.getInstruction();
+		Tree tree = compilation.getRootTree();
+		Document document = tree.document();
+
+		System.out.println("Initializing:");
+
+		System.out.println("\t|- Document: " + document);
+
+		System.out.println("\t|- Spec:");
+		System.out.print(this.format(2, unit.getSpec()));
+
+		System.out.println("\t|- Tree:");
+		System.out.print(this.format(2, tree));
+
+		if (instruction != null) {
+			System.out.println("\t|- Instruction:");
+			System.out.print(this.format(2, compilation.getInstruction()));
+		}
+
+		System.out.println();
 	}
 
 	@Override
 	public void onCreateMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(memory, "memory");
-		System.out.println("Instruction:");
-		System.out.println(this.format(1, compilation.getInstruction()));
+		Instruction instruction = compilation.getInstruction();
+		Tree tree = compilation.getRootTree();
+		Document document = tree.document();
+
+		System.out.println("Executing:");
+
+		System.out.println("\t|- Document: " + document);
+
+		System.out.println("\t|- Tree:");
+		System.out.print(this.format(2, tree));
+
+		if (instruction != null) {
+			System.out.println("\t|- Instruction:");
+			System.out.print(this.format(2, compilation.getInstruction()));
+		}
+
+		System.out.println();
 	}
 
 	@Override
 	public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(memory, "memory");
-		System.out.println("Memory:");
+		Document document = compilation.getRootTree().document();
+
+		System.out.println("Result:");
+
+		System.out.println("\t|- Document: " + document);
+
+		System.out.println("\t|- Memory:");
 
 		for (Frame frame : memory.getFrames())
-			System.out.println(this.format(1, memory, frame));
+			System.out.print(this.format(2, memory, frame));
 
-		System.out.println(this.format(1, memory.getConsole()));
+		System.out.print(this.format(2, memory.getConsole()));
+
+		System.out.println();
 	}
 
 	@Override
@@ -151,6 +238,29 @@ public class DebugSpec implements Spec {
 					break;
 			}
 		}
+	}
+
+	@Override
+	public void onOptimize(@NotNull Compilation compilation, int mode) {
+		Objects.requireNonNull(compilation, "compilation");
+		Instruction instruction = compilation.getInstruction();
+		Tree tree = compilation.getRootTree();
+		Document document = tree.document();
+
+		System.out.println("Optimizing:");
+
+		System.out.println("\t|- Document: " + document);
+
+		System.out.println("\t|- Tree:");
+		System.out.print(this.format(2, tree));
+
+		if (instruction != null) {
+			System.out.println("\t|- Instruction:");
+			System.out.print(this.format(2, compilation.getInstruction()));
+		}
+
+		System.out.println();
+
 	}
 
 	/**
@@ -404,29 +514,30 @@ public class DebugSpec implements Spec {
 
 		buffer.append(indentationSub);
 		buffer.append("Stack:");
-		frame.forEach(value -> {
-			buffer.append("\n");
-			buffer.append(indentationSubSub);
-			buffer.append(
-					value == Value.NULL ?
-					"Value.NULL" :
-					value.evaluate(memory)
-			);
-		});
 		buffer.append("\n");
+		frame.forEach(value -> {
+			buffer.append(indentationSubSub);
+			buffer.append("[");
+			buffer.append(value.toString());
+			buffer.append("]");
+			buffer.append("\t");
+			buffer.append(value.evaluate(memory));
+			buffer.append("\n");
+		});
 
 		buffer.append(indentationSub);
 		buffer.append("Heap:");
+		buffer.append("\n");
 		frame.forEach((address, value) -> {
-			buffer.append("\n");
 			buffer.append(indentationSubSub);
 			buffer.append(address);
 			buffer.append(" ~> ");
-			buffer.append(
-					value == Value.NULL ?
-					"Value.NULL" :
-					value.evaluate(memory)
-			);
+			buffer.append("[");
+			buffer.append(value.toString());
+			buffer.append("]");
+			buffer.append("\t");
+			buffer.append(value.evaluate(memory));
+			buffer.append("\n");
 		});
 	}
 
@@ -464,5 +575,6 @@ public class DebugSpec implements Spec {
 
 		buffer.append(indentationSub);
 		buffer.append(consoleString);
+		buffer.append("\n");
 	}
 }
