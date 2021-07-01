@@ -102,6 +102,26 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private Sketch sketch;
 
 	/**
+	 * Construct a new tree with the same document, reference, z-index and a clone sketch
+	 * as the given {@code tree}.
+	 *
+	 * @param tree the tree to copy.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	public Tree(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		this.document = tree.document;
+		this.reference = tree.reference;
+		this.zIndex = tree.zIndex;
+		this.sketch = new Sketch(
+				this,
+				tree.sketch.getName(),
+				tree.sketch.getKind()
+		);
+	}
+
+	/**
 	 * Construct a new tree for the whole given {@code document}.
 	 *
 	 * @param document the document the constructed tree is for.
