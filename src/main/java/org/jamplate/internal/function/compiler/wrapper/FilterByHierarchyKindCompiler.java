@@ -22,7 +22,7 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A compiler that targets the trees with one of their parents has a pre-specified kind
@@ -41,12 +41,12 @@ public class FilterByHierarchyKindCompiler implements Compiler {
 	@NotNull
 	protected final Compiler compiler;
 	/**
-	 * Te kind of one of the parents of the trees to accept.
+	 * Te kinds of one of the parents of the trees to accept.
 	 *
 	 * @since 0.3.0 ~2021.06.20
 	 */
 	@NotNull
-	protected final String kind;
+	protected final Set<String> kinds;
 
 	/**
 	 * Construct a new parent-kind-filtered compiler that compiles trees with one of their
@@ -63,7 +63,25 @@ public class FilterByHierarchyKindCompiler implements Compiler {
 		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
-		this.kind = kind;
+		this.kinds = Collections.singleton(kind);
+	}
+
+	/**
+	 * Construct a new parent-kinds-filtered compiler that compiles trees with one of
+	 * their parents has the given {@code kinds} using the given {@code compiler}.
+	 *
+	 * @param kinds    the kinds of one of the parents of the trees the constructed
+	 *                 compiler will target.
+	 * @param compiler the wrapped compiler.
+	 * @throws NullPointerException if the given {@code kinds} or {@code compiler} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.20
+	 */
+	public FilterByHierarchyKindCompiler(@NotNull Compiler compiler, @Nullable String @NotNull ... kinds) {
+		Objects.requireNonNull(kinds, "kinds");
+		Objects.requireNonNull(compiler, "compiler");
+		this.compiler = compiler;
+		this.kinds = new HashSet<>(Arrays.asList(kinds));
 	}
 
 	@Nullable
@@ -78,7 +96,7 @@ public class FilterByHierarchyKindCompiler implements Compiler {
 				parent != null;
 				parent = parent.getParent()
 		)
-			if (parent.getSketch().getKind().equals(this.kind))
+			if (this.kinds.contains(parent.getSketch().getKind()))
 				return this.compiler.compile(compiler, compilation, tree);
 
 		return null;

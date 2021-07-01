@@ -14,12 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package containing implementations of the interface {@link
- * org.jamplate.function.Parser}.
+ * Rerouting analyzers.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.05.25
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.06.27
  */
-@Deprecated
-package org.jamplate.impl.parser;
+package org.jamplate.internal.function.analyzer.router;

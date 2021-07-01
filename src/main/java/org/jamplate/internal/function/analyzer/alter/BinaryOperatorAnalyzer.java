@@ -111,38 +111,36 @@ public class BinaryOperatorAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		Document document = tree.document();
+
 		Tree previous = tree.getPrevious();
 		Tree next = tree.getNext();
 
-		if (previous != null && next != null) {
-			Tree head = Trees.head(previous);
-			Tree tail = Trees.tail(next);
+		Tree head = Trees.head(tree);
+		Tree tail = Trees.tail(tree);
 
-			Tree wrapper = this.constructor.apply(
-					document,
-					References.inclusive(head, tail)
+		Tree wrapper = this.constructor.apply(
+				document,
+				References.inclusive(head, tail)
+		);
+
+		tree.offer(wrapper);
+
+		if (this.operatorConstructor != null)
+			this.operatorConstructor.accept(
+					wrapper,
+					tree
+			);
+		if (previous != null && this.leftConstructor != null)
+			this.leftConstructor.accept(
+					wrapper,
+					References.inclusive(head, previous)
+			);
+		if (next != null && this.rightConstructor != null)
+			this.rightConstructor.accept(
+					wrapper,
+					References.inclusive(next, tail)
 			);
 
-			tree.offer(wrapper);
-
-			if (this.operatorConstructor != null)
-				this.operatorConstructor.accept(
-						wrapper,
-						tree
-				);
-			if (this.leftConstructor != null)
-				this.leftConstructor.accept(
-						wrapper,
-						References.inclusive(head, previous)
-				);
-			if (this.rightConstructor != null)
-				this.rightConstructor.accept(
-						wrapper,
-						References.inclusive(next, tail)
-				);
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 }
