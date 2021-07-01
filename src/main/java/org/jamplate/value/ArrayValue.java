@@ -305,7 +305,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		return this.evaluateToken(memory)
 				   .stream()
 				   .map(value -> value.evaluate(memory))
-				   .collect(Collectors.joining(", ", "[", "]"));
+				   .collect(Collectors.joining(",", "[", "]"));
 	}
 
 	@NotNull
@@ -362,5 +362,39 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 					   .map(element -> element.evaluate(m))
 					   .orElse("");
 		};
+	}
+
+	/**
+	 * Return a new array that contains the elements of this array but with the given
+	 * {@code value} set at the given {@code index}.
+	 *
+	 * @param index the index to be set the value at in the returned object.
+	 * @param value the value to be set in the returned object.
+	 * @return an array from this array but with the given {@code value} at the given
+	 *        {@code index}.
+	 * @throws NullPointerException if the given {@code index} or {@code value} is null.
+	 * @since 0.3.0 ~2021.06.29
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public ArrayValue put(@NotNull NumberValue index, @NotNull Value value) {
+		Objects.requireNonNull(index, "index");
+		Objects.requireNonNull(value, "value");
+		return new ArrayValue((Function<Memory, List<Value>>) m -> {
+			//eval the elements
+			List<Value> elements = new ArrayList<>(this.evaluateToken(m));
+			//eval the index
+			double indexNumber = index.evaluatePrimitiveToken(m);
+
+			//fill if too small
+			while (elements.size() <= indexNumber)
+				elements.add(new TextValue(""));
+
+			//set
+			elements.set((int) indexNumber, value);
+
+			//return
+			return Collections.unmodifiableList(elements);
+		});
 	}
 }

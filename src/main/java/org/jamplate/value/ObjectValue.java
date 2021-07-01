@@ -344,7 +344,7 @@ public final class ObjectValue extends TokenValue<List<PairValue>> {
 		return this.evaluateToken(memory)
 				   .stream()
 				   .map(pair -> pair.evaluate(memory))
-				   .collect(Collectors.joining(", ", "{", "}"));
+				   .collect(Collectors.joining(",", "{", "}"));
 	}
 
 	@NotNull
