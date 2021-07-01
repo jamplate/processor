@@ -79,6 +79,13 @@ public class AnchorSpec implements Spec {
 	 */
 	@NotNull
 	public static final String KIND_OPEN = "anchor:open";
+	/**
+	 * The kind of a slot inside the body.
+	 *
+	 * @since 0.3.0 ~2021.06.27
+	 */
+	@NotNull
+	public static final String KIND_SLOT = "anchor:slot";
 
 	/**
 	 * The qualified name of this spec.
@@ -94,6 +101,12 @@ public class AnchorSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	public static final int Z_INDEX_BODY = -100;
+	/**
+	 * The z-index of a slot inside the body.
+	 *
+	 * @since 0.3.0 ~2021.06.27
+	 */
+	public static final int Z_INDEX_SLOT = -50;
 
 	@NotNull
 	@Override
