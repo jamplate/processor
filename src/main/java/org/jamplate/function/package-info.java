@@ -20,12 +20,6 @@
  * Functions:
  * <ul>
  *     <li>
- *         {@link org.jamplate.function.Initializer Initializer}
- *         <br>
- *         A function that initializes a {@link org.jamplate.model.Document} into an
- *         {@link org.jamplate.model.Environment}.
- *     </li>
- *     <li>
  *         {@link org.jamplate.function.Parser Parser}
  *         <br>
  *         A function tries to constructs a set of {@link org.jamplate.model.Tree Trees}
