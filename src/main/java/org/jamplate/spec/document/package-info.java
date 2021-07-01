@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Testing specifications.
+ * Document default components.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.25
+ * @since 0.3.0 ~2021.06.24
  */
-package org.jamplate.spec.test;
+package org.jamplate.spec.document;
