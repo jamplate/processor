@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.logic;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,35 +96,28 @@ public class And implements Instruction {
 		//left
 		Value value1 = memory.pop();
 
-		memory.push(m -> {
+		if (value0 instanceof BooleanValue && value1 instanceof BooleanValue) {
 			//right
-			String text0 = value0.evaluate(m);
+			BooleanValue boolean0 = (BooleanValue) value0;
 			//left
-			String text1 = value1.evaluate(m);
+			BooleanValue boolean1 = (BooleanValue) value1;
 
-			switch (text1) {
-				case "true":
-					switch (text0) {
-						case "true":
-							return "true";
-						case "false":
-							return "false";
-						default:
-							throw new ExecutionException(
-									"AND expected a boolean but got: " +
-									text0,
-									this.tree
-							);
-					}
-				case "false":
-					return "false";
-				default:
-					throw new ExecutionException(
-							"AND expected a boolean but got: " + text1,
-							this.tree
-					);
-			}
-		});
+			//result
+			BooleanValue boolean2 = boolean1.apply((m, b) ->
+					b && boolean0.evaluatePrimitiveToken(m)
+			);
+
+			memory.push(boolean2);
+			return;
+		}
+
+		throw new ExecutionException(
+				"AND expected two booleans but got: " +
+				value1.evaluate(memory) +
+				" and " +
+				value0.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable

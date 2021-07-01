@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.logic;
 
 import org.jamplate.model.*;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,43 +99,50 @@ public class Compare implements Instruction {
 		//left
 		Value value1 = memory.pop();
 
-		if (value1 == Value.NULL)
+		if (value1 == Value.NULL) {
 			if (value0 == Value.NULL)
 				//both the values are null
-				memory.push(m -> "0");
+				memory.push(new NumberValue(0));
 			else
 				//only the left value is null
-				memory.push(m -> "-1");
-		else if (value0 == Value.NULL)
+				memory.push(new NumberValue(-1));
+			return;
+		}
+		if (value0 == Value.NULL) {
 			//only the right value is null
-			memory.push(m -> "1");
-		else
-			//both the values are nonnull
-			memory.push(m -> {
-				//right
-				String text0 = value0.evaluate(m);
-				//left
-				String text1 = value1.evaluate(m);
+			memory.push(new NumberValue(1));
+			return;
+		}
 
-				try {
-					//right
-					double num0 = Double.parseDouble(text0);
-					//left
-					double num1 = Double.parseDouble(text1);
+		if (value0 instanceof NumberValue && value1 instanceof NumberValue) {
+			//right
+			NumberValue number0 = (NumberValue) value0;
+			//left
+			NumberValue number1 = (NumberValue) value1;
 
-					//result
-					int num3 = Double.compare(num1, num0);
-					int num4 = num3 > 1 ? 1 : num3 < -1 ? -1 : num3;
-
-					return Integer.toString(num4);
-				} catch (NumberFormatException ignored0) {
-					//result
-					int num3 = text1.compareTo(text0);
-					int num4 = num3 > 1 ? 1 : num3 < -1 ? -1 : num3;
-
-					return Integer.toString(num4);
-				}
+			//result
+			NumberValue number2 = number1.apply((m, n) -> {
+				int num3 = n.compareTo(number0.evaluateToken(m));
+				return (double) (num3 > 1 ? 1 : num3 < -1 ? -1 : num3);
 			});
+
+			memory.push(number2);
+			return;
+		}
+
+		//both the values are nonnull
+		memory.push(new NumberValue(m -> {
+			//right
+			String text0 = value0.evaluate(m);
+			//left
+			String text1 = value1.evaluate(m);
+
+			//result
+			int num3 = text1.compareTo(text0);
+			int num4 = num3 > 1 ? 1 : num3 < -1 ? -1 : num3;
+
+			return Integer.toString(num4);
+		}));
 	}
 
 	@Nullable

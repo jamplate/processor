@@ -98,18 +98,19 @@ public class Invert implements Instruction {
 			ArrayValue array0 = (ArrayValue) value0;
 
 			//result
-			array0.apply((m, l) -> {
+			ArrayValue array1 = array0.apply((m, l) -> {
 				List<Value> list = new ArrayList<>(l);
 				Collections.reverse(list);
 				return list;
 			});
 
-			memory.push(array0);
+			memory.push(array1);
 			return;
 		}
 
 		throw new ExecutionException(
-				"INVERT expected array but got: " + value0.evaluate(memory),
+				"INVERT expected array but got: " +
+				value0.evaluate(memory),
 				this.tree
 		);
 	}

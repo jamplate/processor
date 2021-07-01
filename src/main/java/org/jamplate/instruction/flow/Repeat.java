@@ -16,6 +16,7 @@
 package org.jamplate.instruction.flow;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,20 +97,23 @@ public class Repeat implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 		while (true) {
 			Value value0 = memory.pop();
-			String text0 = value0.evaluate(memory);
 
-			switch (text0) {
-				case "true":
+			if (value0 instanceof BooleanValue) {
+				BooleanValue boolean0 = (BooleanValue) value0;
+				boolean state0 = boolean0.evaluateToken(memory);
+
+				if (state0) {
 					this.instruction.exec(environment, memory);
-					break;
-				case "false":
-					return;
-				default:
-					throw new ExecutionException(
-							"REPEAT expected a boolean but got: " + text0,
-							this.tree
-					);
+					continue;
+				}
+
+				return;
 			}
+
+			throw new ExecutionException(
+					"REPEAT expected a boolean but got: " + value0.evaluate(memory),
+					this.tree
+			);
 		}
 	}
 

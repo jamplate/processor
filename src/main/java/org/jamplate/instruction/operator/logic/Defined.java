@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.logic;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,9 +90,9 @@ public class Defined implements Instruction {
 		Value value0 = memory.pop();
 
 		if (value0 == Value.NULL)
-			memory.push(m -> "false");
+			memory.push(new BooleanValue(false));
 		else
-			memory.push(m -> "true");
+			memory.push(new BooleanValue(true));
 	}
 
 	@Nullable

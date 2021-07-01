@@ -120,11 +120,7 @@ public class Get implements Instruction {
 			return;
 		}
 
-		throw new ExecutionException(
-				"GET expected array or object but got: " +
-				value1.evaluate(memory),
-				this.tree
-		);
+		memory.push(Value.NULL);
 	}
 
 	@Nullable

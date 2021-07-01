@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.math;
 
 import org.jamplate.model.*;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,32 +92,28 @@ public class Difference implements Instruction {
 		//left
 		Value value1 = memory.pop();
 
-		memory.push(m -> {
+		if (value0 instanceof NumberValue && value1 instanceof NumberValue) {
 			//right
-			String text0 = value0.evaluate(m);
+			NumberValue number0 = (NumberValue) value0;
 			//left
-			String text1 = value1.evaluate(m);
+			NumberValue number1 = (NumberValue) value1;
 
-			try {
-				//right
-				double num0 = Double.parseDouble(text0);
-				//left
-				double num1 = Double.parseDouble(text1);
+			//result
+			NumberValue number2 = number1.apply((m, n) ->
+					n - number0.evaluatePrimitiveToken(m)
+			);
 
-				//result
-				double num3 = num1 - num0;
+			memory.push(number2);
+			return;
+		}
 
-				return num3 % 1 == 0 ?
-					   Long.toString((long) num3) :
-					   Double.toString(num3);
-			} catch (NumberFormatException ignored0) {
-				throw new ExecutionException(
-						"SUB (-) expected two numbers but got: " + text0 + " and " +
-						text1,
-						this.tree
-				);
-			}
-		});
+		throw new ExecutionException(
+				"DIFFERENCE (-) expected two numbers but got: " +
+				value1.evaluate(memory) +
+				" and " +
+				value0.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable

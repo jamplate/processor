@@ -17,6 +17,7 @@ package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
 import org.jamplate.value.ArrayValue;
+import org.jamplate.value.UnquoteValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,13 +96,18 @@ public class Split implements Instruction {
 			ArrayValue array0 = (ArrayValue) value0;
 
 			array0.evaluateToken(memory)
-				  .forEach(memory::push);
+				  .forEach(value1 -> {
+					  UnquoteValue unquote1 = UnquoteValue.cast(value1);
+
+					  memory.push(unquote1);
+				  });
 
 			return;
 		}
 
 		throw new ExecutionException(
-				"SPLIT expected an array but got: " + value0.evaluate(memory),
+				"SPLIT expected an array but got: " +
+				value0.evaluate(memory),
 				this.tree
 		);
 	}

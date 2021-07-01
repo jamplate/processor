@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.logic;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,23 +89,25 @@ public class Negate implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//parameter
 		Value value0 = memory.pop();
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
+		if (value0 instanceof BooleanValue) {
+			//parameter
+			BooleanValue boolean0 = (BooleanValue) value0;
 
-			switch (text0) {
-				case "true":
-					return "false";
-				case "false":
-					return "true";
-				default:
-					throw new ExecutionException(
-							"NEG (!) expected a boolean but got: " + text0,
-							this.tree
-					);
-			}
-		});
+			//result
+			BooleanValue boolean1 = boolean0.apply((m, b) -> !b);
+
+			memory.push(boolean1);
+			return;
+		}
+
+		throw new ExecutionException(
+				"NEG (!) expected a boolean but got: " +
+				value0.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable

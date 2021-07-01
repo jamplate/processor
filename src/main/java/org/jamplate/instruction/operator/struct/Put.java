@@ -16,6 +16,8 @@
 package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
+import org.jamplate.value.NumberValue;
 import org.jamplate.value.ObjectValue;
 import org.jamplate.value.QuoteValue;
 import org.jetbrains.annotations.NotNull;
@@ -94,28 +96,35 @@ public class Put implements Instruction {
 		Value value0 = memory.pop();
 		//key
 		Value value1 = memory.pop();
-		//object
+		//struct
 		Value value2 = memory.pop();
 
-		if (value2 instanceof ObjectValue) {
+		if (!(value2 instanceof ObjectValue) && value1 instanceof NumberValue) {
 			//value
 			QuoteValue quote0 = QuoteValue.cast(value0);
 			//key
-			QuoteValue quote1 = QuoteValue.cast(value1);
-			//object
-			ObjectValue object2 = (ObjectValue) value2;
+			NumberValue number1 = NumberValue.cast(value1);
+			//struct
+			ArrayValue array2 = ArrayValue.cast(value2);
 
 			//result
-			ObjectValue object3 = object2.put(quote1, quote0);
+			ArrayValue array3 = array2.put(number1, quote0);
 
-			memory.push(object3);
+			memory.push(array3);
 			return;
 		}
 
-		throw new ExecutionException(
-				"PUT expected array or object but got: " + value2.evaluate(memory),
-				this.tree
-		);
+		//value
+		QuoteValue quote0 = QuoteValue.cast(value0);
+		//key
+		QuoteValue quote1 = QuoteValue.cast(value1);
+		//struct
+		ObjectValue object2 = ObjectValue.cast(value2);
+
+		//result
+		ObjectValue object3 = object2.put(quote1, quote0);
+
+		memory.push(object3);
 	}
 
 	@Nullable
