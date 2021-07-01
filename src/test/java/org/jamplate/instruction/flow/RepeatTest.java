@@ -17,6 +17,7 @@ import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ public class RepeatTest {
 		String keyV = "MyKey";
 		String resultKeyV = "ResultKeyV";
 
-		Instruction valueI = new PushConst(m -> "[X, Y, Z, '', 'Z', 'Y', 'X']");
+		Instruction valueI = new PushConst(new ArrayValue("[X, Y, Z, '', 'Z', 'Y', 'X']"));
 		Instruction bodyI = (env, mem) -> {
 			Value next = mem.get(keyV);
 			mem.compute(resultKeyV, prev -> m ->
