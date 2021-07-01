@@ -87,11 +87,13 @@ public class Eval implements Instruction {
 
 		//pop the last value
 		Value value0 = memory.pop();
-		//evaluate the value
-		String text0 = value0.evaluate(memory);
+
+		//result
+		String text1 = value0.evaluate(memory);
+		Value value1 = TokenValue.cast(text1);
 
 		//push the result
-		memory.push(TokenValue.cast(text0));
+		memory.push(value1);
 	}
 
 	@Nullable
