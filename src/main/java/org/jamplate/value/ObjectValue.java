@@ -357,6 +357,12 @@ public final class ObjectValue extends TokenValue<List<PairValue>> {
 		return this.function.apply(memory);
 	}
 
+	@NotNull
+	@Override
+	public String toString() {
+		return "Object:" + Integer.toHexString(this.hashCode());
+	}
+
 	/**
 	 * Evaluate the token in this object at the given {@code key}.
 	 *

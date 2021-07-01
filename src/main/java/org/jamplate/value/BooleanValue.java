@@ -172,6 +172,12 @@ public final class BooleanValue extends TokenValue<Boolean> {
 		return this.function.test(memory);
 	}
 
+	@NotNull
+	@Override
+	public String toString() {
+		return "Boolean:" + Integer.toHexString(this.hashCode());
+	}
+
 	/**
 	 * Evaluate this value to a primitive raw state.
 	 *

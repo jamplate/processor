@@ -194,6 +194,12 @@ public final class NumberValue extends TokenValue<Double> {
 		return this.function.applyAsDouble(memory);
 	}
 
+	@NotNull
+	@Override
+	public String toString() {
+		return "Number:" + Integer.toHexString(this.hashCode());
+	}
+
 	/**
 	 * Evaluate this value to a primitive raw number.
 	 *

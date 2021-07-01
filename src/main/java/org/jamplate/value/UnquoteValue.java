@@ -124,4 +124,10 @@ public final class UnquoteValue extends TokenValue<Value> {
 		Objects.requireNonNull(memory, "memory");
 		return this.function.apply(memory);
 	}
+
+	@NotNull
+	@Override
+	public String toString() {
+		return "Unquote:" + Integer.toHexString(this.hashCode());
+	}
 }

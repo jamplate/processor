@@ -123,4 +123,10 @@ public final class QuoteValue extends TokenValue<Value> {
 		Objects.requireNonNull(memory, "memory");
 		return this.function.apply(memory);
 	}
+
+	@NotNull
+	@Override
+	public String toString() {
+		return "Quote:" + Integer.toHexString(this.hashCode());
+	}
 }

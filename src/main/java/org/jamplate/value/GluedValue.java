@@ -198,4 +198,10 @@ public class GluedValue extends TokenValue<List<Value>> {
 	public List<Value> evaluateToken(@NotNull Memory memory) {
 		return this.function.apply(memory);
 	}
+
+	@NotNull
+	@Override
+	public String toString() {
+		return "Glued:" + Integer.toHexString(this.hashCode());
+	}
 }

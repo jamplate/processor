@@ -140,4 +140,10 @@ public final class TextValue extends TokenValue<String> {
 		Objects.requireNonNull(memory, "memory");
 		return this.function.apply(memory);
 	}
+
+	@NotNull
+	@Override
+	public String toString() {
+		return "Text:" + Integer.toHexString(this.hashCode());
+	}
 }

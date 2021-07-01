@@ -315,6 +315,12 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		return this.function.apply(memory);
 	}
 
+	@NotNull
+	@Override
+	public String toString() {
+		return "Array:" + Integer.toHexString(this.hashCode());
+	}
+
 	/**
 	 * Evaluate the token in this array at the given {@code index}.
 	 *

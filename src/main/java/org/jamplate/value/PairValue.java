@@ -252,6 +252,12 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 		return this.function.apply(memory);
 	}
 
+	@NotNull
+	@Override
+	public String toString() {
+		return "Pair:" + Integer.toHexString(this.hashCode());
+	}
+
 	/**
 	 * Return a value that evaluates to the key of this pair.
 	 *
