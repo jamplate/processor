@@ -96,7 +96,7 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addSpecAfter(@NotNull Spec ref, @NotNull Spec spec) {
+	public boolean addAfter(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");
 		Objects.requireNonNull(spec, "spec");
 		if (this.specs.contains(spec))
@@ -117,7 +117,7 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addSpecBefore(@NotNull Spec ref, @NotNull Spec spec) {
+	public boolean addBefore(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");
 		Objects.requireNonNull(spec, "spec");
 		if (this.specs.contains(spec))
@@ -139,7 +139,7 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addSpecFirst(@NotNull Spec spec) {
+	public boolean addFirst(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		if (this.specs.contains(spec))
 			return false;
@@ -149,7 +149,7 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addSpecLast(@NotNull Spec spec) {
+	public boolean addLast(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		if (this.specs.contains(spec))
 			return false;

@@ -44,8 +44,8 @@ import java.util.Objects;
  * For a spec to support sub-specs, it must implement the method {@link #iterator()}.
  * <br>
  * For a spec to support variable sub-specs, it must implement the methods {@link
- * #addSpecFirst(Spec)}, {@link #addSpecBefore(Spec, Spec)}, {@link #addSpecLast(Spec)},
- * {@link #addSpecAfter(Spec, Spec)}.
+ * #addFirst(Spec)}, {@link #addBefore(Spec, Spec)}, {@link #addLast(Spec)}, {@link
+ * #addAfter(Spec, Spec)}.
  *
  * @author LSafer
  * @version 0.3.0
@@ -77,12 +77,12 @@ public interface Spec extends Iterable<Spec> {
 	 * @return true, if the spec was not already a subspec in this spec.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
-	 * @implSpec this implementation will delegate to {@link #addSpecLast(Spec)}.
+	 * @implSpec this implementation will delegate to {@link #addLast(Spec)}.
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean addSpec(@NotNull Spec spec) {
-		return this.addSpecLast(spec);
+	default boolean add(@NotNull Spec spec) {
+		return this.addLast(spec);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public interface Spec extends Iterable<Spec> {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean addSpecAfter(@NotNull Spec ref, @NotNull Spec spec) {
+	default boolean addAfter(@NotNull Spec ref, @NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecAfter");
 	}
 
@@ -125,7 +125,7 @@ public interface Spec extends Iterable<Spec> {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean addSpecBefore(@NotNull Spec ref, @NotNull Spec spec) {
+	default boolean addBefore(@NotNull Spec ref, @NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecBefore");
 	}
 
@@ -144,7 +144,7 @@ public interface Spec extends Iterable<Spec> {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean addSpecFirst(@NotNull Spec spec) {
+	default boolean addFirst(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecFirst");
 	}
 
@@ -163,7 +163,7 @@ public interface Spec extends Iterable<Spec> {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean addSpecLast(@NotNull Spec spec) {
+	default boolean addLast(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecLast");
 	}
 
@@ -359,7 +359,7 @@ public interface Spec extends Iterable<Spec> {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	@Contract(mutates = "this")
-	default boolean removeSpec(@NotNull Spec spec) {
+	default boolean remove(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		Iterator<Spec> iterator = this.iterator();
 		while (iterator.hasNext())
