@@ -20,6 +20,7 @@ import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONTokener;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -111,9 +112,8 @@ public final class UnquoteValue extends TokenValue<Value> {
 		Value value = this.evaluateToken(memory);
 
 		if (value instanceof QuoteValue)
-			return ((QuoteValue) value)
-					.evaluateToken(memory)
-					.evaluate(memory);
+			return (String) new JSONTokener(value.evaluate(memory))
+					.nextValue();
 
 		return value.evaluate(memory);
 	}
