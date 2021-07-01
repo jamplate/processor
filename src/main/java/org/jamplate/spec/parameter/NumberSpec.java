@@ -18,10 +18,11 @@ package org.jamplate.spec.parameter;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.spec.syntax.term.DigitsSpec;
+import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.spec.syntax.term.DigitsSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -61,30 +62,30 @@ public class NumberSpec implements Spec {
 
 					try {
 						//re-interpret the text (binary, octal, hex)
-						String interpreted =
+						double interpreted =
 								//octal
 								text.startsWith("0") && text.length() > 1 ?
-								Long.toString(Long.parseLong(
+								Long.parseLong(
 										text.substring(1),
 										8
-								)) :
+								) :
 								//binary
 								text.startsWith("0b") ?
-								Long.toString(Long.parseLong(
+								Long.parseLong(
 										text.substring(2),
 										2
-								)) :
+								) :
 								//hexadecimal
 								text.startsWith("0x") ?
-								Long.toString(Long.parseLong(
+								Long.parseLong(
 										text.substring(2),
 										16
-								)) :
+								) :
 								//decimal
-								text;
+								Double.parseDouble(text);
 
 						//compile to PushConst
-						return new PushConst(tree, m -> interpreted);
+						return new PushConst(tree, new NumberValue(interpreted));
 					} catch (NumberFormatException ignored) {
 						//cannot interpret, skip ;P
 						return null;
@@ -99,10 +100,3 @@ public class NumberSpec implements Spec {
 		return NumberSpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						NumberSpec.KIND,
-//						ToPushConstCompiler.INSTANCE
-//				)
-//		);

@@ -16,21 +16,32 @@
 package org.jamplate.spec.parameter;
 
 import org.jamplate.api.Spec;
+import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.memory.frame.DumpFrame;
 import org.jamplate.instruction.memory.frame.JoinFrame;
 import org.jamplate.instruction.memory.frame.PushFrame;
 import org.jamplate.instruction.operator.cast.CastArray;
+import org.jamplate.instruction.operator.cast.CastQuote;
+import org.jamplate.internal.function.analyzer.alter.MultiSeparatorAnalyzer;
+import org.jamplate.internal.function.analyzer.filter.FilterByNotChildKindAnalyzer;
+import org.jamplate.internal.function.analyzer.router.ChildrenAnalyzer;
+import org.jamplate.internal.function.analyzer.wrapper.FilterByKindAnalyzer;
+import org.jamplate.internal.function.analyzer.wrapper.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
+import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToPushConstCompiler;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.wrapper.FilterWhitespaceCompiler;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.spec.syntax.symbol.CommaSpec;
-import org.jamplate.internal.util.Functions;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -40,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
+@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
 public class ArraySpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -59,6 +71,33 @@ public class ArraySpec implements Spec {
 
 	@NotNull
 	@Override
+	public Analyzer getAnalyzer() {
+		return Functions.analyzer(
+				//search in the whole hierarchy
+				HierarchyAnalyzer::new,
+				//target brackets
+				a -> new FilterByKindAnalyzer(BracketsSpec.KIND, a),
+				//for each child
+				ChildrenAnalyzer::new,
+				//target the body
+				a -> new FilterByKindAnalyzer(AnchorSpec.KIND_BODY, a),
+				//skip if already separated
+				a -> new FilterByNotChildKindAnalyzer(AnchorSpec.KIND_SLOT, a),
+				//separate
+				a -> new MultiSeparatorAnalyzer(
+						CommaSpec.KIND,
+						(t, r) -> t.offer(new Tree(
+								t.document(),
+								r,
+								new Sketch(AnchorSpec.KIND_SLOT),
+								AnchorSpec.Z_INDEX_SLOT
+						))
+				)
+		);
+	}
+
+	@NotNull
+	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
 				//target brackets
@@ -72,35 +111,54 @@ public class ArraySpec implements Spec {
 								//execute inner parts
 								c.compile(compiler, compilation, tree),
 								//join the execution result
-								JoinFrame.INSTANCE,
+								new JoinFrame(tree),
 								//reformat the array
-								CastArray.INSTANCE,
+								new CastArray(tree),
 								//dump the frame
-								DumpFrame.INSTANCE
+								new DumpFrame(tree)
 						),
 				//flatten parts
 				FlattenCompiler::new,
-				//compile anchors, commas, body
+				//compile anchors, body, commas, slots, else
 				c -> new FirstCompileCompiler(
 						//compile opening anchors to PushConst
 						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToPushConstCompiler.INSTANCE),
 						//compile closing anchors to PushConst
 						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToPushConstCompiler.INSTANCE),
-						//compile body
-						Functions.compiler(
-								//target body
-								cc -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, cc),
-								//flatten body parts
-								FlattenCompiler::new,
-								//compile each part
-								cc -> new FirstCompileCompiler(
-										//compile commas (,) to PushConst
-										new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
-										//compile others using the fallback compiler
-										FallbackCompiler.INSTANCE
-								)
+						//compile body, commas, slots, else
+						c
+				),
+				//target body
+				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
+				//flatten body parts
+				FlattenCompiler::new,
+				//compile commas, slots, else
+				c -> new FirstCompileCompiler(
+						//compile commas (,) to PushConst
+						new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
+						//compile the slots
+						c,
+						//compile others using the fallback compiler
+						FallbackCompiler.INSTANCE
+				),
+				//target the slots
+				c -> new FilterByKindCompiler(AnchorSpec.KIND_SLOT, c),
+				//flatten slots parts
+				FlattenCompiler::new,
+				//compile each slot part
+				c -> new FirstCompileCompiler(
+						//ignore whitespaces
+						new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE),
+						//compile quoted
+						(compiler, compilation, tree) -> new Block(
+								//use the fallback
+								FallbackCompiler.INSTANCE.compile(compiler, compilation, tree),
+								//quote the slot
+								new CastQuote(tree)
 						)
-				)
+				),
+				//compile each slot part using the fallback compiler
+				c -> FallbackCompiler.INSTANCE
 		);
 	}
 
@@ -110,18 +168,3 @@ public class ArraySpec implements Spec {
 		return ArraySpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						BracketsSpec.KIND,
-//						new FlattenCompiler(
-//								FallbackCompiler.INSTANCE,
-//								new MandatoryCompiler(new FirstCompileCompiler(
-//										new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToPushConstCompiler.INSTANCE),
-//										new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToPushConstCompiler.INSTANCE),
-//										new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
-//										new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE)
-//								))
-//						)
-//				)
-//		);

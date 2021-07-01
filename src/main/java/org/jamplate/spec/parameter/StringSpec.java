@@ -19,9 +19,10 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
-import org.jamplate.spec.syntax.enclosure.DoubleQuotesSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
+import org.jamplate.spec.syntax.enclosure.DoubleQuotesSpec;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -68,7 +69,7 @@ public class StringSpec implements Spec {
 								.toString();
 
 						//compile to
-						return new PushConst(tree, v -> interpreted);
+						return new PushConst(tree, new TextValue(interpreted));
 					} catch (JSONException ignored) {
 						//cannot interpret, skip ;P
 						return null;
@@ -83,10 +84,3 @@ public class StringSpec implements Spec {
 		return StringSpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						DoubleQuotesSpec.KIND,
-//						ToPushConstUnescapeCompiler.INSTANCE
-//				)
-//		);

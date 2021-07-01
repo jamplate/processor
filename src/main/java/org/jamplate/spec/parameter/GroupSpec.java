@@ -17,18 +17,14 @@ package org.jamplate.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.frame.DumpFrame;
-import org.jamplate.instruction.memory.frame.JoinFrame;
-import org.jamplate.instruction.memory.frame.PushFrame;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.util.Functions;
 import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.spec.syntax.enclosure.ParenthesesSpec;
-import org.jamplate.internal.util.Functions;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -61,19 +57,6 @@ public class GroupSpec implements Spec {
 		return Functions.compiler(
 				//target parentheses
 				c -> new FilterByKindCompiler(ParenthesesSpec.KIND, c),
-				//compile the whole context
-				c -> (compiler, compilation, tree) ->
-						new Block(
-								tree,
-								//push a frame to encapsulate the content of the group
-								new PushFrame(tree),
-								//execute inner parts
-								c.compile(compiler, compilation, tree),
-								//join the execution results
-								JoinFrame.INSTANCE,
-								//dump the frame
-								DumpFrame.INSTANCE
-						),
 				//flatten parts
 				FlattenCompiler::new,
 				//compile anchors and body
@@ -83,15 +66,14 @@ public class GroupSpec implements Spec {
 						//compile closing anchors to Idle
 						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE),
 						//compile body
-						Functions.compiler(
-								//target body
-								cc -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, cc),
-								//flatten body parts
-								FlattenCompiler::new,
-								//compile each part using the fallback compiler
-								cc -> FallbackCompiler.INSTANCE
-						)
-				)
+						c
+				),
+				//target body
+				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
+				//flatten body parts
+				FlattenCompiler::new,
+				//compile each part using the fallback compiler
+				c -> FallbackCompiler.INSTANCE
 		);
 	}
 
@@ -101,17 +83,3 @@ public class GroupSpec implements Spec {
 		return GroupSpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						ParenthesesSpec.KIND,
-//						new FlattenCompiler(
-//								FallbackCompiler.INSTANCE,
-//								new MandatoryCompiler(new FirstCompileCompiler(
-//										new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToIdleCompiler.INSTANCE),
-//										new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE),
-//										new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE)
-//								))
-//						)
-//				)
-//		);

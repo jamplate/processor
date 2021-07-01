@@ -26,9 +26,9 @@ import org.jamplate.instruction.memory.stack.Dup;
 import org.jamplate.instruction.memory.stack.Pop;
 import org.jamplate.instruction.operator.logic.Defined;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
-import org.jamplate.spec.syntax.term.WordSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
+import org.jamplate.spec.syntax.term.WordSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
+@SuppressWarnings("OverlyCoupledMethod")
 public class ReferenceSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -72,19 +73,21 @@ public class ReferenceSpec implements Spec {
 							//push the address
 							new PushConst(tree, m -> text),
 							//access
-							Access.INSTANCE,
+							new Access(tree),
 							//duplicate the value to be null checked first
-							Dup.INSTANCE,
+							new Dup(tree),
 							//null check (true if not null)
-							Defined.INSTANCE,
+							new Defined(tree),
 							//branch if not null
 							new Branch(
+									tree,
 									//the value is not null, no need to replace
-									Idle.INSTANCE,
+									new Idle(tree),
 									//value is null, replace
 									new Block(
+											tree,
 											//pop the duplicate value (it is null)
-											Pop.INSTANCE,
+											new Pop(tree),
 											//push the name of the reference
 											new PushConst(tree, m -> text)
 									)
@@ -100,17 +103,3 @@ public class ReferenceSpec implements Spec {
 		return ReferenceSpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						WordSpec.KIND,
-//						(compiler, compilation, tree) -> {
-//							String text = Trees.read(tree).toString();
-//
-//							return new Block(
-//									new PushConst(m -> text),
-//									Access.INSTANCE
-//							);
-//						}
-//				)
-//		);

@@ -17,18 +17,14 @@ package org.jamplate.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.frame.DumpFrame;
-import org.jamplate.instruction.memory.frame.JoinFrame;
-import org.jamplate.instruction.memory.frame.PushFrame;
+import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToPushConstCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
 import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.spec.syntax.enclosure.QuotesSpec;
-import org.jamplate.internal.util.Functions;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -61,30 +57,17 @@ public class EscapedStringSpec implements Spec {
 		return Functions.compiler(
 				//target quotes
 				c -> new FilterByKindCompiler(QuotesSpec.KIND, c),
-				//compile the whole context
-				c -> (compiler, compilation, tree) ->
-						new Block(
-								tree,
-								//push a frame to encapsulate the content of the escaped string
-								new PushFrame(tree),
-								//execute inner parts
-								c.compile(compiler, compilation, tree),
-								//join the execution results
-								JoinFrame.INSTANCE,
-								//dump the frame
-								DumpFrame.INSTANCE
-						),
-				//flatten parts
+				//flatten the parts
 				FlattenCompiler::new,
-				//compile anchors and body
-				c -> new FirstCompileCompiler(
-						//compile opening anchors to Idle
-						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToIdleCompiler.INSTANCE),
-						//compile closing anchors to Idle
-						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE),
-						//compile body to PushConst
-						new FilterByKindCompiler(AnchorSpec.KIND_BODY, ToPushConstCompiler.INSTANCE)
-				)
+				//target the body
+				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
+				//compile
+				c -> (compiler, compilation, tree) -> {
+					//read the tree
+					String text = IO.read(tree).toString();
+
+					return new PushConst(tree, new TextValue(text));
+				}
 		);
 	}
 
@@ -94,16 +77,3 @@ public class EscapedStringSpec implements Spec {
 		return EscapedStringSpec.NAME;
 	}
 }
-//		return new FilterByHierarchyKindCompiler(
-//				ParameterSpec.KIND,
-//				new FilterByKindCompiler(
-//						QuotesSpec.KIND,
-//						new FlattenCompiler(
-//								new FirstCompileCompiler(
-//										new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToIdleCompiler.INSTANCE),
-//										new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE)
-//								),
-//								ToPushConstCompiler.INSTANCE
-//						)
-//				)
-//		);
