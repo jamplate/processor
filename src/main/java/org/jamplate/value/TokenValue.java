@@ -24,7 +24,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -73,13 +75,27 @@ public abstract class TokenValue<T> implements Value {
 		//parse -> re-try
 		try {
 			String source = TokenValue.toString(object);
+
+			if (source.isEmpty())
+				return new QuoteValue(new TextValue(""));
+
 			JSONTokener tokener = new JSONTokener(source);
-			Object value = tokener.nextValue();
+			List<Value> values = new ArrayList<>();
 
-			if (value instanceof String)
-				return new QuoteValue(new TextValue(value));
+			while (tokener.more()) {
+				Object value = tokener.nextValue();
 
-			return TokenValue.cast(value);
+				if (value instanceof String)
+					values.add(new QuoteValue(new TextValue(value)));
+				else
+					values.add(TokenValue.cast(value));
+			}
+
+			return values.isEmpty() ?
+				   TextValue.cast(source) :
+				   values.size() == 1 ?
+				   values.get(0) :
+				   GluedValue.cast(values);
 		} catch (JSONException ignored) {
 		}
 
