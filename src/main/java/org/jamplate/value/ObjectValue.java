@@ -209,9 +209,11 @@ public final class ObjectValue extends TokenValue<List<PairValue>> {
 		} catch (JSONException ignored) {
 		}
 		//attempt to parse as singleton
-		return Collections.singletonList(
-				PairValue.cast(source)
-		);
+		return source.trim().isEmpty() ?
+			   Collections.emptyList() :
+			   Collections.singletonList(
+					   PairValue.cast(source)
+			   );
 	}
 
 	/**
