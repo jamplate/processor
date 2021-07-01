@@ -179,8 +179,8 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 		}
 		//attempt to parse as marker
 		return new AbstractMap.SimpleImmutableEntry<>(
-				m -> source,
-				m -> ""
+				m -> JSONObject.quote(source),
+				m -> "\"\""
 		);
 	}
 
