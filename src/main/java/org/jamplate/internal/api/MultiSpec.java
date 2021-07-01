@@ -96,12 +96,9 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addAfter(@NotNull Spec ref, @NotNull Spec spec) {
+	public Spec addAfter(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");
 		Objects.requireNonNull(spec, "spec");
-		if (this.specs.contains(spec))
-			return false;
-
 		ListIterator<Spec> iterator = this.specs.listIterator();
 
 		while (iterator.hasNext()) {
@@ -109,7 +106,7 @@ public class MultiSpec implements Spec {
 
 			if (next == ref) {
 				iterator.add(spec);
-				return true;
+				return this;
 			}
 		}
 
@@ -117,12 +114,9 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addBefore(@NotNull Spec ref, @NotNull Spec spec) {
+	public Spec addBefore(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");
 		Objects.requireNonNull(spec, "spec");
-		if (this.specs.contains(spec))
-			return false;
-
 		ListIterator<Spec> iterator = this.specs.listIterator(this.specs.size());
 
 		while (iterator.hasPrevious()) {
@@ -131,7 +125,7 @@ public class MultiSpec implements Spec {
 			if (previous == ref) {
 				iterator.set(spec);
 				iterator.add(previous);
-				return true;
+				return this;
 			}
 		}
 
@@ -139,23 +133,17 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
-	public boolean addFirst(@NotNull Spec spec) {
+	public Spec addFirst(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
-		if (this.specs.contains(spec))
-			return false;
-
 		this.specs.addFirst(spec);
-		return true;
+		return this;
 	}
 
 	@Override
-	public boolean addLast(@NotNull Spec spec) {
+	public Spec addLast(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
-		if (this.specs.contains(spec))
-			return false;
-
 		this.specs.addLast(spec);
-		return true;
+		return this;
 	}
 
 	@NotNull
@@ -263,12 +251,13 @@ public class MultiSpec implements Spec {
 	@Override
 	public void onOptimize(@NotNull Compilation compilation, int mode) {
 		for (Spec spec : this)
-			spec.onOptimize( compilation, mode);
+			spec.onOptimize(compilation, mode);
 	}
 
 	@Override
-	public void setQualifiedName(@NotNull String name) {
+	public Spec setQualifiedName(@NotNull String name) {
 		Objects.requireNonNull(name, "name");
 		this.qualifiedName = name;
+		return this;
 	}
 }

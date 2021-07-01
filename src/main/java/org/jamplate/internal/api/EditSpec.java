@@ -146,44 +146,51 @@ public class EditSpec implements Spec {
 	}
 
 	@Override
-	public void setAnalyzeProcessor(@NotNull Processor processor) {
+	public Spec setAnalyzeProcessor(@NotNull Processor processor) {
 		Objects.requireNonNull(processor, "processor");
 		this.analyzeProcessor = processor;
+		return this;
 	}
 
 	@Override
-	public void setAnalyzer(@NotNull Analyzer analyzer) {
+	public Spec setAnalyzer(@NotNull Analyzer analyzer) {
 		Objects.requireNonNull(analyzer, "analyzer");
 		this.analyzer = analyzer;
+		return this;
 	}
 
 	@Override
-	public void setCompileProcessor(@NotNull Processor processor) {
+	public Spec setCompileProcessor(@NotNull Processor processor) {
 		Objects.requireNonNull(processor, "processor");
 		this.compileProcessor = processor;
+		return this;
 	}
 
 	@Override
-	public void setCompiler(@NotNull Compiler compiler) {
+	public Spec setCompiler(@NotNull Compiler compiler) {
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
+		return this;
 	}
 
 	@Override
-	public void setParseProcessor(@NotNull Processor processor) {
+	public Spec setParseProcessor(@NotNull Processor processor) {
 		Objects.requireNonNull(processor, "processor");
 		this.parseProcessor = processor;
+		return this;
 	}
 
 	@Override
-	public void setParser(@NotNull Parser parser) {
+	public Spec setParser(@NotNull Parser parser) {
 		Objects.requireNonNull(parser, "parser");
 		this.parser = parser;
+		return this;
 	}
 
 	@Override
-	public void setQualifiedName(@NotNull String name) {
+	public Spec setQualifiedName(@NotNull String name) {
 		Objects.requireNonNull(name, "name");
 		this.qualifiedName = name;
+		return this;
 	}
 }

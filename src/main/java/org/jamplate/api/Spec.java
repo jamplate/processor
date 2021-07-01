@@ -70,30 +70,26 @@ public interface Spec extends Iterable<Spec> {
 	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at an
 	 * unspecified order.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
 	 *
 	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
 	 * @implSpec this implementation will delegate to {@link #addLast(Spec)}.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean add(@NotNull Spec spec) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec add(@NotNull Spec spec) {
 		return this.addLast(spec);
 	}
 
 	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added after
 	 * the given {@code ref} spec.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
 	 *
 	 * @param ref  the spec for the given {@code spec} to be added after it.
 	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws IllegalArgumentException      if the given {@code ref} spec is not
 	 *                                       currently a subspec in this spec.
@@ -102,20 +98,18 @@ public interface Spec extends Iterable<Spec> {
 	 * 		immediately.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean addAfter(@NotNull Spec ref, @NotNull Spec spec) {
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addAfter(@NotNull Spec ref, @NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecAfter");
 	}
 
 	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added before
 	 * the given {@code ref} spec.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
 	 *
 	 * @param ref  the spec for the given {@code spec} to be added before it.
 	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws IllegalArgumentException      if the given {@code ref} spec is not
 	 *                                       currently a subspec in this spec.
@@ -124,46 +118,42 @@ public interface Spec extends Iterable<Spec> {
 	 * 		immediately.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean addBefore(@NotNull Spec ref, @NotNull Spec spec) {
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addBefore(@NotNull Spec ref, @NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecBefore");
 	}
 
 	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
 	 * start.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
 	 *
 	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
 	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
 	 * 		immediately.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean addFirst(@NotNull Spec spec) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec addFirst(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecFirst");
 	}
 
 	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added at the
 	 * end.
-	 * <br>
-	 * If the spec is already added to this spec, this method call will be ignored.
 	 *
 	 * @param spec the spec to be added.
-	 * @return true, if the spec was not already a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code spec} is null.
 	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
 	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
 	 * 		immediately.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean addLast(@NotNull Spec spec) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec addLast(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecLast");
 	}
 
@@ -353,34 +343,33 @@ public interface Spec extends Iterable<Spec> {
 	 * Remove the given subspec {@code spec} from this spec.
 	 *
 	 * @param spec the subspec to be removed.
-	 * @return true, if the given {@code spec} was a subspec in this spec.
+	 * @return this.
 	 * @throws NullPointerException if the given {@code spec} is null.
 	 * @implSpec this implementation uses {@link #iterator()} to remove the spec.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default boolean remove(@NotNull Spec spec) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec remove(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		Iterator<Spec> iterator = this.iterator();
 		while (iterator.hasNext())
-			if (iterator.next() == spec) {
+			if (iterator.next() == spec)
 				iterator.remove();
-				return true;
-			}
-		return false;
+		return this;
 	}
 
 	/**
 	 * Set the pre-analyze processor of this spec to be the given {@code processor}.
 	 *
 	 * @param processor the new pre-analyze processor.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code processor} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       pre-analyze processor.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setAnalyzeProcessor(@NotNull Processor processor) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setAnalyzeProcessor(@NotNull Processor processor) {
 		throw new UnsupportedOperationException("setAnalyzeProcessor");
 	}
 
@@ -388,13 +377,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the analyzer of this spec to be the given {@code analyzer}.
 	 *
 	 * @param analyzer the new analyzer.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code analyzer} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       analyzer.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setAnalyzer(@NotNull Analyzer analyzer) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setAnalyzer(@NotNull Analyzer analyzer) {
 		throw new UnsupportedOperationException("setAnalyzer");
 	}
 
@@ -402,13 +392,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the pre-compile processor of this spec to be the given {@code processor}.
 	 *
 	 * @param processor the new pre-compile processor.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code processor} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       pre-compile processor.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setCompileProcessor(@NotNull Processor processor) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setCompileProcessor(@NotNull Processor processor) {
 		throw new UnsupportedOperationException("setCompileProcessor");
 	}
 
@@ -416,13 +407,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the compiler of this spec to be the given {@code compiler}.
 	 *
 	 * @param compiler the new compiler.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code compiler} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       compiler.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setCompiler(@NotNull Compiler compiler) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setCompiler(@NotNull Compiler compiler) {
 		throw new UnsupportedOperationException("setCompiler");
 	}
 
@@ -430,13 +422,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the pre-parse processor of this spec to be the given {@code processor}.
 	 *
 	 * @param processor the new pre-parse processor.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code processor} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       pre-parse processor.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setParseProcessor(@NotNull Processor processor) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setParseProcessor(@NotNull Processor processor) {
 		throw new UnsupportedOperationException("setParseProcessor");
 	}
 
@@ -444,13 +437,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the parser of this spec to be the given {@code parser}.
 	 *
 	 * @param parser the new parser.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code parser} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       parser.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setParser(@NotNull Parser parser) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setParser(@NotNull Parser parser) {
 		throw new UnsupportedOperationException("setParser");
 	}
 
@@ -458,13 +452,14 @@ public interface Spec extends Iterable<Spec> {
 	 * Set the qualified name of this spec to be the given {@code name}.
 	 *
 	 * @param name the new qualified name.
+	 * @return this.
 	 * @throws NullPointerException          if the given {@code name} is null.
 	 * @throws UnsupportedOperationException if this spec does not support changing its
 	 *                                       qualified name.
 	 * @since 0.3.0 ~2021.06.19
 	 */
-	@Contract(mutates = "this")
-	default void setQualifiedName(@NotNull String name) {
+	@Contract(value = "_->this", mutates = "this")
+	default Spec setQualifiedName(@NotNull String name) {
 		throw new UnsupportedOperationException("setQualifiedName");
 	}
 }
