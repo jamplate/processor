@@ -27,6 +27,8 @@ import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.value.NumberValue;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
@@ -72,12 +74,12 @@ public class NewlineEscapedSpec implements Spec {
 				//compile the escaped newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					String line = String.valueOf(IO.line(tree) + 1);
+					int line = IO.line(tree) + 1;
 
 					return new Block(
 							//Define __LINE__
-							new PushConst(tree, m -> "__LINE__"),
-							new PushConst(tree, m -> line),
+							new PushConst(tree, new TextValue("__LINE__")),
+							new PushConst(tree, new NumberValue(line)),
 							new Alloc(tree)
 					);
 				}

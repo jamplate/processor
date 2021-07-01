@@ -25,6 +25,7 @@ import org.jamplate.instruction.operator.cast.CastObject;
 import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.util.IO;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -60,8 +61,8 @@ public class TextSpec implements Spec {
 					String text = IO.read(tree).toString();
 
 					return new Block(
-							new PushConst(tree, m -> text),
-							new PushConst(tree, m -> "__DEFINE__"),
+							new PushConst(tree, new TextValue(text)),
+							new PushConst(tree, new TextValue("__DEFINE__")),
 							new Access(tree),
 							new CastObject(tree),
 							new FPrint(tree)

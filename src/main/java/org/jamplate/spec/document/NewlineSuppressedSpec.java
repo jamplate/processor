@@ -27,6 +27,8 @@ import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.model.Tree;
+import org.jamplate.value.NumberValue;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -105,8 +107,8 @@ public class NewlineSuppressedSpec implements Spec {
 
 					return new Block(
 							//Define __LINE__
-							new PushConst(tree, m -> "__LINE__"),
-							new PushConst(tree, m -> line),
+							new PushConst(tree, new TextValue("__LINE__")),
+							new PushConst(tree, new NumberValue(line)),
 							new Alloc(tree)
 					);
 				}
