@@ -16,17 +16,12 @@
 package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
-import org.jetbrains.annotations.Contract;
+import org.jamplate.value.ObjectValue;
+import org.jamplate.value.QuoteValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * An instruction that pops the top three values in the stack and put the first popped
@@ -102,165 +97,30 @@ public class Put implements Instruction {
 		//object
 		Value value2 = memory.pop();
 
-		memory.push(m -> {
+		if (value2 instanceof ObjectValue) {
 			//value
-			String text0 = value0.evaluate(m);
+			QuoteValue quote0 = QuoteValue.cast(value0);
 			//key
-			String text1 = value1.evaluate(m);
+			QuoteValue quote1 = QuoteValue.cast(value1);
 			//object
-			String text2 = value2.evaluate(m);
+			ObjectValue object2 = (ObjectValue) value2;
 
-			try {
-				//key
-				JSONArray array1 = new JSONArray(text1);
-				List<String> list1 = array1
-						.toList()
-						.stream()
-						.map(String::valueOf)
-						.collect(Collectors.toList());
+			//result
+			ObjectValue object3 = object2.put(quote1, quote0);
 
-				//result
-				Object object4 = this.put(text2, list1, text0);
+			memory.push(object3);
+			return;
+		}
 
-				return String.valueOf(object4);
-			} catch (JSONException ignored0) {
-				throw new ExecutionException(
-						"PUT expected an array but got: " + text1
-				);
-			}
-		});
+		throw new ExecutionException(
+				"PUT expected an array but got: " + value2.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable
 	@Override
 	public Tree getTree() {
 		return this.tree;
-	}
-
-	/**
-	 * Assuming the given {@code object} is a {@link JSONArray} or a {@link JSONObject},
-	 * put the given {@code value} at given nesting {@code keys}.
-	 *
-	 * @param object the object to put to.
-	 * @param keys   the nesting keys.
-	 * @param value  the value to be put.
-	 * @return the given {@code object} if the value can be put, or a replacement object.
-	 * @throws NullPointerException     if the given {@code object} or {@code keys} or
-	 *                                  {@code value} is null.
-	 * @throws IllegalArgumentException if the given {@code keys} list is empty.
-	 * @since 0.3.0 ~2021.06.15
-	 */
-	@SuppressWarnings("OverlyLongMethod")
-	@NotNull
-	@Contract(mutates = "param")
-	protected Object put(@NotNull Object object, @NotNull List<String> keys, @NotNull Object value) {
-		Objects.requireNonNull(object, "object");
-		Objects.requireNonNull(keys, "keys");
-		Objects.requireNonNull(value, "value");
-
-		//no keys => error
-		if (keys.isEmpty())
-			throw new IllegalArgumentException("empty keys list");
-
-		//'object' is a 'json object' => put by the key
-		if (object instanceof JSONObject) {
-			JSONObject jsonObject = (JSONObject) object;
-
-			//slot not reached yet => recursive put
-			if (keys.size() > 1) {
-				Object middle = jsonObject.opt(keys.get(0));
-
-				//no middle => place holder
-				if (middle == null)
-					middle = "";
-
-				//recursive put
-				jsonObject.put(
-						keys.get(0),
-						this.put(
-								middle,
-								keys.subList(1, keys.size()),
-								value
-						)
-				);
-
-				return jsonObject;
-			}
-
-			//slot reached => put
-			jsonObject.put(keys.get(0), value);
-
-			return jsonObject;
-		}
-
-		//'object' is a 'json array' => put by index
-		if (object instanceof JSONArray) {
-			JSONArray jsonArray = (JSONArray) object;
-
-			try {
-				//the key is an index => get by index
-				int index = Integer.parseInt(keys.get(0));
-
-				//slot not reached yet => recursive put
-				if (keys.size() > 1) {
-					Object middle = jsonArray.opt(index);
-
-					//no middle => place holder
-					if (middle == null)
-						middle = "";
-
-					//recursive put
-					jsonArray.put(
-							index,
-							this.put(
-									middle,
-									keys.subList(1, keys.size()),
-									value
-							)
-					);
-
-					return jsonArray;
-				}
-
-				//slot reached => put
-				jsonArray.put(index, value);
-
-				return jsonArray;
-			} catch (NumberFormatException e) {
-				//the key is not an index => convert 'object' to 'json object' then recursive put
-				return this.put(
-						jsonArray.toJSONObject(
-								new JSONArray(
-										IntStream.range(0, jsonArray.length())
-												 .mapToObj(Integer::toString)
-												 .collect(Collectors.toList())
-								)
-						),
-						keys,
-						value
-				);
-			}
-		}
-
-		//'object' is not a 'json object' nor a 'json array' => attempt parsing
-		try {
-			//can parse 'object' to 'json object' => parse then recursive put
-			return this.put(new JSONObject(object.toString()), keys, value);
-		} catch (JSONException e1) {
-			try {
-				//can parse 'object' to `json array' => parse then recursive put
-				return this.put(new JSONArray(object.toString()), keys, value);
-			} catch (JSONException e2) {
-				//cannot parse 'object' => new
-				try {
-					//key is an index => replace with a 'json array' then recursive put
-					Integer.parseInt(keys.get(0));
-					return this.put(new JSONArray(), keys, value);
-				} catch (NumberFormatException e3) {
-					//key is not an index => replace with a 'json object' then recursive put
-					return this.put(new JSONObject(), keys, value);
-				}
-			}
-		}
 	}
 }

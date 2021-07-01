@@ -16,10 +16,9 @@
 package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.Objects;
 
@@ -91,22 +90,20 @@ public class Split implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.evaluate(memory);
 
-		try {
-			JSONArray array = new JSONArray(text0);
+		if (value0 instanceof ArrayValue) {
+			ArrayValue array0 = (ArrayValue) value0;
 
-			for (int i = 0, l = array.length(); i < l; i++) {
-				String text1 = array.optString(i);
+			array0.evaluateToken(memory)
+				  .forEach(memory::push);
 
-				memory.push(m -> text1);
-			}
-		} catch (JSONException ignored0) {
-			throw new ExecutionException(
-					"SPLIT expected an array but got: " + text0,
-					this.tree
-			);
+			return;
 		}
+
+		throw new ExecutionException(
+				"SPLIT expected an array but got: " + value0.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable

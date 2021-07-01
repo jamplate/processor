@@ -16,16 +16,14 @@
 package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
-import org.jetbrains.annotations.Contract;
+import org.jamplate.value.ArrayValue;
+import org.jamplate.value.NumberValue;
+import org.jamplate.value.ObjectValue;
+import org.jamplate.value.UnquoteValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * An instruction that pops the top two values in the stack and pushes the property in the
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:text:lazy, key:text:lazy]
+ *     [..., struct:text:lazy, key:text]
  *     [..., value:text:lazy]
  * </pre>
  *
@@ -94,115 +92,44 @@ public class Get implements Instruction {
 		//left
 		Value value1 = memory.pop();
 
-		memory.push(m -> {
+		if (value1 instanceof ObjectValue) {
 			//right
-			String text0 = value0.evaluate(m);
+			Object key0 = value0.evaluate(memory);
 			//left
-			String text1 = value1.evaluate(m);
+			ObjectValue object1 = (ObjectValue) value1;
 
-			try {
-				//right
-				JSONArray array0 = new JSONArray(text0);
-				//right
-				List<String> list0 = array0
-						.toList()
-						.stream()
-						.map(String::valueOf)
-						.collect(Collectors.toList());
+			//result
+			Value value3 = object1.evaluateTokenAt(memory, key0);
+			Value value4 = UnquoteValue.cast(value3);
 
-				//result
-				Object object3 = this.get(text1, list0);
+			memory.push(value4);
+			return;
+		}
+		if (value1 instanceof ArrayValue) {
+			//right
+			NumberValue number0 = NumberValue.cast(value0);
+			int index0 = number0.evaluateToken(memory).intValue();
+			//left
+			ArrayValue array1 = (ArrayValue) value1;
 
-				return String.valueOf(object3);
-			} catch (JSONException ignored) {
-				throw new ExecutionException(
-						"GET expected an array but got: " + text1,
-						this.tree
-				);
-			}
-		});
+			//result
+			Value value3 = array1.evaluateTokenAt(memory, index0);
+			Value value4 = UnquoteValue.cast(value3);
+
+			memory.push(value4);
+			return;
+		}
+
+		throw new ExecutionException(
+				"GET expected array or object but got: " +
+				value1.evaluate(memory),
+				this.tree
+		);
 	}
 
-	/**
-	 * Assuming the given {@code object} is a {@link JSONArray} or a {@link JSONObject},
-	 * get the value stored at the given nesting {@code keys}. If the given {@code object}
-	 * is not a {@link JSONArray} nor a {@link JSONObject} or a node in the middle is not
-	 * of these types, an empty string will be returned.
-	 *
-	 * @param object the object to get from.
-	 * @param keys   the nesting keys to get the value from.
-	 * @return the value nested with the given {@code keys} in the given {@code object}.
-	 * @throws NullPointerException     if the given {@code object} or {@code keys} is
-	 *                                  null.
-	 * @throws IllegalArgumentException if the given {@code keys} list is empty.
-	 * @since 0.3.0 ~2021.06.13
-	 */
-	@NotNull
-	@Contract(pure = true)
-	protected Object get(@NotNull Object object, @NotNull List<String> keys) {
-		Objects.requireNonNull(object, "object");
-		Objects.requireNonNull(keys, "keys");
-
-		//no keys => error
-		if (keys.isEmpty())
-			throw new IllegalArgumentException("empty keys list");
-
-		//'object' is a 'json object' => get by key
-		if (object instanceof JSONObject) {
-			JSONObject jsonObject = (JSONObject) object;
-
-			Object value = jsonObject.opt(keys.get(0));
-
-			//value is null => 'object' contain no value at the key
-			if (value == null)
-				return "";
-
-			//value not reached yet => recursive get
-			if (keys.size() > 1)
-				return this.get(value, keys.subList(1, keys.size()));
-
-			//value reached => return it
-			return value;
-		}
-
-		//'object' is a 'json array' => get by index
-		if (object instanceof JSONArray) {
-			JSONArray array = (JSONArray) object;
-
-			try {
-				//the key is an index => get by index
-				int index = Integer.parseInt(keys.get(0));
-
-				Object value = array.opt(index);
-
-				//value is null => 'object' contain no value at the key
-				if (value == null)
-					return "";
-
-				//value not reached yet => recursive get
-				if (keys.size() > 1)
-					return this.get(value, keys.subList(1, keys.size()));
-
-				//value reached => return it
-				return value;
-			} catch (NumberFormatException e) {
-				//the key is not an index => 'object' contain no value at the key
-				return "";
-			}
-		}
-
-		//'object' is not a 'json object' nor a 'json array' => attempt parsing
-		try {
-			//can parse 'object' to 'json object' => parse then recursive get
-			return this.get(new JSONObject(object.toString()), keys);
-		} catch (JSONException e1) {
-			try {
-				//can parse 'object' to 'json array' => parse then recursive get
-				return this.get(new JSONArray(object.toString()), keys);
-			} catch (JSONException e2) {
-				//cannot parse 'object' => 'object' contain no value at the key
-				return "";
-			}
-		}
+	@Nullable
+	@Override
+	public Tree getTree() {
+		return this.tree;
 	}
 }

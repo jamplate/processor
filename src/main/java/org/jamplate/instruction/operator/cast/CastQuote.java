@@ -16,85 +16,65 @@
 package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
-import org.jamplate.value.ObjectValue;
+import org.jamplate.value.QuoteValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * An instruction that pops the last value in the stack and pushes a value that evaluate
- * to the popped value interpreted as an object.
- * <br>
- * <table>
- *     <tr>
- *         <th>Evaluation</th>
- *         <th>Interpretation</th>
- *     </tr>
- *     <tr>
- *         <td>Object</td>
- *         <td>The object</td>
- *     </tr>
- *     <tr>
- *         <td>Array</td>
- *         <td>An object mapping each item to its index (item=index)</td>
- *     </tr>
- *     <tr>
- *         <td>The rest</td>
- *         <td>A singleton object containing the text.</td>
- *     </tr>
- * </table>
+ * An instruction that pops the last value in the stack and pushes the value of casting it
+ * with {@link QuoteValue#cast(Object)}.
  * <br><br>
  * Memory Visualization:
  * <pre>
  *     [..., input:text:lazy]
  *     [...]
- *     [..., output:object:lazy]
+ *     [..., quote:text:lazy]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.13
+ * @since 0.3.0 ~2021.06.27
  */
-public class CastObject implements Instruction {
+public class CastQuote implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.06.27
 	 */
-	@NotNull
-	public static final CastObject INSTANCE = new CastObject();
+	public static final CastQuote INSTANCE = new CastQuote();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 9027069127434903248L;
+	private static final long serialVersionUID = -7955758253109124525L;
 
 	/**
 	 * A reference of this instruction in the source code.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.06.27
 	 */
 	@Nullable
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * Construct a new instruction that pops the last value in the stack and pushes the
+	 * value of casting it with {@link QuoteValue#cast(Object)}.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.06.27
 	 */
-	public CastObject() {
+	public CastQuote() {
 		this.tree = null;
 	}
 
 	/**
-	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * Construct a new instruction that pops the last value in the stack and pushes the
+	 * value of casting it with {@link QuoteValue#cast(Object)}.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.06.27
 	 */
-	public CastObject(@NotNull Tree tree) {
+	public CastQuote(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -105,7 +85,7 @@ public class CastObject implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		Value value1 = ObjectValue.cast(value0);
+		Value value1 = QuoteValue.cast(value0);
 
 		memory.push(value1);
 	}

@@ -16,6 +16,7 @@
 package org.jamplate.instruction.memory.stack;
 
 import org.jamplate.model.*;
+import org.jamplate.value.TokenValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,7 +91,7 @@ public class Eval implements Instruction {
 		String text0 = value0.evaluate(memory);
 
 		//push the result
-		memory.push(m -> text0);
+		memory.push(TokenValue.cast(text0));
 	}
 
 	@Nullable

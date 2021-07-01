@@ -16,37 +16,15 @@
 package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
  * to the popped value interpreted as an array.
- * <br>
- * <table>
- *     <tr>
- *         <th>Evaluation</th>
- *         <th>Interpretation</th>
- *     </tr>
- *     <tr>
- *         <td>Array</td>
- *         <td>The array</td>
- *     </tr>
- *     <tr>
- *         <td>Object</td>
- *         <td>The keys of the object sorted as by {@link String#compareTo(String)}</td>
- *     </tr>
- *     <tr>
- *         <td>The rest</td>
- *         <td>A singleton array containing the text.</td>
- *     </tr>
- * </table>
  * <br><br>
  * Memory Visualization:
  * <pre>
@@ -108,36 +86,9 @@ public class CastArray implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
+		Value value1 = ArrayValue.cast(value0);
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
-
-			try {
-				JSONArray array0 = new JSONArray(text0);
-
-				return String.valueOf(array0);
-			} catch (JSONException ignored0) {
-				try {
-					JSONObject object0 = new JSONObject(text0);
-					JSONArray array0 = object0.toJSONArray(
-							new JSONArray(
-									object0.keySet()
-										   .stream()
-										   .sorted()
-										   .collect(Collectors.toList())
-							)
-					);
-
-					return String.valueOf(array0);
-				} catch (JSONException ignored1) {
-					JSONArray array0 = new JSONArray();
-
-					array0.put(0, text0);
-
-					return String.valueOf(array0);
-				}
-			}
-		});
+		memory.push(value1);
 	}
 
 	@Nullable

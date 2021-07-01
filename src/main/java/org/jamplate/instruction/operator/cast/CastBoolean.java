@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,22 +121,9 @@ public class CastBoolean implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
+		Value value1 = BooleanValue.cast(value0);
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
-
-			switch (text0) {
-				case "":
-				case "0":
-				case "false":
-				case "null":
-					return "false";
-				case "1":
-				case "true":
-				default:
-					return "true";
-			}
-		});
+		memory.push(value1);
 	}
 
 	@Nullable

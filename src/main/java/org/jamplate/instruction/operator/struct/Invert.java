@@ -16,11 +16,11 @@
 package org.jamplate.instruction.operator.struct;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -90,27 +90,28 @@ public class Invert implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
+		//parameter
 		Value value0 = memory.pop();
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
+		if (value0 instanceof ArrayValue) {
+			//parameter
+			ArrayValue array0 = (ArrayValue) value0;
 
-			try {
-				JSONArray array0 = new JSONArray(text0);
-				List list0 = array0.toList();
+			//result
+			array0.apply((m, l) -> {
+				List<Value> list = new ArrayList<>(l);
+				Collections.reverse(list);
+				return list;
+			});
 
-				Collections.reverse(list0);
+			memory.push(array0);
+			return;
+		}
 
-				JSONArray array1 = new JSONArray(list0);
-
-				return String.valueOf(array1);
-			} catch (JSONException ignored0) {
-				throw new ExecutionException(
-						"INVERT expected an array but got: " + text0,
-						this.tree
-				);
-			}
-		});
+		throw new ExecutionException(
+				"INVERT expected array but got: " + value0.evaluate(memory),
+				this.tree
+		);
 	}
 
 	@Nullable

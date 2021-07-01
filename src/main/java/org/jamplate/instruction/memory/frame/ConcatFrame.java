@@ -16,11 +16,12 @@
 package org.jamplate.instruction.memory.frame;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ArrayValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -91,38 +92,31 @@ public class ConcatFrame implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		Value value0 = memory.pop();
+		ArrayValue array0 = new ArrayValue();
 
 		while (true) {
-			Value value1 = value0;
-			Value value2 = memory.peek();
+			Value value1 = memory.pop();
 
-			if (value2 == Value.NULL) {
-				memory.push(value1);
-				break;
+			if (value1 == Value.NULL) {
+				memory.push(array0);
+				return;
 			}
 
-			memory.pop();
+			if (value1 instanceof ArrayValue) {
+				ArrayValue array1 = (ArrayValue) value1;
 
-			value0 = m -> {
-				String text1 = value1.evaluate(m);
-				String text2 = value2.evaluate(m);
+				array0 = array0.apply((m, l) -> {
+					List<Value> list = new ArrayList<>(l);
+					list.addAll(array1.evaluateToken(m));
+					return list;
+				});
+				continue;
+			}
 
-				try {
-					JSONArray array1 = new JSONArray(text1);
-					JSONArray array2 = new JSONArray(text2);
-
-					array2.putAll(array1);
-
-					return String.valueOf(array2);
-				} catch (JSONException ignored0) {
-					throw new ExecutionException(
-							"CONCAT expected two arrays but got: " + text1 + " and " +
-							text2,
-							this.tree
-					);
-				}
-			};
+			throw new ExecutionException(
+					"CONCAT expected array but got: " + value1.evaluate(memory),
+					this.tree
+			);
 		}
 	}
 

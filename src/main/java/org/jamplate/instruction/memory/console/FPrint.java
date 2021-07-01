@@ -16,10 +16,9 @@
 package org.jamplate.instruction.memory.console;
 
 import org.jamplate.model.*;
+import org.jamplate.value.ObjectValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -27,13 +26,10 @@ import java.util.Objects;
  * An instruction that pops the last two values from the stack and prints the results of
  * evaluating the second popped value to the console with applying the replacements of
  * evaluating the first popped value.
- * <br>
- * If the first popped value was not an object, an {@link ExecutionException} will be
- * thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., parameter:text, replacements:object]
+ *     [..., parameter:text, replacements:object|text]
  *     [...]
  * </pre>
  *
@@ -96,37 +92,27 @@ public class FPrint implements Instruction {
 		//left
 		Value value1 = memory.pop();
 
-		//right
-		String text0 = value0.evaluate(memory);
 		//left
 		String text1 = value1.evaluate(memory);
 
-		try {
-			//right
-			JSONObject object0 = new JSONObject(text0);
+		//right
+		ObjectValue object0 = ObjectValue.cast(value0);
 
-			//result
-			String text2 = object0
-					.toMap()
-					.entrySet()
-					.stream()
-					.reduce(
-							text1,
-							(text, entry) ->
-									text.replace(
-											String.valueOf(entry.getKey()),
-											String.valueOf(entry.getValue())
-									),
-							(t1, t2) -> t1 + t2
-					);
+		//result
+		String text2 = object0
+				.evaluateToken(memory)
+				.stream()
+				.reduce(
+						text1,
+						(s, e) ->
+								s.replace(
+										e.getKey().evaluate(memory),
+										e.getValue().evaluate(memory)
+								),
+						(a, b) -> a + b
+				);
 
-			memory.print(text2);
-		} catch (JSONException ignored) {
-			throw new ExecutionException(
-					"FPRINT expected an object but got: " + text0,
-					this.tree
-			);
-		}
+		memory.print(text2);
 	}
 
 	@Nullable

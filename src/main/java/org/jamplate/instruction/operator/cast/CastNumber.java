@@ -16,6 +16,7 @@
 package org.jamplate.instruction.operator.cast;
 
 import org.jamplate.model.*;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,31 +125,9 @@ public class CastNumber implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
+		Value value1 = NumberValue.cast(value0);
 
-		memory.push(m -> {
-			String text0 = value0.evaluate(m);
-
-			switch (text0) {
-				case "":
-				case "0":
-				case "false":
-				case "null":
-					return "0";
-				case "1":
-				case "true":
-					return "1";
-				default:
-					try {
-						double num0 = Double.parseDouble(text0);
-
-						return Double.toString(num0);
-					} catch (NumberFormatException ignored0) {
-						int num0 = text0.hashCode();
-
-						return String.valueOf(num0);
-					}
-			}
-		});
+		memory.push(value1);
 	}
 
 	@Nullable
