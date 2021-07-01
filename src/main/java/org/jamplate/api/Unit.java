@@ -118,6 +118,20 @@ public interface Unit {
 	boolean initialize(@NotNull Document document);
 
 	/**
+	 * Optimize the the compilation of the given {@code document} in the environment set
+	 * for this unit.
+	 *
+	 * @param document the document to optimize its compilation in this unit.
+	 * @param mode     the optimization mode. negative for extreme optimization.
+	 * @throws NullPointerException  if the given {@code document} is null.
+	 * @throws IllegalStateException if no compilation was associated to the given {@code
+	 *                               document}.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	@Contract(mutates = "this")
+	void optimize(@NotNull Document document, int mode);
+
+	/**
 	 * Parse the trees in the compilation of the given {@code document} in the environment
 	 * set for this unit using the parser of the spec set for this unit.
 	 *

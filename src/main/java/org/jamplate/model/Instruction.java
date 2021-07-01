@@ -121,6 +121,20 @@ public interface Instruction extends Iterable<Instruction>, Serializable {
 	}
 
 	/**
+	 * Return an optimized version of this instruction.
+	 *
+	 * @param mode the mode of the optimization. zero or positive integer for normal
+	 *             optimization and negative integer for maximum optimization.
+	 * @return an optimized version of this instruction.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	@NotNull
+	@Contract(pure = true)
+	default Instruction optimize(int mode) {
+		return this;
+	}
+
+	/**
 	 * Execute this instruction with the given {@code environment} and {@code memory}.
 	 *
 	 * @param environment the environment this instruction is executed in.

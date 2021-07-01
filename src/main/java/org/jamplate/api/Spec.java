@@ -51,6 +51,7 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.16
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public interface Spec extends Iterable<Spec> {
 	/**
 	 * Return an iterator iterating over the subspecs in this spec.
@@ -281,7 +282,7 @@ public interface Spec extends Iterable<Spec> {
 	 * A method that get invoked after the compilation get created for a document at a
 	 * unit where this spec is applied.
 	 *
-	 * @param unit     the unit where this spec is applied. (optional)
+	 * @param unit        the unit where this spec is applied. (optional)
 	 * @param compilation the created compilation.
 	 * @throws NullPointerException if the given {@code compilation} is null.
 	 * @since 0.3.0 ~2021.06.22
@@ -333,6 +334,19 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(mutates = "param1")
 	default void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
+	}
+
+	/**
+	 * A method that get invoked when the user requests to optimize the given {@code
+	 * compilation}.
+	 *
+	 * @param compilation the compilation to be optimized.
+	 * @param mode        the optimization mode. Negative for extreme optimizations.
+	 * @throws NullPointerException if the given {@code compilation} is null.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	@Contract(mutates = "param1")
+	default void onOptimize(@NotNull Compilation compilation, int mode) {
 	}
 
 	/**

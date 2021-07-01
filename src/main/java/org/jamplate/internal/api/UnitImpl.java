@@ -15,8 +15,8 @@
  */
 package org.jamplate.internal.api;
 
-import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
+import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Analyzer;
@@ -302,6 +302,16 @@ public class UnitImpl implements Unit {
 		spec.onCreateCompilation(this, compilation);
 
 		return true;
+	}
+
+	@Override
+	public void optimize(@NotNull Document document, int mode) {
+		Objects.requireNonNull(document, "document");
+		Spec spec = this.spec;
+
+		Compilation compilation = this.requireCompilation(document);
+
+		spec.onOptimize(compilation, mode);
 	}
 
 	@Override

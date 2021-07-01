@@ -112,4 +112,10 @@ public class Negate implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? Negate.INSTANCE : new Negate(new Tree(this.tree));
+	}
 }

@@ -124,4 +124,17 @@ public class Repeat implements Instruction {
 	public Iterator<Instruction> iterator() {
 		return Collections.singleton(this.instruction).iterator();
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ?
+			   new Repeat(
+					   this.instruction.optimize(mode)
+			   ) :
+			   new Repeat(
+					   new Tree(this.tree),
+					   this.instruction.optimize(mode)
+			   );
+	}
 }

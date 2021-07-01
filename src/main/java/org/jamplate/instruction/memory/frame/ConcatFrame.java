@@ -125,4 +125,10 @@ public class ConcatFrame implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? ConcatFrame.INSTANCE : new ConcatFrame(new Tree(this.tree));
+	}
 }

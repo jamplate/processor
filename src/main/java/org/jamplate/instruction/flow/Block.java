@@ -227,4 +227,27 @@ public class Block implements Instruction {
 	public Iterator<Instruction> iterator() {
 		return Collections.unmodifiableList(this.instructions).iterator();
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ?
+			   new Block(
+					   this.instructions
+							   .stream()
+							   .map(instruction ->
+									   instruction.optimize(mode)
+							   )
+							   .collect(Collectors.toList())
+			   ) :
+			   new Block(
+					   new Tree(this.tree),
+					   this.instructions
+							   .stream()
+							   .map(instruction ->
+									   instruction.optimize(mode)
+							   )
+							   .collect(Collectors.toList())
+			   );
+	}
 }

@@ -87,4 +87,10 @@ public class Idle implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? Idle.INSTANCE : new Idle(new Tree(this.tree));
+	}
 }

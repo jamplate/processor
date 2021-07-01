@@ -152,4 +152,19 @@ public class Branch implements Instruction {
 	public Iterator<Instruction> iterator() {
 		return Arrays.asList(this.branch, this.fallback).iterator();
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ?
+			   new Branch(
+					   this.branch.optimize(mode),
+					   this.fallback.optimize(mode)
+			   ) :
+			   new Branch(
+					   new Tree(this.tree),
+					   this.branch.optimize(mode),
+					   this.fallback.optimize(mode)
+			   );
+	}
 }

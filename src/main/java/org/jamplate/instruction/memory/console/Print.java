@@ -94,4 +94,10 @@ public class Print implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? Print.INSTANCE : new Print(new Tree(this.tree));
+	}
 }

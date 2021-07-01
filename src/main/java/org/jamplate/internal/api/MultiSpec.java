@@ -15,8 +15,8 @@
  */
 package org.jamplate.internal.api;
 
-import org.jamplate.api.Unit;
 import org.jamplate.api.Spec;
+import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
@@ -258,6 +258,12 @@ public class MultiSpec implements Spec {
 	public void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
 		for (Spec spec : this)
 			spec.onDiagnostic(environment, message);
+	}
+
+	@Override
+	public void onOptimize(@NotNull Compilation compilation, int mode) {
+		for (Spec spec : this)
+			spec.onOptimize( compilation, mode);
 	}
 
 	@Override

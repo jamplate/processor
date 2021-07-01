@@ -102,4 +102,17 @@ public class PushConst implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ?
+			   new PushConst(
+					   this.value
+			   ) :
+			   new PushConst(
+					   new Tree(this.tree),
+					   this.value
+			   );
+	}
 }

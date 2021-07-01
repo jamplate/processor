@@ -124,4 +124,10 @@ public class Product implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? Product.INSTANCE : new Product(new Tree(this.tree));
+	}
 }

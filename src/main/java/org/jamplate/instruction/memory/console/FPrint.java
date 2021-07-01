@@ -120,4 +120,10 @@ public class FPrint implements Instruction {
 	public Tree getTree() {
 		return this.tree;
 	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? FPrint.INSTANCE : new FPrint(new Tree(this.tree));
+	}
 }
