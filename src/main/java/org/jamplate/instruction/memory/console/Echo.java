@@ -35,7 +35,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., target:text]
+ *     [..., param:value]
  *     [...]
  * </pre>
  *

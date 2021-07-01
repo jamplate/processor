@@ -29,7 +29,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., top:text:lazy]
+ *     [..., ignore:value*]
  *     [...]
  * </pre>
  *

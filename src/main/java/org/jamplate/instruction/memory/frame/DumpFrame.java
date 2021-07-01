@@ -29,8 +29,8 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     ...[...][...]
- *     ...[..., ...]
+ *     ...[...][...param:value*]
+ *     ...[..., ...result:value*]
  * </pre>
  *
  * @author LSafer

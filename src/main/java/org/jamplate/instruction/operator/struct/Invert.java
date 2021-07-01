@@ -29,13 +29,13 @@ import java.util.Objects;
  * An instruction that pops the top value at the stack and invert it (assuming its an
  * array).
  * <br>
- * If the popped value was not an array, an {@link ExecutionException} will be thrown.
+ * If the popped value was not an {@link ArrayValue array}, an {@link ExecutionException}
+ * will be thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:array:lazy]
- *     [...]
- *     [..., inverted:array:lazy]
+ *     [..., param:array*]
+ *     [..., result:array*]
  * </pre>
  *
  * @author LSafer

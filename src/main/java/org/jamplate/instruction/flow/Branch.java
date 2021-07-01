@@ -16,6 +16,7 @@
 package org.jamplate.instruction.flow;
 
 import org.jamplate.model.*;
+import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,12 +30,12 @@ import java.util.Objects;
  * fallback} if the top value in the stack evaluated to {@code false}. The top value in
  * the stack will be popped in the process.
  * <br>
- * If the top value in the stack is not a boolean, then an {@link ExecutionException} will
- * be thrown.
+ * If the top value in the stack is not a {@link BooleanValue boolean}, then an {@link
+ * ExecutionException} will be thrown.
  * <br><br>
  * Memory Visualization (before executing the branch):
  * <pre>
- *     [..., condition:boolean]
+ *     [..., param:boolean]
  *     [...]
  * </pre>
  *

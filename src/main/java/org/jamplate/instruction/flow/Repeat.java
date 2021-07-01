@@ -28,12 +28,12 @@ import java.util.Objects;
  * An instruction that repeatedly executes a pre-specified instruction while the top value
  * in the stack evaluates to true. The top value will be popped before being executed.
  * <br>
- * If the top value in the stack is not a boolean, then an {@link ExecutionException} will
- * be thrown.
+ * If the top value in the stack is not a {@link BooleanValue boolean}, then an {@link
+ * ExecutionException} will be thrown.
  * <br><br>
  * Memory Visualization (before each execution of the instruction):
  * <pre>
- *     [..., condition:boolean]
+ *     [..., param:boolean]
  *     [...]
  * </pre>
  *

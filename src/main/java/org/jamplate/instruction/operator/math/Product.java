@@ -26,13 +26,13 @@ import java.util.Objects;
  * An instruction that pops the last two values and pushes a value that evaluates to the
  * results of multiplying the result of evaluating the two popped values.
  * <br>
- * If one of the values is not a number, an {@link ExecutionException} will occur.
+ * If one of the values is not a {@link NumberValue number}, an {@link ExecutionException}
+ * will occur.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., left:number:lazy, right:number:lazy]
- *     [...]
- *     [..., result:number:lazy]
+ *     [..., left:number*, right:number*]
+ *     [..., result:number*]
  * </pre>
  *
  * @author LSafer

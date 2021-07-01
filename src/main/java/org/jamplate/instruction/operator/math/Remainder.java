@@ -26,13 +26,13 @@ import java.util.Objects;
  * An instruction that pops the last two values and pushes a value that evaluates to the
  * remainder of dividing the second popped value by the first one.
  * <br>
- * If one of the values is not a number, an {@link ExecutionException} will occur.
+ * If one of the values is not a {@link NumberValue number}, an {@link ExecutionException}
+ * will occur.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., left:number:lazy, right:number:lazy]
- *     [...]
- *     [..., result:number:lazy]
+ *     [..., left:number*, right:number*]
+ *     [..., result:number*]
  * </pre>
  *
  * @author LSafer

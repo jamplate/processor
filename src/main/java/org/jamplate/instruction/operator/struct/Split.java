@@ -30,12 +30,13 @@ import java.util.Objects;
  * The items will be pushed from the first to the last, so popping the stack will result
  * to reading the array backwards.
  * <br>
- * If the popped value is not an array, an {@link ExecutionException} will be thrown.
+ * If the popped value is not an {@link ArrayValue array}, an {@link ExecutionException}
+ * will be thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct: array]
- *     [..., item0:text, item1:text, item2:text, ...]
+ *     [..., param:array]
+ *     [..., ...result:value]
  * </pre>
  *
  * @author LSafer

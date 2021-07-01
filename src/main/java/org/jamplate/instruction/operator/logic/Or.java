@@ -28,13 +28,12 @@ import java.util.Objects;
  * {@code false} if both the popped values evaluated to {@code false}.
  * <br>
  * This instruction will throw an {@link ExecutionException} if one of the popped values
- * was not a boolean.
+ * was not a {@link BooleanValue boolean}.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., left:boolean:lazy, right:boolean:lazy]
- *     [...]
- *     [..., result:boolean:lazy]
+ *     [..., left:boolean*, right:boolean*]
+ *     [..., result:boolean*]
  * </pre>
  *
  * @author LSafer

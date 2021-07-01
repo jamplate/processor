@@ -29,7 +29,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., parameter:text, replacements:object|text]
+ *     [..., param:value, replace:value|object]
  *     [...]
  * </pre>
  *

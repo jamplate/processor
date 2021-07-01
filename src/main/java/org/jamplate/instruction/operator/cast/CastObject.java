@@ -25,31 +25,11 @@ import java.util.Objects;
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
  * to the popped value interpreted as an object.
- * <br>
- * <table>
- *     <tr>
- *         <th>Evaluation</th>
- *         <th>Interpretation</th>
- *     </tr>
- *     <tr>
- *         <td>Object</td>
- *         <td>The object</td>
- *     </tr>
- *     <tr>
- *         <td>Array</td>
- *         <td>An object mapping each item to its index (item=index)</td>
- *     </tr>
- *     <tr>
- *         <td>The rest</td>
- *         <td>A singleton object containing the text.</td>
- *     </tr>
- * </table>
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text:lazy]
- *     [...]
- *     [..., output:object:lazy]
+ *     [..., param:value*]
+ *     [..., result:object*]
  * </pre>
  *
  * @author LSafer

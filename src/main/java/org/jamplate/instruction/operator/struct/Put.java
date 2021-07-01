@@ -29,13 +29,11 @@ import java.util.Objects;
  * An instruction that pops the top three values in the stack and put the first popped
  * value in the third popped value at the key resultant from evaluating the second popped
  * value.
- * <br>
- * If the second popped value is not an array, an {@link ExecutionException} will occur.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:text:lazy, key:text:lazy, value:text:lazy]
- *     [..., result:text:lazy]
+ *     [..., param:value*|array*|object*, key:value*|number*, value:value*]
+ *     [..., result:array*|object*]
  * </pre>
  *
  * @author LSafer

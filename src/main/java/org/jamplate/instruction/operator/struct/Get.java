@@ -31,8 +31,8 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., struct:text:lazy, key:text]
- *     [..., value:text:lazy]
+ *     [..., param:value*|array*|object*, key:value*|number*]
+ *     [..., result:value*]
  * </pre>
  *
  * @author LSafer

@@ -25,47 +25,11 @@ import java.util.Objects;
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
  * to the popped value interpreted as a boolean.
- * <br>
- * <table>
- *     <tr>
- *         <th>Evaluation</th>
- *         <th>Interpretation</th>
- *     </tr>
- *     <tr>
- *         <td>""</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"0"</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"false"</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"null"</td>
- *         <td>false</td>
- *     </tr>
- *     <tr>
- *         <td>"1"</td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td>"true"</td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td>The Rest</td>
- *         <td>true</td>
- *     </tr>
- * </table>
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text:lazy]
- *     [...]
- *     [..., output:boolean:lazy]
+ *     [..., param:value*]
+ *     [..., result:boolean*]
  * </pre>
  *
  * @author LSafer

@@ -28,14 +28,15 @@ import java.util.Objects;
  * An instruction that pops the items from the last item and before the last {@link
  * Value#NULL} and then pushes a value that evaluates to the results of concatenating all
  * the popped values from the last popped to the first popped. The concatenation will be
- * array concatenation. If one of the values is not an array, an {@link
- * ExecutionException} will be thrown.
+ * array concatenation.
+ * <br>
+ * If one of the values is not an {@link ArrayValue array}, an {@link ExecutionException}
+ * will be thrown.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [...null?, item0:array:lazy, item1:array:lazy, item2:array:lazy, ...]
- *     [...null?]
- *     [...null?, joint:array:lazy]
+ *     [..., ...param:array*]
+ *     [..., result:array*]
  * </pre>
  *
  * @author LSafer

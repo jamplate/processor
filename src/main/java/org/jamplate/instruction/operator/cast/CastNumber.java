@@ -25,51 +25,11 @@ import java.util.Objects;
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
  * to the popped value interpreted as a number.
- * <br>
- * <table>
- *     <tr>
- *         <th>Evaluation</th>
- *         <th>Interpretation</th>
- *     </tr>
- *     <tr>
- *         <td>Number</td>
- *         <td>The number</td>
- *     </tr>
- *     <tr>
- *         <td>""</td>
- *         <td>0</td>
- *     </tr>
- *     <tr>
- *         <td>"0"</td>
- *         <td>0</td>
- *     </tr>
- *     <tr>
- *         <td>"false"</td>
- *         <td>0</td>
- *     </tr>
- *     <tr>
- *         <td>"null"</td>
- *         <td>0</td>
- *     </tr>
- *     <tr>
- *         <td>"1"</td>
- *         <td>1</td>
- *     </tr>
- *     <tr>
- *         <td>"true"</td>
- *         <td>1</td>
- *     </tr>
- *     <tr>
- *         <td>The rest</td>
- *         <td>The hashcode of the text as in {@link String#hashCode()}</td>
- *     </tr>
- * </table>
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., input:text:lazy]
- *     [...]
- *     [..., output:number:lazy]
+ *     [..., param:value*]
+ *     [..., result:number*]
  * </pre>
  *
  * @author LSafer

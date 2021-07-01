@@ -28,9 +28,8 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., x:text:lazy]
- *     [...]
- *     [..., x:text]
+ *     [..., param:value]
+ *     [..., result:text]
  * </pre>
  *
  * @author LSafer

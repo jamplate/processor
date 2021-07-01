@@ -27,7 +27,7 @@ import java.util.Objects;
  * Memory Visualization:
  * <pre>
  *     [...]
- *     [..., constant:text:lazy]
+ *     [..., result:value*]
  * </pre>
  *
  * @author LSafer
