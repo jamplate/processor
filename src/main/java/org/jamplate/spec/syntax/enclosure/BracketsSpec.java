@@ -18,7 +18,7 @@ package org.jamplate.spec.syntax.enclosure;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.function.parser.pattern.EnclosureParser;
-import org.jamplate.internal.function.parser.wrapper.HierarchyParser;
+import org.jamplate.internal.function.parser.router.HierarchyParser;
 import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.model.Sketch;

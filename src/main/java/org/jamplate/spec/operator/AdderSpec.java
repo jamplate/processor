@@ -27,10 +27,10 @@ import org.jamplate.spec.syntax.symbol.PlusSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
-import org.jamplate.internal.function.analyzer.wrapper.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.wrapper.FilterByNotParentKindAnalyzer;
-import org.jamplate.internal.function.analyzer.wrapper.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
+import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
+import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jetbrains.annotations.NotNull;
 
 /**

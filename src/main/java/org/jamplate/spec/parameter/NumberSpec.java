@@ -18,7 +18,7 @@ package org.jamplate.spec.parameter;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.spec.syntax.term.DigitsSpec;

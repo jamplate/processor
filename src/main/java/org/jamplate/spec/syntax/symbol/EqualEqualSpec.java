@@ -19,7 +19,7 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.function.parser.pattern.TermParser;
-import org.jamplate.internal.function.parser.wrapper.HierarchyParser;
+import org.jamplate.internal.function.parser.router.HierarchyParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;

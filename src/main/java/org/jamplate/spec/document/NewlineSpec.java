@@ -22,7 +22,7 @@ import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.memory.console.Print;
 import org.jamplate.instruction.memory.heap.Alloc;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.function.parser.pattern.TermParser;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;

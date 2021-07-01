@@ -17,11 +17,11 @@ package org.jamplate.spec.parameter;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.spec.syntax.enclosure.ParenthesesSpec;

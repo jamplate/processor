@@ -22,7 +22,7 @@ import org.jamplate.instruction.memory.console.FPrint;
 import org.jamplate.instruction.memory.heap.Access;
 import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.instruction.operator.cast.CastObject;
-import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.util.IO;
 import org.jamplate.value.TextValue;

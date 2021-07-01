@@ -25,7 +25,7 @@ import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.instruction.memory.stack.Dup;
 import org.jamplate.instruction.memory.stack.Pop;
 import org.jamplate.instruction.operator.logic.Defined;
-import org.jamplate.internal.function.compiler.wrapper.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.spec.syntax.term.WordSpec;

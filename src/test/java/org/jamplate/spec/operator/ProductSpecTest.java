@@ -5,7 +5,7 @@ import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Compiler;
 import org.jamplate.internal.api.UnitImpl;
-import org.jamplate.internal.function.compiler.branch.FlattenCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.model.PseudoDocument;
