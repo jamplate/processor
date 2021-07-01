@@ -13,11 +13,11 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.analyzer.wrapper;
+package org.jamplate.internal.function.analyzer.filter;
 
-import org.jamplate.function.Analyzer;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
+import org.jamplate.function.Analyzer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,40 +28,40 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An analyzer that analyzes using another analyzer and only analyzes trees with none of
- * pre-specified kinds.
+ * An analyzer that analyzes using another analyzer and only analyzes trees with a child
+ * with one of pre-specified kinds.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.24
+ * @since 0.3.0 ~2021.06.15
  */
-public class FilterByNotKindAnalyzer implements Analyzer {
+public class FilterByChildKindAnalyzer implements Analyzer {
 	/**
 	 * The analyzer to be used.
 	 *
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
 	protected final Analyzer analyzer;
 	/**
-	 * The skipped kinds.
+	 * The targeted kinds.
 	 *
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
 	protected final Set<String> kinds;
 
 	/**
-	 * Construct a new analyzer that analyzes the trees without the given {@code kind}
-	 * using the given {@code analyzer}.
+	 * Construct a new analyzer that analyzes the trees with a child with the given {@code
+	 * kind} using the given {@code analyzer}.
 	 *
-	 * @param kind     the kind of trees to skip analyzing.
+	 * @param kind     the kind of the a child of a tree to be analyze.
 	 * @param analyzer the analyzer to be used.
 	 * @throws NullPointerException if the given {@code kind} or {@code analyzer} is
 	 *                              null.
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.06.15
 	 */
-	public FilterByNotKindAnalyzer(@NotNull String kind, @NotNull Analyzer analyzer) {
+	public FilterByChildKindAnalyzer(@NotNull String kind, @NotNull Analyzer analyzer) {
 		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(analyzer, "analyzer");
 		this.kinds = Collections.singleton(kind);
@@ -69,16 +69,16 @@ public class FilterByNotKindAnalyzer implements Analyzer {
 	}
 
 	/**
-	 * Construct a new analyzer that analyzes the trees with none of the given {@code
+	 * Construct a new analyzer that analyzes the trees with one of the given {@code
 	 * kinds} using the given {@code analyzer}.
 	 *
 	 * @param analyzer the analyzer to be used.
-	 * @param kinds    the kinds of trees to skip analyzing.
+	 * @param kinds    the kinds of the a child of a tree to be analyze.
 	 * @throws NullPointerException if the given {@code analyzer} or {@code kinds} is
 	 *                              null.
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.06.15
 	 */
-	public FilterByNotKindAnalyzer(@NotNull Analyzer analyzer, @Nullable String @NotNull ... kinds) {
+	public FilterByChildKindAnalyzer(@NotNull Analyzer analyzer, @Nullable String @NotNull ... kinds) {
 		Objects.requireNonNull(kinds, "kinds");
 		Objects.requireNonNull(analyzer, "analyzer");
 		this.kinds = Arrays
@@ -93,8 +93,9 @@ public class FilterByNotKindAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 
-		if (!this.kinds.contains(tree.getSketch().getKind()))
-			return this.analyzer.analyze(compilation, tree);
+		for (Tree child : tree)
+			if (this.kinds.contains(child.getSketch().getKind()))
+				return this.analyzer.analyze(compilation, tree);
 
 		return false;
 	}

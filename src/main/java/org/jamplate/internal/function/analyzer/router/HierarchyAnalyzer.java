@@ -13,9 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.analyzer.wrapper;
+package org.jamplate.internal.function.analyzer.router;
 
 import org.jamplate.function.Analyzer;
+import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
@@ -23,43 +24,32 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * An analyzer that wraps another analyzer and only analyzes trees with a parent with a
- * pre-specified kind.
+ * An analyzer that analyzes the whole hierarchy of the trees given to it using a
+ * pre-specified analyzer.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.20
+ * @since 0.3.0 ~2021.06.15
  */
-public class FilterByHierarchyKindAnalyzer implements Analyzer {
+public class HierarchyAnalyzer implements Analyzer {
 	/**
-	 * The wrapped analyzer.
+	 * The analyzer to be used by this.
 	 *
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
 	protected final Analyzer analyzer;
-	/**
-	 * The kind of a parent of the trees to analyze.
-	 *
-	 * @since 0.3.0 ~2021.06.24
-	 */
-	@NotNull
-	protected final String kind;
 
 	/**
-	 * Construct a new analyzer that uses the given {@code analyzer} and only analyzes
-	 * trees that has a parent with the given {@code kind}.
+	 * Construct a new analyzer that analyzes the whole hierarchy of the trees given to it
+	 * using the given {@code analyzer}.
 	 *
-	 * @param kind     the kind of a parent of the trees to be analyzed.
 	 * @param analyzer the analyzer to be used.
-	 * @throws NullPointerException if the given {@code kind} or {@code analyzer} is
-	 *                              null.
-	 * @since 0.3.0 ~2021.06.24
+	 * @throws NullPointerException if the given {@code analyzer} is null.
+	 * @since 0.3.0 ~2021.06.15
 	 */
-	public FilterByHierarchyKindAnalyzer(@NotNull String kind, @NotNull Analyzer analyzer) {
-		Objects.requireNonNull(kind, "kind");
+	public HierarchyAnalyzer(@NotNull Analyzer analyzer) {
 		Objects.requireNonNull(analyzer, "analyzer");
-		this.kind = kind;
 		this.analyzer = analyzer;
 	}
 
@@ -68,14 +58,11 @@ public class FilterByHierarchyKindAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 
-		for (
-				Tree parent = tree.getParent();
-				parent != null;
-				parent = parent.getParent()
-		)
-			if (parent.getSketch().getKind().equals(this.kind))
-				return this.analyzer.analyze(compilation, tree);
+		boolean modified = this.analyzer.analyze(compilation, tree);
 
-		return false;
+		for (Tree child : Trees.toArray(tree))
+			modified |= this.analyze(compilation, child);
+
+		return modified;
 	}
 }

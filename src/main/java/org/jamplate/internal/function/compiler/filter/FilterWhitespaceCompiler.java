@@ -13,27 +13,26 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.compiler.wrapper;
+package org.jamplate.internal.function.compiler.filter;
 
+import org.jamplate.function.Compiler;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
-import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * A compiler that delegates to another compiler and raises an exception if that other
- * compiler failed to compile.
+ * A wrapper compiler that compiles whitespaces only, using another compiler.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.05.28
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.06.20
  */
-public class MandatoryCompiler implements Compiler {
+public class FilterWhitespaceCompiler implements Compiler {
 	/**
 	 * The wrapped compiler.
 	 *
@@ -43,14 +42,14 @@ public class MandatoryCompiler implements Compiler {
 	protected final Compiler compiler;
 
 	/**
-	 * Construct a new compiler wrapper that wraps the given {@code compiler} and throws
-	 * an exception if it fails to compile.
+	 * Construct a new whitespace-filtered compiler that compiles trees that are just
+	 * whitespace using the given {@code compiler}.
 	 *
-	 * @param compiler the compiler to be wrapped.
+	 * @param compiler the wrapped compiler.
 	 * @throws NullPointerException if the given {@code compiler} is null.
-	 * @since 0.2.0 ~2021.05.28
+	 * @since 0.3.0 ~2021.05.28
 	 */
-	public MandatoryCompiler(@NotNull Compiler compiler) {
+	public FilterWhitespaceCompiler(@NotNull Compiler compiler) {
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
 	}
@@ -58,14 +57,13 @@ public class MandatoryCompiler implements Compiler {
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
-		Instruction instruction = this.compiler.compile(compiler, compilation, tree);
+		Objects.requireNonNull(compiler, "compiler");
+		Objects.requireNonNull(compilation, "compilation");
+		Objects.requireNonNull(tree, "tree");
 
-		if (instruction == null)
-			throw new CompileException(
-					"Unrecognized token",
-					tree
-			);
+		if (IO.read(tree).toString().trim().isEmpty())
+			return this.compiler.compile(compiler, compilation, tree);
 
-		return instruction;
+		return null;
 	}
 }

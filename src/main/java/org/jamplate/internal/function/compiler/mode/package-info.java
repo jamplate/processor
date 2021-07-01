@@ -14,11 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Jamplate specific implementations.
+ * Mode changer compilers.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.01.17
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.07.02
  */
-@Deprecated
-package org.jamplate.impl;
+package org.jamplate.internal.function.compiler.mode;

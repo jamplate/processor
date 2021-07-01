@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.parser.wrapper;
+package org.jamplate.internal.function.parser.router;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;

@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.analyzer.wrapper;
+package org.jamplate.internal.function.analyzer.filter;
 
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;

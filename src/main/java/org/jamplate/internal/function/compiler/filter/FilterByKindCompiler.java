@@ -13,26 +13,26 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.compiler.wrapper;
+package org.jamplate.internal.function.compiler.filter;
 
-import org.jamplate.function.Compiler;
-import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
+import org.jamplate.function.Compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 /**
- * A wrapper compiler that compiles whitespaces only, using another compiler.
+ * A compiler that targets a pre-specified kind of trees and compiles using another
+ * compiler.
  *
  * @author LSafer
- * @version 0.3.0
- * @since 0.3.0 ~2021.06.20
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.05.28
  */
-public class FilterWhitespaceCompiler implements Compiler {
+public class FilterByKindCompiler implements Compiler {
 	/**
 	 * The wrapped compiler.
 	 *
@@ -40,28 +40,36 @@ public class FilterWhitespaceCompiler implements Compiler {
 	 */
 	@NotNull
 	protected final Compiler compiler;
+	/**
+	 * The kind of the trees to accept.
+	 *
+	 * @since 0.2.0 ~2021.05.28
+	 */
+	@NotNull
+	protected final String kind;
 
 	/**
-	 * Construct a new whitespace-filtered compiler that compiles trees that are just
-	 * whitespace using the given {@code compiler}.
+	 * Construct a new kind-filtered compiler that compiles trees with the given {@code
+	 * kind} using the given {@code compiler}.
 	 *
+	 * @param kind     the kind of trees the constructed compiler will target.
 	 * @param compiler the wrapped compiler.
-	 * @throws NullPointerException if the given {@code compiler} is null.
-	 * @since 0.3.0 ~2021.05.28
+	 * @throws NullPointerException if the given {@code kind} or {@code compiler} is
+	 *                              null.
+	 * @since 0.2.0 ~2021.05.28
 	 */
-	public FilterWhitespaceCompiler(@NotNull Compiler compiler) {
+	public FilterByKindCompiler(@NotNull String kind, @NotNull Compiler compiler) {
+		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(compiler, "compiler");
+		this.kind = kind;
 		this.compiler = compiler;
 	}
 
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
-		Objects.requireNonNull(compiler, "compiler");
-		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-
-		if (IO.read(tree).toString().trim().isEmpty())
+		if (tree.getSketch().getKind().equals(this.kind))
 			return this.compiler.compile(compiler, compilation, tree);
 
 		return null;

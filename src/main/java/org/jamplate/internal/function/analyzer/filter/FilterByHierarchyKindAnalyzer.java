@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.function.analyzer.wrapper;
+package org.jamplate.internal.function.analyzer.filter;
 
 import org.jamplate.function.Analyzer;
 import org.jamplate.model.Compilation;
@@ -23,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * An analyzer that wraps another analyzer and only analyzes when the parent of the trees
- * given to it does not have a pre-specified kind.
+ * An analyzer that wraps another analyzer and only analyzes trees with a parent with a
+ * pre-specified kind.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.21
+ * @since 0.3.0 ~2021.06.20
  */
-public class FilterByNotParentKindAnalyzer implements Analyzer {
+public class FilterByHierarchyKindAnalyzer implements Analyzer {
 	/**
 	 * The wrapped analyzer.
 	 *
@@ -39,7 +39,7 @@ public class FilterByNotParentKindAnalyzer implements Analyzer {
 	@NotNull
 	protected final Analyzer analyzer;
 	/**
-	 * The kind of the parent tree of the trees to not analyze.
+	 * The kind of a parent of the trees to analyze.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
@@ -47,16 +47,16 @@ public class FilterByNotParentKindAnalyzer implements Analyzer {
 	protected final String kind;
 
 	/**
-	 * Construct a new analyzer that wraps the given {@code analyzer} and only analyzes
-	 * when the parent tree of the tree given to it does not has the given {@code kind}.
+	 * Construct a new analyzer that uses the given {@code analyzer} and only analyzes
+	 * trees that has a parent with the given {@code kind}.
 	 *
-	 * @param kind     the kind of the parent tree of the trees to not analyze.
+	 * @param kind     the kind of a parent of the trees to be analyzed.
 	 * @param analyzer the analyzer to be used.
 	 * @throws NullPointerException if the given {@code kind} or {@code analyzer} is
 	 *                              null.
 	 * @since 0.3.0 ~2021.06.24
 	 */
-	public FilterByNotParentKindAnalyzer(@NotNull String kind, @NotNull Analyzer analyzer) {
+	public FilterByHierarchyKindAnalyzer(@NotNull String kind, @NotNull Analyzer analyzer) {
 		Objects.requireNonNull(kind, "kind");
 		Objects.requireNonNull(analyzer, "analyzer");
 		this.kind = kind;
@@ -68,10 +68,13 @@ public class FilterByNotParentKindAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 
-		Tree parent = tree.getParent();
-
-		if (parent == null || !parent.getSketch().getKind().equals(this.kind))
-			return this.analyzer.analyze(compilation, tree);
+		for (
+				Tree parent = tree.getParent();
+				parent != null;
+				parent = parent.getParent()
+		)
+			if (parent.getSketch().getKind().equals(this.kind))
+				return this.analyzer.analyze(compilation, tree);
 
 		return false;
 	}
