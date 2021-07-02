@@ -403,4 +403,85 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 			return Collections.unmodifiableList(elements);
 		});
 	}
+
+	/**
+	 * Return a new array that contains the elements of this array but with the given
+	 * {@code value} placed at the given nested {@code indices}.
+	 *
+	 * @param indices the nested indices to the place to put the value in the returned
+	 *                array.
+	 * @param value   the value of to be set in the returned array.
+	 * @return an array from this array but with the given {@code value} at the given
+	 * 		nested {@code indices}.
+	 * @throws NullPointerException     if the given {@code keys} or {@code value} is
+	 *                                  null.
+	 * @throws IllegalArgumentException if the given {@code keys} list is empty or if the
+	 *                                  first key has not been interpreted as a number.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public ArrayValue put(@NotNull List<?> indices, @NotNull Value value) {
+		Objects.requireNonNull(indices, "indices");
+		Objects.requireNonNull(value, "value");
+		//cheat-check
+		List<Value> list = ArrayValue.transformElements(indices);
+		//case no keys
+		if (list.isEmpty())
+			throw new IllegalArgumentException("Empty keys list");
+		//case first key is not a number
+		if (!(list.get(0) instanceof NumberValue))
+			throw new IllegalArgumentException("First key is not an index");
+		//case single key
+		if (list.size() == 1)
+			return this.put((NumberValue) list.get(0), value);
+		//case multiple keys
+		return new ArrayValue((Function<Memory, List<Value>>) m -> {
+			//eval the pairs
+			List<Value> elements = new ArrayList<>(this.evaluateToken(m));
+			//the index
+			NumberValue index = (NumberValue) list.get(0);
+			//eval the index
+			double indexNumber = index.evaluatePrimitiveToken(m);
+			//the next key
+			Value nextKey = list.get(1);
+
+			//if too small
+			while (elements.size() <= indexNumber)
+				elements.add(new TextValue(""));
+
+			//get middle structure
+			Value middle = elements.get((int) indexNumber);
+
+			//case middle can be an array
+			if (!(middle instanceof ObjectValue) && nextKey instanceof NumberValue) {
+				//middle as array
+				ArrayValue middleArray = ArrayValue.cast(middle);
+
+				//replace and done
+				elements.set(
+						(int) indexNumber,
+						middleArray.put(
+								list.subList(1, list.size()),
+								value
+						)
+				);
+			} else {
+				//middle as object
+				ObjectValue middleObject = ObjectValue.cast(middle);
+
+				//replace and done
+				elements.set(
+						(int) indexNumber,
+						middleObject.put(
+								list.subList(1, list.size()),
+								value
+						)
+				);
+			}
+
+			//done
+			return Collections.unmodifiableList(elements);
+		});
+	}
 }

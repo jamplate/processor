@@ -460,4 +460,105 @@ public final class ObjectValue extends TokenValue<List<PairValue>> {
 			return Collections.unmodifiableList(pairs);
 		});
 	}
+
+	/**
+	 * Return a new object that contains the mappings of this object but with the given
+	 * {@code value} mapped to the given nested {@code keys}.
+	 *
+	 * @param keys  the nested keys to the place to put the value in the returned object.
+	 * @param value the value of to be put in the returned object.
+	 * @return an object from this object but with the given nested pair.
+	 * @throws NullPointerException     if the given {@code keys} or {@code value} is
+	 *                                  null.
+	 * @throws IllegalArgumentException if the given {@code keys} list is empty.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public ObjectValue put(@NotNull List<?> keys, @NotNull Value value) {
+		Objects.requireNonNull(keys, "keys");
+		Objects.requireNonNull(value, "value");
+		//cheat-check
+		List<Value> list = ArrayValue.transformElements(keys);
+		//case no keys
+		if (list.isEmpty())
+			throw new IllegalArgumentException("Empty keys list");
+		//case single key
+		if (list.size() == 1)
+			return this.put(list.get(0), value);
+		//case multiple keys
+		return new ObjectValue((Function<Memory, List<PairValue>>) m -> {
+			//eval the pairs
+			List<PairValue> pairs = new ArrayList<>(this.evaluateToken(m));
+			//the key
+			Value key = list.get(0);
+			//eval the first key
+			String keyText = key.evaluate(m);
+			//the next key
+			Value nextKey = list.get(1);
+
+			//attempt replace pair with the same key
+			ListIterator<PairValue> iterator = pairs.listIterator();
+			while (iterator.hasNext()) {
+				//evaluate the pair
+				PairValue pair = iterator.next();
+				Map.Entry<Value, Value> entry = pair.evaluateToken(m);
+
+				//check if same key
+				if (entry.getKey().evaluate(m).equals(keyText)) {
+					//intermediate value
+					Value middle = entry.getValue();
+
+					//case middle can be an array
+					if (!(middle instanceof ObjectValue) &&
+						nextKey instanceof NumberValue) {
+						//middle as array
+						ArrayValue middleArray = ArrayValue.cast(middle);
+
+						//replace pair
+						iterator.set(new PairValue(
+								key,
+								middleArray.put(
+										list.subList(1, list.size()),
+										value
+								)
+						));
+					} else {
+						//middle as object
+						ObjectValue middleObject = ObjectValue.cast(middle);
+
+						//replace and done
+						iterator.set(new PairValue(
+								key,
+								middleObject.put(
+										list.subList(1, list.size()),
+										value
+								)
+						));
+					}
+
+					//done
+					return Collections.unmodifiableList(pairs);
+				}
+			}
+
+			//no identical key, add new pair
+			pairs.add(new PairValue(
+					key,
+					nextKey instanceof NumberValue ?
+					//new pair value can be an array
+					new ArrayValue().put(
+							list.subList(1, list.size()),
+							value
+					) :
+					//new pair value cannot be other than an object
+					new ObjectValue().put(
+							list.subList(1, list.size()),
+							value
+					)
+			));
+			//done
+			return Collections.unmodifiableList(pairs);
+		});
+	}
 }
