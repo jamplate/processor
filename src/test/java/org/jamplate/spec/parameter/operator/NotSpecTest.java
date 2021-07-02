@@ -1,4 +1,4 @@
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
@@ -16,7 +16,7 @@ import org.jamplate.model.Memory;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.tool.DebugSpec;
-import org.jamplate.spec.parameter.ReferenceSpec;
+import org.jamplate.spec.parameter.resource.ReferenceSpec;
 import org.jamplate.spec.syntax.symbol.ExclamationSpec;
 import org.jamplate.spec.syntax.symbol.PlusSpec;
 import org.jamplate.spec.syntax.term.WordSpec;

@@ -1,4 +1,4 @@
-package org.jamplate.spec.parameter;
+package org.jamplate.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
@@ -9,13 +9,13 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Memory;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.tool.DebugSpec;
-import org.jamplate.spec.operator.AdderSpec;
-import org.jamplate.spec.operator.MultiplierSpec;
+import org.jamplate.spec.parameter.operator.AdderSpec;
+import org.jamplate.spec.parameter.operator.MultiplierSpec;
 import org.jamplate.spec.syntax.enclosure.ParenthesesSpec;
 import org.jamplate.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.spec.syntax.symbol.PlusSpec;
 import org.jamplate.spec.syntax.term.DigitsSpec;
+import org.jamplate.spec.tool.DebugSpec;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 

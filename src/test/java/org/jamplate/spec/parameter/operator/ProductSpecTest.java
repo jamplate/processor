@@ -1,4 +1,4 @@
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
@@ -13,7 +13,7 @@ import org.jamplate.model.*;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.tool.DebugSpec;
-import org.jamplate.spec.parameter.NumberSpec;
+import org.jamplate.spec.parameter.resource.NumberSpec;
 import org.jamplate.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.spec.syntax.symbol.MinusSpec;
 import org.jamplate.spec.syntax.term.DigitsSpec;

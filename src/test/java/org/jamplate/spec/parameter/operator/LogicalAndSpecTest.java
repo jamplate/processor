@@ -1,12 +1,10 @@
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.Compare;
-import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.instruction.operator.logic.And;
 import org.jamplate.internal.api.UnitImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
@@ -14,40 +12,38 @@ import org.jamplate.model.*;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.tool.DebugSpec;
-import org.jamplate.spec.parameter.NumberSpec;
-import org.jamplate.spec.syntax.symbol.CloseChevronSpec;
-import org.jamplate.spec.syntax.symbol.MinusSpec;
-import org.jamplate.spec.syntax.term.DigitsSpec;
-import org.jamplate.value.NumberValue;
+import org.jamplate.spec.parameter.resource.ReferenceSpec;
+import org.jamplate.spec.syntax.symbol.AndAndSpec;
+import org.jamplate.spec.syntax.term.WordSpec;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MoreThanSpecTest {
+public class LogicalAndSpecTest {
 	@Test
 	public void manualAssembly0() {
-		for (int i = -2; i < 3; i++)
-			for (int j = -2; j < 3; j++) {
-				int left = i;
-				int right = j;
-				boolean result = left > right;
+		for (boolean i : Arrays.asList(true, false))
+			for (boolean j : Arrays.asList(true, false)) {
+				boolean left = i;
+				boolean right = j;
+				boolean result = left && right;
 
 				Environment environment = new EnvironmentImpl();
 				Memory memory = new Memory();
 				new Block(
-						(env, mem) -> mem.push(new NumberValue(left)),
-						(env, mem) -> mem.push(new NumberValue(right)),
-						//compare the values
-						Compare.INSTANCE,
-						//push `1` to compare the comparison result
-						new PushConst(new NumberValue(1)),
-						//compare the comparison result with `1`
-						Compare.INSTANCE,
-						//cast the result to boolean
+						//run first param
+						(env, mem) -> mem.push(m -> Boolean.toString(left)),
+						//cast first param into boolean
 						CastBoolean.INSTANCE,
-						//invert the results
-						Negate.INSTANCE
+						//run second param
+						(env, mem) -> mem.push(m -> Boolean.toString(right)),
+						//cast second param into boolean
+						CastBoolean.INSTANCE,
+						//do the logic
+						And.INSTANCE
 				).exec(environment, memory);
 
 				Value value = memory.pop();
@@ -56,7 +52,7 @@ public class MoreThanSpecTest {
 				assertEquals(
 						String.valueOf(result),
 						text,
-						left + " > " + right + " is expected to be " + result +
+						left + " && " + right + " is expected to be " + result +
 						" but got " +
 						text
 				);
@@ -65,10 +61,10 @@ public class MoreThanSpecTest {
 
 	@Test
 	public void test0() {
-		for (int i : new int[]{-2, -1, 0, 1, 2})
-			for (int j : new int[]{-2, -1, 0, 1, 2}) {
-				Document document = new PseudoDocument(i + ">" + j);
-				String expected = String.valueOf(i > j);
+		for (boolean i : new boolean[]{false, true})
+			for (boolean j : new boolean[]{false, true}) {
+				Document document = new PseudoDocument(i + "&&" + j);
+				String expected = String.valueOf(i && j);
 
 				Unit unit = new UnitImpl();
 
@@ -77,14 +73,12 @@ public class MoreThanSpecTest {
 				unit.getSpec().add(LogicSpec.INSTANCE);
 				unit.getSpec().add(new ParameterSpec(
 						//syntax
-						DigitsSpec.INSTANCE,
-						MinusSpec.INSTANCE,
-						CloseChevronSpec.INSTANCE,
+						WordSpec.INSTANCE,
+						AndAndSpec.INSTANCE,
 						//value
-						NumberSpec.INSTANCE,
+						ReferenceSpec.INSTANCE,
 						//operator
-						MoreThanSpec.INSTANCE,
-						SubtractorSpec.INSTANCE
+						LogicalAndSpec.INSTANCE
 				));
 				unit.getSpec().add(new Spec() {
 					@Override
