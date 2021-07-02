@@ -19,10 +19,10 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.internal.function.parser.router.HierarchyParser;
-import org.jamplate.spec.standard.AnchorSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.spec.standard.AnchorSpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
@@ -81,7 +81,7 @@ public class DoubleQuotesSpec implements Spec {
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_OPEN)
-								 .setKind(AnchorSpec.KIND_CLOSE)
+								 .setKind(AnchorSpec.KIND_OPEN)
 						)),
 						//close anchor constructor
 						(t, r) -> t.offer(new Tree(
