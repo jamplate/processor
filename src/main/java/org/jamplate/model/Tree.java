@@ -403,18 +403,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Get the document of this tree.
-	 *
-	 * @return the document of this tree.
-	 * @since 0.2.0 ~2021.05.17
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Document getDocument() {
-		return this.document;
-	}
-
-	/**
 	 * Get the first child tree of this tree.
 	 *
 	 * @return the first tree in this tree. Or {@code null} if this tree has no children.
@@ -425,6 +413,18 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	public Tree getChild() {
 		Node<Tree> child = this.node.get(Tetragon.BOTTOM);
 		return child == null ? null : child.get();
+	}
+
+	/**
+	 * Get the document of this tree.
+	 *
+	 * @return the document of this tree.
+	 * @since 0.2.0 ~2021.05.17
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Document getDocument() {
+		return this.document;
 	}
 
 	/**
@@ -466,6 +466,18 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	public Tree getPrevious() {
 		Node<Tree> start = this.node.get(Tetragon.START);
 		return start == null ? null : start.get();
+	}
+
+	/**
+	 * Get the reference of this tree.
+	 *
+	 * @return the reference of this tree.
+	 * @since 0.2.0 ~2021.05.14
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public Reference getReference() {
+		return this.reference;
 	}
 
 	/**
@@ -578,18 +590,6 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		if (bottom != null && end != null)
 			Nodes.tail(Tetragon.END, bottom)
 				 .put(Tetragon.END, end);
-	}
-
-	/**
-	 * Get the reference of this tree.
-	 *
-	 * @return the reference of this tree.
-	 * @since 0.2.0 ~2021.05.14
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Reference getReference() {
-		return this.reference;
 	}
 
 	/**
