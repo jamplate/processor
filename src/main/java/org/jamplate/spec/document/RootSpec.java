@@ -99,15 +99,15 @@ public class RootSpec implements Spec {
 							//Define __PATH__
 							new PushConst(tree, new TextValue("__PATH__")),
 							new PushConst(tree, new TextValue(file)),
-							Alloc.INSTANCE,
+							new Alloc(tree),
 							//Define __DIR__
 							new PushConst(tree, new TextValue("__DIR__")),
 							new PushConst(tree, TextValue.cast(dir)),
-							Alloc.INSTANCE,
+							new Alloc(tree),
 							//Define __LINE__
 							new PushConst(tree, new TextValue("__LINE__")),
 							new PushConst(tree, new NumberValue(m -> line)),
-							Alloc.INSTANCE
+							new Alloc(tree)
 					);
 				}
 		);
