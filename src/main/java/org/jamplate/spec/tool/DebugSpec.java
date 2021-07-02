@@ -101,7 +101,6 @@ public class DebugSpec implements Spec {
 				case Event.POST_PARSE:
 				case Event.POST_ANALYZE:
 				case Event.POST_COMPILE:
-				case Event.OPTIMIZE:
 				case Event.PRE_EXEC:
 				case Event.POST_EXEC:
 					Tree tree = compilation.getRootTree();
