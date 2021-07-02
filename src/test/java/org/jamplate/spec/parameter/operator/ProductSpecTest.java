@@ -1,27 +1,27 @@
 package org.jamplate.spec.parameter.operator;
 
-import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
+import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.function.Compiler;
+import org.jamplate.internal.api.EditSpec;
+import org.jamplate.internal.api.Event;
 import org.jamplate.internal.api.UnitImpl;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.*;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.tool.DebugSpec;
 import org.jamplate.spec.parameter.resource.NumberSpec;
 import org.jamplate.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.spec.syntax.symbol.MinusSpec;
 import org.jamplate.spec.syntax.term.DigitsSpec;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jamplate.spec.tool.DebugSpec;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ProductSpecTest {
 	@Test
@@ -47,18 +47,21 @@ public class ProductSpecTest {
 						MultiplierSpec.INSTANCE,
 						SubtractorSpec.INSTANCE
 				));
-				unit.getSpec().add(new Spec() {
-					@Override
-					public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-						String actual = memory.peek().evaluate(memory);
+				unit.getSpec().add(new EditSpec()
+						.setListener((event, compilation, parameter) -> {
+							if (event.equals(Event.POST_EXEC)) {
+								Memory memory = (Memory) parameter;
 
-						assertEquals(
-								expected,
-								actual,
-								"Unexpected result"
-						);
-					}
-				});
+								String actual = memory.peek().evaluate(memory);
+
+								assertEquals(
+										expected,
+										actual,
+										"Unexpected result"
+								);
+							}
+						})
+				);
 
 				if (
 						!unit.initialize(document) ||
@@ -66,8 +69,10 @@ public class ProductSpecTest {
 						!unit.analyze(document) ||
 						!unit.compile(document) ||
 						!unit.execute(document)
-				)
+				) {
 					unit.diagnostic();
+					fail("Uncompleted test invocation");
+				}
 			}
 	}
 
@@ -78,72 +83,82 @@ public class ProductSpecTest {
 		Document document = new PseudoDocument("45 * 6");
 
 		//specs
+		unit.getSpec().add(DebugSpec.INSTANCE);
+		unit.getSpec().add(LogicSpec.INSTANCE);
 		unit.getSpec().add(MultiplierSpec.INSTANCE);
 		unit.getSpec().add(NumberSpec.INSTANCE);
-		unit.getSpec().add(DebugSpec.INSTANCE);
-		unit.getSpec().add(new Spec() {
-			@NotNull
-			@Override
-			public Compiler getCompiler() {
-				return new FlattenCompiler(
-						FallbackCompiler.INSTANCE,
-						ToIdleCompiler.INSTANCE
-				);
-			}
+		unit.getSpec().add(new EditSpec()
+				.setCompiler(
+						new FlattenCompiler(
+								FallbackCompiler.INSTANCE,
+								ToIdleCompiler.INSTANCE
+						)
+				)
+				.setListener(
+						(event, compilation, parameter) -> {
+							//noinspection SwitchStatementDensity
+							switch (event) {
+								case Event.POST_INIT: {
+									//pseudo parse
+									Tree root = compilation.getRootTree();
 
-			@Override
-			public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
-				//pseudo parse
-				Tree root = compilation.getRootTree();
-				Document document = root.getDocument();
+									root.getSketch().setKind(ParameterSpec.KIND);
+									root.offer(new Tree(
+											document,
+											new Reference(0, 2),
+											new Sketch(DigitsSpec.KIND)
+									));
+									root.offer(new Tree(
+											document,
+											new Reference(3, 1),
+											new Sketch(AsteriskSpec.KIND)
+									));
+									root.offer(new Tree(
+											document,
+											new Reference(5, 1),
+											new Sketch(DigitsSpec.KIND)
+									));
+									break;
+								}
+								case Event.POST_EXEC: {
+									Memory memory = (Memory) parameter;
+									String result = memory.pop().evaluate(memory);
 
-				root.getSketch().setKind(ParameterSpec.KIND);
-				root.offer(new Tree(
-						document,
-						new Reference(0, 2),
-						new Sketch(DigitsSpec.KIND)
-				));
-				root.offer(new Tree(
-						document,
-						new Reference(3, 1),
-						new Sketch(AsteriskSpec.KIND)
-				));
-				root.offer(new Tree(
-						document,
-						new Reference(5, 1),
-						new Sketch(DigitsSpec.KIND)
-				));
-			}
+									assertEquals(
+											"270",
+											result,
+											"45 * 6 = 270"
+									);
+									break;
+								}
+								case Event.DIAGNOSTIC: {
+									Diagnostic diagnostic = (Diagnostic) parameter;
 
-			@Override
-			public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-				String result = memory.pop().evaluate(memory);
+									for (Message message : diagnostic)
+										if (message.isFetal())
+											if (message.getException() == null)
+												throw new RuntimeException(message.getMessagePhrase());
+											else
+												throw new RuntimeException(message.getException());
 
-				assertEquals(
-						"270",
-						result,
-						"45 * 6 = 270"
-				);
-			}
-
-			@Override
-			public void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
-				environment.getDiagnostic().flush(true);
-
-				if (message.isFetal())
-					if (message.getException() == null)
-						throw new RuntimeException(message.getMessagePhrase());
-					else
-						throw new RuntimeException(message.getException());
-			}
-		});
+									diagnostic.flush(true);
+									break;
+								}
+							}
+						}
+				)
+		);
 
 		//run
-		unit.initialize(document);
-		unit.parse(document);
-		unit.analyze(document);
-		unit.compile(document);
-		unit.execute(document);
-		unit.diagnostic();
+		if (
+				!unit.initialize(document) ||
+				!unit.parse(document) ||
+				!unit.analyze(document) ||
+				!unit.compile(document) ||
+				!unit.execute(document)
+		) {
+			unit.diagnostic();
+			fail("Uncompleted test invocation");
+		}
 	}
 }

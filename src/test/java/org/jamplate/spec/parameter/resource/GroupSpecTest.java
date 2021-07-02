@@ -1,10 +1,10 @@
 package org.jamplate.spec.parameter.resource;
 
-import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
+import org.jamplate.internal.api.EditSpec;
+import org.jamplate.internal.api.Event;
 import org.jamplate.internal.api.UnitImpl;
 import org.jamplate.internal.model.PseudoDocument;
-import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Memory;
 import org.jamplate.spec.document.LogicSpec;
@@ -16,10 +16,10 @@ import org.jamplate.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.spec.syntax.symbol.PlusSpec;
 import org.jamplate.spec.syntax.term.DigitsSpec;
 import org.jamplate.spec.tool.DebugSpec;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GroupSpecTest {
 	@Test
@@ -43,18 +43,20 @@ public class GroupSpecTest {
 				AdderSpec.INSTANCE,
 				MultiplierSpec.INSTANCE
 		));
-		unit.getSpec().add(new Spec() {
-			@Override
-			public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-				String actual = memory.peek().evaluate(memory);
+		unit.getSpec().add(new EditSpec().setListener(
+				(event, compilation, parameter) -> {
+					if (event.equals(Event.POST_EXEC)) {
+						Memory memory = (Memory) parameter;
+						String actual = memory.peek().evaluate(memory);
 
-				assertEquals(
-						expected,
-						actual,
-						"Unexpected results"
-				);
-			}
-		});
+						assertEquals(
+								expected,
+								actual,
+								"Unexpected results"
+						);
+					}
+				}
+		));
 
 		if (
 				!unit.initialize(document) ||
@@ -62,7 +64,9 @@ public class GroupSpecTest {
 				!unit.analyze(document) ||
 				!unit.compile(document) ||
 				!unit.execute(document)
-		)
+		) {
 			unit.diagnostic();
+			fail("Uncompleted test invocation");
+		}
 	}
 }

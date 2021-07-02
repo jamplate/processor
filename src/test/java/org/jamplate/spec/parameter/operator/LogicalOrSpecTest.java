@@ -1,26 +1,30 @@
 package org.jamplate.spec.parameter.operator;
 
-import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.operator.cast.CastBoolean;
 import org.jamplate.instruction.operator.logic.Or;
+import org.jamplate.internal.api.EditSpec;
+import org.jamplate.internal.api.Event;
 import org.jamplate.internal.api.UnitImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
-import org.jamplate.model.*;
+import org.jamplate.model.Document;
+import org.jamplate.model.Environment;
+import org.jamplate.model.Memory;
+import org.jamplate.model.Value;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.tool.DebugSpec;
 import org.jamplate.spec.parameter.resource.ReferenceSpec;
 import org.jamplate.spec.syntax.symbol.PipePipeSpec;
 import org.jamplate.spec.syntax.term.WordSpec;
-import org.jetbrains.annotations.NotNull;
+import org.jamplate.spec.tool.DebugSpec;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class LogicalOrSpecTest {
 	@Test
@@ -68,7 +72,7 @@ public class LogicalOrSpecTest {
 
 				Unit unit = new UnitImpl();
 
-								unit.getSpec().add(DebugSpec.INSTANCE);
+				unit.getSpec().add(DebugSpec.INSTANCE);
 
 				unit.getSpec().add(LogicSpec.INSTANCE);
 				unit.getSpec().add(new ParameterSpec(
@@ -80,18 +84,20 @@ public class LogicalOrSpecTest {
 						//operator
 						LogicalOrSpec.INSTANCE
 				));
-				unit.getSpec().add(new Spec() {
-					@Override
-					public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-						String actual = memory.peek().evaluate(memory);
+				unit.getSpec().add(new EditSpec().setListener(
+						(event, compilation, parameter) -> {
+							if (event.equals(Event.POST_EXEC)) {
+								Memory memory = (Memory) parameter;
+								String actual = memory.peek().evaluate(memory);
 
-						assertEquals(
-								expected,
-								actual,
-								"Unexpected result"
-						);
-					}
-				});
+								assertEquals(
+										expected,
+										actual,
+										"Unexpected result"
+								);
+							}
+						}
+				));
 
 				if (
 						!unit.initialize(document) ||
@@ -99,8 +105,10 @@ public class LogicalOrSpecTest {
 						!unit.analyze(document) ||
 						!unit.compile(document) ||
 						!unit.execute(document)
-				)
+				) {
 					unit.diagnostic();
+					fail("Uncompleted test invocation");
+				}
 			}
 	}
 }
