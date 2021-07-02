@@ -102,22 +102,6 @@ public interface Environment extends Iterable<Compilation>, Serializable {
 	Map<String, Object> getMeta();
 
 	/**
-	 * Return the compilation set to this environment with the given {@code document} or
-	 * create a new compilation for the given {@code document}, add it to this environment
-	 * and return it.
-	 *
-	 * @param document the document to get a compilation for.
-	 * @return the compilation with the given {@code document} in this environment or a
-	 * 		newly created, then added compilation for the given {@code document}.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	@Contract(mutates = "this")
-	@Deprecated
-	Compilation optCompilation(@NotNull Document document);
-
-	/**
 	 * Associate the given {@code compilation} to the given {@code document} in this
 	 * environment.
 	 *

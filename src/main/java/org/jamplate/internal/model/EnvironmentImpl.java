@@ -20,7 +20,6 @@ import org.jamplate.internal.diagnostic.DiagnosticImpl;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
-import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,15 +98,6 @@ public class EnvironmentImpl implements Environment {
 	@Override
 	public Iterator<Compilation> iterator() {
 		return this.compilations.values().iterator();
-	}
-
-	@NotNull
-	@Override
-	public Compilation optCompilation(@NotNull Document document) {
-		Objects.requireNonNull(document, "document");
-		return this.compilations.computeIfAbsent(document, k ->
-				new CompilationImpl(this, new Tree(document, -1))
-		);
 	}
 
 	@Override
