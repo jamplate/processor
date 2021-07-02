@@ -120,27 +120,3 @@ public class CommandSpec extends MultiSpec {
 		return CommandSpec.NAME;
 	}
 }
-//		return new HierarchyAnalyzer(new FilterByKindAnalyzer(
-//				CommandSpec.KIND,
-//				(compilation, tree) -> {
-//					tree.pop();
-//					return true;
-//				}
-//		));
-
-//		return new EnclosureParser(
-//				Pattern.compile("(?<=^|[\r\n])[\\t ]*#"),
-//				Pattern.compile("(?=[\r\n])(?<!\\\\)|(?=$)"),
-//				(d, r) -> new Tree(
-//						d,
-//						r,
-//						new Sketch(CommandSpec.KIND)
-//				),
-//				(t, r) -> t.offer(new Tree(
-//						t.document(),
-//						r,
-//						t.getSketch()
-//						 .get(AnchorSpec.KEY_OPEN)
-//						 .setKind(AnchorSpec.KIND_OPEN)
-//				))
-//		);
