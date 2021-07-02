@@ -90,7 +90,7 @@ public class ArraySpec implements Spec {
 								t.document(),
 								r,
 								new Sketch(AnchorSpec.KIND_SLOT),
-								AnchorSpec.Z_INDEX_SLOT
+								AnchorSpec.WEIGHT_SLOT
 						))
 				)
 		);

@@ -74,17 +74,17 @@ public class ContextSpec implements Spec {
 	public static final String NAME = ContextSpec.class.getSimpleName();
 
 	/**
-	 * The z-index of a command context body.
+	 * The {@code weight} of a command context body.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
-	public static final int Z_INDEX = 0;
+	public static final int WEIGHT = 0;
 	/**
-	 * The z-index of a command context body.
+	 * The {@code weight} of a command context body.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
-	public static final int Z_INDEX_BODY = -1;
+	public static final int WEIGHT_BODY = -1;
 
 	@NotNull
 	@Override

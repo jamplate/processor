@@ -167,7 +167,7 @@ public class InjectionSpec implements Spec {
 								t.getSketch()
 								 .get(InjectionSpec.KEY_VALUE)
 								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
+								ParameterSpec.WEIGHT
 						))
 				)
 		);

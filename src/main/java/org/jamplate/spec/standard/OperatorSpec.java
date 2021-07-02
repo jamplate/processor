@@ -67,11 +67,11 @@ public class OperatorSpec implements Spec {
 	public static final String NAME = OperatorSpec.class.getSimpleName();
 
 	/**
-	 * The {@code z-index} of an operator tree.
+	 * The {@code weight} of an operator tree.
 	 *
 	 * @since 0.3.0 ~2021.06.22
 	 */
-	public static final int Z_INDEX = 0;
+	public static final int WEIGHT = 0;
 
 	@NotNull
 	@Override

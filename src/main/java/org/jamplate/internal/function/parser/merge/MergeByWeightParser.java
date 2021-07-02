@@ -159,7 +159,7 @@ public class MergeByWeightParser implements Parser {
 				//the secondary cannot be with the primary, the secondary must be removed
 				return false;
 			case EXACT:
-				return primary.getZIndex() != secondary.getZIndex();
+				return primary.getWeight() != secondary.getWeight();
 			default:
 				//unexpected
 				throw new InternalError();

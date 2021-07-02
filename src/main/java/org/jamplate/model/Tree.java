@@ -51,8 +51,8 @@ import java.util.Objects;
  * threads because random sketches will be moved around while those threads are reading.
  * <br>
  * Two identical trees in one structure is allowed only if the two trees has the same
- * {@link #getZIndex() z-index}. The tree with the higher z-index can fit inside the tree
- * with the lower z-index.
+ * {@link #getWeight() weight}. The tree with the higher weight can fit inside the tree
+ * with the lower weight.
  *
  * @author LSafer
  * @version 0.2.0
@@ -87,11 +87,11 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private final Reference reference;
 
 	/**
-	 * The Z-index.
+	 * The weight of this tree.
 	 *
 	 * @since 0.2.0 ~2021.05.30
 	 */
-	private final int zIndex;
+	private final int weight;
 
 	/**
 	 * The sketch set to this tree.
@@ -102,7 +102,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	private Sketch sketch;
 
 	/**
-	 * Construct a new tree with the same document, reference, z-index and a clone sketch
+	 * Construct a new tree with the same document, reference, weight and a clone sketch
 	 * as the given {@code tree}.
 	 *
 	 * @param tree the tree to copy.
@@ -113,7 +113,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		Objects.requireNonNull(tree, "tree");
 		this.document = tree.document;
 		this.reference = tree.reference;
-		this.zIndex = tree.zIndex;
+		this.weight = tree.weight;
 		this.sketch = new Sketch(
 				this,
 				tree.sketch.getName(),
@@ -137,7 +137,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = new Sketch(this);
-		this.zIndex = 0;
+		this.weight = 0;
 	}
 
 	/**
@@ -163,7 +163,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = sketch;
-		this.zIndex = 0;
+		this.weight = 0;
 
 		sketch.setTree(this);
 	}
@@ -183,7 +183,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = reference;
 		this.sketch = new Sketch(this);
-		this.zIndex = 0;
+		this.weight = 0;
 	}
 
 	/**
@@ -208,7 +208,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		this.document = document;
 		this.reference = reference;
 		this.sketch = sketch;
-		this.zIndex = 0;
+		this.weight = 0;
 
 		sketch.setTree(this);
 	}
@@ -217,7 +217,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * Construct a new tree for the whole given {@code document}.
 	 *
 	 * @param document the document the constructed tree is for.
-	 * @param zIndex   the z-index for the constructed tree.
+	 * @param weight   the weight for the constructed tree.
 	 * @throws NullPointerException  if the given {@code document} is null.
 	 * @throws java.io.IOError       if any I/O error occurred while reading the given
 	 *                               {@code document} to get its length.
@@ -225,12 +225,12 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 *                               reading.
 	 * @since 0.2.0 ~2021.05.17
 	 */
-	public Tree(@NotNull Document document, int zIndex) {
+	public Tree(@NotNull Document document, int weight) {
 		Objects.requireNonNull(document, "document");
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = new Sketch(this);
-		this.zIndex = zIndex;
+		this.weight = weight;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 *
 	 * @param document the document the constructed tree is for.
 	 * @param sketch   the initial sketch set to this tree.
-	 * @param zIndex   the z-index for the constructed tree.
+	 * @param weight   the weight for the constructed tree.
 	 * @throws NullPointerException  if the given {@code document} or {@code sketch} is
 	 *                               null.
 	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
@@ -251,13 +251,13 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * @since 0.2.0 ~2021.05.17
 	 */
 	@Contract(mutates = "param2")
-	public Tree(@NotNull Document document, @NotNull Sketch sketch, int zIndex) {
+	public Tree(@NotNull Document document, @NotNull Sketch sketch, int weight) {
 		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(sketch, "sketch");
 		this.document = document;
 		this.reference = new Reference(0, document.read().length());
 		this.sketch = sketch;
-		this.zIndex = zIndex;
+		this.weight = weight;
 
 		sketch.setTree(this);
 	}
@@ -267,18 +267,18 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 *
 	 * @param document  the document of the constructed tree.
 	 * @param reference the reference of the constructed tree.
-	 * @param zIndex    the z-index for the constructed tree.
+	 * @param weight    the weight for the constructed tree.
 	 * @throws NullPointerException if the given {@code document} or {@code reference} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.15
 	 */
-	public Tree(@NotNull Document document, @NotNull Reference reference, int zIndex) {
+	public Tree(@NotNull Document document, @NotNull Reference reference, int weight) {
 		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(reference, "reference");
 		this.document = document;
 		this.reference = reference;
 		this.sketch = new Sketch(this);
-		this.zIndex = zIndex;
+		this.weight = weight;
 	}
 
 	/**
@@ -290,21 +290,21 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 * @param document  the document of the constructed tree.
 	 * @param reference the reference of the contracted tree.
 	 * @param sketch    the initial sketch set to this tree.
-	 * @param zIndex    the z-index for the constructed tree.
+	 * @param weight    the weight for the constructed tree.
 	 * @throws NullPointerException  if the given {@code document} or {@code reference} or
 	 *                               {@code sketch} is null.
 	 * @throws IllegalStateException if the given {@code sketch} already has a tree.
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Contract(mutates = "param3")
-	public Tree(@NotNull Document document, @NotNull Reference reference, @NotNull Sketch sketch, int zIndex) {
+	public Tree(@NotNull Document document, @NotNull Reference reference, @NotNull Sketch sketch, int weight) {
 		Objects.requireNonNull(document, "document");
 		Objects.requireNonNull(reference, "reference");
 		Objects.requireNonNull(sketch, "sketch");
 		this.document = document;
 		this.reference = reference;
 		this.sketch = sketch;
-		this.zIndex = zIndex;
+		this.weight = weight;
 
 		sketch.setTree(this);
 	}
@@ -383,7 +383,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	@Contract(pure = true)
 	@Override
 	public String toString() {
-		return this.sketch + " " + this.document + this.reference + "(" + this.zIndex +
+		return this.sketch + " " + this.document + this.reference + "(" + this.weight +
 			   ")";
 	}
 
@@ -481,14 +481,14 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	}
 
 	/**
-	 * Return the Z-index of this tree.
+	 * Return the weight of this tree.
 	 *
-	 * @return the z index of this tree.
+	 * @return the weight of this tree.
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@Contract(pure = true)
-	public int getZIndex() {
-		return this.zIndex;
+	public int getWeight() {
+		return this.weight;
 	}
 
 	/**
@@ -714,7 +714,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 				}
 			}
 			case EXACT: {
-				int zdf = this.zIndex - tree.zIndex;
+				int zdf = this.weight - tree.weight;
 
 				if (zdf >= 0)
 					throw new TreeTakeoverException("Invalid child", this, tree);
@@ -725,7 +725,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 					//compare to the bottom
 					switch (Dominance.compute(bottom.get(), tree)) {
 						case EXACT:
-							int zdf2 = bottom.get().zIndex - tree.zIndex;
+							int zdf2 = bottom.get().weight - tree.weight;
 
 							if (zdf2 == 0)
 								throw new TreeTakeoverException("Exact child bounds", bottom.get(), tree);
@@ -961,7 +961,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		//noinspection SwitchStatementDensity
 		switch (Dominance.compute(this, tree)) {
 			case EXACT:
-				if (this.zIndex - tree.zIndex <= 0)
+				if (this.weight - tree.weight <= 0)
 					throw new TreeTakeoverException("Invalid parent", this, tree);
 			case CONTAIN:
 				Node<Tree> bottom = this.node; //to be tree.bottom
@@ -1221,9 +1221,9 @@ public final class Tree implements Iterable<Tree>, Serializable {
 		Objects.requireNonNull(tree, "tree");
 		switch (Dominance.compute(this, tree)) {
 			case EXACT:
-				int zDiff = this.zIndex - tree.zIndex;
+				int zDiff = this.weight - tree.weight;
 
-				//case no z-index difference
+				//case no weight difference
 				if (zDiff == 0)
 					throw new TreeTakeoverException("Exact bounds", this, tree);
 

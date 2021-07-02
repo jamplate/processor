@@ -20,17 +20,17 @@ import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.api.MultiSpec;
-import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByHierarchyKindAnalyzer;
+import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.mode.ExclusiveCompiler;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.function.compiler.filter.FilterWhitespaceCompiler;
+import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
+import org.jamplate.internal.function.compiler.mode.ExclusiveCompiler;
 import org.jamplate.internal.function.compiler.mode.MandatoryCompiler;
+import org.jamplate.internal.function.compiler.router.FallbackCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.function.parser.filter.FilterByKindParser;
 import org.jamplate.internal.function.parser.router.HierarchyParser;
 import org.jamplate.internal.util.Functions;
@@ -64,11 +64,11 @@ public class ParameterSpec extends MultiSpec {
 	public static final String NAME = ParameterSpec.class.getSimpleName();
 
 	/**
-	 * The {@code z-index} of a parameter tree.
+	 * The default {@code weight} of a parameter tree.
 	 *
 	 * @since 0.3.0 ~2021.06.22
 	 */
-	public static final int Z_INDEX = -100;
+	public static final int WEIGHT = -100;
 
 	/**
 	 * Construct a new parameter spec.

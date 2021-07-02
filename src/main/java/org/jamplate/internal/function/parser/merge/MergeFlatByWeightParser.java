@@ -79,7 +79,7 @@ public class MergeFlatByWeightParser extends MergeByWeightParser {
 				return false;
 			case EXACT:
 				//takeover
-				return primary.getZIndex() != secondary.getZIndex();
+				return primary.getWeight() != secondary.getWeight();
 			default:
 				//unexpected
 				throw new InternalError();

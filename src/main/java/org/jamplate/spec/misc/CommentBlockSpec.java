@@ -91,7 +91,7 @@ public class CommentBlockSpec implements Spec {
 						t.getSketch()
 						 .get(AnchorSpec.KEY_BODY)
 						 .setKind(AnchorSpec.KIND_BODY),
-						AnchorSpec.Z_INDEX_BODY
+						AnchorSpec.WEIGHT_BODY
 				))
 		);
 	}

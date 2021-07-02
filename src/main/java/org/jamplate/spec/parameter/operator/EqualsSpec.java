@@ -87,7 +87,7 @@ public class EqualsSpec implements Spec {
 								d,
 								r,
 								new Sketch(EqualsSpec.KIND),
-								OperatorSpec.Z_INDEX
+								OperatorSpec.WEIGHT
 						),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
@@ -101,7 +101,7 @@ public class EqualsSpec implements Spec {
 								w.getSketch()
 								 .get(OperatorSpec.KEY_LEFT)
 								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
+								ParameterSpec.WEIGHT
 						)),
 						//right-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
@@ -110,7 +110,7 @@ public class EqualsSpec implements Spec {
 								w.getSketch()
 								 .get(OperatorSpec.KEY_RIGHT)
 								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
+								ParameterSpec.WEIGHT
 						))
 				)
 		);

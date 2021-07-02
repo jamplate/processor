@@ -86,7 +86,7 @@ public class NotSpec implements Spec {
 								d,
 								r,
 								new Sketch(NotSpec.KIND),
-								OperatorSpec.Z_INDEX
+								OperatorSpec.WEIGHT
 						),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
@@ -100,7 +100,7 @@ public class NotSpec implements Spec {
 								w.getSketch()
 								 .get(OperatorSpec.KEY_RIGHT)
 								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
+								ParameterSpec.WEIGHT
 						))
 				)
 		);

@@ -87,7 +87,7 @@ public class GetterSpec implements Spec {
 								d,
 								r,
 								new Sketch(GetterSpec.KIND),
-								ExtensionSpec.Z_INDEX
+								ExtensionSpec.WEIGHT
 						),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
@@ -101,7 +101,7 @@ public class GetterSpec implements Spec {
 								w.getSketch()
 								 .get(ExtensionSpec.KEY_TARGET)
 								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
+								ParameterSpec.WEIGHT
 						))
 				)
 		);

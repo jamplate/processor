@@ -60,11 +60,11 @@ public class ExtensionSpec implements Spec {
 	public static final String NAME = ExtensionSpec.class.getSimpleName();
 
 	/**
-	 * The {@code z-index} of an extension tree.
+	 * The {@code weight} of an extension tree.
 	 *
 	 * @since 0.3.0 ~2021.06.23
 	 */
-	public static final int Z_INDEX = 0;
+	public static final int WEIGHT = 0;
 
 	@NotNull
 	@Override

@@ -294,7 +294,7 @@ public class UnitImpl implements Unit {
 
 		Compilation compilation = new CompilationImpl(
 				environment,
-				new Tree(document, new Sketch(), -1)
+				new Tree(document, -1)
 		);
 
 		environment.setCompilation(document, compilation);

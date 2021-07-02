@@ -96,17 +96,17 @@ public class AnchorSpec implements Spec {
 	public static final String NAME = AnchorSpec.class.getSimpleName();
 
 	/**
-	 * The z-index of the body between opening and closing anchors.
+	 * The {@code weight} of the body between opening and closing anchors.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
-	public static final int Z_INDEX_BODY = -100;
+	public static final int WEIGHT_BODY = -100;
 	/**
-	 * The z-index of a slot inside the body.
+	 * The {@code weight} of a slot inside the body.
 	 *
 	 * @since 0.3.0 ~2021.06.27
 	 */
-	public static final int Z_INDEX_SLOT = -50;
+	public static final int WEIGHT_SLOT = -50;
 
 	@NotNull
 	@Override
