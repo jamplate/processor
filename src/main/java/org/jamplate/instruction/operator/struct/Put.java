@@ -97,9 +97,10 @@ public class Put implements Instruction {
 		//struct
 		Value value2 = memory.pop();
 
+		//value
+		QuoteValue quote0 = QuoteValue.cast(value0);
+
 		if (!(value2 instanceof ObjectValue) && value1 instanceof NumberValue) {
-			//value
-			QuoteValue quote0 = QuoteValue.cast(value0);
 			//key
 			NumberValue number1 = NumberValue.cast(value1);
 			//struct
@@ -109,20 +110,17 @@ public class Put implements Instruction {
 			ArrayValue array3 = array2.put(number1, quote0);
 
 			memory.push(array3);
-			return;
+		} else {
+			//key
+			QuoteValue quote1 = QuoteValue.cast(value1);
+			//struct
+			ObjectValue object2 = ObjectValue.cast(value2);
+
+			//result
+			ObjectValue object3 = object2.put(quote1, quote0);
+
+			memory.push(object3);
 		}
-
-		//value
-		QuoteValue quote0 = QuoteValue.cast(value0);
-		//key
-		QuoteValue quote1 = QuoteValue.cast(value1);
-		//struct
-		ObjectValue object2 = ObjectValue.cast(value2);
-
-		//result
-		ObjectValue object3 = object2.put(quote1, quote0);
-
-		memory.push(object3);
 	}
 
 	@Nullable
