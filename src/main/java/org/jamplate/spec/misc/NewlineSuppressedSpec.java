@@ -13,50 +13,47 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.document;
+package org.jamplate.spec.misc;
 
 import org.jamplate.api.Spec;
+import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.function.Parser;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.console.Print;
 import org.jamplate.instruction.memory.heap.Alloc;
 import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
+import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.parser.pattern.TermParser;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.value.NumberValue;
 import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
-
 /**
- * Line separators ({@code \n}, {@code \r}, {@code \r\n}) spec.
+ * Suppressed new line specification. Suppresses newlines nearby commands.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.24
  */
-public class NewlineSpec implements Spec {
+public class NewlineSuppressedSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final NewlineSpec INSTANCE = new NewlineSpec();
+	public static final NewlineSuppressedSpec INSTANCE = new NewlineSuppressedSpec();
 
 	/**
-	 * The kind of line separator trees.
+	 * The kind of a suppressed line separator trees.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final String KIND = "newline";
+	public static final String KIND = "newline:suppressed";
 
 	/**
 	 * The qualified name of this spec.
@@ -64,29 +61,55 @@ public class NewlineSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final String NAME = NewlineSpec.class.getSimpleName();
+	public static final String NAME = NewlineSuppressedSpec.class.getSimpleName();
+
+	@NotNull
+	@Override
+	public Analyzer getAnalyzer() {
+		return Functions.analyzer(
+				//search the whole hierarchy
+				HierarchyAnalyzer::new,
+				//target newlines
+				a -> new FilterByKindAnalyzer(NewlineSpec.KIND, a),
+				//analyze
+				a -> (compilation, tree) -> {
+					//gather surroundings
+					Tree previous = tree.getPrevious();
+					Tree next = tree.getNext();
+
+					//suppress trees that its kind starts with 'command'
+					if (
+							previous != null &&
+							previous.getSketch().getKind().startsWith("command") ||
+							next != null &&
+							next.getSketch().getKind().startsWith("command")
+					) {
+						tree.getSketch().setKind(NewlineSuppressedSpec.KIND);
+						return true;
+					}
+
+					//nothing interesting...
+					return false;
+				}
+		);
+	}
 
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target newlines
-				c -> new FilterByKindCompiler(NewlineSpec.KIND, c),
-				//compile the newlines
+				//target suppressed newlines
+				c -> new FilterByKindCompiler(NewlineSuppressedSpec.KIND, c),
+				//compile the suppressed newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					int line = IO.line(tree) + 1;
-					//read the tree
-					String text = IO.read(tree).toString();
+					String line = String.valueOf(IO.line(tree) + 1);
 
 					return new Block(
 							//Define __LINE__
 							new PushConst(tree, new TextValue("__LINE__")),
 							new PushConst(tree, new NumberValue(line)),
-							new Alloc(tree),
-							//print the newline text
-							new PushConst(tree, new TextValue(text)),
-							new Print(tree)
+							new Alloc(tree)
 					);
 				}
 		);
@@ -94,21 +117,7 @@ public class NewlineSpec implements Spec {
 
 	@NotNull
 	@Override
-	public Parser getParser() {
-		//parse only on the first round
-		return new TermParser(
-				Pattern.compile("(?<!\\\\)(?:\r\n|\r|\n)"),
-				(d, r) -> new Tree(
-						d,
-						r,
-						new Sketch(NewlineSpec.KIND)
-				)
-		);
-	}
-
-	@NotNull
-	@Override
 	public String getQualifiedName() {
-		return NewlineSpec.NAME;
+		return NewlineSuppressedSpec.NAME;
 	}
 }

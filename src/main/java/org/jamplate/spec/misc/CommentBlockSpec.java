@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.comment;
+package org.jamplate.spec.misc;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
