@@ -13,53 +13,52 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.Or;
+import org.jamplate.instruction.operator.math.Quotient;
+import org.jamplate.spec.element.ParameterSpec;
+import org.jamplate.spec.standard.OperatorSpec;
+import org.jamplate.spec.syntax.symbol.SlashSpec;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
-import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.PipePipeSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Logical-Or operator specifications.
+ * Divider operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class LogicalOrSpec implements Spec {
+public class DividerSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final LogicalOrSpec INSTANCE = new LogicalOrSpec();
+	public static final DividerSpec INSTANCE = new DividerSpec();
 
 	/**
-	 * The kind of a logical-or operator context.
+	 * The kind of a divider operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:logical_or";
+	public static final String KIND = "operator:divider";
 
 	/**
 	 * The qualified name of this spec.
@@ -67,7 +66,7 @@ public class LogicalOrSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = LogicalOrSpec.class.getSimpleName();
+	public static final String NAME = DividerSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -76,16 +75,16 @@ public class LogicalOrSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(LogicalOrSpec.KIND, a),
-				//target pipe-pipe
-				a -> new FilterByKindAnalyzer(PipePipeSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(DividerSpec.KIND, a),
+				//target slashes
+				a -> new FilterByKindAnalyzer(SlashSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(LogicalOrSpec.KIND),
+								new Sketch(DividerSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -119,8 +118,8 @@ public class LogicalOrSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target logical-or operator
-				c -> new FilterByKindCompiler(LogicalOrSpec.KIND, c),
+				//target divider operator
+				c -> new FilterByKindCompiler(DividerSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -128,7 +127,7 @@ public class LogicalOrSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator LOGICAL_OR (||) is missing some components",
+								"Operator DIVIDER (/) is missing some components",
 								tree
 						);
 
@@ -145,7 +144,7 @@ public class LogicalOrSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator LOGICAL_OR (||) cannot be applied to <" +
+								"The operator DIVIDER (/) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -155,16 +154,9 @@ public class LogicalOrSpec implements Spec {
 
 					return new Block(
 							tree,
-							//run first param
 							leftI,
-							//cast first param into boolean
-							new CastBoolean(tree),
-							//run second param
 							rightI,
-							//cast second param into boolean
-							new CastBoolean(tree),
-							//do the logic
-							new Or(tree)
+							new Quotient(tree)
 					);
 				}
 		);
@@ -173,6 +165,6 @@ public class LogicalOrSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return LogicalOrSpec.NAME;
+		return DividerSpec.NAME;
 	}
 }

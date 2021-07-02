@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Parameters specification. (Analyze/Compile Only)
+ * Operators specifications. (Analyze/Compile Only)
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.24
+ * @since 0.3.0 ~2021.06.20
  */
-package org.jamplate.spec.parameter;
+package org.jamplate.spec.parameter.operator;

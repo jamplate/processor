@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.parameter;
+package org.jamplate.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
@@ -21,27 +21,25 @@ import org.jamplate.instruction.memory.resource.PushConst;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.spec.syntax.enclosure.DoubleQuotesSpec;
-import org.jamplate.value.TextValue;
+import org.jamplate.spec.syntax.term.DigitsSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONTokener;
 
 /**
- * Parameter string specification.
+ * Parameter number specification.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
-public class StringSpec implements Spec {
+public class NumberSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.20
 	 */
 	@NotNull
-	public static final StringSpec INSTANCE = new StringSpec();
+	public static final NumberSpec INSTANCE = new NumberSpec();
 
 	/**
 	 * The qualified name of this spec.
@@ -49,28 +47,46 @@ public class StringSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.20
 	 */
 	@NotNull
-	public static final String NAME = StringSpec.class.getSimpleName();
+	public static final String NAME = NumberSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target double quotes
-				c -> new FilterByKindCompiler(DoubleQuotesSpec.KIND, c),
+				//target digits sequences
+				c -> new FilterByKindCompiler(DigitsSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//read the tree
 					String text = IO.read(tree).toString();
 
 					try {
-						//re-interpret the text (unescape, including '\n', "\""... etc)
-						String interpreted = new JSONTokener(text)
-								.nextValue()
-								.toString();
+						//re-interpret the text (binary, octal, hex)
+						double interpreted =
+								//octal
+								text.startsWith("0") && text.length() > 1 ?
+								Long.parseLong(
+										text.substring(1),
+										8
+								) :
+								//binary
+								text.startsWith("0b") ?
+								Long.parseLong(
+										text.substring(2),
+										2
+								) :
+								//hexadecimal
+								text.startsWith("0x") ?
+								Long.parseLong(
+										text.substring(2),
+										16
+								) :
+								//decimal
+								Double.parseDouble(text);
 
-						//compile to
-						return new PushConst(tree, new TextValue(interpreted));
-					} catch (JSONException ignored) {
+						//compile to PushConst
+						return new PushConst(tree, new NumberValue(interpreted));
+					} catch (NumberFormatException ignored) {
 						//cannot interpret, skip ;P
 						return null;
 					}
@@ -81,6 +97,6 @@ public class StringSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return StringSpec.NAME;
+		return NumberSpec.NAME;
 	}
 }

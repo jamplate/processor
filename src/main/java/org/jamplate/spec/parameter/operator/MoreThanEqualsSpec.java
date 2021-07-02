@@ -13,15 +13,20 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
+import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.instruction.memory.stack.Dup;
+import org.jamplate.instruction.memory.stack.Swap;
 import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Compare;
 import org.jamplate.instruction.operator.logic.Negate;
-import org.jamplate.internal.function.analyzer.alter.UnaryOperatorAnalyzer;
+import org.jamplate.instruction.operator.logic.Or;
+import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
@@ -34,32 +39,34 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.ExclamationSpec;
+import org.jamplate.spec.syntax.symbol.CloseChevronEqualSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Not operator specifications.
+ * More-Than-Equals operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class NotSpec implements Spec {
+@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+public class MoreThanEqualsSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final NotSpec INSTANCE = new NotSpec();
+	public static final MoreThanEqualsSpec INSTANCE = new MoreThanEqualsSpec();
 
 	/**
-	 * The kind of a not operator context.
+	 * The kind of a more-than-equals operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:not";
+	public static final String KIND = "operator:more_than_equals";
 
 	/**
 	 * The qualified name of this spec.
@@ -67,7 +74,7 @@ public class NotSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = NotSpec.class.getSimpleName();
+	public static final String NAME = MoreThanEqualsSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -76,16 +83,16 @@ public class NotSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(NotSpec.KIND, a),
-				//target exclamation
-				a -> new FilterByKindAnalyzer(ExclamationSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(MoreThanEqualsSpec.KIND, a),
+				//target close-chevron-equal
+				a -> new FilterByKindAnalyzer(CloseChevronEqualSpec.KIND, a),
 				//wrap
-				a -> new UnaryOperatorAnalyzer(
+				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(NotSpec.KIND),
+								new Sketch(MoreThanEqualsSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -93,6 +100,15 @@ public class NotSpec implements Spec {
 								OperatorSpec.KEY_SIGN,
 								t.getSketch()
 						),
+						//left-side wrapper constructor
+						(w, r) -> w.offer(new Tree(
+								w.document(),
+								r,
+								w.getSketch()
+								 .get(OperatorSpec.KEY_LEFT)
+								 .setKind(ParameterSpec.KIND),
+								ParameterSpec.Z_INDEX
+						)),
 						//right-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
 								w.document(),
@@ -110,27 +126,35 @@ public class NotSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target not operator
-				c -> new FilterByKindCompiler(NotSpec.KIND, c),
+				//target more-than-equals operator
+				c -> new FilterByKindCompiler(MoreThanEqualsSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
+					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
 					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
 
-					if (rightT == null)
+					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator NOT (!) is missing some components",
+								"Operator MORE_THAN_EQUALS (>=) is missing some components",
 								tree
 						);
 
+					Instruction leftI = compiler.compile(
+							compiler,
+							compilation,
+							leftT
+					);
 					Instruction rightI = compiler.compile(
 							compiler,
 							compilation,
 							rightT
 					);
 
-					if (rightI == null)
+					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator NOT (!) cannot be applied to <" +
+								"The operator MORE_THAN_EQUALS (>=) cannot be applied to <" +
+								IO.read(leftT) +
+								"> and <" +
 								IO.read(rightT) +
 								">",
 								tree
@@ -138,9 +162,28 @@ public class NotSpec implements Spec {
 
 					return new Block(
 							tree,
+							leftI,
 							rightI,
+							//compare the values
+							new Compare(tree),
+							//duplicate for the two checks
+							new Dup(tree),
+							//cast the first duplicate to boolean
 							new CastBoolean(tree),
-							new Negate(tree)
+							//negate the first duplicate to boolean
+							new Negate(tree),
+							//swap the duplicates
+							new Swap(tree),
+							//push '1' to compare with the duplicate
+							new PushConst(new NumberValue(1)),
+							//compare the second duplicate with `1`
+							new Compare(tree),
+							//cast the second duplicate to boolean
+							new CastBoolean(tree),
+							//negate the second duplicate
+							new Negate(tree),
+							//more than or equals
+							new Or(tree)
 					);
 				}
 		);
@@ -149,6 +192,6 @@ public class NotSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return NotSpec.NAME;
+		return MoreThanEqualsSpec.NAME;
 	}
 }

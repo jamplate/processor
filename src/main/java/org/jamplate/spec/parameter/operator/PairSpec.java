@@ -13,14 +13,18 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
+import org.jamplate.instruction.memory.frame.DumpFrame;
+import org.jamplate.instruction.memory.frame.JoinFrame;
+import org.jamplate.instruction.memory.frame.PushFrame;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.operator.math.Difference;
+import org.jamplate.instruction.operator.cast.CastPair;
+import org.jamplate.instruction.operator.cast.CastQuote;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -34,33 +38,33 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.MinusSpec;
-import org.jamplate.value.NumberValue;
+import org.jamplate.spec.syntax.symbol.ColonSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Subtractor operator specifications.
+ * Pair operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.25
+ * @since 0.3.0 ~2021.06.27
  */
-public class SubtractorSpec implements Spec {
+@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+public class PairSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.25
+	 * @since 0.3.0 ~2021.06.27
 	 */
 	@NotNull
-	public static final SubtractorSpec INSTANCE = new SubtractorSpec();
+	public static final PairSpec INSTANCE = new PairSpec();
 
 	/**
-	 * The kind of a subtractor operator context.
+	 * The kind of a pair operator context.
 	 *
-	 * @since 0.3.0 ~2021.06.25
+	 * @since 0.3.0 ~2021.06.27
 	 */
 	@NotNull
-	public static final String KIND = "operator:subtractor";
+	public static final String KIND = "operator:pair";
 
 	/**
 	 * The qualified name of this spec.
@@ -68,7 +72,7 @@ public class SubtractorSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = SubtractorSpec.class.getSimpleName();
+	public static final String NAME = PairSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -77,17 +81,16 @@ public class SubtractorSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(SubtractorSpec.KIND, a),
-				//target minuses
-				a -> new FilterByKindAnalyzer(MinusSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(PairSpec.KIND, a),
+				//target colons
+				a -> new FilterByKindAnalyzer(ColonSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
-						(d, r) ->
-								new Tree(
+						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(SubtractorSpec.KIND),
+								new Sketch(PairSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -121,43 +124,17 @@ public class SubtractorSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target subtractor operator
-				c -> new FilterByKindCompiler(SubtractorSpec.KIND, c),
+				//target pair operator
+				c -> new FilterByKindCompiler(PairSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
 					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
 
-					if (rightT == null)
+					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator SUBTRACTOR (-) is missing some components",
+								"Operator PAIR (:) is missing some components",
 								tree
-						);
-
-					Instruction rightI = compiler.compile(
-							compiler,
-							compilation,
-							rightT
-					);
-
-					if (rightI == null)
-						throw new CompileException(
-								"The operator SUBTRACTOR (-) cannot be applied to <" +
-								IO.read(rightT) +
-								">",
-								tree
-						);
-
-					if (leftT == null)
-						//flip the sign
-						return new Block(
-								tree,
-								//no left value, default to `0`
-								new PushConst(new NumberValue(0)),
-								//execute the right value
-								rightI,
-								//do the work
-								new Difference(tree)
 						);
 
 					Instruction leftI = compiler.compile(
@@ -165,10 +142,15 @@ public class SubtractorSpec implements Spec {
 							compilation,
 							leftT
 					);
+					Instruction rightI = compiler.compile(
+							compiler,
+							compilation,
+							rightT
+					);
 
-					if (leftI == null)
+					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator SUBTRACTOR (-) cannot be applied to <" +
+								"The operator PAIR (:) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -178,12 +160,15 @@ public class SubtractorSpec implements Spec {
 
 					return new Block(
 							tree,
-							//execute the left value
+							new PushFrame(tree),
 							leftI,
-							//execute the right value
+							new CastQuote(tree),
+							new PushConst(tree, m -> ":"),
 							rightI,
-							//do the work
-							new Difference(tree)
+							new CastQuote(tree),
+							new JoinFrame(tree),
+							new CastPair(tree),
+							new DumpFrame(tree)
 					);
 				}
 		);
@@ -192,6 +177,6 @@ public class SubtractorSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return SubtractorSpec.NAME;
+		return PairSpec.NAME;
 	}
 }

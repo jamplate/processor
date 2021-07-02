@@ -13,15 +13,14 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.Compare;
-import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.instruction.operator.logic.And;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -35,32 +34,32 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.EqualEqualSpec;
+import org.jamplate.spec.syntax.symbol.AndAndSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Equals operator specifications.
+ * Logical-And operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class EqualsSpec implements Spec {
+public class LogicalAndSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final EqualsSpec INSTANCE = new EqualsSpec();
+	public static final LogicalAndSpec INSTANCE = new LogicalAndSpec();
 
 	/**
-	 * The kind of an equals operator context.
+	 * The kind of a logical-and operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:equals";
+	public static final String KIND = "operator:logical_and";
 
 	/**
 	 * The qualified name of this spec.
@@ -68,7 +67,7 @@ public class EqualsSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = EqualsSpec.class.getSimpleName();
+	public static final String NAME = LogicalAndSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -77,16 +76,16 @@ public class EqualsSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(EqualsSpec.KIND, a),
-				//target equal-equal
-				a -> new FilterByKindAnalyzer(EqualEqualSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(LogicalAndSpec.KIND, a),
+				//target and-and
+				a -> new FilterByKindAnalyzer(AndAndSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(EqualsSpec.KIND),
+								new Sketch(LogicalAndSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -120,8 +119,8 @@ public class EqualsSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target equals operator
-				c -> new FilterByKindCompiler(EqualsSpec.KIND, c),
+				//target logical-and operator
+				c -> new FilterByKindCompiler(LogicalAndSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -129,7 +128,7 @@ public class EqualsSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator EQUALS (==) is missing some components",
+								"Operator LOGICAL_AND (&&) is missing some components",
 								tree
 						);
 
@@ -146,7 +145,7 @@ public class EqualsSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator EQUALS (==) cannot be applied to <" +
+								"The operator LOGICAL_AND (&&) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -156,11 +155,16 @@ public class EqualsSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run first param
 							leftI,
-							rightI,
-							new Compare(tree),
+							//cast first param into boolean
 							new CastBoolean(tree),
-							new Negate(tree)
+							//run second param
+							rightI,
+							//cast second param into boolean
+							new CastBoolean(tree),
+							//do the logic
+							new And(tree)
 					);
 				}
 		);
@@ -169,6 +173,6 @@ public class EqualsSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return EqualsSpec.NAME;
+		return LogicalAndSpec.NAME;
 	}
 }

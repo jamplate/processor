@@ -13,15 +13,17 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.operator.struct.Get;
-import org.jamplate.internal.function.analyzer.alter.UnaryExtensionAnalyzer;
+import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Compare;
+import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
@@ -33,65 +35,67 @@ import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.ExtensionSpec;
-import org.jamplate.spec.syntax.enclosure.BracketsSpec;
+import org.jamplate.spec.standard.OperatorSpec;
+import org.jamplate.spec.syntax.symbol.CloseChevronSpec;
 import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Getter operator specifications.
+ * More-Than operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.20
+ * @since 0.3.0 ~2021.06.25
  */
-public class GetterSpec implements Spec {
+@SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
+public class MoreThanSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.21
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final GetterSpec INSTANCE = new GetterSpec();
+	public static final MoreThanSpec INSTANCE = new MoreThanSpec();
 
 	/**
-	 * The kind of a getter operator context.
+	 * The kind of an more-than operator context.
 	 *
-	 * @since 0.3.0 ~2021.06.22
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:getter";
+	public static final String KIND = "operator:more_than";
 
 	/**
 	 * The qualified name of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.22
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = GetterSpec.class.getSimpleName();
+	public static final String NAME = MoreThanSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
 		return Functions.analyzer(
-				//search in the whole hierarchy
+				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(GetterSpec.KIND, a),
-				//target square brackets
-				a -> new FilterByKindAnalyzer(BracketsSpec.KIND, a),
-				//analytic
-				a -> new UnaryExtensionAnalyzer(
+				a -> new FilterByNotParentKindAnalyzer(MoreThanSpec.KIND, a),
+				//target close-chevrons
+				a -> new FilterByKindAnalyzer(CloseChevronSpec.KIND, a),
+				//wrap
+				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
-						(d, r) -> new Tree(
+						(d, r) ->
+								new Tree(
 								d,
 								r,
-								new Sketch(GetterSpec.KIND),
-								ExtensionSpec.Z_INDEX
+								new Sketch(MoreThanSpec.KIND),
+								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
-								ExtensionSpec.KEY_SIGN,
+								OperatorSpec.KEY_SIGN,
 								t.getSketch()
 						),
 						//left-side wrapper constructor
@@ -99,7 +103,16 @@ public class GetterSpec implements Spec {
 								w.document(),
 								r,
 								w.getSketch()
-								 .get(ExtensionSpec.KEY_TARGET)
+								 .get(OperatorSpec.KEY_LEFT)
+								 .setKind(ParameterSpec.KIND),
+								ParameterSpec.Z_INDEX
+						)),
+						//right-side wrapper constructor
+						(w, r) -> w.offer(new Tree(
+								w.document(),
+								r,
+								w.getSketch()
+								 .get(OperatorSpec.KEY_RIGHT)
 								 .setKind(ParameterSpec.KIND),
 								ParameterSpec.Z_INDEX
 						))
@@ -111,51 +124,54 @@ public class GetterSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target getter context
-				c -> new FilterByKindCompiler(GetterSpec.KIND, c),
+				//target more-than operator
+				c -> new FilterByKindCompiler(MoreThanSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
-					Tree targetT = tree.getSketch().get(ExtensionSpec.KEY_TARGET).getTree();
-					Tree signT = tree.getSketch().get(ExtensionSpec.KEY_SIGN).getTree();
+					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
+					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
 
-					if (targetT == null || signT == null)
+					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Extension GETTER is missing some components",
+								"Operator MORE_THAN (>) is missing some components",
 								tree
 						);
 
-					Instruction targetI = compiler.compile(
+					Instruction leftI = compiler.compile(
 							compiler,
 							compilation,
-							targetT
+							leftT
 					);
-					Instruction signI = compiler.compile(
+					Instruction rightI = compiler.compile(
 							compiler,
 							compilation,
-							signT
+							rightT
 					);
 
-					if (targetI == null || signI == null)
+					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator GETTER cannot be applied to <" +
-								IO.read(targetT) +
-								"> with <" +
-								IO.read(signT) +
+								"The operator MORE_THAN (>) cannot be applied to <" +
+								IO.read(leftT) +
+								"> and <" +
+								IO.read(rightT) +
 								">",
 								tree
 						);
 
-					Block signWrapI = new Block(
-							signI,
-							new PushConst(tree, new NumberValue(0)),
-							new Get(tree)
-					);
-
 					return new Block(
 							tree,
-							targetI,
-							signWrapI,
-							new Get(tree)
+							leftI,
+							rightI,
+							//compare the values
+							new Compare(tree),
+							//push `1` to compare the comparison result
+							new PushConst(new NumberValue(1)),
+							//compare the comparison result with `1`
+							new Compare(tree),
+							//cast the result to boolean
+							new CastBoolean(tree),
+							//negate the results
+							new Negate(tree)
 					);
 				}
 		);
@@ -164,6 +180,6 @@ public class GetterSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return GetterSpec.NAME;
+		return MoreThanSpec.NAME;
 	}
 }

@@ -13,18 +13,16 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.frame.DumpFrame;
-import org.jamplate.instruction.memory.frame.JoinFrame;
-import org.jamplate.instruction.memory.frame.PushFrame;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.operator.cast.CastPair;
-import org.jamplate.instruction.operator.cast.CastQuote;
+import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Compare;
+import org.jamplate.instruction.operator.logic.Negate;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -38,33 +36,34 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.ColonSpec;
+import org.jamplate.spec.syntax.symbol.OpenChevronSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Pair operator specifications.
+ * Less-Than operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.27
+ * @since 0.3.0 ~2021.06.25
  */
 @SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
-public class PairSpec implements Spec {
+public class LessThanSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.27
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final PairSpec INSTANCE = new PairSpec();
+	public static final LessThanSpec INSTANCE = new LessThanSpec();
 
 	/**
-	 * The kind of a pair operator context.
+	 * The kind of an less-than operator context.
 	 *
-	 * @since 0.3.0 ~2021.06.27
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:pair";
+	public static final String KIND = "operator:less_than";
 
 	/**
 	 * The qualified name of this spec.
@@ -72,7 +71,7 @@ public class PairSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = PairSpec.class.getSimpleName();
+	public static final String NAME = LessThanSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -81,16 +80,16 @@ public class PairSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(PairSpec.KIND, a),
-				//target colons
-				a -> new FilterByKindAnalyzer(ColonSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(LessThanSpec.KIND, a),
+				//target open-chevrons
+				a -> new FilterByKindAnalyzer(OpenChevronSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(PairSpec.KIND),
+								new Sketch(LessThanSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -124,8 +123,8 @@ public class PairSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target pair operator
-				c -> new FilterByKindCompiler(PairSpec.KIND, c),
+				//target less-than operator
+				c -> new FilterByKindCompiler(LessThanSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -133,7 +132,7 @@ public class PairSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator PAIR (:) is missing some components",
+								"Operator LESS_THAN (<) is missing some components",
 								tree
 						);
 
@@ -150,7 +149,7 @@ public class PairSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator PAIR (:) cannot be applied to <" +
+								"The operator LESS_THAN (<) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -160,15 +159,18 @@ public class PairSpec implements Spec {
 
 					return new Block(
 							tree,
-							new PushFrame(tree),
 							leftI,
-							new CastQuote(tree),
-							new PushConst(tree, m -> ":"),
 							rightI,
-							new CastQuote(tree),
-							new JoinFrame(tree),
-							new CastPair(tree),
-							new DumpFrame(tree)
+							//compare the values
+							new Compare(tree),
+							//push `-1` to compare the comparison result
+							new PushConst(tree, new NumberValue(-1)),
+							//compare the comparison result with `-1`
+							new Compare(tree),
+							//cast the result to boolean
+							new CastBoolean(tree),
+							//negate the results
+							new Negate(tree)
 					);
 				}
 		);
@@ -177,6 +179,6 @@ public class PairSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return PairSpec.NAME;
+		return LessThanSpec.NAME;
 	}
 }

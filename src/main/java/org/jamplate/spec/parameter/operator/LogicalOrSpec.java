@@ -13,14 +13,14 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.And;
+import org.jamplate.instruction.operator.logic.Or;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -34,32 +34,32 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.AndAndSpec;
+import org.jamplate.spec.syntax.symbol.PipePipeSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Logical-And operator specifications.
+ * Logical-Or operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class LogicalAndSpec implements Spec {
+public class LogicalOrSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final LogicalAndSpec INSTANCE = new LogicalAndSpec();
+	public static final LogicalOrSpec INSTANCE = new LogicalOrSpec();
 
 	/**
-	 * The kind of a logical-and operator context.
+	 * The kind of a logical-or operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:logical_and";
+	public static final String KIND = "operator:logical_or";
 
 	/**
 	 * The qualified name of this spec.
@@ -67,7 +67,7 @@ public class LogicalAndSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = LogicalAndSpec.class.getSimpleName();
+	public static final String NAME = LogicalOrSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -76,16 +76,16 @@ public class LogicalAndSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(LogicalAndSpec.KIND, a),
-				//target and-and
-				a -> new FilterByKindAnalyzer(AndAndSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(LogicalOrSpec.KIND, a),
+				//target pipe-pipe
+				a -> new FilterByKindAnalyzer(PipePipeSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(LogicalAndSpec.KIND),
+								new Sketch(LogicalOrSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -119,8 +119,8 @@ public class LogicalAndSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target logical-and operator
-				c -> new FilterByKindCompiler(LogicalAndSpec.KIND, c),
+				//target logical-or operator
+				c -> new FilterByKindCompiler(LogicalOrSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -128,7 +128,7 @@ public class LogicalAndSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator LOGICAL_AND (&&) is missing some components",
+								"Operator LOGICAL_OR (||) is missing some components",
 								tree
 						);
 
@@ -145,7 +145,7 @@ public class LogicalAndSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator LOGICAL_AND (&&) cannot be applied to <" +
+								"The operator LOGICAL_OR (||) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -164,7 +164,7 @@ public class LogicalAndSpec implements Spec {
 							//cast second param into boolean
 							new CastBoolean(tree),
 							//do the logic
-							new And(tree)
+							new Or(tree)
 					);
 				}
 		);
@@ -173,6 +173,6 @@ public class LogicalAndSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return LogicalAndSpec.NAME;
+		return LogicalOrSpec.NAME;
 	}
 }

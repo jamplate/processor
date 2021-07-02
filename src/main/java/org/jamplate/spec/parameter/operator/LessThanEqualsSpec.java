@@ -13,60 +13,68 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.operator.math.Product;
-import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.AsteriskSpec;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
+import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.instruction.memory.stack.Dup;
+import org.jamplate.instruction.memory.stack.Swap;
+import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Compare;
+import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.instruction.operator.logic.Or;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.spec.element.ParameterSpec;
+import org.jamplate.spec.standard.OperatorSpec;
+import org.jamplate.spec.syntax.symbol.OpenChevronEqualSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Multiplier operator specifications.
+ * Less-Than-Equals operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.22
+ * @since 0.3.0 ~2021.06.25
  */
-public class MultiplierSpec implements Spec {
+@SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
+public class LessThanEqualsSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.22
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final MultiplierSpec INSTANCE = new MultiplierSpec();
+	public static final LessThanEqualsSpec INSTANCE = new LessThanEqualsSpec();
 
 	/**
-	 * The kind of a multiplier operator context.
+	 * The kind of a less-than-equals operator context.
 	 *
-	 * @since 0.3.0 ~2021.06.22
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:multiplier";
+	public static final String KIND = "operator:less_than_equals";
 
 	/**
 	 * The qualified name of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.22
+	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = MultiplierSpec.class.getSimpleName();
+	public static final String NAME = LessThanEqualsSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -75,16 +83,16 @@ public class MultiplierSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(MultiplierSpec.KIND, a),
-				//target asterisks
-				a -> new FilterByKindAnalyzer(AsteriskSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(LessThanEqualsSpec.KIND, a),
+				//target open-chevron-equal
+				a -> new FilterByKindAnalyzer(OpenChevronEqualSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(MultiplierSpec.KIND),
+								new Sketch(LessThanEqualsSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -118,8 +126,8 @@ public class MultiplierSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target multiplier operator
-				c -> new FilterByKindCompiler(MultiplierSpec.KIND, c),
+				//target less-than-equals operator
+				c -> new FilterByKindCompiler(LessThanEqualsSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -127,7 +135,7 @@ public class MultiplierSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator MULTIPLIER (*) is missing some components",
+								"Operator LESS_THAN_EQUALS (<=) is missing some components",
 								tree
 						);
 
@@ -144,7 +152,7 @@ public class MultiplierSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator MULTIPLIER (*) cannot be applied to <" +
+								"The operator LESS_THAN_EQUALS (<=) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -156,7 +164,26 @@ public class MultiplierSpec implements Spec {
 							tree,
 							leftI,
 							rightI,
-							new Product(tree)
+							//compare the values
+							new Compare(tree),
+							//duplicate for the two checks
+							new Dup(tree),
+							//cast the first duplicate to boolean
+							new CastBoolean(tree),
+							//negate the first duplicate
+							new Negate(tree),
+							//swap the duplicates
+							new Swap(tree),
+							//push '-1' to compare with the duplicate
+							new PushConst(tree, new NumberValue(-1)),
+							//compare the second duplicate with `-1`
+							new Compare(tree),
+							//cast the second duplicate to boolean
+							new CastBoolean(tree),
+							//negate the second duplicate
+							new Negate(tree),
+							//less than or equals
+							new Or(tree)
 					);
 				}
 		);
@@ -165,6 +192,6 @@ public class MultiplierSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return MultiplierSpec.NAME;
+		return LessThanEqualsSpec.NAME;
 	}
 }

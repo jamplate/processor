@@ -13,49 +13,53 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.operator.math.Sum;
-import org.jamplate.model.*;
-import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.PlusSpec;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
+import org.jamplate.instruction.operator.cast.CastBoolean;
+import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.internal.function.analyzer.alter.UnaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
+import org.jamplate.model.CompileException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
+import org.jamplate.spec.element.ParameterSpec;
+import org.jamplate.spec.standard.OperatorSpec;
+import org.jamplate.spec.syntax.symbol.ExclamationSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Adder operator specifications.
+ * Not operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class AdderSpec implements Spec {
+public class NotSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final AdderSpec INSTANCE = new AdderSpec();
+	public static final NotSpec INSTANCE = new NotSpec();
 
 	/**
-	 * The kind of a adder operator context.
+	 * The kind of a not operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:adder";
+	public static final String KIND = "operator:not";
 
 	/**
 	 * The qualified name of this spec.
@@ -63,7 +67,7 @@ public class AdderSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = AdderSpec.class.getSimpleName();
+	public static final String NAME = NotSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -72,16 +76,16 @@ public class AdderSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(AdderSpec.KIND, a),
-				//target pluses
-				a -> new FilterByKindAnalyzer(PlusSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(NotSpec.KIND, a),
+				//target exclamation
+				a -> new FilterByKindAnalyzer(ExclamationSpec.KIND, a),
 				//wrap
-				a -> new BinaryOperatorAnalyzer(
+				a -> new UnaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(AdderSpec.KIND),
+								new Sketch(NotSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -89,15 +93,6 @@ public class AdderSpec implements Spec {
 								OperatorSpec.KEY_SIGN,
 								t.getSketch()
 						),
-						//left-side wrapper constructor
-						(w, r) -> w.offer(new Tree(
-								w.document(),
-								r,
-								w.getSketch()
-								 .get(OperatorSpec.KEY_LEFT)
-								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
-						)),
 						//right-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
 								w.document(),
@@ -115,35 +110,27 @@ public class AdderSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target adder operator
-				c -> new FilterByKindCompiler(AdderSpec.KIND, c),
+				//target not operator
+				c -> new FilterByKindCompiler(NotSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
-					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
 					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
 
-					if (leftT == null || rightT == null)
+					if (rightT == null)
 						throw new CompileException(
-								"Operator ADDER (+) is missing some components",
+								"Operator NOT (!) is missing some components",
 								tree
 						);
 
-					Instruction leftI = compiler.compile(
-							compiler,
-							compilation,
-							leftT
-					);
 					Instruction rightI = compiler.compile(
 							compiler,
 							compilation,
 							rightT
 					);
 
-					if (leftI == null || rightI == null)
+					if (rightI == null)
 						throw new CompileException(
-								"The operator ADDER (+) cannot be applied to <" +
-								IO.read(leftT) +
-								"> and <" +
+								"The operator NOT (!) cannot be applied to <" +
 								IO.read(rightT) +
 								">",
 								tree
@@ -151,9 +138,9 @@ public class AdderSpec implements Spec {
 
 					return new Block(
 							tree,
-							leftI,
 							rightI,
-							new Sum(tree)
+							new CastBoolean(tree),
+							new Negate(tree)
 					);
 				}
 		);
@@ -162,6 +149,6 @@ public class AdderSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return AdderSpec.NAME;
+		return NotSpec.NAME;
 	}
 }

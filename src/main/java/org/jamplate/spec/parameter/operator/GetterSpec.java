@@ -13,83 +13,85 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.operator.math.Remainder;
-import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.PercentSpec;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
+import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.instruction.operator.struct.Get;
+import org.jamplate.internal.function.analyzer.alter.UnaryExtensionAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.spec.element.ParameterSpec;
+import org.jamplate.spec.standard.ExtensionSpec;
+import org.jamplate.spec.syntax.enclosure.BracketsSpec;
+import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Modulo operator specifications.
+ * Getter operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.25
+ * @since 0.3.0 ~2021.06.20
  */
-public class ModuloSpec implements Spec {
+public class GetterSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.25
+	 * @since 0.3.0 ~2021.06.21
 	 */
 	@NotNull
-	public static final ModuloSpec INSTANCE = new ModuloSpec();
+	public static final GetterSpec INSTANCE = new GetterSpec();
 
 	/**
-	 * The kind of a modulo operator context.
+	 * The kind of a getter operator context.
 	 *
-	 * @since 0.3.0 ~2021.06.25
+	 * @since 0.3.0 ~2021.06.22
 	 */
 	@NotNull
-	public static final String KIND = "operator:modulo";
+	public static final String KIND = "operator:getter";
 
 	/**
 	 * The qualified name of this spec.
 	 *
-	 * @since 0.3.0 ~2021.06.25
+	 * @since 0.3.0 ~2021.06.22
 	 */
 	@NotNull
-	public static final String NAME = ModuloSpec.class.getSimpleName();
+	public static final String NAME = GetterSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
 		return Functions.analyzer(
-				//analyze the whole hierarchy
+				//search in the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(ModuloSpec.KIND, a),
-				//target percents
-				a -> new FilterByKindAnalyzer(PercentSpec.KIND, a),
-				//wrap
-				a -> new BinaryOperatorAnalyzer(
+				a -> new FilterByNotParentKindAnalyzer(GetterSpec.KIND, a),
+				//target square brackets
+				a -> new FilterByKindAnalyzer(BracketsSpec.KIND, a),
+				//analytic
+				a -> new UnaryExtensionAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(ModuloSpec.KIND),
-								OperatorSpec.Z_INDEX
+								new Sketch(GetterSpec.KIND),
+								ExtensionSpec.Z_INDEX
 						),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
-								OperatorSpec.KEY_SIGN,
+								ExtensionSpec.KEY_SIGN,
 								t.getSketch()
 						),
 						//left-side wrapper constructor
@@ -97,16 +99,7 @@ public class ModuloSpec implements Spec {
 								w.document(),
 								r,
 								w.getSketch()
-								 .get(OperatorSpec.KEY_LEFT)
-								 .setKind(ParameterSpec.KIND),
-								ParameterSpec.Z_INDEX
-						)),
-						//right-side wrapper constructor
-						(w, r) -> w.offer(new Tree(
-								w.document(),
-								r,
-								w.getSketch()
-								 .get(OperatorSpec.KEY_RIGHT)
+								 .get(ExtensionSpec.KEY_TARGET)
 								 .setKind(ParameterSpec.KIND),
 								ParameterSpec.Z_INDEX
 						))
@@ -118,45 +111,51 @@ public class ModuloSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target modulo operator
-				c -> new FilterByKindCompiler(ModuloSpec.KIND, c),
+				//target getter context
+				c -> new FilterByKindCompiler(GetterSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
-					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
-					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
+					Tree targetT = tree.getSketch().get(ExtensionSpec.KEY_TARGET).getTree();
+					Tree signT = tree.getSketch().get(ExtensionSpec.KEY_SIGN).getTree();
 
-					if (leftT == null || rightT == null)
+					if (targetT == null || signT == null)
 						throw new CompileException(
-								"Operator MODULO (%) is missing some components",
+								"Extension GETTER is missing some components",
 								tree
 						);
 
-					Instruction leftI = compiler.compile(
+					Instruction targetI = compiler.compile(
 							compiler,
 							compilation,
-							leftT
+							targetT
 					);
-					Instruction rightI = compiler.compile(
+					Instruction signI = compiler.compile(
 							compiler,
 							compilation,
-							rightT
+							signT
 					);
 
-					if (leftI == null || rightI == null)
+					if (targetI == null || signI == null)
 						throw new CompileException(
-								"The operator MODULO (%) cannot be applied to <" +
-								IO.read(leftT) +
-								"> and <" +
-								IO.read(rightT) +
+								"The operator GETTER cannot be applied to <" +
+								IO.read(targetT) +
+								"> with <" +
+								IO.read(signT) +
 								">",
 								tree
 						);
 
+					Block signWrapI = new Block(
+							signI,
+							new PushConst(tree, new NumberValue(0)),
+							new Get(tree)
+					);
+
 					return new Block(
 							tree,
-							leftI,
-							rightI,
-							new Remainder(tree)
+							targetI,
+							signWrapI,
+							new Get(tree)
 					);
 				}
 		);
@@ -165,6 +164,6 @@ public class ModuloSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return ModuloSpec.NAME;
+		return GetterSpec.NAME;
 	}
 }

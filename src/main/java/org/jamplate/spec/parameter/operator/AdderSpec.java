@@ -13,57 +13,49 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.Compare;
-import org.jamplate.instruction.operator.logic.Negate;
+import org.jamplate.instruction.operator.math.Sum;
+import org.jamplate.model.*;
+import org.jamplate.spec.element.ParameterSpec;
+import org.jamplate.spec.standard.OperatorSpec;
+import org.jamplate.spec.syntax.symbol.PlusSpec;
+import org.jamplate.internal.util.Functions;
+import org.jamplate.internal.util.IO;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
 import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.CompileException;
-import org.jamplate.model.Instruction;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
-import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.CloseChevronSpec;
-import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * More-Than operator specifications.
+ * Adder operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
-public class MoreThanSpec implements Spec {
+public class AdderSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final MoreThanSpec INSTANCE = new MoreThanSpec();
+	public static final AdderSpec INSTANCE = new AdderSpec();
 
 	/**
-	 * The kind of an more-than operator context.
+	 * The kind of a adder operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:more_than";
+	public static final String KIND = "operator:adder";
 
 	/**
 	 * The qualified name of this spec.
@@ -71,7 +63,7 @@ public class MoreThanSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = MoreThanSpec.class.getSimpleName();
+	public static final String NAME = AdderSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -80,17 +72,16 @@ public class MoreThanSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(MoreThanSpec.KIND, a),
-				//target close-chevrons
-				a -> new FilterByKindAnalyzer(CloseChevronSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(AdderSpec.KIND, a),
+				//target pluses
+				a -> new FilterByKindAnalyzer(PlusSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
-						(d, r) ->
-								new Tree(
+						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(MoreThanSpec.KIND),
+								new Sketch(AdderSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -124,8 +115,8 @@ public class MoreThanSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target more-than operator
-				c -> new FilterByKindCompiler(MoreThanSpec.KIND, c),
+				//target adder operator
+				c -> new FilterByKindCompiler(AdderSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -133,7 +124,7 @@ public class MoreThanSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator MORE_THAN (>) is missing some components",
+								"Operator ADDER (+) is missing some components",
 								tree
 						);
 
@@ -150,7 +141,7 @@ public class MoreThanSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator MORE_THAN (>) cannot be applied to <" +
+								"The operator ADDER (+) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -162,16 +153,7 @@ public class MoreThanSpec implements Spec {
 							tree,
 							leftI,
 							rightI,
-							//compare the values
-							new Compare(tree),
-							//push `1` to compare the comparison result
-							new PushConst(new NumberValue(1)),
-							//compare the comparison result with `1`
-							new Compare(tree),
-							//cast the result to boolean
-							new CastBoolean(tree),
-							//negate the results
-							new Negate(tree)
+							new Sum(tree)
 					);
 				}
 		);
@@ -180,6 +162,6 @@ public class MoreThanSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return MoreThanSpec.NAME;
+		return AdderSpec.NAME;
 	}
 }

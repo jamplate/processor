@@ -13,19 +13,15 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.memory.stack.Dup;
-import org.jamplate.instruction.memory.stack.Swap;
 import org.jamplate.instruction.operator.cast.CastBoolean;
 import org.jamplate.instruction.operator.logic.Compare;
 import org.jamplate.instruction.operator.logic.Negate;
-import org.jamplate.instruction.operator.logic.Or;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -39,34 +35,32 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.CloseChevronEqualSpec;
-import org.jamplate.value.NumberValue;
+import org.jamplate.spec.syntax.symbol.EqualEqualSpec;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * More-Than-Equals operator specifications.
+ * Equals operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
-public class MoreThanEqualsSpec implements Spec {
+public class EqualsSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final MoreThanEqualsSpec INSTANCE = new MoreThanEqualsSpec();
+	public static final EqualsSpec INSTANCE = new EqualsSpec();
 
 	/**
-	 * The kind of a more-than-equals operator context.
+	 * The kind of an equals operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:more_than_equals";
+	public static final String KIND = "operator:equals";
 
 	/**
 	 * The qualified name of this spec.
@@ -74,7 +68,7 @@ public class MoreThanEqualsSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = MoreThanEqualsSpec.class.getSimpleName();
+	public static final String NAME = EqualsSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -83,16 +77,16 @@ public class MoreThanEqualsSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(MoreThanEqualsSpec.KIND, a),
-				//target close-chevron-equal
-				a -> new FilterByKindAnalyzer(CloseChevronEqualSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(EqualsSpec.KIND, a),
+				//target equal-equal
+				a -> new FilterByKindAnalyzer(EqualEqualSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(MoreThanEqualsSpec.KIND),
+								new Sketch(EqualsSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -126,8 +120,8 @@ public class MoreThanEqualsSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target more-than-equals operator
-				c -> new FilterByKindCompiler(MoreThanEqualsSpec.KIND, c),
+				//target equals operator
+				c -> new FilterByKindCompiler(EqualsSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -135,7 +129,7 @@ public class MoreThanEqualsSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator MORE_THAN_EQUALS (>=) is missing some components",
+								"Operator EQUALS (==) is missing some components",
 								tree
 						);
 
@@ -152,7 +146,7 @@ public class MoreThanEqualsSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator MORE_THAN_EQUALS (>=) cannot be applied to <" +
+								"The operator EQUALS (==) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -164,26 +158,9 @@ public class MoreThanEqualsSpec implements Spec {
 							tree,
 							leftI,
 							rightI,
-							//compare the values
 							new Compare(tree),
-							//duplicate for the two checks
-							new Dup(tree),
-							//cast the first duplicate to boolean
 							new CastBoolean(tree),
-							//negate the first duplicate to boolean
-							new Negate(tree),
-							//swap the duplicates
-							new Swap(tree),
-							//push '1' to compare with the duplicate
-							new PushConst(new NumberValue(1)),
-							//compare the second duplicate with `1`
-							new Compare(tree),
-							//cast the second duplicate to boolean
-							new CastBoolean(tree),
-							//negate the second duplicate
-							new Negate(tree),
-							//more than or equals
-							new Or(tree)
+							new Negate(tree)
 					);
 				}
 		);
@@ -192,6 +169,6 @@ public class MoreThanEqualsSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return MoreThanEqualsSpec.NAME;
+		return EqualsSpec.NAME;
 	}
 }

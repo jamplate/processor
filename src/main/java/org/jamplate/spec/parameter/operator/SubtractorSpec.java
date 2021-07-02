@@ -13,19 +13,14 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.instruction.memory.stack.Dup;
-import org.jamplate.instruction.memory.stack.Swap;
-import org.jamplate.instruction.operator.cast.CastBoolean;
-import org.jamplate.instruction.operator.logic.Compare;
-import org.jamplate.instruction.operator.logic.Negate;
-import org.jamplate.instruction.operator.logic.Or;
+import org.jamplate.instruction.operator.math.Difference;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
 import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
@@ -39,34 +34,33 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.OpenChevronEqualSpec;
+import org.jamplate.spec.syntax.symbol.MinusSpec;
 import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Less-Than-Equals operator specifications.
+ * Subtractor operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
-public class LessThanEqualsSpec implements Spec {
+public class SubtractorSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final LessThanEqualsSpec INSTANCE = new LessThanEqualsSpec();
+	public static final SubtractorSpec INSTANCE = new SubtractorSpec();
 
 	/**
-	 * The kind of a less-than-equals operator context.
+	 * The kind of a subtractor operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:less_than_equals";
+	public static final String KIND = "operator:subtractor";
 
 	/**
 	 * The qualified name of this spec.
@@ -74,7 +68,7 @@ public class LessThanEqualsSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = LessThanEqualsSpec.class.getSimpleName();
+	public static final String NAME = SubtractorSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -83,16 +77,17 @@ public class LessThanEqualsSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(LessThanEqualsSpec.KIND, a),
-				//target open-chevron-equal
-				a -> new FilterByKindAnalyzer(OpenChevronEqualSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(SubtractorSpec.KIND, a),
+				//target minuses
+				a -> new FilterByKindAnalyzer(MinusSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
-						(d, r) -> new Tree(
+						(d, r) ->
+								new Tree(
 								d,
 								r,
-								new Sketch(LessThanEqualsSpec.KIND),
+								new Sketch(SubtractorSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -126,17 +121,43 @@ public class LessThanEqualsSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target less-than-equals operator
-				c -> new FilterByKindCompiler(LessThanEqualsSpec.KIND, c),
+				//target subtractor operator
+				c -> new FilterByKindCompiler(SubtractorSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
 					Tree rightT = tree.getSketch().get(OperatorSpec.KEY_RIGHT).getTree();
 
-					if (leftT == null || rightT == null)
+					if (rightT == null)
 						throw new CompileException(
-								"Operator LESS_THAN_EQUALS (<=) is missing some components",
+								"Operator SUBTRACTOR (-) is missing some components",
 								tree
+						);
+
+					Instruction rightI = compiler.compile(
+							compiler,
+							compilation,
+							rightT
+					);
+
+					if (rightI == null)
+						throw new CompileException(
+								"The operator SUBTRACTOR (-) cannot be applied to <" +
+								IO.read(rightT) +
+								">",
+								tree
+						);
+
+					if (leftT == null)
+						//flip the sign
+						return new Block(
+								tree,
+								//no left value, default to `0`
+								new PushConst(new NumberValue(0)),
+								//execute the right value
+								rightI,
+								//do the work
+								new Difference(tree)
 						);
 
 					Instruction leftI = compiler.compile(
@@ -144,15 +165,10 @@ public class LessThanEqualsSpec implements Spec {
 							compilation,
 							leftT
 					);
-					Instruction rightI = compiler.compile(
-							compiler,
-							compilation,
-							rightT
-					);
 
-					if (leftI == null || rightI == null)
+					if (leftI == null)
 						throw new CompileException(
-								"The operator LESS_THAN_EQUALS (<=) cannot be applied to <" +
+								"The operator SUBTRACTOR (-) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -162,28 +178,12 @@ public class LessThanEqualsSpec implements Spec {
 
 					return new Block(
 							tree,
+							//execute the left value
 							leftI,
+							//execute the right value
 							rightI,
-							//compare the values
-							new Compare(tree),
-							//duplicate for the two checks
-							new Dup(tree),
-							//cast the first duplicate to boolean
-							new CastBoolean(tree),
-							//negate the first duplicate
-							new Negate(tree),
-							//swap the duplicates
-							new Swap(tree),
-							//push '-1' to compare with the duplicate
-							new PushConst(tree, new NumberValue(-1)),
-							//compare the second duplicate with `-1`
-							new Compare(tree),
-							//cast the second duplicate to boolean
-							new CastBoolean(tree),
-							//negate the second duplicate
-							new Negate(tree),
-							//less than or equals
-							new Or(tree)
+							//do the work
+							new Difference(tree)
 					);
 				}
 		);
@@ -192,6 +192,6 @@ public class LessThanEqualsSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return LessThanEqualsSpec.NAME;
+		return SubtractorSpec.NAME;
 	}
 }

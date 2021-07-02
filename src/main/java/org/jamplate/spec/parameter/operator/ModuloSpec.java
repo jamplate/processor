@@ -13,16 +13,16 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.operator;
+package org.jamplate.spec.parameter.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.instruction.flow.Block;
-import org.jamplate.instruction.operator.math.Quotient;
+import org.jamplate.instruction.operator.math.Remainder;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.standard.OperatorSpec;
-import org.jamplate.spec.syntax.symbol.SlashSpec;
+import org.jamplate.spec.syntax.symbol.PercentSpec;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
@@ -37,28 +37,28 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Divider operator specifications.
+ * Modulo operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-public class DividerSpec implements Spec {
+public class ModuloSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final DividerSpec INSTANCE = new DividerSpec();
+	public static final ModuloSpec INSTANCE = new ModuloSpec();
 
 	/**
-	 * The kind of a divider operator context.
+	 * The kind of a modulo operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String KIND = "operator:divider";
+	public static final String KIND = "operator:modulo";
 
 	/**
 	 * The qualified name of this spec.
@@ -66,7 +66,7 @@ public class DividerSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@NotNull
-	public static final String NAME = DividerSpec.class.getSimpleName();
+	public static final String NAME = ModuloSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
@@ -75,16 +75,16 @@ public class DividerSpec implements Spec {
 				//analyze the whole hierarchy
 				HierarchyAnalyzer::new,
 				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(DividerSpec.KIND, a),
-				//target slashes
-				a -> new FilterByKindAnalyzer(SlashSpec.KIND, a),
+				a -> new FilterByNotParentKindAnalyzer(ModuloSpec.KIND, a),
+				//target percents
+				a -> new FilterByKindAnalyzer(PercentSpec.KIND, a),
 				//wrap
 				a -> new BinaryOperatorAnalyzer(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(DividerSpec.KIND),
+								new Sketch(ModuloSpec.KIND),
 								OperatorSpec.Z_INDEX
 						),
 						//operator constructor
@@ -118,8 +118,8 @@ public class DividerSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return Functions.compiler(
-				//target divider operator
-				c -> new FilterByKindCompiler(DividerSpec.KIND, c),
+				//target modulo operator
+				c -> new FilterByKindCompiler(ModuloSpec.KIND, c),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -127,7 +127,7 @@ public class DividerSpec implements Spec {
 
 					if (leftT == null || rightT == null)
 						throw new CompileException(
-								"Operator DIVIDER (/) is missing some components",
+								"Operator MODULO (%) is missing some components",
 								tree
 						);
 
@@ -144,7 +144,7 @@ public class DividerSpec implements Spec {
 
 					if (leftI == null || rightI == null)
 						throw new CompileException(
-								"The operator DIVIDER (/) cannot be applied to <" +
+								"The operator MODULO (%) cannot be applied to <" +
 								IO.read(leftT) +
 								"> and <" +
 								IO.read(rightT) +
@@ -156,7 +156,7 @@ public class DividerSpec implements Spec {
 							tree,
 							leftI,
 							rightI,
-							new Quotient(tree)
+							new Remainder(tree)
 					);
 				}
 		);
@@ -165,6 +165,6 @@ public class DividerSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return DividerSpec.NAME;
+		return ModuloSpec.NAME;
 	}
 }
