@@ -15,7 +15,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Memory;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
-import org.jamplate.spec.misc.DebugSpec;
+import org.jamplate.spec.tool.DebugSpec;
 import org.jamplate.spec.parameter.ReferenceSpec;
 import org.jamplate.spec.syntax.symbol.ExclamationSpec;
 import org.jamplate.spec.syntax.symbol.PlusSpec;
