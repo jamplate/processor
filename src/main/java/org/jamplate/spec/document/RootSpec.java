@@ -13,28 +13,28 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.misc;
+package org.jamplate.spec.document;
 
 import org.jamplate.api.Spec;
-import org.jamplate.api.Unit;
 import org.jamplate.function.Compiler;
+import org.jamplate.function.Initializer;
 import org.jamplate.instruction.flow.Block;
 import org.jamplate.instruction.memory.heap.Alloc;
 import org.jamplate.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
+import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.function.compiler.group.CombineCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
+import org.jamplate.internal.function.compiler.router.FlattenCompiler;
+import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
-import org.jamplate.model.Compilation;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jamplate.value.NumberValue;
 import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Objects;
 
 /**
  * A specification that targets root trees.
@@ -68,6 +68,13 @@ public class RootSpec implements Spec {
 	 */
 	@NotNull
 	public static final String NAME = RootSpec.class.getSimpleName();
+
+	/**
+	 * The weight of the root tree.
+	 *
+	 * @since 0.3.0 ~2021.07.02
+	 */
+	public static final int WEIGHT = -1;
 
 	@NotNull
 	@Override
@@ -108,49 +115,21 @@ public class RootSpec implements Spec {
 
 	@NotNull
 	@Override
+	public Initializer getInitializer() {
+		return (environment, document) ->
+				new CompilationImpl(
+						environment,
+						new Tree(
+								document,
+								new Sketch(RootSpec.KIND),
+								RootSpec.WEIGHT
+						)
+				);
+	}
+
+	@NotNull
+	@Override
 	public String getQualifiedName() {
 		return RootSpec.NAME;
 	}
-
-	@Override
-	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
-		Objects.requireNonNull(unit, "unit");
-		Objects.requireNonNull(compilation, "compilation");
-
-		compilation.getRootTree().getSketch().setKind(RootSpec.KIND);
-	}
 }
-//		return new FilterByKindCompiler(
-//				RootSpec.KIND,
-//				(compiler, compilation, tree) -> {
-//					String line = String.valueOf(Trees.line(tree) + 1);
-//					String file = tree.document().toString();
-//					String dir = new File(file).getParent();
-//
-//					Tree childT = tree.getChild();
-//
-//					Instruction childI = compiler.compile(
-//							compiler,
-//							compilation,
-//							childT
-//					);
-//
-//					return new Block(
-//							tree,
-//							//Define __PATH__
-//							new PushConst(m -> "__PATH__"),
-//							new PushConst(m -> file),
-//							Alloc.INSTANCE,
-//							//Define __DIR__
-//							new PushConst(m -> "__DIR__"),
-//							new PushConst(m -> dir == null ? "" : dir),
-//							Alloc.INSTANCE,
-//							//Define __LINE__
-//							new PushConst(m -> "__LINE__"),
-//							new PushConst(m -> line),
-//							Alloc.INSTANCE,
-//							//execute child
-//							childI
-//					);
-//				}
-//		);

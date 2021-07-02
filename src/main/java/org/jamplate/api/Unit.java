@@ -19,6 +19,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A gate unit that holds the variables necessary to do any jamplate task.
@@ -165,4 +166,17 @@ public interface Unit {
 	 */
 	@Contract(mutates = "this")
 	void setSpec(@NotNull Spec spec);
+
+	/**
+	 * Trigger the given {@code event} with the given {@code document}.
+	 *
+	 * @param event     the name of the event to trigger.
+	 * @param document  the document to trigger the event with.
+	 * @param parameter the invocation parameter.
+	 * @throws NullPointerException if the given {@code event} or {@code document} is
+	 *                              null.
+	 * @since 0.3.0 ~ 2021.07.02
+	 */
+	@Contract(mutates = "this,param3")
+	void trigger(@NotNull String event, @NotNull Document document, @Nullable Object parameter);
 }

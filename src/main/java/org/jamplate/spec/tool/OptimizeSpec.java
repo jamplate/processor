@@ -16,11 +16,10 @@
 package org.jamplate.spec.tool;
 
 import org.jamplate.api.Spec;
-import org.jamplate.model.Compilation;
+import org.jamplate.function.Listener;
+import org.jamplate.internal.api.Event;
 import org.jamplate.model.Instruction;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * An optimization spec. General optimizations. If everything has gone right, this should
@@ -49,19 +48,25 @@ public class OptimizeSpec implements Spec {
 
 	@NotNull
 	@Override
-	public String getQualifiedName() {
-		return OptimizeSpec.NAME;
+	public Listener getListener() {
+		return (event, compilation, parameter) -> {
+			if (event.equals(Event.OPTIMIZE)) {
+				Instruction instruction = compilation.getInstruction();
+
+				Number mode = (Number) parameter;
+
+				if (instruction != null) {
+					Instruction optimized = instruction.optimize(mode.intValue());
+
+					compilation.setInstruction(optimized);
+				}
+			}
+		};
 	}
 
+	@NotNull
 	@Override
-	public void onOptimize(@NotNull Compilation compilation, int mode) {
-		Objects.requireNonNull(compilation, "compilation");
-		Instruction instruction = compilation.getInstruction();
-
-		if (instruction != null) {
-			Instruction optimized = instruction.optimize(mode);
-
-			compilation.setInstruction(optimized);
-		}
+	public String getQualifiedName() {
+		return OptimizeSpec.NAME;
 	}
 }

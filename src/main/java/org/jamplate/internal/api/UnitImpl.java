@@ -18,20 +18,17 @@ package org.jamplate.internal.api;
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.diagnostic.Message;
-import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.function.Parser;
-import org.jamplate.function.Processor;
+import org.jamplate.function.*;
 import org.jamplate.internal.diagnostic.MessageImpl;
 import org.jamplate.internal.diagnostic.MessageKind;
 import org.jamplate.internal.diagnostic.MessagePriority;
-import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -46,6 +43,7 @@ import java.util.Set;
  */
 @SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
 public class UnitImpl implements Unit {
+
 	/**
 	 * The current environment.
 	 *
@@ -83,6 +81,7 @@ public class UnitImpl implements Unit {
 		try {
 			Processor processor = spec.getAnalyzeProcessor();
 			Analyzer analyzer = spec.getAnalyzer();
+			Listener listener = spec.getListener();
 
 			//pre-analyze process
 			processor.process(compilation);
@@ -91,6 +90,8 @@ public class UnitImpl implements Unit {
 			while (analyzer.analyze(compilation, root))
 				;
 
+			//post-analyze
+			listener.trigger(Event.POST_ANALYZE, compilation, this);
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -138,6 +139,7 @@ public class UnitImpl implements Unit {
 		try {
 			Processor processor = spec.getCompileProcessor();
 			Compiler compiler = spec.getCompiler();
+			Listener listener = spec.getListener();
 
 			//pre-compile process
 			processor.process(compilation);
@@ -158,6 +160,9 @@ public class UnitImpl implements Unit {
 			}
 
 			compilation.setInstruction(instruction);
+
+			//post-compile
+			listener.trigger(Event.POST_COMPILE, compilation, this);
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -197,11 +202,11 @@ public class UnitImpl implements Unit {
 	public void diagnostic() {
 		Environment environment = this.environment;
 		Spec spec = this.spec;
+		Listener listener = spec.getListener();
 
 		Diagnostic diagnostic = environment.getDiagnostic();
 
-		for (Message message : diagnostic)
-			spec.onDiagnostic(environment, message);
+		listener.trigger(Event.DIAGNOSTIC, null, diagnostic);
 	}
 
 	@Override
@@ -209,6 +214,7 @@ public class UnitImpl implements Unit {
 		Objects.requireNonNull(document, "document");
 		Environment environment = this.environment;
 		Spec spec = this.spec;
+		Listener listener = spec.getListener();
 
 		Compilation compilation = this.requireCompilation(document);
 		Instruction instruction = compilation.getInstruction();
@@ -222,14 +228,14 @@ public class UnitImpl implements Unit {
 		//execute
 		try {
 			//pre-execution
-			spec.onCreateMemory(compilation, memory);
+			listener.trigger(Event.PRE_EXEC, compilation, memory);
 
 			memory.getFrame().setInstruction(instruction);
 
 			instruction.exec(environment, memory);
 
 			//post-execution
-			spec.onDestroyMemory(compilation, memory);
+			listener.trigger(Event.POST_EXEC, compilation, memory);
 			return true;
 		} catch (ExecutionException e) {
 			environment.getDiagnostic()
@@ -292,14 +298,29 @@ public class UnitImpl implements Unit {
 					"Document already initialized: " + document
 			);
 
-		Compilation compilation = new CompilationImpl(
+		Initializer initializer = spec.getInitializer();
+		Listener listener = spec.getListener();
+
+		Compilation compilation = initializer.initialize(
 				environment,
-				new Tree(document, -1)
+				document
 		);
+
+		if (compilation == null) {
+			environment.getDiagnostic()
+					   .print(new MessageImpl(
+							   "No compilation initialized",
+							   MessagePriority.WARNING,
+							   MessageKind.COMPILE,
+							   false,
+							   new Tree(document)
+					   ));
+			return false;
+		}
 
 		environment.setCompilation(document, compilation);
 
-		spec.onCreateCompilation(this, compilation);
+		listener.trigger(Event.POST_INIT, compilation, this);
 
 		return true;
 	}
@@ -308,10 +329,11 @@ public class UnitImpl implements Unit {
 	public void optimize(@NotNull Document document, int mode) {
 		Objects.requireNonNull(document, "document");
 		Spec spec = this.spec;
+		Listener listener = spec.getListener();
 
 		Compilation compilation = this.requireCompilation(document);
 
-		spec.onOptimize(compilation, mode);
+		listener.trigger(Event.OPTIMIZE, compilation, mode);
 	}
 
 	@Override
@@ -326,6 +348,7 @@ public class UnitImpl implements Unit {
 		try {
 			Processor processor = spec.getParseProcessor();
 			Parser parser = spec.getParser();
+			Listener listener = spec.getListener();
 
 			//pre-parse process
 			processor.process(compilation);
@@ -342,6 +365,8 @@ public class UnitImpl implements Unit {
 						root.offer(relative);
 			}
 
+			//post-parse
+			listener.trigger(Event.POST_PARSE, compilation, this);
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -387,6 +412,18 @@ public class UnitImpl implements Unit {
 	public void setSpec(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		this.spec = spec;
+	}
+
+	@Override
+	public void trigger(@NotNull String event, @NotNull Document document, @Nullable Object parameter) {
+		Objects.requireNonNull(event, "event");
+		Objects.requireNonNull(document, "document");
+		Spec spec = this.spec;
+		Listener listener = spec.getListener();
+
+		Compilation compilation = this.requireCompilation(document);
+
+		listener.trigger(event, compilation, parameter);
 	}
 
 	/**

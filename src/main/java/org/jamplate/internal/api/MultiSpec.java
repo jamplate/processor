@@ -16,19 +16,14 @@
 package org.jamplate.internal.api;
 
 import org.jamplate.api.Spec;
-import org.jamplate.api.Unit;
-import org.jamplate.diagnostic.Message;
-import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.function.Parser;
-import org.jamplate.function.Processor;
+import org.jamplate.function.*;
 import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
 import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
+import org.jamplate.internal.function.initializer.group.FirstInitializeInitializer;
+import org.jamplate.internal.function.listener.group.SequentialListener;
 import org.jamplate.internal.function.parser.group.CombineParser;
 import org.jamplate.internal.function.processor.group.SequentialProcessor;
-import org.jamplate.model.Compilation;
-import org.jamplate.model.Environment;
-import org.jamplate.model.Memory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -192,6 +187,27 @@ public class MultiSpec implements Spec {
 
 	@NotNull
 	@Override
+	public Initializer getInitializer() {
+		return new FirstInitializeInitializer(
+				this.specs
+						.stream()
+						.map(Spec::getInitializer)
+						.collect(Collectors.toList())
+		);
+	}
+
+	@NotNull
+	@Override
+	public Listener getListener() {
+		return new SequentialListener(
+				this.specs.stream()
+						  .map(Spec::getListener)
+						  .collect(Collectors.toList())
+		);
+	}
+
+	@NotNull
+	@Override
 	public Processor getParseProcessor() {
 		return new SequentialProcessor(
 				this.specs
@@ -222,36 +238,6 @@ public class MultiSpec implements Spec {
 	@Override
 	public Iterator<Spec> iterator() {
 		return this.specs.iterator();
-	}
-
-	@Override
-	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
-		for (Spec spec : this)
-			spec.onCreateCompilation(unit, compilation);
-	}
-
-	@Override
-	public void onCreateMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-		for (Spec spec : this)
-			spec.onCreateMemory(compilation, memory);
-	}
-
-	@Override
-	public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-		for (Spec spec : this)
-			spec.onDestroyMemory(compilation, memory);
-	}
-
-	@Override
-	public void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
-		for (Spec spec : this)
-			spec.onDiagnostic(environment, message);
-	}
-
-	@Override
-	public void onOptimize(@NotNull Compilation compilation, int mode) {
-		for (Spec spec : this)
-			spec.onOptimize(compilation, mode);
 	}
 
 	@Override

@@ -17,13 +17,14 @@ package org.jamplate.spec.tool;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
+import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.function.Processor;
+import org.jamplate.function.Listener;
+import org.jamplate.internal.api.Event;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -54,78 +55,99 @@ public class DebugSpec implements Spec {
 	@NotNull
 	public static final String NAME = DebugSpec.class.getSimpleName();
 
+	@SuppressWarnings({"OverlyLongLambda", "OverlyLongMethod"})
 	@NotNull
 	@Override
-	public Processor getAnalyzeProcessor() {
-		return compilation -> {
-			Instruction instruction = compilation.getInstruction();
-			Tree tree = compilation.getRootTree();
-			Document document = tree.getDocument();
+	public Listener getListener() {
+		return (event, compilation, parameter) -> {
+			switch (event) {
+				case Event.DIAGNOSTIC:
+					Diagnostic diagnostic = (Diagnostic) parameter;
 
-			System.out.println("Analyzing:");
+					for (Message message : diagnostic)
+						if (message.isFetal()) {
+							diagnostic.flush(true);
 
-			System.out.println("\t|- Document: " + document);
+							if (message.getException() instanceof AssertionError)
+								throw (AssertionError) message.getException();
+						} else {
+							String formatted = diagnostic.format(true, message);
 
-			System.out.println("\t|- Tree:");
-			System.out.print(this.format(2, tree));
+							switch (message.getPriority()) {
+								case MessagePriority.NOTE:
+								case MessagePriority.INFO:
+									//cyan
+									System.out.println(
+											"\u001B[36m" + formatted + "\u001B[0m");
+									break;
+								case MessagePriority.WARNING:
+									//yellow
+									System.out.println(
+											"\u001B[33m" + formatted + "\u001B[0m");
+									break;
+								case MessagePriority.ERROR:
+									//error
+									System.err.println(formatted);
+									break;
+								case MessagePriority.DEBUG:
+									//green
+									System.out.println(
+											"\u001B[32m" + formatted + "\u001B[0m");
+									break;
+							}
+						}
+					break;
+				case Event.POST_INIT:
+				case Event.POST_PARSE:
+				case Event.POST_ANALYZE:
+				case Event.POST_COMPILE:
+				case Event.OPTIMIZE:
+				case Event.PRE_EXEC:
+				case Event.POST_EXEC:
+					Tree tree = compilation.getRootTree();
+					Instruction instruction = compilation.getInstruction();
+					Document document = tree.getDocument();
 
-			if (instruction != null) {
-				System.out.println("\t|- Instruction:");
-				System.out.print(this.format(2, compilation.getInstruction()));
+					//head
+					System.out.println("Event (" + event + ") :");
+
+					//document
+					System.out.println("\t|- Document: " + document);
+
+					//spec
+					if (parameter instanceof Unit) {
+						Unit unit = (Unit) parameter;
+
+						System.out.println("\t|- Spec:");
+						System.out.print(this.format(2, unit.getSpec()));
+					}
+
+					//tree
+					System.out.println("\t|- Tree:");
+					System.out.print(this.format(2, tree));
+
+					//instruction
+					if (instruction != null) {
+						System.out.println("\t|- Instruction:");
+						System.out.print(this.format(2, compilation.getInstruction()));
+					}
+
+					//memory
+					if (parameter instanceof Memory) {
+						Memory memory = (Memory) parameter;
+
+						System.out.println("\t|- Memory:");
+
+						for (Frame frame : memory.getFrames())
+							System.out.print(this.format(2, memory, frame));
+
+						System.out.print(this.format(2, memory.getConsole()));
+					}
+
+					System.out.println();
+				default:
+					break;
 			}
-
-			System.out.println();
-			return false;
-		};
-	}
-
-	@NotNull
-	@Override
-	public Processor getCompileProcessor() {
-		return compilation -> {
-			Instruction instruction = compilation.getInstruction();
-			Tree tree = compilation.getRootTree();
-			Document document = tree.getDocument();
-
-			System.out.println("Compiling:");
-
-			System.out.println("\t|- Document: " + document);
-
-			System.out.println("\t|- Tree:");
-			System.out.print(this.format(2, tree));
-
-			if (instruction != null) {
-				System.out.println("\t|- Instruction:");
-				System.out.print(this.format(2, compilation.getInstruction()));
-			}
-
-			System.out.println();
-			return false;
-		};
-	}
-
-	@NotNull
-	@Override
-	public Processor getParseProcessor() {
-		return compilation -> {
-			Instruction instruction = compilation.getInstruction();
-			Tree tree = compilation.getRootTree();
-			Document document = tree.getDocument();
-
-			System.out.println("Parsing:");
-
-			System.out.println("\t|- Document: " + document);
-
-			System.out.println("\t|- Tree:");
-			System.out.print(this.format(2, tree));
-
-			if (instruction != null) {
-				System.out.println("\t|- Instruction:");
-				System.out.print(this.format(2, compilation.getInstruction()));
-			}
-
-			System.out.println();
-			return false;
 		};
 	}
 
@@ -133,134 +155,6 @@ public class DebugSpec implements Spec {
 	@Override
 	public String getQualifiedName() {
 		return DebugSpec.NAME;
-	}
-
-	@Override
-	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
-		Objects.requireNonNull(unit, "unit");
-		Objects.requireNonNull(compilation, "compilation");
-		Spec spec = unit.getSpec();
-		Instruction instruction = compilation.getInstruction();
-		Tree tree = compilation.getRootTree();
-		Document document = tree.getDocument();
-
-		System.out.println("Initializing:");
-
-		System.out.println("\t|- Document: " + document);
-
-		System.out.println("\t|- Spec:");
-		System.out.print(this.format(2, unit.getSpec()));
-
-		System.out.println("\t|- Tree:");
-		System.out.print(this.format(2, tree));
-
-		if (instruction != null) {
-			System.out.println("\t|- Instruction:");
-			System.out.print(this.format(2, compilation.getInstruction()));
-		}
-
-		System.out.println();
-	}
-
-	@Override
-	public void onCreateMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-		Objects.requireNonNull(compilation, "compilation");
-		Objects.requireNonNull(memory, "memory");
-		Instruction instruction = compilation.getInstruction();
-		Tree tree = compilation.getRootTree();
-		Document document = tree.getDocument();
-
-		System.out.println("Executing:");
-
-		System.out.println("\t|- Document: " + document);
-
-		System.out.println("\t|- Tree:");
-		System.out.print(this.format(2, tree));
-
-		if (instruction != null) {
-			System.out.println("\t|- Instruction:");
-			System.out.print(this.format(2, compilation.getInstruction()));
-		}
-
-		System.out.println();
-	}
-
-	@Override
-	public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
-		Objects.requireNonNull(compilation, "compilation");
-		Objects.requireNonNull(memory, "memory");
-		Document document = compilation.getRootTree().getDocument();
-
-		System.out.println("Result:");
-
-		System.out.println("\t|- Document: " + document);
-
-		System.out.println("\t|- Memory:");
-
-		for (Frame frame : memory.getFrames())
-			System.out.print(this.format(2, memory, frame));
-
-		System.out.print(this.format(2, memory.getConsole()));
-
-		System.out.println();
-	}
-
-	@Override
-	public void onDiagnostic(@NotNull Environment environment, @NotNull Message message) {
-		Objects.requireNonNull(environment, "environment");
-		Objects.requireNonNull(message, "message");
-
-		if (message.isFetal()) {
-			environment.getDiagnostic().flush(true);
-
-			if (message.getException() instanceof AssertionError)
-				throw (AssertionError) message.getException();
-		} else {
-			String formatted = environment.getDiagnostic().format(true, message);
-
-			switch (message.getPriority()) {
-				case MessagePriority.NOTE:
-				case MessagePriority.INFO:
-					//cyan
-					System.out.println("\u001B[36m" + formatted + "\u001B[0m");
-					break;
-				case MessagePriority.WARNING:
-					//yellow
-					System.out.println("\u001B[33m" + formatted + "\u001B[0m");
-					break;
-				case MessagePriority.ERROR:
-					//error
-					System.err.println(formatted);
-					break;
-				case MessagePriority.DEBUG:
-					//green
-					System.out.println("\u001B[32m" + formatted + "\u001B[0m");
-					break;
-			}
-		}
-	}
-
-	@Override
-	public void onOptimize(@NotNull Compilation compilation, int mode) {
-		Objects.requireNonNull(compilation, "compilation");
-		Instruction instruction = compilation.getInstruction();
-		Tree tree = compilation.getRootTree();
-		Document document = tree.getDocument();
-
-		System.out.println("Optimizing:");
-
-		System.out.println("\t|- Document: " + document);
-
-		System.out.println("\t|- Tree:");
-		System.out.print(this.format(2, tree));
-
-		if (instruction != null) {
-			System.out.println("\t|- Instruction:");
-			System.out.print(this.format(2, compilation.getInstruction()));
-		}
-
-		System.out.println();
-
 	}
 
 	/**

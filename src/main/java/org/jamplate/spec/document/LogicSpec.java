@@ -16,14 +16,12 @@
 package org.jamplate.spec.document;
 
 import org.jamplate.api.Spec;
-import org.jamplate.api.Unit;
-import org.jamplate.model.Compilation;
+import org.jamplate.function.Initializer;
+import org.jamplate.internal.model.CompilationImpl;
+import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 /**
  * A specification for logical root compilations.
@@ -51,16 +49,21 @@ public class LogicSpec implements Spec {
 
 	@NotNull
 	@Override
-	public String getQualifiedName() {
-		return LogicSpec.NAME;
+	public Initializer getInitializer() {
+		return (environment, document) ->
+				new CompilationImpl(
+						environment,
+						new Tree(
+								document,
+								new Sketch(ParameterSpec.KIND),
+								ParameterSpec.WEIGHT
+						)
+				);
 	}
 
+	@NotNull
 	@Override
-	public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
-		Objects.requireNonNull(unit, "unit");
-		Objects.requireNonNull(compilation, "compilation");
-		Tree root = compilation.getRootTree();
-
-		root.getSketch().setKind(ParameterSpec.KIND);
+	public String getQualifiedName() {
+		return LogicSpec.NAME;
 	}
 }

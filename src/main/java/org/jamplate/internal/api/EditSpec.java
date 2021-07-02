@@ -16,10 +16,8 @@
 package org.jamplate.internal.api;
 
 import org.jamplate.api.Spec;
-import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.function.Parser;
-import org.jamplate.function.Processor;
+import org.jamplate.function.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -61,6 +59,20 @@ public class EditSpec implements Spec {
 	@NotNull
 	protected Compiler compiler = Compiler.IDLE;
 	/**
+	 * The current set initializer.
+	 *
+	 * @since 0.3.0 ~2021.07.02
+	 */
+	@NotNull
+	protected Initializer initializer = Initializer.IDLE;
+	/**
+	 * The current set listener.
+	 *
+	 * @since 0.3.0 ~2021.07.02
+	 */
+	@NotNull
+	protected Listener listener = Listener.IDLE;
+	/**
 	 * The current set pre-parse processor.
 	 *
 	 * @since 0.3.0 ~2021.06.19
@@ -88,7 +100,7 @@ public class EditSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.19
 	 */
 	public EditSpec() {
-		this.qualifiedName = "ConcreteSpec" + this.hashCode();
+		this.qualifiedName = "EditSpec" + this.hashCode();
 	}
 
 	/**
@@ -125,6 +137,18 @@ public class EditSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return this.compiler;
+	}
+
+	@NotNull
+	@Override
+	public Initializer getInitializer() {
+		return this.initializer;
+	}
+
+	@NotNull
+	@Override
+	public Listener getListener() {
+		return this.listener;
 	}
 
 	@NotNull
@@ -170,6 +194,20 @@ public class EditSpec implements Spec {
 	public Spec setCompiler(@NotNull Compiler compiler) {
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
+		return this;
+	}
+
+	@Override
+	public Spec setInitializer(@NotNull Initializer initializer) {
+		Objects.requireNonNull(initializer, "initializer");
+		this.initializer = initializer;
+		return this;
+	}
+
+	@Override
+	public Spec setListener(@NotNull Listener listener) {
+		Objects.requireNonNull(listener, "listener");
+		this.listener = listener;
 		return this;
 	}
 
