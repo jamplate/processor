@@ -50,6 +50,7 @@ public abstract class TokenValue<T> implements Value {
 	 * @throws NullPointerException if the given {@code object} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
+	@SuppressWarnings("OverlyComplexMethod")
 	@NotNull
 	@Contract(pure = true)
 	public static Value cast(@Nullable Object object) {
@@ -87,6 +88,8 @@ public abstract class TokenValue<T> implements Value {
 
 				if (value instanceof String)
 					values.add(new QuoteValue(new TextValue(value)));
+				else if (value.equals(JSONObject.NULL))
+					values.add(new QuoteValue(new TextValue("")));
 				else
 					values.add(TokenValue.cast(value));
 			}
