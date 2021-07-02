@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Internal wrapper compilers.
+ * Internal grouping initializers.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.16
+ * @since 0.3.0 ~2021.07.02
  */
-package org.jamplate.internal.function.compiler.wrapper;
+package org.jamplate.internal.function.initializer.group;

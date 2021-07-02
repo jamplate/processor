@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Internal branching compilers.
+ * Internal grouping listeners.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.20
+ * @since 0.3.0 ~2021.07.02
  */
-package org.jamplate.internal.function.compiler.branch;
+package org.jamplate.internal.function.listener.group;
