@@ -309,7 +309,7 @@ public enum Relation {
 	@Contract(pure = true)
 	public static Relation compute(@NotNull Tree tree, int s, int e) {
 		Objects.requireNonNull(tree, "tree");
-		return Relation.compute(tree.reference(), s, e);
+		return Relation.compute(tree.getReference(), s, e);
 	}
 
 	/**
@@ -333,7 +333,7 @@ public enum Relation {
 	public static Relation compute(@NotNull Tree tree, @NotNull Reference other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(tree.reference(), other);
+		return Relation.compute(tree.getReference(), other);
 	}
 
 	/**
@@ -357,7 +357,7 @@ public enum Relation {
 	public static Relation compute(@NotNull Tree tree, @NotNull Tree other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Relation.compute(tree.reference(), other.reference());
+		return Relation.compute(tree.getReference(), other.getReference());
 	}
 
 	@NotNull

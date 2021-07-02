@@ -91,7 +91,7 @@ public final class References {
 	public static Reference exclusive(@NotNull Tree start, @NotNull Tree end) {
 		Objects.requireNonNull(start, "start");
 		Objects.requireNonNull(end, "end");
-		return References.exclusive(start.reference(), end.reference());
+		return References.exclusive(start.getReference(), end.getReference());
 	}
 
 	/**
@@ -145,7 +145,7 @@ public final class References {
 	public static Reference exclusiveInclusive(@NotNull Tree start, @NotNull Tree end) {
 		Objects.requireNonNull(start, "start");
 		Objects.requireNonNull(end, "end");
-		return References.exclusiveInclusive(start.reference(), end.reference());
+		return References.exclusiveInclusive(start.getReference(), end.getReference());
 	}
 
 	/**
@@ -199,7 +199,7 @@ public final class References {
 	public static Reference inclusive(@NotNull Tree start, @NotNull Tree end) {
 		Objects.requireNonNull(start, "start");
 		Objects.requireNonNull(end, "end");
-		return References.inclusive(start.reference(), end.reference());
+		return References.inclusive(start.getReference(), end.getReference());
 	}
 
 	/**
@@ -253,6 +253,6 @@ public final class References {
 	public static Reference inclusiveExclusive(@NotNull Tree start, @NotNull Tree end) {
 		Objects.requireNonNull(start, "start");
 		Objects.requireNonNull(end, "end");
-		return References.inclusiveExclusive(start.reference(), end.reference());
+		return References.inclusiveExclusive(start.getReference(), end.getReference());
 	}
 }

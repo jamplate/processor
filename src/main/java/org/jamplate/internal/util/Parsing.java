@@ -67,8 +67,8 @@ public final class Parsing {
 	public static Matcher matcher(@NotNull Tree tree, @NotNull Pattern pattern) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
-		Reference reference = tree.reference();
-		Document document = tree.document();
+		Reference reference = tree.getReference();
+		Document document = tree.getDocument();
 
 		CharSequence content = document.read();
 		int l = content.length();
@@ -102,7 +102,7 @@ public final class Parsing {
 		Objects.requireNonNull(pattern, "pattern");
 
 		Matcher matcher = Parsing.matcher(tree, pattern);
-		Reference reference = tree.reference();
+		Reference reference = tree.getReference();
 
 		if (matcher.matches()) {
 			List<Reference> results = new ArrayList<>();
@@ -228,7 +228,7 @@ public final class Parsing {
 
 		Set<List<Reference>> results = new HashSet<>();
 
-		Reference reference = tree.reference();
+		Reference reference = tree.getReference();
 		int p = reference.position();
 		int t = p + reference.length();
 		int x = p;
@@ -368,7 +368,7 @@ public final class Parsing {
 		Matcher startMatcher = Parsing.matcher(tree, startPattern);
 		Matcher endMatcher = Parsing.matcher(tree, endPattern);
 
-		Reference reference = tree.reference();
+		Reference reference = tree.getReference();
 		int p = reference.position();
 		int t = p + reference.length();
 

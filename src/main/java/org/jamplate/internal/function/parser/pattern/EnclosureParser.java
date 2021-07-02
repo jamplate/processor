@@ -164,7 +164,7 @@ public class EnclosureParser implements Parser {
 		return Parsing.parseAll(tree, this.startPattern, this.endPattern, this.zIndex)
 					  .parallelStream()
 					  .map(m -> {
-						  Tree result = this.constructor.apply(tree.document(), m.get(0));
+						  Tree result = this.constructor.apply(tree.getDocument(), m.get(0));
 
 						  if (this.constructors[0] != null)
 							  this.constructors[0].accept(result, m.get(1));

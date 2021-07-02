@@ -114,7 +114,7 @@ public class MultiSeparatorAnalyzer implements Analyzer {
 			//no separator
 			this.constructor.accept(
 					tree,
-					tree.reference()
+					tree.getReference()
 			);
 		return true;
 	}

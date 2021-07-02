@@ -96,7 +96,7 @@ public class GetterSpec implements Spec {
 						),
 						//left-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
-								w.document(),
+								w.getDocument(),
 								r,
 								w.getSketch()
 								 .get(ExtensionSpec.KEY_TARGET)

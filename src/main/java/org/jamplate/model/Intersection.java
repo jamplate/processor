@@ -570,7 +570,7 @@ public enum Intersection {
 	@Contract(pure = true)
 	public static Intersection compute(@NotNull Tree tree, int s, int e) {
 		Objects.requireNonNull(tree, "tree");
-		return Intersection.compute(tree.reference(), s, e);
+		return Intersection.compute(tree.getReference(), s, e);
 	}
 
 	/**
@@ -590,7 +590,7 @@ public enum Intersection {
 	public static Intersection compute(@NotNull Tree tree, @NotNull Reference other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Intersection.compute(tree.reference(), other);
+		return Intersection.compute(tree.getReference(), other);
 	}
 
 	/**
@@ -609,7 +609,7 @@ public enum Intersection {
 	public static Intersection compute(@NotNull Tree tree, @NotNull Tree other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Intersection.compute(tree.reference(), other.reference());
+		return Intersection.compute(tree.getReference(), other.getReference());
 	}
 
 	@NotNull

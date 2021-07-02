@@ -410,7 +410,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Document document() {
+	public Document getDocument() {
 		return this.document;
 	}
 
@@ -588,7 +588,7 @@ public final class Tree implements Iterable<Tree>, Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Reference reference() {
+	public Reference getReference() {
 		return this.reference;
 	}
 

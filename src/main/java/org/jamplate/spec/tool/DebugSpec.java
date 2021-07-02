@@ -60,7 +60,7 @@ public class DebugSpec implements Spec {
 		return compilation -> {
 			Instruction instruction = compilation.getInstruction();
 			Tree tree = compilation.getRootTree();
-			Document document = tree.document();
+			Document document = tree.getDocument();
 
 			System.out.println("Analyzing:");
 
@@ -85,7 +85,7 @@ public class DebugSpec implements Spec {
 		return compilation -> {
 			Instruction instruction = compilation.getInstruction();
 			Tree tree = compilation.getRootTree();
-			Document document = tree.document();
+			Document document = tree.getDocument();
 
 			System.out.println("Compiling:");
 
@@ -110,7 +110,7 @@ public class DebugSpec implements Spec {
 		return compilation -> {
 			Instruction instruction = compilation.getInstruction();
 			Tree tree = compilation.getRootTree();
-			Document document = tree.document();
+			Document document = tree.getDocument();
 
 			System.out.println("Parsing:");
 
@@ -142,7 +142,7 @@ public class DebugSpec implements Spec {
 		Spec spec = unit.getSpec();
 		Instruction instruction = compilation.getInstruction();
 		Tree tree = compilation.getRootTree();
-		Document document = tree.document();
+		Document document = tree.getDocument();
 
 		System.out.println("Initializing:");
 
@@ -168,7 +168,7 @@ public class DebugSpec implements Spec {
 		Objects.requireNonNull(memory, "memory");
 		Instruction instruction = compilation.getInstruction();
 		Tree tree = compilation.getRootTree();
-		Document document = tree.document();
+		Document document = tree.getDocument();
 
 		System.out.println("Executing:");
 
@@ -189,7 +189,7 @@ public class DebugSpec implements Spec {
 	public void onDestroyMemory(@NotNull Compilation compilation, @NotNull Memory memory) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(memory, "memory");
-		Document document = compilation.getRootTree().document();
+		Document document = compilation.getRootTree().getDocument();
 
 		System.out.println("Result:");
 
@@ -245,7 +245,7 @@ public class DebugSpec implements Spec {
 		Objects.requireNonNull(compilation, "compilation");
 		Instruction instruction = compilation.getInstruction();
 		Tree tree = compilation.getRootTree();
-		Document document = tree.document();
+		Document document = tree.getDocument();
 
 		System.out.println("Optimizing:");
 

@@ -110,7 +110,7 @@ public class BinaryOperatorAnalyzer implements Analyzer {
 	public boolean analyze(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		Document document = tree.document();
+		Document document = tree.getDocument();
 
 		Tree previous = tree.getPrevious();
 		Tree next = tree.getNext();

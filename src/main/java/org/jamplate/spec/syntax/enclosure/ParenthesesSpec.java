@@ -77,7 +77,7 @@ public class ParenthesesSpec implements Spec {
 						),
 						//open anchor constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_OPEN)
@@ -85,7 +85,7 @@ public class ParenthesesSpec implements Spec {
 						)),
 						//close anchor constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_CLOSE)
@@ -93,7 +93,7 @@ public class ParenthesesSpec implements Spec {
 						)),
 						//body wrapper constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_BODY)

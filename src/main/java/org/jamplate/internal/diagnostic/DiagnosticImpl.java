@@ -84,7 +84,7 @@ public class DiagnosticImpl implements Diagnostic {
 				builder.append("\n\tat ")
 					   .append(criticalPoint.getSketch())
 					   .append("(")
-					   .append(criticalPoint.document())
+					   .append(criticalPoint.getDocument())
 					   .append(":")
 					   .append(IO.line(criticalPoint))
 					   .append(") ")
@@ -103,7 +103,7 @@ public class DiagnosticImpl implements Diagnostic {
 							   "",
 							   Collections.nCopies(
 									   Math.max(
-											   criticalPoint.reference().length() - 1, 0),
+											   criticalPoint.getReference().length() - 1, 0),
 									   "-"
 							   )
 					   ));
@@ -112,7 +112,7 @@ public class DiagnosticImpl implements Diagnostic {
 			builder.append("\n\tat ")
 				   .append(trace.getSketch())
 				   .append("(")
-				   .append(trace.document())
+				   .append(trace.getDocument())
 				   .append(":")
 				   .append(IO.line(trace))
 				   .append(")");

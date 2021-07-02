@@ -146,7 +146,7 @@ public class InjectionSpec implements Spec {
 						),
 						//open anchor constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_OPEN)
@@ -154,7 +154,7 @@ public class InjectionSpec implements Spec {
 						)),
 						//close anchor constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(AnchorSpec.KEY_CLOSE)
@@ -162,7 +162,7 @@ public class InjectionSpec implements Spec {
 						)),
 						//value constructor
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								t.getSketch()
 								 .get(InjectionSpec.KEY_VALUE)

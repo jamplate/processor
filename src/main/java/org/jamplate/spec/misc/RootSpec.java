@@ -82,7 +82,7 @@ public class RootSpec implements Spec {
 					//determine the line where the root was declared
 					String line = String.valueOf(IO.line(tree));
 					//determine the file where the root was declared
-					String file = tree.document().toString();
+					String file = tree.getDocument().toString();
 					//determine the directory where the root was declared
 					String dir = new File(file).getParent();
 

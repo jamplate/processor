@@ -351,7 +351,7 @@ public enum Dominance {
 	@Contract(pure = true)
 	public static Dominance compute(@NotNull Tree tree, int s, int e) {
 		Objects.requireNonNull(tree, "tree");
-		return Dominance.compute(tree.reference(), s, e);
+		return Dominance.compute(tree.getReference(), s, e);
 	}
 
 	/**
@@ -370,7 +370,7 @@ public enum Dominance {
 	public static Dominance compute(@NotNull Tree tree, @NotNull Reference other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(tree.reference(), other);
+		return Dominance.compute(tree.getReference(), other);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public enum Dominance {
 	public static Dominance compute(@NotNull Tree tree, @NotNull Tree other) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(tree.reference(), other.reference());
+		return Dominance.compute(tree.getReference(), other.getReference());
 	}
 
 	@NotNull

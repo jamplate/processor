@@ -72,7 +72,7 @@ public class CommentLineSpec implements Spec {
 				),
 				//open anchor constructor
 				(t, r) -> t.offer(new Tree(
-						t.document(),
+						t.getDocument(),
 						t.getSketch()
 						 .get(AnchorSpec.KEY_OPEN)
 						 .setKind(AnchorSpec.KIND_OPEN)
@@ -81,7 +81,7 @@ public class CommentLineSpec implements Spec {
 				null,
 				//body wrapper constructor
 				(t, r) -> t.offer(new Tree(
-						t.document(),
+						t.getDocument(),
 						r,
 						t.getSketch()
 						 .get(AnchorSpec.KEY_BODY)

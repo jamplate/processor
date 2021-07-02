@@ -97,9 +97,9 @@ public class PatternParser implements Parser {
 		if (references == null)
 			return Collections.emptySet();
 
-		Document document = tree.document();
+		Document document = tree.getDocument();
 
-		Tree result = this.constructor.apply(document, tree.reference());
+		Tree result = this.constructor.apply(document, tree.getReference());
 
 		IntStream.range(0, Math.min(this.constructors.length, references.size()))
 				 .filter(i -> this.constructors[i] != null)

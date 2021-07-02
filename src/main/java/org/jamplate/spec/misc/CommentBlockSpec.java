@@ -72,21 +72,21 @@ public class CommentBlockSpec implements Spec {
 				),
 				//open anchor constructor
 				(t, r) -> t.offer(new Tree(
-						t.document(),
+						t.getDocument(),
 						t.getSketch()
 						 .get(AnchorSpec.KEY_OPEN)
 						 .setKind(AnchorSpec.KIND_OPEN)
 				)),
 				//close anchor constructor
 				(t, r) -> t.offer(new Tree(
-						t.document(),
+						t.getDocument(),
 						t.getSketch()
 						 .get(AnchorSpec.KEY_CLOSE)
 						 .setKind(AnchorSpec.KIND_CLOSE)
 				)),
 				//body wrapper constructor
 				(t, r) -> t.offer(new Tree(
-						t.document(),
+						t.getDocument(),
 						r,
 						t.getSketch()
 						 .get(AnchorSpec.KEY_BODY)

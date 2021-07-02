@@ -132,7 +132,7 @@ public class BinaryContextAnalyzer implements Analyzer {
 	public boolean analyze(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		Document document = tree.document();
+		Document document = tree.getDocument();
 		Tree startT = null;
 		Tree endT = null;
 

@@ -61,8 +61,8 @@ public final class IO {
 	@Contract(pure = true)
 	public static int line(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
-		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
+		int p = tree.getReference().position();
+		try (LineNumberReader reader = new LineNumberReader(tree.getDocument().openReader())) {
 			while ((p -= reader.skip(p)) != 0) {
 				if (reader.read() == -1)
 					break;
@@ -91,8 +91,8 @@ public final class IO {
 	@Contract(pure = true)
 	public static int positionInLine(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
-		try (LineNumberReader reader = new LineNumberReader(tree.document().openReader())) {
+		int p = tree.getReference().position();
+		try (LineNumberReader reader = new LineNumberReader(tree.getDocument().openReader())) {
 			char[] b = new char[2];
 			while (true) {
 				reader.mark(Math.max(10, p << 1));
@@ -148,8 +148,8 @@ public final class IO {
 	@Contract(pure = true)
 	public static CharSequence read(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		Document document = tree.document();
-		Reference reference = tree.reference();
+		Document document = tree.getDocument();
+		Reference reference = tree.getReference();
 		return document.read(reference);
 	}
 
@@ -170,9 +170,9 @@ public final class IO {
 	public static CharSequence readLine(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(tree, "tree");
-		int p = tree.reference().position();
+		int p = tree.getReference().position();
 		String line = "";
-		try (BufferedReader reader = new BufferedReader(tree.document().openReader())) {
+		try (BufferedReader reader = new BufferedReader(tree.getDocument().openReader())) {
 			char[] b = new char[2];
 			while (true) {
 				reader.mark(Math.max(10, p << 1));

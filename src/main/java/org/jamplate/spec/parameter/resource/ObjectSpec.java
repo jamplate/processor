@@ -84,7 +84,7 @@ public class ObjectSpec implements Spec {
 				a -> new MultiSeparatorAnalyzer(
 						CommaSpec.KIND,
 						(t, r) -> t.offer(new Tree(
-								t.document(),
+								t.getDocument(),
 								r,
 								new Sketch(AnchorSpec.KIND_SLOT),
 								AnchorSpec.WEIGHT_SLOT

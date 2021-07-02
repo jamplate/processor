@@ -95,7 +95,7 @@ public class ProductSpecTest {
 			public void onCreateCompilation(@Nullable Unit unit, @NotNull Compilation compilation) {
 				//pseudo parse
 				Tree root = compilation.getRootTree();
-				Document document = root.document();
+				Document document = root.getDocument();
 
 				root.getSketch().setKind(ParameterSpec.KIND);
 				root.offer(new Tree(

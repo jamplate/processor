@@ -138,7 +138,7 @@ public class TermParser implements Parser {
 		Objects.requireNonNull(tree, "sketch");
 		return Parsing.parseAll(tree, this.pattern, this.zIndex)
 					  .parallelStream()
-					  .map(m -> this.constructor.apply(tree.document(), m))
+					  .map(m -> this.constructor.apply(tree.getDocument(), m))
 					  .collect(Collectors.toSet());
 	}
 }

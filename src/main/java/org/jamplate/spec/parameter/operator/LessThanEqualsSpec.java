@@ -102,7 +102,7 @@ public class LessThanEqualsSpec implements Spec {
 						),
 						//left-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
-								w.document(),
+								w.getDocument(),
 								r,
 								w.getSketch()
 								 .get(OperatorSpec.KEY_LEFT)
@@ -111,7 +111,7 @@ public class LessThanEqualsSpec implements Spec {
 						)),
 						//right-side wrapper constructor
 						(w, r) -> w.offer(new Tree(
-								w.document(),
+								w.getDocument(),
 								r,
 								w.getSketch()
 								 .get(OperatorSpec.KEY_RIGHT)
