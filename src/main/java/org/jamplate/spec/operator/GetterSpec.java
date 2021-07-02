@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.extension;
+package org.jamplate.spec.operator;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
@@ -39,7 +39,7 @@ import org.jamplate.value.NumberValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Getter extension specifications.
+ * Getter operator specifications.
  *
  * @author LSafer
  * @version 0.3.0
@@ -55,12 +55,12 @@ public class GetterSpec implements Spec {
 	public static final GetterSpec INSTANCE = new GetterSpec();
 
 	/**
-	 * The kind of a getter extension context.
+	 * The kind of a getter operator context.
 	 *
 	 * @since 0.3.0 ~2021.06.22
 	 */
 	@NotNull
-	public static final String KIND = "extension:getter";
+	public static final String KIND = "operator:getter";
 
 	/**
 	 * The qualified name of this spec.
@@ -89,7 +89,7 @@ public class GetterSpec implements Spec {
 								new Sketch(GetterSpec.KIND),
 								ExtensionSpec.Z_INDEX
 						),
-						//extension constructor
+						//operator constructor
 						(w, t) -> w.getSketch().set(
 								ExtensionSpec.KEY_SIGN,
 								t.getSketch()
@@ -137,7 +137,7 @@ public class GetterSpec implements Spec {
 
 					if (targetI == null || signI == null)
 						throw new CompileException(
-								"The extension GETTER cannot be applied to <" +
+								"The operator GETTER cannot be applied to <" +
 								IO.read(targetT) +
 								"> with <" +
 								IO.read(signT) +
