@@ -175,7 +175,7 @@ public class MoreThanEqualsSpec implements Spec {
 							//swap the duplicates
 							new Swap(tree),
 							//push '1' to compare with the duplicate
-							new PushConst(new NumberValue(1)),
+							new PushConst(tree, new NumberValue(1)),
 							//compare the second duplicate with `1`
 							new Compare(tree),
 							//cast the second duplicate to boolean

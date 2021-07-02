@@ -85,11 +85,11 @@ public class SubtractorSpec implements Spec {
 						//context wrapper constructor
 						(d, r) ->
 								new Tree(
-								d,
-								r,
-								new Sketch(SubtractorSpec.KIND),
-								OperatorSpec.WEIGHT
-						),
+										d,
+										r,
+										new Sketch(SubtractorSpec.KIND),
+										OperatorSpec.WEIGHT
+								),
 						//operator constructor
 						(w, t) -> w.getSketch().set(
 								OperatorSpec.KEY_SIGN,
@@ -153,7 +153,7 @@ public class SubtractorSpec implements Spec {
 						return new Block(
 								tree,
 								//no left value, default to `0`
-								new PushConst(new NumberValue(0)),
+								new PushConst(tree, new NumberValue(0)),
 								//execute the right value
 								rightI,
 								//do the work
