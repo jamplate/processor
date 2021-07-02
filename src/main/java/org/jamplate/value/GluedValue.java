@@ -38,7 +38,7 @@ import java.util.stream.StreamSupport;
  * @version 0.3.0
  * @since 0.3.0 ~2021.07.01
  */
-public class GluedValue extends TokenValue<List<Value>> {
+public final class GluedValue extends TokenValue<List<Value>> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8228913560756371483L;
 
