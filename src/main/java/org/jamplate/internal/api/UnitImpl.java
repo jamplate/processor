@@ -69,6 +69,35 @@ public class UnitImpl implements Unit {
 		this.spec = new MultiSpec("MainSpec");
 	}
 
+	/**
+	 * Construct a new unit.
+	 *
+	 * @param spec the initial spec to be used by the unit.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	public UnitImpl(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		this.environment = new EnvironmentImpl();
+		this.spec = spec;
+	}
+
+	/**
+	 * Construct a new unit.
+	 *
+	 * @param environment the initial environment set to the unit.
+	 * @param spec        the initial spec to be used by the unit.
+	 * @throws NullPointerException if the given {@code environment} or {@code spec} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	public UnitImpl(@NotNull Environment environment, @NotNull Spec spec) {
+		Objects.requireNonNull(environment, "environment");
+		Objects.requireNonNull(spec, "spec");
+		this.environment = environment;
+		this.spec = spec;
+	}
+
 	@Override
 	public boolean analyze(@NotNull Document document) {
 		Objects.requireNonNull(document, "document");
