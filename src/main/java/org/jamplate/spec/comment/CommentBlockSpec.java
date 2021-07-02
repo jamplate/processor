@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.spec.syntax.comment;
+package org.jamplate.spec.comment;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
@@ -26,28 +26,28 @@ import org.jetbrains.annotations.NotNull;
 import java.util.regex.Pattern;
 
 /**
- * Comment line specifications.
+ * Comment block specifications.
  *
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.24
  */
-public class CommentLineSpec implements Spec {
+public class CommentBlockSpec implements Spec {
 	/**
 	 * An instance of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final CommentLineSpec INSTANCE = new CommentLineSpec();
+	public static final CommentBlockSpec INSTANCE = new CommentBlockSpec();
 
 	/**
-	 * The kind of the comment line tree.
+	 * The kind of the comment block tree.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final String KIND = "comment:line";
+	public static final String KIND = "comment:block";
 
 	/**
 	 * The qualified name of this spec.
@@ -55,20 +55,20 @@ public class CommentLineSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final String NAME = CommentLineSpec.class.getSimpleName();
+	public static final String NAME = CommentBlockSpec.class.getSimpleName();
 
 	@NotNull
 	@Override
 	public Parser getParser() {
 		//parse only on the first round
 		return new EnclosureParser(
-				Pattern.compile("//"),
-				Pattern.compile("(?=[\r\n])(?<!\\\\)|(?=$)"),
+				Pattern.compile("/\\*"),
+				Pattern.compile("\\*/"),
 				//enclosure constructor
 				(d, r) -> new Tree(
 						d,
 						r,
-						new Sketch(CommentLineSpec.KIND)
+						new Sketch(CommentBlockSpec.KIND)
 				),
 				//open anchor constructor
 				(t, r) -> t.offer(new Tree(
@@ -78,7 +78,12 @@ public class CommentLineSpec implements Spec {
 						 .setKind(AnchorSpec.KIND_OPEN)
 				)),
 				//close anchor constructor
-				null,
+				(t, r) -> t.offer(new Tree(
+						t.document(),
+						t.getSketch()
+						 .get(AnchorSpec.KEY_CLOSE)
+						 .setKind(AnchorSpec.KIND_CLOSE)
+				)),
 				//body wrapper constructor
 				(t, r) -> t.offer(new Tree(
 						t.document(),
@@ -94,6 +99,6 @@ public class CommentLineSpec implements Spec {
 	@NotNull
 	@Override
 	public String getQualifiedName() {
-		return CommentLineSpec.NAME;
+		return CommentBlockSpec.NAME;
 	}
 }

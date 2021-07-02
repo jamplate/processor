@@ -20,4 +20,4 @@
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.24
  */
-package org.jamplate.spec.syntax.comment;
+package org.jamplate.spec.comment;
