@@ -15,6 +15,7 @@
  */
 package org.jamplate.internal.function.parser.pattern;
 
+import org.intellij.lang.annotations.Language;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
@@ -31,6 +32,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
 /**
@@ -70,8 +72,8 @@ public class PatternParser implements Parser {
 	 * @param pattern      the pattern detecting the groups.
 	 * @param constructor  the constructor of the resultant tree.
 	 * @param constructors the trees constructors.
-	 * @throws NullPointerException if the given {@code pattern} or {@code constructors}
-	 *                              is null.
+	 * @throws NullPointerException if the given {@code pattern} or {@code constructor} or
+	 *                              {@code constructors} is null.
 	 * @since 0.2.0 ~2021.05.30
 	 */
 	@SafeVarargs
@@ -83,6 +85,31 @@ public class PatternParser implements Parser {
 		Objects.requireNonNull(pattern, "pattern");
 		Objects.requireNonNull(constructors, "constructors");
 		this.pattern = pattern;
+		this.constructor = constructor;
+		this.constructors = constructors.clone();
+	}
+
+	/**
+	 * Construct a new group parser that uses the given {@code pattern} and the given
+	 * {@code constructors}.
+	 *
+	 * @param pattern      the pattern detecting the groups.
+	 * @param constructor  the constructor of the resultant tree.
+	 * @param constructors the trees constructors.
+	 * @throws NullPointerException   if the given {@code pattern} or {@code constructor}
+	 *                                or {@code constructors} is null.
+	 * @throws PatternSyntaxException if failed to compile the given {@code pattern}.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	@SafeVarargs
+	public PatternParser(
+			@NotNull @Language("RegExp") String pattern,
+			@NotNull BiFunction<Document, Reference, Tree> constructor,
+			@Nullable BiConsumer<Tree, Reference> @NotNull ... constructors
+	) {
+		Objects.requireNonNull(pattern, "pattern");
+		Objects.requireNonNull(constructors, "constructors");
+		this.pattern = Pattern.compile(pattern);
 		this.constructor = constructor;
 		this.constructors = constructors.clone();
 	}

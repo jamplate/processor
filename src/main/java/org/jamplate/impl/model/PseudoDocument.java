@@ -23,7 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A pseudo document that get made programmatically.
@@ -100,6 +102,26 @@ public class PseudoDocument implements Document {
 		Objects.requireNonNull(content, "content");
 		this.identifier = identifier;
 		this.content = content;
+	}
+
+	/**
+	 * Construct a new pseudo document that have the given {@code lines} and be identified
+	 * with the given {@code identifier}.
+	 *
+	 * @param identifier the identity of the constructed document.
+	 * @param lines      the lines of the constructed pseudo content.
+	 * @throws NullPointerException if the given {@code identifier} or {@code lines} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	public PseudoDocument(@NotNull String identifier, @Nullable CharSequence @NotNull ... lines) {
+		Objects.requireNonNull(identifier, "identifier");
+		Objects.requireNonNull(lines, "lines");
+		this.identifier = identifier;
+		this.content = Arrays
+				.stream(lines)
+				.map(line -> Objects.toString(line, ""))
+				.collect(Collectors.joining("\n"));
 	}
 
 	@Override
