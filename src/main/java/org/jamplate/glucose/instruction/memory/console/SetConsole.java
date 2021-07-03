@@ -50,14 +50,14 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.15
  */
-public class Echo implements Instruction {
+public class SetConsole implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
 	@NotNull
-	public static final Echo INSTANCE = new Echo();
+	public static final SetConsole INSTANCE = new SetConsole();
 
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -4360149130636815580L;
@@ -76,7 +76,7 @@ public class Echo implements Instruction {
 	 *
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Echo() {
+	public SetConsole() {
 		this.tree = null;
 	}
 
@@ -88,7 +88,7 @@ public class Echo implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} is null.
 	 * @since 0.3.0 ~2021.06.15
 	 */
-	public Echo(@NotNull Tree tree) {
+	public SetConsole(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -129,6 +129,6 @@ public class Echo implements Instruction {
 	@NotNull
 	@Override
 	public Instruction optimize(int mode) {
-		return mode < 0 ? Echo.INSTANCE : new Echo(new Tree(this.tree));
+		return mode < 0 ? SetConsole.INSTANCE : new SetConsole(new Tree(this.tree));
 	}
 }
