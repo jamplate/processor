@@ -38,7 +38,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., param:value*|array*|object*, key:array*, value:value*]
+ *     [..., param:value*|array*|object*, key:array&, value:value*]
  *     [..., result:array*|object*]
  * </pre>
  *
