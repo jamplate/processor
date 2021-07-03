@@ -16,7 +16,7 @@
 package org.jamplate.internal.function.compiler.group;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.flow.Block;
+import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+//todo do not reference `org.jamplate.glucose`
 public class CombineCompiler implements Compiler {
 	/**
 	 * The compilers used by this.

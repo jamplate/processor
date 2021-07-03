@@ -16,7 +16,7 @@
 package org.jamplate.internal.function.compiler.concrete;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.flow.Idle;
+import org.jamplate.glucose.instruction.flow.Idle;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -32,6 +32,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.31
  */
+//todo do not reference `org.jamplate.glucose`
 public class ToIdleCompiler implements Compiler {
 	/**
 	 * A global instance of this class.

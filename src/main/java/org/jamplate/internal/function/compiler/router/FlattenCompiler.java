@@ -16,7 +16,7 @@
 package org.jamplate.internal.function.compiler.router;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.flow.Block;
+import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
@@ -43,6 +43,7 @@ import java.util.Objects;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.23
  */
+//todo do not reference `org.jamplate.glucose`
 public class FlattenCompiler implements Compiler {
 	/**
 	 * The compiler to be used.

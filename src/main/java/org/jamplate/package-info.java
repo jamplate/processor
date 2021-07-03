@@ -27,9 +27,9 @@
  * <br><br>
  * Public implementation packages:
  * <ul>
- *     <li>{@link org.jamplate.instruction}</li>
- *     <li>{@link org.jamplate.spec}</li>
- *     <li>{@link org.jamplate.value}</li>
+ *     <li>{@link org.jamplate.glucose.instruction}</li>
+ *     <li>{@link org.jamplate.glucose.spec}</li>
+ *     <li>{@link org.jamplate.glucose.value}</li>
  * </ul>
  * <br><br>
  * Default implementations packages:

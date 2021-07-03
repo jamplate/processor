@@ -16,7 +16,7 @@
 package org.jamplate.internal.function.compiler.concrete;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.internal.util.IO;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
@@ -34,6 +34,7 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.05.31
  */
+//todo do not reference `org.jamplate.glucose`
 public class ToPushConstCompiler implements Compiler {
 	/**
 	 * A global instance of this class.
