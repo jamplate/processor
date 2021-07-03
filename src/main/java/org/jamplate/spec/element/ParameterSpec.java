@@ -19,7 +19,7 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.api.MultiSpec;
+import org.jamplate.impl.api.MultiSpec;
 import org.jamplate.internal.function.analyzer.filter.FilterByHierarchyKindAnalyzer;
 import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
 import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;

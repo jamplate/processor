@@ -15,8 +15,8 @@
  */
 package org.jamplate.instruction.memory.console;
 
-import org.jamplate.internal.memory.BufferedConsole;
-import org.jamplate.internal.memory.FileConsole;
+import org.jamplate.impl.memory.BufferedConsole;
+import org.jamplate.impl.memory.FileConsole;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;

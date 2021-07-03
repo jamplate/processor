@@ -13,10 +13,10 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.model;
+package org.jamplate.impl.model;
 
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.internal.diagnostic.DiagnosticImpl;
+import org.jamplate.impl.diagnostic.DiagnosticImpl;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;

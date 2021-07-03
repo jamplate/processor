@@ -17,7 +17,7 @@ package org.jamplate.spec.document;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Initializer;
-import org.jamplate.internal.model.CompilationImpl;
+import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jamplate.spec.element.ParameterSpec;

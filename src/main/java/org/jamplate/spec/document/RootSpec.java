@@ -25,7 +25,7 @@ import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.function.compiler.group.CombineCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.model.CompilationImpl;
+import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.model.Sketch;

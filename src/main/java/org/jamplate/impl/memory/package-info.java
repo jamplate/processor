@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Default jamplate implementations for the package {@link org.jamplate.diagnostic}.
+ * A package containing implementations of the package {@link org.jamplate.memory}.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.05.31
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.07.03
  */
-package org.jamplate.internal.diagnostic;
+package org.jamplate.impl.memory;

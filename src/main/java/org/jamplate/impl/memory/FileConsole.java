@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.memory;
+package org.jamplate.impl.memory;
 
 import org.jamplate.memory.Console;
 import org.jetbrains.annotations.NotNull;

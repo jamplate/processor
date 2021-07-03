@@ -17,7 +17,7 @@ package org.jamplate.spec.tool;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Listener;
-import org.jamplate.internal.api.Event;
+import org.jamplate.impl.api.Event;
 import org.jamplate.model.Instruction;
 import org.jetbrains.annotations.NotNull;
 

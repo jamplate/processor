@@ -15,7 +15,7 @@
  */
 package org.jamplate.memory;
 
-import org.jamplate.internal.memory.BufferedConsole;
+import org.jamplate.impl.memory.BufferedConsole;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;

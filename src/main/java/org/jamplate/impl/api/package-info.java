@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package containing implementations of the package {@link org.jamplate.model}.
+ * A package containing implementations of the package {@link org.jamplate.api}.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.05.16
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.06.19
  */
-package org.jamplate.internal.model;
+package org.jamplate.impl.api;

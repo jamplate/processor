@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.model;
+package org.jamplate.impl.model;
 
 import org.jamplate.model.Document;
 import org.jamplate.model.DocumentNotFoundError;

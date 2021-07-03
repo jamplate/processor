@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.diagnostic;
+package org.jamplate.impl.diagnostic;
 
 import org.jamplate.diagnostic.Message;
 import org.jamplate.memory.Memory;

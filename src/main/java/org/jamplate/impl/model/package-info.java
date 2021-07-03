@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package containing implementations of the package {@link org.jamplate.memory}.
+ * A package containing implementations of the package {@link org.jamplate.model}.
  *
  * @author LSafer
- * @version 0.3.0
- * @since 0.3.0 ~2021.07.03
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.05.16
  */
-package org.jamplate.internal.memory;
+package org.jamplate.impl.model;

@@ -13,17 +13,17 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.internal.api;
+package org.jamplate.impl.api;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.*;
-import org.jamplate.internal.diagnostic.MessageImpl;
-import org.jamplate.internal.diagnostic.MessageKind;
-import org.jamplate.internal.diagnostic.MessagePriority;
-import org.jamplate.internal.model.EnvironmentImpl;
+import org.jamplate.impl.diagnostic.MessageImpl;
+import org.jamplate.impl.diagnostic.MessageKind;
+import org.jamplate.impl.diagnostic.MessagePriority;
+import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.internal.util.Trees;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.*;

@@ -15,6 +15,36 @@
  */
 /**
  * This is the top package of the jamplate preprocessor.
+ * <br><br>
+ * Abstract Packages:
+ * <ul>
+ *     <li>{@link org.jamplate.api}</li>
+ *     <li>{@link org.jamplate.diagnostic}</li>
+ *     <li>{@link org.jamplate.function}</li>
+ *     <li>{@link org.jamplate.memory}</li>
+ *     <li>{@link org.jamplate.model}</li>
+ * </ul>
+ * <br><br>
+ * Public implementation packages:
+ * <ul>
+ *     <li>{@link org.jamplate.instruction}</li>
+ *     <li>{@link org.jamplate.spec}</li>
+ *     <li>{@link org.jamplate.value}</li>
+ * </ul>
+ * <br><br>
+ * Default implementations packages:
+ * <ul>
+ *     <li>{@link org.jamplate.impl.api}</li>
+ *     <li>{@link org.jamplate.impl.diagnostic}</li>
+ *     <li>{@link org.jamplate.impl.memory}</li>
+ *     <li>{@link org.jamplate.impl.model}</li>
+ * </ul>
+ * <br><br>
+ * Internal packages:
+ * <ul>
+ *     <li>{@link org.jamplate.internal.function}</li>
+ *     <li>{@link org.jamplate.internal.util}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * A package containing implementations of the package {@link org.jamplate.api}.
+ * Default jamplate implementations for the package {@link org.jamplate.diagnostic}.
  *
  * @author LSafer
- * @version 0.3.0
- * @since 0.3.0 ~2021.06.19
+ * @version 0.2.0
+ * @since 0.2.0 ~2021.05.31
  */
-package org.jamplate.internal.api;
+package org.jamplate.impl.diagnostic;

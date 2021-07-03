@@ -2,10 +2,10 @@ package org.jamplate.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
-import org.jamplate.internal.api.EditSpec;
-import org.jamplate.internal.api.Event;
-import org.jamplate.internal.api.UnitImpl;
-import org.jamplate.internal.model.PseudoDocument;
+import org.jamplate.impl.api.EditSpec;
+import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
 import org.jamplate.memory.Memory;

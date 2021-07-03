@@ -18,7 +18,7 @@ package org.jamplate.spec.element;
 import cufy.util.Node;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.api.MultiSpec;
+import org.jamplate.impl.api.MultiSpec;
 import org.jamplate.internal.function.parser.router.PseudoTreeParser;
 import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.model.Sketch;
