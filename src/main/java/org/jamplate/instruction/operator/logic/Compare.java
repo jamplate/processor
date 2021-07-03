@@ -121,7 +121,7 @@ public class Compare implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) -> {
-				int num3 = n.compareTo(number0.evaluateToken(m));
+				int num3 = n.compareTo(number0.getPipe().eval(m));
 				return (double) (num3 > 1 ? 1 : num3 < -1 ? -1 : num3);
 			});
 

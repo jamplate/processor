@@ -96,7 +96,8 @@ public class Split implements Instruction {
 		if (value0 instanceof ArrayValue) {
 			ArrayValue array0 = (ArrayValue) value0;
 
-			array0.evaluateToken(memory)
+			array0.getPipe()
+				  .eval(memory)
 				  .forEach(value1 -> {
 					  UnquoteValue unquote1 = UnquoteValue.cast(value1);
 

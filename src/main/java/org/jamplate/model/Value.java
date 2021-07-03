@@ -19,24 +19,26 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The value function is a function that evaluates to a value depending on the state of
  * the memory given to it.
  *
+ * @param <T> the type of the object that the pipe of the value will evaluate to.
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
 @FunctionalInterface
-public interface Value extends Serializable {
+public interface Value<T> extends Serializable {
 	/**
 	 * The {@code null} value.
 	 *
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	Value NULL = new Value() {
+	Value<Object> NULL = new Value<Object>() {
 		@SuppressWarnings("JavaDoc")
 		private static final long serialVersionUID = -5499638541705572487L;
 
@@ -46,11 +48,49 @@ public interface Value extends Serializable {
 			return "";
 		}
 
+		@NotNull
+		@Override
+		public Pipe getPipe() {
+			return (m, v) -> null;
+		}
+
 		@Override
 		public String toString() {
 			return "Value.NULL";
 		}
 	};
+
+	/**
+	 * Return a value that evaluates its pipe to the result of invoking the given {@code
+	 * pipe} with the result of evaluating the pipe of this.
+	 *
+	 * @param pipe the pipe to be applied to the returned value.
+	 * @return a value as described above.
+	 * @throws NullPointerException if the given {@code pipe} is null.
+	 * @implSpec the default implementation returns a new value with its pipe is the
+	 * 		result of applying the given {@code pipe} to the pipe of the value.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	@NotNull
+	@Contract(pure = true)
+	default Value<T> apply(@NotNull Pipe<T> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return this.getPipe().apply(pipe).toValue();
+	}
+
+	/**
+	 * Return the pipe of this value.
+	 *
+	 * @return the pipe of this value.
+	 * @implSpec the default implementation will return a pipe that delegates to the
+	 *        {@link #evaluate(Memory)} method of this value unsafely casted to {@link T}.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	@NotNull
+	@Contract(pure = true)
+	default Pipe<T> getPipe() {
+		return (m, v) -> (T) this.evaluate(m);
+	}
 
 	/**
 	 * Evaluate this value with the given {@code memory}.
@@ -61,6 +101,5 @@ public interface Value extends Serializable {
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	@Contract(pure = true)
 	String evaluate(@NotNull Memory memory);
 }

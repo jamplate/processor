@@ -18,6 +18,7 @@ import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.*;
 import org.jamplate.value.ArrayValue;
+import org.jamplate.value.TextValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,7 +86,7 @@ public class RepeatTest {
 				//iterate until the anchoring null
 				new Repeat(new Block(
 						//push the allocation address
-						new PushConst(m -> keyV),
+						new PushConst(new TextValue(keyV)),
 						//swap the address with the value
 						Swap.INSTANCE,
 						//allocate the loop variable

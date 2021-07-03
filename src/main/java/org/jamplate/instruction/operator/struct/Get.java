@@ -99,7 +99,7 @@ public class Get implements Instruction {
 			ObjectValue object1 = (ObjectValue) value1;
 
 			//result
-			Value value3 = object1.evaluateTokenAt(memory, key0);
+			Value value3 = object1.evaluateAt(memory, key0);
 			Value value4 = UnquoteValue.cast(value3);
 
 			memory.push(value4);
@@ -108,12 +108,12 @@ public class Get implements Instruction {
 		if (value1 instanceof ArrayValue) {
 			//right
 			NumberValue number0 = NumberValue.cast(value0);
-			int index0 = number0.evaluateToken(memory).intValue();
+			int index0 = number0.getPipe().eval(memory).intValue();
 			//left
 			ArrayValue array1 = (ArrayValue) value1;
 
 			//result
-			Value value3 = array1.evaluateTokenAt(memory, index0);
+			Value value3 = array1.evaluateAt(memory, index0);
 			Value value4 = UnquoteValue.cast(value3);
 
 			memory.push(value4);

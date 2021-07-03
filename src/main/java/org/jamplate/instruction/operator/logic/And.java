@@ -103,7 +103,7 @@ public class And implements Instruction {
 
 			//result
 			BooleanValue boolean2 = boolean1.apply((m, b) ->
-					b && boolean0.evaluatePrimitiveToken(m)
+					b && boolean0.getPipe().eval(m)
 			);
 
 			memory.push(boolean2);

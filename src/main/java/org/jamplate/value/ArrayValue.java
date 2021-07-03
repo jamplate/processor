@@ -16,6 +16,7 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -39,7 +38,7 @@ import java.util.stream.StreamSupport;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.29
  */
-public final class ArrayValue extends TokenValue<List<Value>> {
+public final class ArrayValue implements Value<List<Value>> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8228913560756371483L;
 
@@ -49,7 +48,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	 * @since 0.3.0 ~2021.06.29
 	 */
 	@NotNull
-	private final Function<Memory, List<Value>> function;
+	private final Pipe<List<Value>> pipe;
 
 	/**
 	 * Construct a new array value that evaluates to the result of parsing the given
@@ -62,7 +61,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	public ArrayValue(@NotNull String source) {
 		Objects.requireNonNull(source, "source");
 		List<Value> list = ArrayValue.parse(source);
-		this.function = m -> list;
+		this.pipe = (m, v) -> list;
 	}
 
 	/**
@@ -75,7 +74,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	public ArrayValue(@Nullable Object @NotNull ... elements) {
 		Objects.requireNonNull(elements, "elements");
 		List<Value> list = ArrayValue.transformElements(elements);
-		this.function = m -> list;
+		this.pipe = (m, v) -> list;
 	}
 
 	/**
@@ -88,7 +87,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	public ArrayValue(@NotNull Iterable<?> elements) {
 		Objects.requireNonNull(elements, "elements");
 		List<Value> list = ArrayValue.transformElements(elements);
-		this.function = m -> list;
+		this.pipe = (m, v) -> list;
 	}
 
 	/**
@@ -99,10 +98,9 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.06.29
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public ArrayValue(@NotNull Value value) {
+	public ArrayValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = m -> ArrayValue.parse(value.evaluate(m));
+		this.pipe = (m, v) -> ArrayValue.parse(value.evaluate(m));
 	}
 
 	/**
@@ -115,22 +113,21 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	 */
 	public ArrayValue(@NotNull ObjectValue object) {
 		Objects.requireNonNull(object, "object");
-		this.function = m -> ArrayValue.transformPairs(object.evaluateToken(m));
+		this.pipe = (m, v) -> ArrayValue.transformPairs(object.getPipe().eval(m));
 	}
 
 	/**
 	 * An internal constructor to construct a new array value with the given {@code
 	 * function}.
 	 *
-	 * @param function the function that evaluates to the elements of the constructed
-	 *                 array value.
-	 * @throws NullPointerException if the given {@code function} is null.
+	 * @param pipe the function that evaluates to the elements of the constructed array
+	 *             value.
+	 * @throws NullPointerException if the given {@code pipe} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private ArrayValue(@NotNull Function<Memory, List<Value>> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private ArrayValue(@NotNull Pipe<List<Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -165,7 +162,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 			return new ArrayValue(ArrayValue.transformPairs(((JSONObject) object).toMap()));
 
 		//parse
-		return new ArrayValue(TokenValue.toString(object));
+		return new ArrayValue(Tokenizer.toString(object));
 	}
 
 	/**
@@ -197,7 +194,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		}
 		//attempt to parse as singleton
 		return Collections.singletonList(
-				TokenValue.cast(source)
+				Tokenizer.cast(source)
 		);
 	}
 
@@ -217,7 +214,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		Objects.requireNonNull(elements, "elements");
 		return Collections.unmodifiableList(
 				Arrays.stream(elements)
-					  .map(TokenValue::cast)
+					  .map(Tokenizer::cast)
 					  .collect(Collectors.toList())
 		);
 	}
@@ -239,7 +236,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		return Collections.unmodifiableList(
 				StreamSupport
 						.stream(elements.spliterator(), false)
-						.map(TokenValue::cast)
+						.map(Tokenizer::cast)
 						.collect(Collectors.toList())
 		);
 	}
@@ -261,7 +258,7 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		return Collections.unmodifiableList(
 				StreamSupport
 						.stream(pairs.keySet().spliterator(), false)
-						.map(TokenValue::cast)
+						.map(Tokenizer::cast)
 						.collect(Collectors.toList())
 		);
 	}
@@ -291,28 +288,26 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 
 	@NotNull
 	@Override
-	public ArrayValue apply(@NotNull BiFunction<Memory, List<Value>, List<Value>> function) {
-		Objects.requireNonNull(function, "function");
-		return new ArrayValue((Function<Memory, List<Value>>) m ->
-				ArrayValue.transformElements(function.apply(m, this.evaluateToken(m)))
-		);
+	public ArrayValue apply(@NotNull Pipe<List<Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new ArrayValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.evaluateToken(memory)
-				   .stream()
-				   .map(value -> value.evaluate(memory))
-				   .collect(Collectors.joining(",", "[", "]"));
+		return this.pipe
+				.eval(memory)
+				.stream()
+				.map(value -> value.evaluate(memory))
+				.collect(Collectors.joining(",", "[", "]"));
 	}
 
 	@NotNull
 	@Override
-	public List<Value> evaluateToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.apply(memory);
+	public Pipe<List<Value>> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull
@@ -320,6 +315,8 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	public String toString() {
 		return "Array:" + Integer.toHexString(this.hashCode());
 	}
+
+	//--------
 
 	/**
 	 * Evaluate the token in this array at the given {@code index}.
@@ -333,13 +330,14 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Value evaluateTokenAt(@NotNull Memory memory, int index) {
+	public Value<?> evaluateAt(@NotNull Memory memory, int index) {
 		Objects.requireNonNull(memory, "memory");
-		return this.evaluateToken(memory)
-				   .stream()
-				   .skip(index)
-				   .findFirst()
-				   .orElse(Value.NULL);
+		return this.pipe
+				.eval(memory)
+				.stream()
+				.skip(index)
+				.findFirst()
+				.orElse(Value.NULL);
 	}
 
 	/**
@@ -354,19 +352,20 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Value get(@NotNull NumberValue index) {
+	public Value<?> get(@NotNull NumberValue index) {
 		Objects.requireNonNull(index, "index");
 		return m -> {
 			//eval key
-			double indexNumber = index.evaluatePrimitiveToken(m);
+			double indexNumber = index.getPipe().eval(m);
 
 			//stream elements -> skip to target -> returned eval element
-			return this.evaluateToken(m)
-					   .stream()
-					   .skip((long) indexNumber)
-					   .findFirst()
-					   .map(element -> element.evaluate(m))
-					   .orElse("");
+			return this.pipe
+					.eval(m)
+					.stream()
+					.skip((long) indexNumber)
+					.findFirst()
+					.map(element -> element.evaluate(m))
+					.orElse("");
 		};
 	}
 
@@ -386,11 +385,11 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 	public ArrayValue put(@NotNull NumberValue index, @NotNull Value value) {
 		Objects.requireNonNull(index, "index");
 		Objects.requireNonNull(value, "value");
-		return new ArrayValue((Function<Memory, List<Value>>) m -> {
+		return new ArrayValue((Pipe<List<Value>>) (m, v) -> {
 			//eval the elements
-			List<Value> elements = new ArrayList<>(this.evaluateToken(m));
+			List<Value> elements = new ArrayList<>(this.pipe.eval(m));
 			//eval the index
-			double indexNumber = index.evaluatePrimitiveToken(m);
+			double indexNumber = index.getPipe().eval(m);
 
 			//fill if too small
 			while (elements.size() <= indexNumber)
@@ -436,13 +435,13 @@ public final class ArrayValue extends TokenValue<List<Value>> {
 		if (list.size() == 1)
 			return this.put((NumberValue) list.get(0), value);
 		//case multiple keys
-		return new ArrayValue((Function<Memory, List<Value>>) m -> {
+		return new ArrayValue((Pipe<List<Value>>) (m, v) -> {
 			//eval the pairs
-			List<Value> elements = new ArrayList<>(this.evaluateToken(m));
+			List<Value> elements = new ArrayList<>(this.pipe.eval(m));
 			//the index
 			NumberValue index = (NumberValue) list.get(0);
 			//eval the index
-			double indexNumber = index.evaluatePrimitiveToken(m);
+			double indexNumber = index.getPipe().eval(m);
 			//the next key
 			Value nextKey = list.get(1);
 

@@ -68,7 +68,7 @@ public class PushConst implements Instruction {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public PushConst(@NotNull Value value) {
+	public PushConst(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
 		this.tree = null;
 		this.value = value;
@@ -82,7 +82,7 @@ public class PushConst implements Instruction {
 	 * @throws NullPointerException if the given {@code tree} or {@code value} is null.
 	 * @since 0.3.0 ~2021.06.12
 	 */
-	public PushConst(@NotNull Tree tree, @NotNull Value value) {
+	public PushConst(@NotNull Tree tree, @NotNull Value<?> value) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(value, "value");
 		this.tree = tree;

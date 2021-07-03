@@ -100,7 +100,7 @@ public class Remainder implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) -> {
-				double nn = number0.evaluatePrimitiveToken(m);
+				double nn = number0.getPipe().eval(m);
 
 				if (nn == 0)
 					throw new ExecutionException(

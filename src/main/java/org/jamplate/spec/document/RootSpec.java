@@ -106,7 +106,7 @@ public class RootSpec implements Spec {
 							new Alloc(tree),
 							//Define __LINE__
 							new PushConst(tree, new TextValue("__LINE__")),
-							new PushConst(tree, new NumberValue(m -> line)),
+							new PushConst(tree, new NumberValue(line)),
 							new Alloc(tree)
 					);
 				}

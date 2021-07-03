@@ -15,7 +15,6 @@
  */
 package org.jamplate.value;
 
-import org.jamplate.model.Memory;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -28,19 +27,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * The base class of all the values on this package.
  *
- * @param <T> the type of the raw token.
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.30
  */
-public abstract class TokenValue<T> implements Value {
-	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -502980380564606240L;
+public final class Tokenizer {
+	/**
+	 * Tool classes does not need instantiating.
+	 *
+	 * @throws AssertionError when called.
+	 * @since 0.3.0 ~2021.07.03
+	 */
+	private Tokenizer() {
+		throw new AssertionError("No instance for you!");
+	}
 
 	/**
 	 * Cast the given {@code object} into a suitable value.
@@ -75,7 +79,7 @@ public abstract class TokenValue<T> implements Value {
 
 		//parse -> re-try
 		try {
-			String source = TokenValue.toString(object);
+			String source = Tokenizer.toString(object);
 
 			if (source.isEmpty())
 				return new QuoteValue(new TextValue(""));
@@ -91,7 +95,7 @@ public abstract class TokenValue<T> implements Value {
 				else if (value.equals(JSONObject.NULL))
 					values.add(new QuoteValue(new TextValue("")));
 				else
-					values.add(TokenValue.cast(value));
+					values.add(Tokenizer.cast(value));
 			}
 
 			return values.isEmpty() ?
@@ -137,29 +141,4 @@ public abstract class TokenValue<T> implements Value {
 
 		return object == null ? "" : object.toString();
 	}
-
-	/**
-	 * Return a token value of the same type as this token value that evaluates its token
-	 * to the result of invoking the given {@code function} with the result of evaluating
-	 * the token of this.
-	 *
-	 * @param function the function to be applied to the returned token value.
-	 * @return a token value of the same type as this as described above.
-	 * @throws NullPointerException if the given {@code function} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract
-	public abstract TokenValue apply(@NotNull BiFunction<Memory, T, T> function);
-
-	/**
-	 * Evaluate the raw token of this value.
-	 *
-	 * @param memory the memory to evaluate with.
-	 * @return the raw token of this value.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public abstract T evaluateToken(@NotNull Memory memory);
 }

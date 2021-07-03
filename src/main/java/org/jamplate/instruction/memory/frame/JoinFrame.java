@@ -86,7 +86,7 @@ public class JoinFrame implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		Value value0 = memory.pop();
+		Value<?> value0 = memory.pop();
 
 		while (true) {
 			Value value1 = value0;

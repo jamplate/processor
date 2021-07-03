@@ -16,14 +16,13 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 /**
  * A value that evaluates to a boolean and can be evaluated to a raw state.
@@ -32,7 +31,7 @@ import java.util.function.Predicate;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.30
  */
-public final class BooleanValue extends TokenValue<Boolean> {
+public final class BooleanValue implements Value<Boolean> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1562079784562666632L;
 
@@ -42,7 +41,7 @@ public final class BooleanValue extends TokenValue<Boolean> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Predicate<Memory> function;
+	private final Pipe<Boolean> pipe;
 
 	/**
 	 * Construct a new boolean value that evaluates to the result of parsing the given
@@ -55,7 +54,7 @@ public final class BooleanValue extends TokenValue<Boolean> {
 	public BooleanValue(@NotNull String source) {
 		Objects.requireNonNull(source, "source");
 		boolean state = BooleanValue.parse(source);
-		this.function = m -> state;
+		this.pipe = (m, v) -> state;
 	}
 
 	/**
@@ -65,7 +64,7 @@ public final class BooleanValue extends TokenValue<Boolean> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	public BooleanValue(boolean state) {
-		this.function = m -> state;
+		this.pipe = (m, v) -> state;
 	}
 
 	/**
@@ -76,25 +75,22 @@ public final class BooleanValue extends TokenValue<Boolean> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public BooleanValue(@NotNull Value value) {
+	public BooleanValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = m -> BooleanValue.parse(value.evaluate(m));
+		this.pipe = (m, v) -> BooleanValue.parse(value.evaluate(m));
 	}
 
 	/**
 	 * An internal constructor to construct a new boolean value with the given {@code
-	 * function}.
+	 * pipe}.
 	 *
-	 * @param function the function that evaluates to the state of the constructed boolean
-	 *                 value.
-	 * @throws NullPointerException if the given {@code function} is null.
+	 * @param pipe the pipe that evaluates to the state of the constructed boolean value.
+	 * @throws NullPointerException if the given {@code pipe} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private BooleanValue(@NotNull Predicate<Memory> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private BooleanValue(@NotNull Pipe<Boolean> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -120,7 +116,7 @@ public final class BooleanValue extends TokenValue<Boolean> {
 			return new BooleanValue((boolean) object);
 
 		//parse
-		return new BooleanValue(TokenValue.toString(object));
+		return new BooleanValue(Tokenizer.toString(object));
 	}
 
 	/**
@@ -149,46 +145,29 @@ public final class BooleanValue extends TokenValue<Boolean> {
 
 	@NotNull
 	@Override
-	public BooleanValue apply(@NotNull BiFunction<Memory, Boolean, Boolean> function) {
-		Objects.requireNonNull(function, "function");
-		return new BooleanValue((Predicate<Memory>) m ->
-				function.apply(m, this.evaluateToken(m))
-		);
+	public BooleanValue apply(@NotNull Pipe<Boolean> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new BooleanValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.evaluatePrimitiveToken(memory) ?
+		return this.pipe.eval(memory) ?
 			   "true" :
 			   "false";
 	}
 
 	@NotNull
 	@Override
-	public Boolean evaluateToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.test(memory);
+	public Pipe<Boolean> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull
 	@Override
 	public String toString() {
 		return "Boolean:" + Integer.toHexString(this.hashCode());
-	}
-
-	/**
-	 * Evaluate this value to a primitive raw state.
-	 *
-	 * @param memory the memory to evaluate with.
-	 * @return a primitive raw evaluation of this value.
-	 * @throws NullPointerException if the given {@code memory} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@Contract(pure = true)
-	public boolean evaluatePrimitiveToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.test(memory);
 	}
 }

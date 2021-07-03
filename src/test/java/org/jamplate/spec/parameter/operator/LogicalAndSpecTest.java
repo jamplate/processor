@@ -19,6 +19,7 @@ import org.jamplate.spec.parameter.resource.ReferenceSpec;
 import org.jamplate.spec.syntax.symbol.AndAndSpec;
 import org.jamplate.spec.syntax.term.WordSpec;
 import org.jamplate.spec.tool.DebugSpec;
+import org.jamplate.value.BooleanValue;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -39,11 +40,11 @@ public class LogicalAndSpecTest {
 				Memory memory = new Memory();
 				new Block(
 						//run first param
-						(env, mem) -> mem.push(m -> Boolean.toString(left)),
+						(env, mem) -> mem.push(new BooleanValue(left)),
 						//cast first param into boolean
 						CastBoolean.INSTANCE,
 						//run second param
-						(env, mem) -> mem.push(m -> Boolean.toString(right)),
+						(env, mem) -> mem.push(new BooleanValue(right)),
 						//cast second param into boolean
 						CastBoolean.INSTANCE,
 						//do the logic

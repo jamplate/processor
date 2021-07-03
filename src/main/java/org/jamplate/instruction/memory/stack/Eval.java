@@ -16,7 +16,7 @@
 package org.jamplate.instruction.memory.stack;
 
 import org.jamplate.model.*;
-import org.jamplate.value.TokenValue;
+import org.jamplate.value.Tokenizer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,7 +89,7 @@ public class Eval implements Instruction {
 
 		//result
 		String text1 = value0.evaluate(memory);
-		Value value1 = TokenValue.cast(text1);
+		Value value1 = Tokenizer.cast(text1);
 
 		//push the result
 		memory.push(value1);

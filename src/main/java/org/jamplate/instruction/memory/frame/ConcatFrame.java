@@ -108,7 +108,7 @@ public class ConcatFrame implements Instruction {
 
 				array0 = array0.apply((m, l) -> {
 					List<Value> list = new ArrayList<>(l);
-					list.addAll(array1.evaluateToken(m));
+					list.addAll(array1.getPipe().eval(m));
 					return list;
 				});
 				continue;

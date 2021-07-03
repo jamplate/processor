@@ -16,6 +16,7 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -38,7 +37,7 @@ import java.util.stream.StreamSupport;
  * @version 0.3.0
  * @since 0.3.0 ~2021.07.01
  */
-public final class GluedValue extends TokenValue<List<Value>> {
+public final class GluedValue implements Value<List<Value>> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 8228913560756371483L;
 
@@ -48,7 +47,7 @@ public final class GluedValue extends TokenValue<List<Value>> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Function<Memory, List<Value>> function;
+	private final Pipe<List<Value>> pipe;
 
 	/**
 	 * Construct a new glued value that evaluates to the given raw {@code values}.
@@ -60,7 +59,7 @@ public final class GluedValue extends TokenValue<List<Value>> {
 	public GluedValue(@Nullable Object @NotNull ... values) {
 		Objects.requireNonNull(values, "values");
 		List<Value> list = GluedValue.transformValues(values);
-		this.function = m -> list;
+		this.pipe = (m, v) -> list;
 	}
 
 	/**
@@ -73,7 +72,7 @@ public final class GluedValue extends TokenValue<List<Value>> {
 	public GluedValue(@NotNull Iterable<?> elements) {
 		Objects.requireNonNull(elements, "elements");
 		List<Value> list = ArrayValue.transformElements(elements);
-		this.function = m -> list;
+		this.pipe = (m, v) -> list;
 	}
 
 	/**
@@ -84,25 +83,23 @@ public final class GluedValue extends TokenValue<List<Value>> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public GluedValue(@NotNull Value value) {
+	public GluedValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = m -> Collections.singletonList(value);
+		this.pipe = (m, v) -> Collections.singletonList(value);
 	}
 
 	/**
 	 * An internal constructor to construct a new glued value with the given {@code
 	 * function}.
 	 *
-	 * @param function the function that evaluates to the values of the constructed glued
-	 *                 value.
+	 * @param pipe the function that evaluates to the values of the constructed glued
+	 *             value.
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private GluedValue(@NotNull Function<Memory, List<Value>> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private GluedValue(@NotNull Pipe<List<Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -147,7 +144,7 @@ public final class GluedValue extends TokenValue<List<Value>> {
 		Objects.requireNonNull(values, "values");
 		return Collections.unmodifiableList(
 				Arrays.stream(values)
-					  .map(TokenValue::cast)
+					  .map(Tokenizer::cast)
 					  .collect(Collectors.toList())
 		);
 	}
@@ -169,34 +166,33 @@ public final class GluedValue extends TokenValue<List<Value>> {
 		return Collections.unmodifiableList(
 				StreamSupport
 						.stream(values.spliterator(), false)
-						.map(TokenValue::cast)
+						.map(Tokenizer::cast)
 						.collect(Collectors.toList())
 		);
 	}
 
 	@NotNull
 	@Override
-	public TokenValue apply(@NotNull BiFunction<Memory, List<Value>, List<Value>> function) {
-		Objects.requireNonNull(function, "function");
-		return new GluedValue((Function<Memory, List<Value>>) m ->
-				GluedValue.transformValues(function.apply(m, this.evaluateToken(m)))
-		);
+	public Value<List<Value>> apply(@NotNull Pipe<List<Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new GluedValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.evaluateToken(memory)
-				   .stream()
-				   .map(value -> value.evaluate(memory))
-				   .collect(Collectors.joining());
+		return this.pipe
+				.eval(memory)
+				.stream()
+				.map(value -> value.evaluate(memory))
+				.collect(Collectors.joining());
 	}
 
 	@NotNull
 	@Override
-	public List<Value> evaluateToken(@NotNull Memory memory) {
-		return this.function.apply(memory);
+	public Pipe<List<Value>> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull

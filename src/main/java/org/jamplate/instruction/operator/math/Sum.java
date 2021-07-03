@@ -103,7 +103,7 @@ public class Sum implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) ->
-					n + number0.evaluatePrimitiveToken(m)
+					n + number0.getPipe().eval(m)
 			);
 
 			memory.push(number2);
@@ -117,7 +117,7 @@ public class Sum implements Instruction {
 
 		//result
 		TextValue text2 = text1.apply((m, s) ->
-				s + text0.evaluateToken(m)
+				s + text0.getPipe().eval(m)
 		);
 
 		memory.push(text2);

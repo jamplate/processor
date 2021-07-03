@@ -111,9 +111,9 @@ public class Touch implements Instruction {
 		QuoteValue quote0 = QuoteValue.cast(value0);
 		//key
 		ArrayValue array1 = (ArrayValue) value1;
-		List<Value> list1 = array1.evaluateToken(memory);
+		List<Value> list1 = array1.getPipe().eval(memory);
 		//first key
-		Value value3 = array1.evaluateTokenAt(memory, 0);
+		Value value3 = array1.evaluateAt(memory, 0);
 
 		if (!(value2 instanceof ObjectValue) && value3 instanceof NumberValue) {
 			//struct

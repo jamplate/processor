@@ -16,6 +16,7 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * A quoting wrapper value.
@@ -33,7 +32,7 @@ import java.util.function.Function;
  * @version 0.3.0
  * @since 0.3.0 ~2021.07.01
  */
-public final class QuoteValue extends TokenValue<Value> {
+public final class QuoteValue implements Value<Value> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -8362991250407876199L;
 
@@ -43,7 +42,7 @@ public final class QuoteValue extends TokenValue<Value> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Function<Memory, Value> function;
+	private final Pipe<Value> pipe;
 
 	/**
 	 * Construct a new quoted text value that evaluate to the evaluation of the given
@@ -53,25 +52,23 @@ public final class QuoteValue extends TokenValue<Value> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public QuoteValue(@NotNull Value value) {
+	public QuoteValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = m -> value;
+		this.pipe = (m, v) -> value;
 	}
 
 	/**
 	 * An internal constructor to construct a quoted new text value with the given {@code
 	 * function}.
 	 *
-	 * @param function the function that evaluates to text of the constructed quoted text
-	 *                 value.
+	 * @param pipe the function that evaluates to text of the constructed quoted text
+	 *             value.
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private QuoteValue(@NotNull Function<Memory, Value> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private QuoteValue(@NotNull Pipe<Value> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -93,15 +90,15 @@ public final class QuoteValue extends TokenValue<Value> {
 			return new QuoteValue((Value) object);
 
 		//turn into value
-		return new QuoteValue(TokenValue.cast(object));
+		return new QuoteValue(Tokenizer.cast(object));
 	}
 
 	@NotNull
 	@Override
-	public QuoteValue apply(@NotNull BiFunction<Memory, Value, Value> function) {
-		Objects.requireNonNull(function, "function");
-		return new QuoteValue((Function<Memory, Value>) m ->
-				function.apply(m, this.evaluateToken(m))
+	public QuoteValue apply(@NotNull Pipe<Value> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new QuoteValue(
+				this.pipe.apply(pipe)
 		);
 	}
 
@@ -109,7 +106,7 @@ public final class QuoteValue extends TokenValue<Value> {
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		Value value = this.evaluateToken(memory);
+		Value value = this.pipe.eval(memory);
 
 		if (value instanceof TextValue)
 			return JSONObject.quote(value.evaluate(memory));
@@ -119,9 +116,8 @@ public final class QuoteValue extends TokenValue<Value> {
 
 	@NotNull
 	@Override
-	public Value evaluateToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.apply(memory);
+	public Pipe<Value> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull

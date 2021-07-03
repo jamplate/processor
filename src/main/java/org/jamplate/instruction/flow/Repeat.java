@@ -100,7 +100,7 @@ public class Repeat implements Instruction {
 
 			if (value0 instanceof BooleanValue) {
 				BooleanValue boolean0 = (BooleanValue) value0;
-				boolean state0 = boolean0.evaluateToken(memory);
+				boolean state0 = boolean0.getPipe().eval(memory);
 
 				if (state0) {
 					this.instruction.exec(environment, memory);

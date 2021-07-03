@@ -16,6 +16,7 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +28,6 @@ import org.json.JSONObject;
 import java.util.AbstractMap;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * A value that evaluates to an object pair and can be evaluates to a raw pair entry.
@@ -38,7 +37,7 @@ import java.util.function.Function;
  * @since 0.3.0 ~2021.06.30
  */
 @SuppressWarnings("UnqualifiedInnerClassAccess")
-public final class PairValue extends TokenValue<Entry<Value, Value>> {
+public final class PairValue implements Value<Entry<Value, Value>> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = 2938159775955369455L;
 
@@ -48,7 +47,7 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	 * @since 0.3.0 ~2021.06.29
 	 */
 	@NotNull
-	private final Function<Memory, Entry<Value, Value>> function;
+	private final Pipe<Entry<Value, Value>> pipe;
 
 	/**
 	 * Construct a new pair value that evaluates to the result of parsing the given {@code
@@ -61,7 +60,7 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	public PairValue(@NotNull String source) {
 		Objects.requireNonNull(source, "source");
 		Entry<Value, Value> pair = PairValue.parse(source);
-		this.function = m -> pair;
+		this.pipe = (m, v) -> pair;
 	}
 
 	/**
@@ -77,7 +76,7 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 		Objects.requireNonNull(key, "key");
 		Objects.requireNonNull(value, "value");
 		Entry<Value, Value> entry = PairValue.transformPair(key, value);
-		this.function = m -> entry;
+		this.pipe = (m, v) -> entry;
 	}
 
 	/**
@@ -90,7 +89,7 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	public PairValue(@NotNull Entry<?, ?> pair) {
 		Objects.requireNonNull(pair, "pair");
 		Entry<Value, Value> entry = PairValue.transformPair(pair);
-		this.function = m -> entry;
+		this.pipe = (m, v) -> entry;
 	}
 
 	/**
@@ -101,25 +100,22 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.06.29
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public PairValue(@NotNull Value value) {
+	public PairValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = m -> PairValue.parse(value.evaluate(m));
+		this.pipe = (m, v) -> PairValue.parse(value.evaluate(m));
 	}
 
 	/**
 	 * An internal constructor to construct a new pair value with the given {@code
 	 * function}.
 	 *
-	 * @param function the function that evaluates to the pair of the constructed pair
-	 *                 value.
+	 * @param pipe the function that evaluates to the pair of the constructed pair value.
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private PairValue(@NotNull Function<Memory, Entry<Value, Value>> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private PairValue(@NotNull Pipe<Entry<Value, Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -143,7 +139,7 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 			return new PairValue((Entry) object);
 
 		//parse
-		return new PairValue(TokenValue.toString(object));
+		return new PairValue(Tokenizer.toString(object));
 	}
 
 	/**
@@ -167,8 +163,8 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 						 .entrySet()
 						 .stream()
 						 .map(e -> new AbstractMap.SimpleImmutableEntry<>(
-								 TokenValue.cast(e.getKey()),
-								 TokenValue.cast(e.getValue())
+								 Tokenizer.cast(e.getKey()),
+								 Tokenizer.cast(e.getValue())
 						 ))
 						 .findFirst()
 						 .orElse(new AbstractMap.SimpleImmutableEntry<>(
@@ -201,8 +197,8 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 		Objects.requireNonNull(key, "key");
 		Objects.requireNonNull(value, "value");
 		return new AbstractMap.SimpleImmutableEntry<>(
-				TokenValue.cast(key),
-				TokenValue.cast(value)
+				Tokenizer.cast(key),
+				Tokenizer.cast(value)
 		);
 	}
 
@@ -220,17 +216,17 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	public static Entry<Value, Value> transformPair(@NotNull Entry<?, ?> pair) {
 		Objects.requireNonNull(pair, "pair");
 		return new AbstractMap.SimpleImmutableEntry<>(
-				TokenValue.cast(pair.getKey()),
-				TokenValue.cast(pair.getValue())
+				Tokenizer.cast(pair.getKey()),
+				Tokenizer.cast(pair.getValue())
 		);
 	}
 
 	@NotNull
 	@Override
-	public PairValue apply(@NotNull BiFunction<Memory, Entry<Value, Value>, Entry<Value, Value>> function) {
-		Objects.requireNonNull(function, "function");
-		return new PairValue((Function<Memory, Entry<Value, Value>>) m ->
-				PairValue.transformPair(function.apply(m, this.evaluateToken(m)))
+	public PairValue apply(@NotNull Pipe<Entry<Value, Value>> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new PairValue(
+				this.pipe.apply(pipe)
 		);
 	}
 
@@ -238,18 +234,16 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		Entry<Value, Value> pair = this.evaluateToken(memory);
+		Entry<Value, Value> pair = this.pipe.eval(memory);
 		return pair.getKey().evaluate(memory) +
 			   ":" +
 			   pair.getValue().evaluate(memory);
 	}
 
 	@NotNull
-	@Unmodifiable
 	@Override
-	public Entry<Value, Value> evaluateToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.apply(memory);
+	public Pipe<Entry<Value, Value>> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull
@@ -257,6 +251,8 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	public String toString() {
 		return "Pair:" + Integer.toHexString(this.hashCode());
 	}
+
+	//--------
 
 	/**
 	 * Return a value that evaluates to the key of this pair.
@@ -266,11 +262,11 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Value getKey() {
-		return m ->
-				this.evaluateToken(m)
-					.getKey()
-					.evaluate(m);
+	public Value<?> getKey() {
+		return m -> this.pipe
+				.eval(m)
+				.getKey()
+				.evaluate(m);
 	}
 
 	/**
@@ -281,10 +277,10 @@ public final class PairValue extends TokenValue<Entry<Value, Value>> {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Value getValue() {
-		return m ->
-				this.evaluateToken(m)
-					.getValue()
-					.evaluate(m);
+	public Value<?> getValue() {
+		return m -> this.pipe
+				.eval(m)
+				.getValue()
+				.evaluate(m);
 	}
 }

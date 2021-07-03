@@ -100,7 +100,8 @@ public class FPrint implements Instruction {
 
 		//result
 		String text2 = object0
-				.evaluateToken(memory)
+				.getPipe()
+				.eval(memory)
 				.stream()
 				.reduce(
 						text1,

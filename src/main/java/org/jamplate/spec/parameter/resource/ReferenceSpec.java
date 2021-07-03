@@ -29,6 +29,7 @@ import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
 import org.jamplate.internal.util.Functions;
 import org.jamplate.internal.util.IO;
 import org.jamplate.spec.syntax.term.WordSpec;
+import org.jamplate.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -71,7 +72,7 @@ public class ReferenceSpec implements Spec {
 					return new Block(
 							tree,
 							//push the address
-							new PushConst(tree, m -> text),
+							new PushConst(tree, new TextValue(text)),
 							//access
 							new Access(tree),
 							//duplicate the value to be null checked first
@@ -89,7 +90,7 @@ public class ReferenceSpec implements Spec {
 											//pop the duplicate value (it is null)
 											new Pop(tree),
 											//push the name of the reference
-											new PushConst(tree, m -> text)
+											new PushConst(tree, new TextValue(text))
 									)
 							)
 					);

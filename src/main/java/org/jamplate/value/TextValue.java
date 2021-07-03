@@ -16,14 +16,13 @@
 package org.jamplate.value;
 
 import org.jamplate.model.Memory;
+import org.jamplate.model.Pipe;
 import org.jamplate.model.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * A value wrapper implementation.
@@ -32,7 +31,7 @@ import java.util.function.Function;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.30
  */
-public final class TextValue extends TokenValue<String> {
+public final class TextValue implements Value<String> {
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -8001672867393082818L;
 
@@ -42,7 +41,7 @@ public final class TextValue extends TokenValue<String> {
 	 * @since 0.3.0 ~2021.06.30
 	 */
 	@NotNull
-	private final Function<Memory, String> function;
+	private final Pipe<String> pipe;
 
 	/**
 	 * Construct a new text value that evaluates to the given {@code text}.
@@ -53,7 +52,7 @@ public final class TextValue extends TokenValue<String> {
 	 */
 	public TextValue(@NotNull String text) {
 		Objects.requireNonNull(text, "text");
-		this.function = m -> text;
+		this.pipe = (m, v) -> text;
 	}
 
 	/**
@@ -65,8 +64,8 @@ public final class TextValue extends TokenValue<String> {
 	 */
 	public TextValue(@NotNull Object text) {
 		Objects.requireNonNull(text, "text");
-		String string = TokenValue.toString(text);
-		this.function = m -> string;
+		String string = Tokenizer.toString(text);
+		this.pipe = (m, v) -> string;
 	}
 
 	/**
@@ -77,24 +76,22 @@ public final class TextValue extends TokenValue<String> {
 	 * @throws NullPointerException if the given {@code value} is null.
 	 * @since 0.3.0 ~2021.06.30
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	public TextValue(@NotNull Value value) {
+	public TextValue(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
-		this.function = value::evaluate;
+		this.pipe = (m, v) -> value.evaluate(m);
 	}
 
 	/**
 	 * An internal constructor to construct a new text value with the given {@code
 	 * function}.
 	 *
-	 * @param function the function that evaluates to text of the constructed text value.
+	 * @param pipe the function that evaluates to text of the constructed text value.
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	@SuppressWarnings("LambdaUnfriendlyMethodOverload")
-	private TextValue(@NotNull Function<Memory, String> function) {
-		Objects.requireNonNull(function, "function");
-		this.function = function;
+	private TextValue(@NotNull Pipe<String> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		this.pipe = pipe;
 	}
 
 	/**
@@ -116,14 +113,15 @@ public final class TextValue extends TokenValue<String> {
 			return new TextValue((Value) object);
 
 		//stringify
-		return new TextValue(TokenValue.toString(object));
+		return new TextValue(Tokenizer.toString(object));
 	}
 
 	@NotNull
 	@Override
-	public TextValue apply(@NotNull BiFunction<Memory, String, String> function) {
-		return new TextValue((Function<Memory, String>) m ->
-				function.apply(m, this.evaluateToken(m))
+	public TextValue apply(@NotNull Pipe<String> pipe) {
+		Objects.requireNonNull(pipe, "pipe");
+		return new TextValue(
+				this.pipe.apply(pipe)
 		);
 	}
 
@@ -131,14 +129,13 @@ public final class TextValue extends TokenValue<String> {
 	@Override
 	public String evaluate(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
-		return this.evaluateToken(memory);
+		return this.pipe.eval(memory);
 	}
 
 	@NotNull
 	@Override
-	public String evaluateToken(@NotNull Memory memory) {
-		Objects.requireNonNull(memory, "memory");
-		return this.function.apply(memory);
+	public Pipe<String> getPipe() {
+		return this.pipe;
 	}
 
 	@NotNull
