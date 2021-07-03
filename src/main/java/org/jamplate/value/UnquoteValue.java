@@ -15,9 +15,9 @@
  */
 package org.jamplate.value;
 
-import org.jamplate.model.Memory;
-import org.jamplate.model.Pipe;
-import org.jamplate.model.Value;
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Pipe;
+import org.jamplate.memory.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

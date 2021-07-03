@@ -16,6 +16,8 @@ import org.jamplate.instruction.operator.struct.Split;
 import org.jamplate.internal.model.CompilationImpl;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.model.PseudoDocument;
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
 import org.jamplate.model.*;
 import org.jamplate.value.ArrayValue;
 import org.jamplate.value.TextValue;

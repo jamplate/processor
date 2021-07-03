@@ -15,12 +15,19 @@
  */
 package org.jamplate.instruction.memory.console;
 
-import org.jamplate.model.*;
+import org.jamplate.internal.memory.BufferedConsole;
+import org.jamplate.internal.memory.FileConsole;
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
+import org.jamplate.model.Environment;
+import org.jamplate.model.ExecutionException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.IOError;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
@@ -91,16 +98,12 @@ public class Echo implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		try {
-			memory.close();
-		} catch (IOException ignored0) {
-		}
-
 		Value value0 = memory.pop();
 		String text0 = value0.evaluate(memory);
 
 		if (value0 == Value.NULL) {
-			memory.setConsole(new StringBuilder());
+			memory.getConsole().close();
+			memory.setConsole(new BufferedConsole());
 			return;
 		}
 
@@ -111,8 +114,8 @@ public class Echo implements Instruction {
 			if (parent != null && !parent.exists())
 				Files.createDirectories(parent.toPath());
 
-			memory.setConsole(new FileWriter(file));
-		} catch (IOException e0) {
+			memory.setConsole(new FileConsole(file));
+		} catch (IOException | IOError e0) {
 			throw new ExecutionException(e0, this.tree);
 		}
 	}

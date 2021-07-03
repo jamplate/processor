@@ -6,7 +6,7 @@ import org.jamplate.internal.api.Event;
 import org.jamplate.internal.api.UnitImpl;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.Document;
-import org.jamplate.model.Memory;
+import org.jamplate.memory.Memory;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.parameter.operator.AdderSpec;

@@ -78,7 +78,7 @@
  * Built Components:
  * <ul>
  *     <li>
- *         {@link org.jamplate.model.Value Value}
+ *         {@link org.jamplate.memory.Value Value}
  *         <br>
  *         A built component that can be evaluated into a string.
  *     </li>
@@ -120,7 +120,7 @@
  * Volatile Components:
  * <ul>
  *     <li>
- *         {@link org.jamplate.model.Frame Frame}
+ *         {@link org.jamplate.memory.Frame Frame}
  *         <br>
  *         A highly stateful mutable structure that can store and release values/data in a
  *         stack and heap fashion.
@@ -129,12 +129,12 @@
  *         <li>A heap of values.</li>
  *     </li>
  *     <li>
- *         {@link org.jamplate.model.Memory Memory}
+ *         {@link org.jamplate.memory.Memory Memory}
  *         <br>
  *         A highly stateful mutable structure that can store and release frames in a
  *         stack fashion.
  *         <ul>
- *             <li>A stack of {@link org.jamplate.model.Frame Frames}.</li>
+ *             <li>A stack of {@link org.jamplate.memory.Frame Frames}.</li>
  *             <li>A console.</li>
  *         </ul>
  *     </li>

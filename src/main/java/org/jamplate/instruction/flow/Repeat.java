@@ -15,6 +15,8 @@
  */
 package org.jamplate.instruction.flow;
 
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
 import org.jamplate.model.*;
 import org.jamplate.value.BooleanValue;
 import org.jetbrains.annotations.NotNull;

@@ -17,7 +17,7 @@ package org.jamplate.internal.api;
 
 import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
-import org.jamplate.model.Memory;
+import org.jamplate.memory.Memory;
 import org.jetbrains.annotations.NotNull;
 
 /**

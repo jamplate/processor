@@ -16,7 +16,7 @@
 package org.jamplate.internal.diagnostic;
 
 import org.jamplate.diagnostic.Message;
-import org.jamplate.model.Memory;
+import org.jamplate.memory.Memory;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

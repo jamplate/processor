@@ -25,12 +25,13 @@ import org.jamplate.internal.diagnostic.MessageKind;
 import org.jamplate.internal.diagnostic.MessagePriority;
 import org.jamplate.internal.model.EnvironmentImpl;
 import org.jamplate.internal.util.Trees;
+import org.jamplate.memory.Memory;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.io.IOError;
 import java.util.Objects;
 import java.util.Set;
 
@@ -290,8 +291,8 @@ public class UnitImpl implements Unit {
 			return false;
 		} finally {
 			try {
-				memory.close();
-			} catch (IOException e) {
+				memory.getConsole().close();
+			} catch (IOError e) {
 				environment.getDiagnostic()
 						   .print(new MessageImpl(
 								   e,

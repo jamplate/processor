@@ -15,6 +15,8 @@
  */
 package org.jamplate.instruction.operator.math;
 
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
 import org.jamplate.model.*;
 import org.jamplate.value.NumberValue;
 import org.jamplate.value.TextValue;

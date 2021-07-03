@@ -15,7 +15,7 @@
  */
 package org.jamplate.value;
 
-import org.jamplate.model.Value;
+import org.jamplate.memory.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

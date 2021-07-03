@@ -15,6 +15,8 @@
  */
 package org.jamplate.instruction.system;
 
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

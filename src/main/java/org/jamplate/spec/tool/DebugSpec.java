@@ -22,7 +22,12 @@ import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Listener;
 import org.jamplate.internal.api.Event;
 import org.jamplate.internal.diagnostic.MessagePriority;
-import org.jamplate.model.*;
+import org.jamplate.memory.Console;
+import org.jamplate.memory.Frame;
+import org.jamplate.memory.Memory;
+import org.jamplate.model.Document;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -137,7 +142,7 @@ public class DebugSpec implements Spec {
 
 						System.out.println("\t|- Memory:");
 
-						for (Frame frame : memory.getFrames())
+						for (Frame frame : memory)
 							System.out.print(this.format(2, memory, frame));
 
 						System.out.print(this.format(2, memory.getConsole()));
@@ -237,7 +242,7 @@ public class DebugSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@Contract(pure = true)
-	protected String format(int indent, @NotNull Appendable console) {
+	protected String format(int indent, @NotNull Console console) {
 		StringBuilder buffer = new StringBuilder();
 		this.format(indent, buffer, console);
 		return buffer.toString();
@@ -446,7 +451,7 @@ public class DebugSpec implements Spec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	@Contract(mutates = "param2")
-	protected void format(int indent, @NotNull StringBuilder buffer, @NotNull Appendable console) {
+	protected void format(int indent, @NotNull StringBuilder buffer, @NotNull Console console) {
 		Objects.requireNonNull(buffer, "buffer");
 		Objects.requireNonNull(console, "console");
 		if (indent < 0)
@@ -460,7 +465,7 @@ public class DebugSpec implements Spec {
 			indentationSub.add("");
 
 		//noinspection DynamicRegexReplaceableByCompiledPattern
-		String consoleString = console.toString().replace("\n", "\n" + indentationSub);
+		String consoleString = console.read().replace("\n", "\n" + indentationSub);
 
 		buffer.append(indentation);
 		buffer.append("Console:");

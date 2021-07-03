@@ -11,7 +11,7 @@ import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.model.PseudoDocument;
 import org.jamplate.model.Document;
-import org.jamplate.model.Memory;
+import org.jamplate.memory.Memory;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;
 import org.jamplate.spec.parameter.resource.ReferenceSpec;

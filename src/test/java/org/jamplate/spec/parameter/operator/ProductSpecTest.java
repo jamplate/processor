@@ -10,6 +10,7 @@ import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
 import org.jamplate.internal.function.compiler.router.FallbackCompiler;
 import org.jamplate.internal.function.compiler.router.FlattenCompiler;
 import org.jamplate.internal.model.PseudoDocument;
+import org.jamplate.memory.Memory;
 import org.jamplate.model.*;
 import org.jamplate.spec.document.LogicSpec;
 import org.jamplate.spec.element.ParameterSpec;

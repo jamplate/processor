@@ -13,14 +13,15 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.model;
+package org.jamplate.memory;
 
+import org.jamplate.internal.memory.BufferedConsole;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Closeable;
 import java.io.IOError;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
-public final class Memory implements Iterable<Frame>, Closeable {
+public final class Memory implements Iterable<Frame> {
 	/**
 	 * The frames in this memory. Always not empty.
 	 *
@@ -42,12 +43,12 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	private final Deque<Frame> frames;
 
 	/**
-	 * A an appendable to append the text printed to the console to it.
+	 * The current set console.
 	 *
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	private Appendable console;
+	private Console console;
 
 	/**
 	 * Construct a new empty memory.
@@ -56,7 +57,7 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	 */
 	public Memory() {
 		this.frames = new LinkedList<>(Collections.singleton(new Frame()));
-		this.console = new StringBuilder();
+		this.console = new BufferedConsole();
 	}
 
 	/**
@@ -73,12 +74,6 @@ public final class Memory implements Iterable<Frame>, Closeable {
 				.map(Frame::new)
 				.collect(Collectors.toCollection(LinkedList::new));
 		this.console = memory.console;
-	}
-
-	@Override
-	public void close() throws IOException {
-		if (this.console instanceof Closeable)
-			((Closeable) this.console).close();
 	}
 
 	/**
@@ -165,14 +160,14 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	}
 
 	/**
-	 * Return current set console appendable.
+	 * Return current set console.
 	 *
 	 * @return the current console.
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public Appendable getConsole() {
+	public Console getConsole() {
 		return this.console;
 	}
 
@@ -186,19 +181,6 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	@Contract(pure = true)
 	public Frame getFrame() {
 		return this.frames.getLast();
-	}
-
-	/**
-	 * Return an array containing the current frames in this memory.
-	 *
-	 * @return an array of the current frames.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	@Contract(value = "->new", pure = true)
-	public Frame[] getFrames() {
-		//noinspection SimplifyStreamApiCallChains
-		return this.frames.stream().toArray(Frame[]::new);
 	}
 
 	/**
@@ -294,11 +276,7 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	@Contract(mutates = "this")
 	public void print(@NotNull CharSequence text) {
 		Objects.requireNonNull(text, "text");
-		try {
-			this.console.append(text);
-		} catch (IOException e) {
-			throw new IOError(e);
-		}
+		this.console.print(text);
 	}
 
 	/**
@@ -365,7 +343,7 @@ public final class Memory implements Iterable<Frame>, Closeable {
 	 * @since 0.2.0 ~2021.05.23
 	 */
 	@Contract(mutates = "this")
-	public void setConsole(@NotNull Appendable console) {
+	public void setConsole(@NotNull Console console) {
 		Objects.requireNonNull(console, "console");
 		this.console = console;
 	}

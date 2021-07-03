@@ -15,6 +15,8 @@
  */
 package org.jamplate.instruction.memory.stack;
 
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
 import org.jamplate.model.*;
 import org.jamplate.value.Tokenizer;
 import org.jetbrains.annotations.NotNull;
