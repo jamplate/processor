@@ -264,6 +264,8 @@ public class UnitImpl implements Unit {
 
 			instruction.exec(environment, memory);
 
+			memory.getConsole().close();
+
 			//post-execution
 			listener.trigger(Event.POST_EXEC, compilation, memory);
 			return true;
