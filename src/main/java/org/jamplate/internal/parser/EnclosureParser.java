@@ -26,13 +26,14 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 /**
  * A parser parsing scope sketches depending on a specific starting and ending pattern.
@@ -263,27 +264,54 @@ public class EnclosureParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		return Parsing.parseAll(tree, this.startPattern, this.endPattern, this.weight)
-					  .parallelStream()
-					  .map(m -> {
-						  Tree result = this.constructor.apply(tree.getDocument(), m.get(0));
+		List<Reference> match = Parsing.parseFirst(
+				tree,
+				this.startPattern,
+				this.endPattern,
+				this.weight
+		);
 
-						  if (this.startConstructor != null)
-							  this.startConstructor.accept(result, m.get(1));
-						  if (this.endConstructor != null)
-							  this.endConstructor.accept(result, m.get(2));
-						  if (this.bodyConstructor != null) {
-							  int position = m.get(1).position() + m.get(1).length();
-							  int length = m.get(2).position() - position;
+		if (match.isEmpty())
+			return Collections.emptySet();
 
-							  this.bodyConstructor.accept(
-									  result,
-									  new Reference(position, length)
-							  );
-						  }
+		Tree result = this.constructor.apply(tree.getDocument(), match.get(0));
 
-						  return result;
-					  })
-					  .collect(Collectors.toSet());
+		if (this.startConstructor != null)
+			this.startConstructor.accept(result, match.get(1));
+		if (this.endConstructor != null)
+			this.endConstructor.accept(result, match.get(2));
+		if (this.bodyConstructor != null) {
+			int position = match.get(1).position() + match.get(1).length();
+			int length = match.get(2).position() - position;
+
+			this.bodyConstructor.accept(
+					result,
+					new Reference(position, length)
+			);
+		}
+
+		return Collections.singleton(result);
+		//		return Parsing.parseAll(tree, this.startPattern, this.endPattern, this.weight)
+		//					  .parallelStream()
+		//					  .map(m -> {
+		//						  Tree result = this.constructor.apply(tree.getDocument(), m.get(0));
+		//
+		//						  if (this.startConstructor != null)
+		//							  this.startConstructor.accept(result, m.get(1));
+		//						  if (this.endConstructor != null)
+		//							  this.endConstructor.accept(result, m.get(2));
+		//						  if (this.bodyConstructor != null) {
+		//							  int position = m.get(1).position() + m.get(1).length();
+		//							  int length = m.get(2).position() - position;
+		//
+		//							  this.bodyConstructor.accept(
+		//									  result,
+		//									  new Reference(position, length)
+		//							  );
+		//						  }
+		//
+		//						  return result;
+		//					  })
+		//					  .collect(Collectors.toSet());
 	}
 }

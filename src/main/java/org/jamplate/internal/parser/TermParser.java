@@ -25,12 +25,12 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 /**
  * A parser parsing literal sketches depending on a specific pattern.
@@ -160,9 +160,21 @@ public class TermParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "sketch");
-		return Parsing.parseAll(tree, this.pattern, this.weight)
-					  .parallelStream()
-					  .map(m -> this.constructor.apply(tree.getDocument(), m))
-					  .collect(Collectors.toSet());
+		Reference match = Parsing.parseFirst(
+				tree,
+				this.pattern,
+				this.weight
+		);
+
+		if (match == null)
+			return Collections.emptySet();
+
+		Tree result = this.constructor.apply(tree.getDocument(), match);
+
+		return Collections.singleton(result);
+		//		return Parsing.parseAll(tree, this.pattern, this.weight)
+		//					  .parallelStream()
+		//					  .map(m -> this.constructor.apply(tree.getDocument(), m))
+		//					  .collect(Collectors.toSet());
 	}
 }

@@ -309,7 +309,7 @@ public final class Parsing {
 	 * @since 0.2.0 ~2021.05.15
 	 */
 	@Nullable
-	@Contract(value = "_,_,_->new", pure = true)
+	@Contract(pure = true)
 	public static Reference parseFirst(@NotNull Tree tree, @NotNull Pattern pattern, int weight) {
 		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(pattern, "pattern");
