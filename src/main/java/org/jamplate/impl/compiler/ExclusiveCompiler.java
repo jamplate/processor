@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -123,5 +125,11 @@ public class ExclusiveCompiler implements Compiler {
 				this.fallback,
 				compilation, tree
 		);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Arrays.asList(this.compiler, this.fallback).iterator();
 	}
 }

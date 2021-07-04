@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOError;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ import java.util.Set;
  * @since 0.2.0 ~2021.05.16
  */
 @FunctionalInterface
-public interface Parser {
+public interface Parser extends Iterable<Parser> {
 	/**
 	 * A parser that parses nothing.
 	 *
@@ -51,6 +52,18 @@ public interface Parser {
 			return "Parser.IDLE";
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-parsers of this parser.
+	 *
+	 * @return an iterator iterating over the sub-parsers of this parser.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Parser> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Parse the given {@code sketch} with respect to the given {@code compilation}.

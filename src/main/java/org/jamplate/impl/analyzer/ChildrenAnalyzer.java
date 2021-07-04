@@ -22,6 +22,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -80,5 +82,11 @@ public class ChildrenAnalyzer implements Analyzer {
 			modified |= this.analyzer.analyze(compilation, child);
 
 		return modified;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Analyzer> iterator() {
+		return Collections.singleton(this.analyzer).iterator();
 	}
 }

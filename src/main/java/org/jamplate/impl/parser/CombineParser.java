@@ -22,10 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -107,6 +104,12 @@ public class CombineParser implements Parser {
 	@Contract(value = "_->new", pure = true)
 	public static CombineParser combine(@NotNull Iterable<Parser> parsers) {
 		return new CombineParser(parsers);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Parser> iterator() {
+		return Collections.unmodifiableSet(this.parsers).iterator();
 	}
 
 	@NotNull

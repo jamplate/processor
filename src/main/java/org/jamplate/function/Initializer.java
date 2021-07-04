@@ -22,6 +22,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 /**
  * The initializer is a function that constructs a compilation for the document provided
  * to it.
@@ -31,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.2.0 ~2021.05.29
  */
 @FunctionalInterface
-public interface Initializer {
+public interface Initializer extends Iterable<Initializer> {
 	/**
 	 * An initializer that initializes nothing.
 	 *
@@ -50,6 +53,18 @@ public interface Initializer {
 			return "Initializer.IDLE";
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-initializers of this initializer.
+	 *
+	 * @return an iterator iterating over the sub-initializers of this initializer.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Initializer> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Initialize a compilation for the given {@code documents} in the given {@code

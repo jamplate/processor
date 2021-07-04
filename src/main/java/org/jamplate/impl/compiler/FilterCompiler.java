@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -92,5 +94,11 @@ public class FilterCompiler implements Compiler {
 		return this.predicate.test(tree) ?
 			   this.compiler.compile(compiler, compilation, tree) :
 			   null;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Collections.singleton(this.compiler).iterator();
 	}
 }

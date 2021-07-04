@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOError;
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * A compiler is a function that compiles {@link Tree}s into {@link Instruction}s
@@ -34,7 +36,7 @@ import java.io.IOError;
  * @since 0.2.0 ~2021.05.21
  */
 @FunctionalInterface
-public interface Compiler {
+public interface Compiler extends Iterable<Compiler> {
 	/**
 	 * A compiler that compiles nothing.
 	 *
@@ -53,6 +55,18 @@ public interface Compiler {
 			return "Compiler.IDLE";
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-compilers of this compiler.
+	 *
+	 * @return an iterator iterating over the sub-compilers of this compiler.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Compiler> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Compile the given {@code tree} and the trees in it. If this compiler cannot If this

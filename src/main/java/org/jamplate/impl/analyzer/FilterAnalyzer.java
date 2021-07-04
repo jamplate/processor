@@ -21,6 +21,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -88,5 +90,11 @@ public class FilterAnalyzer implements Analyzer {
 		Objects.requireNonNull(tree, "tree");
 		return this.predicate.test(tree) &&
 			   this.analyzer.analyze(compilation, tree);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Analyzer> iterator() {
+		return Collections.singleton(this.analyzer).iterator();
 	}
 }

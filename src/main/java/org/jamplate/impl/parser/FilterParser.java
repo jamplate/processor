@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -82,6 +83,12 @@ public class FilterParser implements Parser {
 	@Contract(value = "_,_->new", pure = true)
 	public static FilterParser filter(@NotNull Parser parser, @NotNull Predicate<Tree> predicate) {
 		return new FilterParser(predicate, parser);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Parser> iterator() {
+		return Collections.singleton(this.parser).iterator();
 	}
 
 	@NotNull

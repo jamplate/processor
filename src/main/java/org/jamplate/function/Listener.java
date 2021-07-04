@@ -20,6 +20,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 /**
  * A function that get invoked when an event occurred while processing a compilation.
  *
@@ -28,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.3.0 ~2021.07.02
  */
 @FunctionalInterface
-public interface Listener {
+public interface Listener extends Iterable<Listener> {
 	/**
 	 * A listener that does nothing.
 	 *
@@ -45,6 +48,18 @@ public interface Listener {
 		public void trigger(@NotNull String event, @Nullable Compilation compilation, @Nullable Object parameter) {
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-listeners of this listener.
+	 *
+	 * @return an iterator iterating over the sub-listeners of this listener.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Listener> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Invoke this listener because of the occurrence of an event with the given {@code

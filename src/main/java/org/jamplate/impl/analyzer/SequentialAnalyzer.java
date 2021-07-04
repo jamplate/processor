@@ -22,10 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,5 +121,11 @@ public class SequentialAnalyzer implements Analyzer {
 		for (Analyzer analyzer : this.analyzers)
 			analyzed |= analyzer.analyze(compilation, tree);
 		return analyzed;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Analyzer> iterator() {
+		return Collections.unmodifiableList(this.analyzers).iterator();
 	}
 }

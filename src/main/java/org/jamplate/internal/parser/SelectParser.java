@@ -21,6 +21,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,6 +87,12 @@ public class SelectParser implements Parser {
 			@NotNull Parser parser
 	) {
 		return new SelectParser(selector, parser);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Parser> iterator() {
+		return Arrays.asList(this.selector, this.parser).iterator();
 	}
 
 	@NotNull

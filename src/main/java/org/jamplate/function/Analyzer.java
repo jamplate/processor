@@ -21,6 +21,9 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 /**
  * A function that analyzes the trees given to it and modify them (if necessary) depending
  * on its analytic results.
@@ -30,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.2.0 ~2021.05.28
  */
 @FunctionalInterface
-public interface Analyzer {
+public interface Analyzer extends Iterable<Analyzer> {
 	/**
 	 * An analyzer that does nothing.
 	 *
@@ -48,6 +51,18 @@ public interface Analyzer {
 			return "Analyzer.IDLE";
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-analyzers of this analyzer.
+	 *
+	 * @return an iterator iterating over the sub-analyzers of this analyzer.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Analyzer> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Analyze the given {@code tree} and its relative trees.

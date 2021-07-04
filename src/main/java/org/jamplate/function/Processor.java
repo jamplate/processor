@@ -19,6 +19,9 @@ import org.jamplate.model.Compilation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 /**
  * A processor is a function that takes a sketch and a compilation and process it its way
  * (for example: parsing its value).
@@ -28,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 0.2.0 ~2021.04.28
  */
 @FunctionalInterface
-public interface Processor {
+public interface Processor extends Iterable<Processor> {
 	/**
 	 * A processor that does nothing.
 	 *
@@ -46,6 +49,18 @@ public interface Processor {
 			return "Processor.IDLE";
 		}
 	};
+
+	/**
+	 * Return an immutable iterator iterating over sub-processors of this processor.
+	 *
+	 * @return an iterator iterating over the sub-processors of this processor.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Override
+	default Iterator<Processor> iterator() {
+		return Collections.emptyIterator();
+	}
 
 	/**
 	 * Process the given {@code compilation}.

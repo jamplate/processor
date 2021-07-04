@@ -21,10 +21,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -113,6 +110,12 @@ public class SequentialListener implements Listener {
 	@Contract(value = "_->new", pure = true)
 	public static SequentialListener sequential(@NotNull List<Listener> listeners) {
 		return new SequentialListener(listeners);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Listener> iterator() {
+		return Collections.unmodifiableList(this.listeners).iterator();
 	}
 
 	@Override

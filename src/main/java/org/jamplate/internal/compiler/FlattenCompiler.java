@@ -25,9 +25,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A compiler that compiles using two compilers.
@@ -154,5 +152,11 @@ public class FlattenCompiler implements Compiler {
 
 		//nulls are auto filtered
 		return new Block(tree, instructions);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Arrays.asList(this.compiler, this.fallBack).iterator();
 	}
 }

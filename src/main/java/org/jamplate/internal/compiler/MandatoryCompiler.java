@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -83,5 +85,11 @@ public class MandatoryCompiler implements Compiler {
 			);
 
 		return instruction;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Collections.singleton(this.compiler).iterator();
 	}
 }
