@@ -117,6 +117,8 @@ public class CommandSpec extends MultiSpec {
 						enclosure(
 								"(?<=^|[\r\n])[\\t ]*#",
 								"(?=(?<!\\\\)[\\r\\n]|$)",
+								0,
+								true,
 								(d, r) -> new Tree(
 										d,
 										r,
