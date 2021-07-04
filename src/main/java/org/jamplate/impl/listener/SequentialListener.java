@@ -15,8 +15,8 @@
  */
 package org.jamplate.impl.listener;
 
+import org.jamplate.api.Event;
 import org.jamplate.function.Listener;
-import org.jamplate.model.Compilation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -119,9 +119,9 @@ public class SequentialListener implements Listener {
 	}
 
 	@Override
-	public void trigger(@NotNull String event, @Nullable Compilation compilation, @Nullable Object parameter) {
+	public void trigger(@NotNull Event event) {
 		Objects.requireNonNull(event, "event");
 		for (Listener listener : this.listeners)
-			listener.trigger(event, compilation, parameter);
+			listener.trigger(event);
 	}
 }

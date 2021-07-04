@@ -1,12 +1,6 @@
 package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Unit;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
-import org.jamplate.model.Document;
-import org.jamplate.memory.Memory;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.operator.AdderSpec;
@@ -20,8 +14,14 @@ import org.jamplate.glucose.spec.syntax.symbol.ExclamationSpec;
 import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
+import org.jamplate.impl.api.Action;
+import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.memory.Memory;
+import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -52,20 +52,18 @@ public class ObjectSpecTest {
 				PairSpec.INSTANCE
 		));
 		unit.getSpec().add(DebugSpec.INSTANCE);
-		unit.getSpec().add(new EditSpec().setListener(
-				(event, compilation, parameter) -> {
-					if (event.equals(Event.POST_EXEC)) {
-						Memory memory = (Memory) parameter;
-						String results = memory.peek().evaluate(memory);
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String results = memory.peek().evaluate(memory);
 
-						assertEquals(
-								expected,
-								results,
-								"Unexpected results"
-						);
-					}
-				}
-		));
+				assertEquals(
+						expected,
+						results,
+						"Unexpected results"
+				);
+			}
+		}));
 
 		//run
 		if (
@@ -107,20 +105,18 @@ public class ObjectSpecTest {
 				PairSpec.INSTANCE
 		));
 		unit.getSpec().add(DebugSpec.INSTANCE);
-		unit.getSpec().add(new EditSpec().setListener(
-				(event, compilation, parameter) -> {
-					if (event.equals(Event.POST_EXEC)) {
-						Memory memory = (Memory) parameter;
-						String results = memory.peek().evaluate(memory);
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String results = memory.peek().evaluate(memory);
 
-						assertEquals(
-								expected,
-								results,
-								"Unexpected results"
-						);
-					}
-				}
-		));
+				assertEquals(
+						expected,
+						results,
+						"Unexpected results"
+				);
+			}
+		}));
 
 		//run
 		if (
@@ -160,20 +156,18 @@ public class ObjectSpecTest {
 				PairSpec.INSTANCE
 		));
 		unit.getSpec().add(DebugSpec.INSTANCE);
-		unit.getSpec().add(new EditSpec().setListener(
-				(event, compilation, parameter) -> {
-					if (event.equals(Event.POST_EXEC)) {
-						Memory memory = (Memory) parameter;
-						String results = memory.peek().evaluate(memory);
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String results = memory.peek().evaluate(memory);
 
-						assertEquals(
-								"{1:9,2:8,3:7,4:6,5:5}",
-								results,
-								"Unexpected results"
-						);
-					}
-				}
-		));
+				assertEquals(
+						"{1:9,2:8,3:7,4:6,5:5}",
+						results,
+						"Unexpected results"
+				);
+			}
+		}));
 
 		//run
 		if (

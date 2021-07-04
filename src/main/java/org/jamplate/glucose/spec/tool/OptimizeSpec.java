@@ -17,7 +17,8 @@ package org.jamplate.glucose.spec.tool;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Listener;
-import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.Action;
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,14 +50,14 @@ public class OptimizeSpec implements Spec {
 	@NotNull
 	@Override
 	public Listener getListener() {
-		return (event, compilation, parameter) -> {
-			if (event.equals(Event.OPTIMIZE)) {
+		return event -> {
+			if (event.getAction().equals(Action.OPTIMIZE)) {
+				Compilation compilation = event.getCompilation();
 				Instruction instruction = compilation.getInstruction();
-
-				Number mode = (Number) parameter;
+				int mode = event.getExtra("mode");
 
 				if (instruction != null) {
-					Instruction optimized = instruction.optimize(mode.intValue());
+					Instruction optimized = instruction.optimize(mode);
 
 					compilation.setInstruction(optimized);
 				}

@@ -20,11 +20,12 @@ import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Listener;
-import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.Action;
 import org.jamplate.impl.diagnostic.MessagePriority;
 import org.jamplate.memory.Console;
 import org.jamplate.memory.Frame;
 import org.jamplate.memory.Memory;
+import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -60,14 +61,15 @@ public class DebugSpec implements Spec {
 	@NotNull
 	public static final String NAME = DebugSpec.class.getSimpleName();
 
-	@SuppressWarnings({"OverlyLongLambda", "OverlyLongMethod"})
+	@SuppressWarnings({"OverlyLongLambda", "OverlyLongMethod", "OverlyCoupledMethod"})
 	@NotNull
 	@Override
 	public Listener getListener() {
-		return (event, compilation, parameter) -> {
-			switch (event) {
-				case Event.DIAGNOSTIC:
-					Diagnostic diagnostic = (Diagnostic) parameter;
+		return event -> {
+			//noinspection SwitchStatementDensity
+			switch (event.getAction()) {
+				case Action.DIAGNOSTIC:
+					Diagnostic diagnostic = event.getDiagnostic();
 
 					for (Message message : diagnostic)
 						if (message.isFetal()) {
@@ -102,26 +104,27 @@ public class DebugSpec implements Spec {
 							}
 						}
 					break;
-				case Event.POST_INIT:
-				case Event.POST_PARSE:
-				case Event.POST_ANALYZE:
-				case Event.POST_COMPILE:
-				case Event.PRE_EXEC:
-				case Event.POST_EXEC:
-					Tree tree = compilation.getRootTree();
-					Instruction instruction = compilation.getInstruction();
-					Document document = tree.getDocument();
+				case Action.POST_INIT:
+				case Action.POST_PARSE:
+				case Action.POST_ANALYZE:
+				case Action.POST_COMPILE:
+				case Action.PRE_EXEC:
+				case Action.POST_EXEC:
+					Compilation compilation = event.getCompilation();
+					Instruction instruction = event.getInstruction();
+					Document document = event.getDocument();
+					Unit unit = event.getUnit();
+					Memory memory = event.getMemory();
+					Tree tree = event.getTree();
 
 					//head
-					System.out.println("Event (" + event + ") :");
+					System.out.println("Action [" + event.getAction() + "]:");
 
 					//document
 					System.out.println("\t|- Document: " + document);
 
 					//spec
-					if (parameter instanceof Unit) {
-						Unit unit = (Unit) parameter;
-
+					if (unit != null) {
 						System.out.println("\t|- Spec:");
 						System.out.print(this.format(2, unit.getSpec()));
 					}
@@ -133,13 +136,11 @@ public class DebugSpec implements Spec {
 					//instruction
 					if (instruction != null) {
 						System.out.println("\t|- Instruction:");
-						System.out.print(this.format(2, compilation.getInstruction()));
+						System.out.print(this.format(2, instruction));
 					}
 
 					//memory
-					if (parameter instanceof Memory) {
-						Memory memory = (Memory) parameter;
-
+					if (memory != null) {
 						System.out.println("\t|- Memory:");
 
 						for (Frame frame : memory)

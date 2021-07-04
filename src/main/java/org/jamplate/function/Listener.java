@@ -15,10 +15,9 @@
  */
 package org.jamplate.function;
 
-import org.jamplate.model.Compilation;
+import org.jamplate.api.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,7 +44,7 @@ public interface Listener extends Iterable<Listener> {
 		}
 
 		@Override
-		public void trigger(@NotNull String event, @Nullable Compilation compilation, @Nullable Object parameter) {
+		public void trigger(@NotNull Event event) {
 		}
 	};
 
@@ -65,12 +64,10 @@ public interface Listener extends Iterable<Listener> {
 	 * Invoke this listener because of the occurrence of an event with the given {@code
 	 * event} name.
 	 *
-	 * @param event       the name of the event occurred.
-	 * @param compilation the compilation the event occurred on.
-	 * @param parameter   the invocation parameter.
+	 * @param event the name of the event occurred.
 	 * @throws NullPointerException if the given {@code event} is null.
 	 * @since 0.3.0 ~2021.07.02
 	 */
-	@Contract(mutates = "param2,param3")
-	void trigger(@NotNull String event, @Nullable Compilation compilation, @Nullable Object parameter);
+	@Contract(mutates = "this,param")
+	void trigger(@NotNull Event event);
 }

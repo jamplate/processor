@@ -2,13 +2,6 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
-import org.jamplate.model.Document;
-import org.jamplate.model.Environment;
-import org.jamplate.memory.Memory;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.operator.AdderSpec;
@@ -18,6 +11,12 @@ import org.jamplate.glucose.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
+import org.jamplate.impl.api.Action;
+import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.memory.Memory;
+import org.jamplate.model.Document;
+import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -25,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -50,20 +50,18 @@ public class GroupSpecTest {
 				AdderSpec.INSTANCE,
 				MultiplierSpec.INSTANCE
 		));
-		unit.getSpec().add(new EditSpec().setListener(
-				(event, compilation, parameter) -> {
-					if (event.equals(Event.POST_EXEC)) {
-						Memory memory = (Memory) parameter;
-						String actual = memory.peek().evaluate(memory);
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String actual = memory.peek().evaluate(memory);
 
-						assertEquals(
-								expected,
-								actual,
-								"Unexpected results"
-						);
-					}
-				}
-		));
+				assertEquals(
+						expected,
+						actual,
+						"Unexpected results"
+				);
+			}
+		}));
 
 		if (
 				!unit.initialize(document) ||
@@ -119,20 +117,18 @@ public class GroupSpecTest {
 				AdderSpec.INSTANCE,
 				MultiplierSpec.INSTANCE
 		));
-		unit.getSpec().add(new EditSpec().setListener(
-				(event, compilation, parameter) -> {
-					if (event.equals(Event.POST_EXEC)) {
-						Memory memory = (Memory) parameter;
-						String actual = memory.peek().evaluate(memory);
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String actual = memory.peek().evaluate(memory);
 
-						assertEquals(
-								expected,
-								actual,
-								"Unexpected results"
-						);
-					}
-				}
-		));
+				assertEquals(
+						expected,
+						actual,
+						"Unexpected results"
+				);
+			}
+		}));
 
 		if (
 				!unit.initialize(document) ||

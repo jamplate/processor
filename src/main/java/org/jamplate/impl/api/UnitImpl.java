@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl.api;
 
+import org.jamplate.api.Event;
 import org.jamplate.api.Spec;
 import org.jamplate.api.Unit;
-import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.*;
 import org.jamplate.impl.diagnostic.MessageImpl;
@@ -29,7 +29,6 @@ import org.jamplate.memory.Memory;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOError;
 import java.util.Objects;
@@ -121,7 +120,10 @@ public class UnitImpl implements Unit {
 				;
 
 			//post-analyze
-			listener.trigger(Event.POST_ANALYZE, compilation, this);
+			listener.trigger(new Event(
+					Action.POST_ANALYZE,
+					this, compilation
+			));
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -192,7 +194,10 @@ public class UnitImpl implements Unit {
 			compilation.setInstruction(instruction);
 
 			//post-compile
-			listener.trigger(Event.POST_COMPILE, compilation, this);
+			listener.trigger(new Event(
+					Action.POST_COMPILE,
+					this, compilation
+			));
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -234,9 +239,10 @@ public class UnitImpl implements Unit {
 		Spec spec = this.spec;
 		Listener listener = spec.getListener();
 
-		Diagnostic diagnostic = environment.getDiagnostic();
-
-		listener.trigger(Event.DIAGNOSTIC, null, diagnostic);
+		listener.trigger(new Event(
+				Action.DIAGNOSTIC,
+				this
+		));
 	}
 
 	@Override
@@ -254,20 +260,25 @@ public class UnitImpl implements Unit {
 			throw new IllegalStateException("No instruction to execute");
 
 		Memory memory = new Memory();
+		memory.getFrame().setInstruction(instruction);
 
 		//execute
 		try {
 			//pre-execution
-			listener.trigger(Event.PRE_EXEC, compilation, memory);
-
-			memory.getFrame().setInstruction(instruction);
+			listener.trigger(new Event(
+					Action.PRE_EXEC,
+					this, compilation, memory
+			));
 
 			instruction.exec(environment, memory);
 
 			memory.getConsole().close();
 
 			//post-execution
-			listener.trigger(Event.POST_EXEC, compilation, memory);
+			listener.trigger(new Event(
+					Action.POST_EXEC,
+					this, compilation, memory
+			));
 			return true;
 		} catch (ExecutionException e) {
 			environment.getDiagnostic()
@@ -352,7 +363,10 @@ public class UnitImpl implements Unit {
 
 		environment.setCompilation(document, compilation);
 
-		listener.trigger(Event.POST_INIT, compilation, this);
+		listener.trigger(new Event(
+				Action.POST_INIT,
+				this, compilation
+		));
 
 		return true;
 	}
@@ -365,7 +379,10 @@ public class UnitImpl implements Unit {
 
 		Compilation compilation = this.requireCompilation(document);
 
-		listener.trigger(Event.OPTIMIZE, compilation, mode);
+		listener.trigger(new Event(
+				Action.OPTIMIZE,
+				this, compilation
+		).putExtra("mode", mode));
 	}
 
 	@Override
@@ -398,7 +415,10 @@ public class UnitImpl implements Unit {
 			}
 
 			//post-parse
-			listener.trigger(Event.POST_PARSE, compilation, this);
+			listener.trigger(new Event(
+					Action.POST_PARSE,
+					this, compilation
+			));
 			return true;
 		} catch (IllegalTreeException e) {
 			environment.getDiagnostic()
@@ -444,18 +464,6 @@ public class UnitImpl implements Unit {
 	public void setSpec(@NotNull Spec spec) {
 		Objects.requireNonNull(spec, "spec");
 		this.spec = spec;
-	}
-
-	@Override
-	public void trigger(@NotNull String event, @NotNull Document document, @Nullable Object parameter) {
-		Objects.requireNonNull(event, "event");
-		Objects.requireNonNull(document, "document");
-		Spec spec = this.spec;
-		Listener listener = spec.getListener();
-
-		Compilation compilation = this.requireCompilation(document);
-
-		listener.trigger(event, compilation, parameter);
 	}
 
 	/**

@@ -6,15 +6,6 @@ import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Compare;
 import org.jamplate.glucose.instruction.operator.logic.Negate;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.EnvironmentImpl;
-import org.jamplate.impl.model.PseudoDocument;
-import org.jamplate.model.Document;
-import org.jamplate.model.Environment;
-import org.jamplate.memory.Memory;
-import org.jamplate.memory.Value;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.NumberSpec;
@@ -23,8 +14,17 @@ import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
 import org.jamplate.glucose.value.NumberValue;
+import org.jamplate.impl.api.Action;
+import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.model.EnvironmentImpl;
+import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
+import org.jamplate.model.Document;
+import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -90,20 +90,18 @@ public class MoreThanSpecTest {
 						MoreThanSpec.INSTANCE,
 						SubtractorSpec.INSTANCE
 				));
-				unit.getSpec().add(new EditSpec().setListener(
-						(event, compilation, parameter) -> {
-							if (event.equals(Event.POST_EXEC)) {
-								Memory memory = (Memory) parameter;
-								String actual = memory.peek().evaluate(memory);
+				unit.getSpec().add(listener(event -> {
+					if (event.getAction().equals(Action.POST_EXEC)) {
+						Memory memory = event.getMemory();
+						String actual = memory.peek().evaluate(memory);
 
-								assertEquals(
-										expected,
-										actual,
-										"Unexpected result"
-								);
-							}
-						}
-				));
+						assertEquals(
+								expected,
+								actual,
+								"Unexpected result"
+						);
+					}
+				}));
 
 				if (
 						!unit.initialize(document) ||

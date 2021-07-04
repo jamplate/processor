@@ -9,8 +9,7 @@ import org.jamplate.glucose.spec.syntax.symbol.ExclamationSpec;
 import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.Action;
 import org.jamplate.impl.api.UnitImpl;
 import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.internal.util.Query;
@@ -18,11 +17,13 @@ import org.jamplate.memory.Memory;
 import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Specs.compiler;
+import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -48,20 +49,18 @@ public class NotSpecTest {
 					//operator
 					NotSpec.INSTANCE
 			));
-			unit.getSpec().add(new EditSpec().setListener(
-					(event, compilation, parameter) -> {
-						if (event.equals(Event.POST_EXEC)) {
-							Memory memory = (Memory) parameter;
-							String actual = memory.peek().evaluate(memory);
+			unit.getSpec().add(listener(event -> {
+				if (event.getAction().equals(Action.POST_EXEC)) {
+					Memory memory = event.getMemory();
+					String actual = memory.peek().evaluate(memory);
 
-							assertEquals(
-									expected,
-									actual,
-									"Unexpected result"
-							);
-						}
-					}
-			));
+					assertEquals(
+							expected,
+							actual,
+							"Unexpected result"
+					);
+				}
+			}));
 
 			if (
 					!unit.initialize(document) ||
@@ -89,32 +88,28 @@ public class NotSpecTest {
 		unit.getSpec().add(NotSpec.INSTANCE);
 		unit.getSpec().add(ReferenceSpec.INSTANCE);
 		unit.getSpec().add(DebugSpec.INSTANCE);
-		unit.getSpec().add(new EditSpec()
-				.setCompiler(
-						flatten(
-								mandatory(fallback()),
-								mandatory(compiler(
-										c -> filter(c, Query.whitespace()),
-										c -> (compiler, compilation, tree) -> Idle.INSTANCE
-								))
-						)
+		unit.getSpec().add(compiler(
+				flatten(
+						mandatory(fallback()),
+						mandatory(compiler(
+								c -> filter(c, Query.whitespace()),
+								c -> (compiler, compilation, tree) -> Idle.INSTANCE
+						))
 				)
-				.setListener(
-						(event, compilation, parameter) -> {
-							if (event.equals(Event.POST_EXEC)) {
-								Memory memory = (Memory) parameter;
-								String result = memory.pop().evaluate(memory);
+		));
+		unit.getSpec().add(listener(event -> {
+			if (event.getAction().equals(Action.POST_EXEC)) {
+				Memory memory = event.getMemory();
+				String result = memory.pop().evaluate(memory);
 
-								//noinspection SpellCheckingInspection
-								assertEquals(
-										"truefalse",
-										result,
-										"!!!false + !!!true = truefalse"
-								);
-							}
-						}
-				)
-		);
+				//noinspection SpellCheckingInspection
+				assertEquals(
+						"truefalse",
+						result,
+						"!!!false + !!!true = truefalse"
+				);
+			}
+		}));
 
 		//run
 		if (

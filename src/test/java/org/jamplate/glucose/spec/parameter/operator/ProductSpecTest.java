@@ -11,8 +11,7 @@ import org.jamplate.glucose.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.Action;
 import org.jamplate.impl.api.UnitImpl;
 import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.memory.Memory;
@@ -24,6 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Specs.compiler;
+import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -51,21 +52,19 @@ public class ProductSpecTest {
 						MultiplierSpec.INSTANCE,
 						SubtractorSpec.INSTANCE
 				));
-				unit.getSpec().add(new EditSpec()
-						.setListener((event, compilation, parameter) -> {
-							if (event.equals(Event.POST_EXEC)) {
-								Memory memory = (Memory) parameter;
+				unit.getSpec().add(listener(event -> {
+					if (event.getAction().equals(Action.POST_EXEC)) {
+						Memory memory = event.getMemory();
 
-								String actual = memory.peek().evaluate(memory);
+						String actual = memory.peek().evaluate(memory);
 
-								assertEquals(
-										expected,
-										actual,
-										"Unexpected result"
-								);
-							}
-						})
-				);
+						assertEquals(
+								expected,
+								actual,
+								"Unexpected result"
+						);
+					}
+				}));
 
 				if (
 						!unit.initialize(document) ||
@@ -91,67 +90,63 @@ public class ProductSpecTest {
 		unit.getSpec().add(LogicSpec.INSTANCE);
 		unit.getSpec().add(MultiplierSpec.INSTANCE);
 		unit.getSpec().add(NumberSpec.INSTANCE);
-		unit.getSpec().add(new EditSpec()
-				.setCompiler(
-						flatten(
-								fallback(),
-								(compiler, compilation, tree) -> Idle.INSTANCE
-						)
+		unit.getSpec().add(compiler(
+				flatten(
+						fallback(),
+						(compiler, compilation, tree) -> Idle.INSTANCE
 				)
-				.setListener(
-						(event, compilation, parameter) -> {
-							//noinspection SwitchStatementDensity
-							switch (event) {
-								case Event.POST_INIT: {
-									//pseudo parse
-									Tree root = compilation.getRootTree();
+		));
+		unit.getSpec().add(listener(event -> {
+			//noinspection SwitchStatementDensity
+			switch (event.getAction()) {
+				case Action.POST_INIT: {
+					//pseudo parse
+					Tree root = event.getTree();
 
-									root.getSketch().setKind(ParameterSpec.KIND);
-									root.offer(new Tree(
-											document,
-											new Reference(0, 2),
-											new Sketch(DigitsSpec.KIND)
-									));
-									root.offer(new Tree(
-											document,
-											new Reference(3, 1),
-											new Sketch(AsteriskSpec.KIND)
-									));
-									root.offer(new Tree(
-											document,
-											new Reference(5, 1),
-											new Sketch(DigitsSpec.KIND)
-									));
-									break;
-								}
-								case Event.POST_EXEC: {
-									Memory memory = (Memory) parameter;
-									String result = memory.pop().evaluate(memory);
+					root.getSketch().setKind(ParameterSpec.KIND);
+					root.offer(new Tree(
+							document,
+							new Reference(0, 2),
+							new Sketch(DigitsSpec.KIND)
+					));
+					root.offer(new Tree(
+							document,
+							new Reference(3, 1),
+							new Sketch(AsteriskSpec.KIND)
+					));
+					root.offer(new Tree(
+							document,
+							new Reference(5, 1),
+							new Sketch(DigitsSpec.KIND)
+					));
+					break;
+				}
+				case Action.POST_EXEC: {
+					Memory memory = event.getMemory();
+					String result = memory.pop().evaluate(memory);
 
-									assertEquals(
-											"270",
-											result,
-											"45 * 6 = 270"
-									);
-									break;
-								}
-								case Event.DIAGNOSTIC: {
-									Diagnostic diagnostic = (Diagnostic) parameter;
+					assertEquals(
+							"270",
+							result,
+							"45 * 6 = 270"
+					);
+					break;
+				}
+				case Action.DIAGNOSTIC: {
+					Diagnostic diagnostic = event.getDiagnostic();
 
-									for (Message message : diagnostic)
-										if (message.isFetal())
-											if (message.getException() == null)
-												throw new RuntimeException(message.getMessagePhrase());
-											else
-												throw new RuntimeException(message.getException());
+					for (Message message : diagnostic)
+						if (message.isFetal())
+							if (message.getException() == null)
+								throw new RuntimeException(message.getMessagePhrase());
+							else
+								throw new RuntimeException(message.getException());
 
-									diagnostic.flush(true);
-									break;
-								}
-							}
-						}
-				)
-		);
+					diagnostic.flush(true);
+					break;
+				}
+			}
+		}));
 
 		//run
 		if (

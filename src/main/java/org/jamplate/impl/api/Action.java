@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.07.02
  */
-public final class Event {
+public final class Action {
 	/**
 	 * The name of the event that gets triggered to handle the diagnostic messages.
 	 * <br>
@@ -123,7 +123,7 @@ public final class Event {
 	 * @throws AssertionError when called.
 	 * @since 0.3.0 ~2021.07.02
 	 */
-	private Event() {
+	private Action() {
 		throw new AssertionError("No instance for you");
 	}
 }
