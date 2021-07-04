@@ -17,13 +17,13 @@ package org.jamplate.glucose.spec.misc;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * Comment line specifications.
@@ -61,33 +61,35 @@ public class CommentLineSpec implements Spec {
 	@Override
 	public Parser getParser() {
 		//parse only on the first round
-		return new EnclosureParser(
-				Pattern.compile("//"),
-				Pattern.compile("(?=[\r\n])(?<!\\\\)|(?=$)"),
-				//enclosure constructor
-				(d, r) -> new Tree(
-						d,
-						r,
-						new Sketch(CommentLineSpec.KIND)
-				),
-				//open anchor constructor
-				(t, r) -> t.offer(new Tree(
-						t.getDocument(),
-						t.getSketch()
-						 .get(AnchorSpec.KEY_OPEN)
-						 .setKind(AnchorSpec.KIND_OPEN)
-				)),
-				//close anchor constructor
-				null,
-				//body wrapper constructor
-				(t, r) -> t.offer(new Tree(
-						t.getDocument(),
-						r,
-						t.getSketch()
-						 .get(AnchorSpec.KEY_BODY)
-						 .setKind(AnchorSpec.KIND_BODY),
-						AnchorSpec.WEIGHT_BODY
-				))
+		return parser(
+				p -> enclosure(
+						"//",
+						"(?=[\r\n])(?<!\\\\)|(?=$)",
+						//enclosure constructor
+						(d, r) -> new Tree(
+								d,
+								r,
+								new Sketch(CommentLineSpec.KIND)
+						),
+						//open anchor constructor
+						(t, r) -> t.offer(new Tree(
+								t.getDocument(),
+								t.getSketch()
+								 .get(AnchorSpec.KEY_OPEN)
+								 .setKind(AnchorSpec.KIND_OPEN)
+						)),
+						//close anchor constructor
+						null,
+						//body wrapper constructor
+						(t, r) -> t.offer(new Tree(
+								t.getDocument(),
+								r,
+								t.getSketch()
+								 .get(AnchorSpec.KEY_BODY)
+								 .setKind(AnchorSpec.KIND_BODY),
+								AnchorSpec.WEIGHT_BODY
+						))
+				)
 		);
 	}
 

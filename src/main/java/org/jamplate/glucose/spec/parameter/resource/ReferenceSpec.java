@@ -25,12 +25,14 @@ import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.memory.stack.Dup;
 import org.jamplate.glucose.instruction.memory.stack.Pop;
 import org.jamplate.glucose.instruction.operator.logic.Defined;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Parameter reference specification.
@@ -60,13 +62,13 @@ public class ReferenceSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target words
-				c -> new FilterByKindCompiler(WordSpec.KIND, c),
+				c -> filter(c, is(WordSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//read the tree
-					String text = IO.read(tree).toString();
+					String text = Source.read(tree).toString();
 
 					//compile to Access
 					return new Block(

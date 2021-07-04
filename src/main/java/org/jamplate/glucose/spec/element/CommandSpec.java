@@ -19,14 +19,14 @@ import cufy.util.Node;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.impl.api.MultiSpec;
-import org.jamplate.internal.function.parser.router.PseudoTreeParser;
-import org.jamplate.internal.function.parser.pattern.EnclosureParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
+import static org.jamplate.internal.function.parser.SelectParser.select;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * A class containing command internal specifications.
@@ -73,6 +73,14 @@ public class CommandSpec extends MultiSpec {
 	public static final Node.Key KEY_VALUE = Sketch.component("command:value");
 
 	/**
+	 * The kind of commands placeholder.
+	 *
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	public static final String KIND = "command";
+
+	/**
 	 * The qualified name of this spec.
 	 *
 	 * @since 0.3.0 ~2021.06.19
@@ -81,12 +89,19 @@ public class CommandSpec extends MultiSpec {
 	public static final String NAME = CommandSpec.class.getSimpleName();
 
 	/**
+	 * The default {@code weight} of a command tree.
+	 *
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	public static final int WEIGHT = 0;
+
+	/**
 	 * Construct a new commands spec.
 	 *
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	public CommandSpec() {
-		super(ParameterSpec.NAME);
+		super(CommandSpec.NAME);
 	}
 
 	/**
@@ -97,26 +112,33 @@ public class CommandSpec extends MultiSpec {
 	 * @since 0.3.0 ~2021.06.25
 	 */
 	public CommandSpec(@Nullable Spec @NotNull ... subspecs) {
-		super(ParameterSpec.NAME, subspecs);
+		super(CommandSpec.NAME, subspecs);
 	}
 
 	@NotNull
 	@Override
 	public Parser getParser() {
 		//parse only in the first round
-		return new PseudoTreeParser(
-				new EnclosureParser(
-						Pattern.compile("(?<=^|[\r\n])[\\t ]*#"),
-						Pattern.compile("(?=(?<!\\\\)[\\r\\n]|$)"),
-						Tree::new
-				),
-				super.getParser()
+		return parser(
+				//select then parse
+				p -> select(
+						//select valid command trees
+						enclosure(
+								"(?<=^|[\r\n])[\\t ]*#",
+								"(?=(?<!\\\\)[\\r\\n]|$)",
+								(d, r) -> new Tree(
+										d,
+										r,
+										new Sketch(CommandSpec.KIND),
+										CommandSpec.WEIGHT
+								),
+								null,
+								null,
+								null
+						),
+						//parse selected trees using subspecs
+						super.getParser()
+				)
 		);
-	}
-
-	@NotNull
-	@Override
-	public String getQualifiedName() {
-		return CommandSpec.NAME;
 	}
 }

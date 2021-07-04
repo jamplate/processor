@@ -1,17 +1,7 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.impl.api.EditSpec;
-import org.jamplate.impl.api.Event;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterWhitespaceCompiler;
-import org.jamplate.internal.function.compiler.mode.MandatoryCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.impl.model.PseudoDocument;
-import org.jamplate.model.Document;
-import org.jamplate.memory.Memory;
+import org.jamplate.glucose.instruction.flow.Idle;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.ReferenceSpec;
@@ -19,8 +9,20 @@ import org.jamplate.glucose.spec.syntax.symbol.ExclamationSpec;
 import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
+import org.jamplate.impl.api.EditSpec;
+import org.jamplate.impl.api.Event;
+import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.internal.util.Query;
+import org.jamplate.memory.Memory;
+import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.function.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.compiler;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -89,9 +91,12 @@ public class NotSpecTest {
 		unit.getSpec().add(DebugSpec.INSTANCE);
 		unit.getSpec().add(new EditSpec()
 				.setCompiler(
-						new FlattenCompiler(
-								new MandatoryCompiler(FallbackCompiler.INSTANCE),
-								new MandatoryCompiler(new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE))
+						flatten(
+								mandatory(fallback()),
+								mandatory(compiler(
+										c -> filter(c, Query.whitespace()),
+										c -> (compiler, compilation, tree) -> Idle.INSTANCE
+								))
 						)
 				)
 				.setListener(

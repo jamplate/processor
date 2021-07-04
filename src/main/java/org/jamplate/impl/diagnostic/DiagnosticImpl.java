@@ -17,7 +17,7 @@ package org.jamplate.impl.diagnostic;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.internal.util.IO;
+import org.jamplate.internal.util.Source;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,15 +86,15 @@ public class DiagnosticImpl implements Diagnostic {
 					   .append("(")
 					   .append(criticalPoint.getDocument())
 					   .append(":")
-					   .append(IO.line(criticalPoint))
+					   .append(Source.optLine(criticalPoint))
 					   .append(") ")
 					   .append("\n\t")
-					   .append(IO.readLine(criticalPoint))
+					   .append(Source.optReadLine(criticalPoint))
 					   .append("\n\t")
 					   .append(String.join(
 							   "",
 							   Collections.nCopies(
-									   IO.positionInLine(criticalPoint),
+									   Source.optLinePosition(criticalPoint),
 									   " "
 							   )
 					   ))
@@ -103,7 +103,8 @@ public class DiagnosticImpl implements Diagnostic {
 							   "",
 							   Collections.nCopies(
 									   Math.max(
-											   criticalPoint.getReference().length() - 1, 0),
+											   criticalPoint.getReference().length() -
+											   1, 0),
 									   "-"
 							   )
 					   ));
@@ -114,7 +115,7 @@ public class DiagnosticImpl implements Diagnostic {
 				   .append("(")
 				   .append(trace.getDocument())
 				   .append(":")
-				   .append(IO.line(trace))
+				   .append(Source.optLine(trace))
 				   .append(")");
 
 		if (debug || message.getPriority().equals(MessagePriority.DEBUG)) {

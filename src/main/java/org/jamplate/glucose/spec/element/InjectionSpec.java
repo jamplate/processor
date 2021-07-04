@@ -24,18 +24,19 @@ import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.parser.pattern.EnclosureParser;
-import org.jamplate.internal.function.parser.router.HierarchyParser;
-import org.jamplate.internal.util.Functions;
+import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
-import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
+import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * Injection {@code #{...}#} specification.
@@ -44,7 +45,6 @@ import java.util.regex.Pattern;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings("OverlyCoupledMethod")
 public class InjectionSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -78,12 +78,19 @@ public class InjectionSpec implements Spec {
 	@NotNull
 	public static final String NAME = InjectionSpec.class.getSimpleName();
 
+	/**
+	 * The default {@code weight} of an injection tree.
+	 *
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	public static final int WEIGHT = 0;
+
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target injections
-				c -> new FilterByKindCompiler(InjectionSpec.KIND, c),
+				c -> filter(c, is(InjectionSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//gather component trees
@@ -131,18 +138,19 @@ public class InjectionSpec implements Spec {
 	@NotNull
 	@Override
 	public Parser getParser() {
-		return Functions.parser(
+		return parser(
 				//search in the whole hierarchy
-				HierarchyParser::new,
+				p -> hierarchy(p),
 				//target injections
-				p -> new EnclosureParser(
-						Pattern.compile("#\\{"),
-						Pattern.compile("\\}#"),
+				p -> enclosure(
+						"#\\{",
+						"\\}#",
 						//enclosure constructor
 						(d, r) -> new Tree(
 								d,
 								r,
-								new Sketch(InjectionSpec.KIND)
+								new Sketch(InjectionSpec.KIND),
+								InjectionSpec.WEIGHT
 						),
 						//open anchor constructor
 						(t, r) -> t.offer(new Tree(

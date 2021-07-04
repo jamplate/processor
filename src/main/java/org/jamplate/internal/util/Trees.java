@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -43,21 +44,26 @@ public final class Trees {
 	}
 
 	/**
-	 * Collect all the children of the given {@code tree} and add them to the given {@code
-	 * result}.
+	 * Return an array containing the current children of the given {@code tree}.
 	 *
-	 * @param tree the tree to get its children.
-	 * @return a set containing all the children of the given {@code tree}.
+	 * @param tree the tree to get an array containing its current children.
+	 * @return a new array containing the children of the given {@code tree}.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.2.0 ~2021.05.23
+	 * @since 0.2.0 ~2021.05.30
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static Set<Tree> children(@NotNull Tree tree) {
+	public static List<Tree> children(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
-		Set<Tree> result = new HashSet<>();
-		Trees.children(result, tree);
-		return result;
+		return StreamSupport.stream(
+				Spliterators.spliteratorUnknownSize(
+						tree.iterator(),
+						Spliterator.ORDERED |
+						Spliterator.NONNULL |
+						Spliterator.DISTINCT
+				),
+				false
+		).collect(Collectors.toList());
 	}
 
 	/**
@@ -172,6 +178,24 @@ public final class Trees {
 	}
 
 	/**
+	 * Collect all the children of the given {@code tree} and add them to the given {@code
+	 * result}.
+	 *
+	 * @param tree the tree to get its children.
+	 * @return a set containing all the children of the given {@code tree}.
+	 * @throws NullPointerException if the given {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Set<Tree> hierarchy(@NotNull Tree tree) {
+		Objects.requireNonNull(tree, "tree");
+		Set<Tree> result = new HashSet<>();
+		Trees.hierarchy(result, tree);
+		return result;
+	}
+
+	/**
 	 * Return the root tree of the given {@code tree}.
 	 *
 	 * @param tree the tree to get its root tree.
@@ -218,48 +242,6 @@ public final class Trees {
 	}
 
 	/**
-	 * Return an array containing the current children of the given {@code tree}.
-	 *
-	 * @param tree the tree to get an array containing its current children.
-	 * @return a new array containing the children of the given {@code tree}.
-	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.2.0 ~2021.05.30
-	 */
-	@NotNull
-	@Contract(value = "_->new", pure = true)
-	public static Tree[] toArray(@NotNull Tree tree) {
-		Objects.requireNonNull(tree, "tree");
-		return StreamSupport.stream(
-				Spliterators.spliteratorUnknownSize(
-						tree.iterator(),
-						Spliterator.ORDERED |
-						Spliterator.NONNULL |
-						Spliterator.DISTINCT
-				),
-				false
-		).toArray(Tree[]::new);
-	}
-
-	/**
-	 * Collect all the children of the given {@code tree} and add them to the given {@code
-	 * result}.
-	 *
-	 * @param result a set to add the results to.
-	 * @param tree   the tree to get its children.
-	 * @throws NullPointerException if the given {@code result} or {@code tree} is null.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@Contract(mutates = "param1")
-	private static void children(@NotNull Set<Tree> result, @NotNull Tree tree) {
-		Objects.requireNonNull(result, "result");
-		Objects.requireNonNull(tree, "tree");
-		for (Tree t : tree) {
-			result.add(t);
-			Trees.children(result, t);
-		}
-	}
-
-	/**
 	 * Collect all the trees relative to the given {@code tree} and store it to the given
 	 * {@code result}. The trees that are already in the given {@code result} will not be
 	 * collected.
@@ -290,5 +272,24 @@ public final class Trees {
 			Trees.collect(result, next);
 		if (child != null && !result.contains(child))
 			Trees.collect(result, child);
+	}
+
+	/**
+	 * Collect all the children of the given {@code tree} and add them to the given {@code
+	 * result}.
+	 *
+	 * @param result a set to add the results to.
+	 * @param tree   the tree to get its children.
+	 * @throws NullPointerException if the given {@code result} or {@code tree} is null.
+	 * @since 0.2.0 ~2021.05.23
+	 */
+	@Contract(mutates = "param1")
+	private static void hierarchy(@NotNull Set<Tree> result, @NotNull Tree tree) {
+		Objects.requireNonNull(result, "result");
+		Objects.requireNonNull(tree, "tree");
+		for (Tree t : tree) {
+			result.add(t);
+			Trees.hierarchy(result, t);
+		}
 	}
 }

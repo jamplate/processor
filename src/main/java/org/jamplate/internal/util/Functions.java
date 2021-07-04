@@ -15,9 +15,8 @@
  */
 package org.jamplate.internal.util;
 
-import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.function.Parser;
+import org.jamplate.function.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -128,6 +127,90 @@ public final class Functions {
 	}
 
 	/**
+	 * Construct a new initializer from executing the given {@code initializers} functions
+	 * from the last to the first with the argument being the result of invoking the
+	 * previous function with the last function invoked with {@link Initializer#IDLE}.
+	 * <br>
+	 * The following is a pseudo-code demonstration of how the product is computed.
+	 * <pre>
+	 *     product = function0(function1(function2(function3(...functionLast(Initializer.IDLE)))))
+	 * </pre>
+	 * <br>
+	 * Note: null operators in the given array will be completely ignored.
+	 * <br>
+	 * Note: an operator will be completely ignored when it returns null.
+	 *
+	 * @param initializers the wrappers constructors.
+	 * @return the final product.
+	 * @throws NullPointerException if the given {@code initializers} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@SafeVarargs
+	public static Initializer initializer(@NotNull UnaryOperator<Initializer>... initializers) {
+		Objects.requireNonNull(initializers, "initializers");
+		ListIterator<UnaryOperator<Initializer>> iterator =
+				Arrays.asList(initializers)
+					  .listIterator(initializers.length);
+
+		Initializer product = Initializer.IDLE;
+
+		while (iterator.hasPrevious()) {
+			UnaryOperator<Initializer> operator = iterator.previous();
+
+			if (operator != null) {
+				Initializer wrapped = operator.apply(product);
+
+				if (wrapped != null)
+					product = wrapped;
+			}
+		}
+
+		return product;
+	}
+
+	/**
+	 * Construct a new listener from executing the given {@code listeners} functions from
+	 * the last to the first with the argument being the result of invoking the previous
+	 * function with the last function invoked with {@link Listener#IDLE}.
+	 * <br>
+	 * The following is a pseudo-code demonstration of how the product is computed.
+	 * <pre>
+	 *     product = function0(function1(function2(function3(...functionLast(Listener.IDLE)))))
+	 * </pre>
+	 * <br>
+	 * Note: null operators in the given array will be completely ignored.
+	 * <br>
+	 * Note: an operator will be completely ignored when it returns null.
+	 *
+	 * @param listeners the wrappers constructors.
+	 * @return the final product.
+	 * @throws NullPointerException if the given {@code listeners} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@SafeVarargs
+	public static Listener listener(@NotNull UnaryOperator<Listener>... listeners) {
+		Objects.requireNonNull(listeners, "listeners");
+		ListIterator<UnaryOperator<Listener>> iterator =
+				Arrays.asList(listeners)
+					  .listIterator(listeners.length);
+
+		Listener product = Listener.IDLE;
+
+		while (iterator.hasPrevious()) {
+			UnaryOperator<Listener> operator = iterator.previous();
+
+			if (operator != null) {
+				Listener wrapped = operator.apply(product);
+
+				if (wrapped != null)
+					product = wrapped;
+			}
+		}
+
+		return product;
+	}
+
+	/**
 	 * Construct a new parser from executing the given {@code parsers} functions from the
 	 * last to the first with the argument being the result of invoking the previous
 	 * function with the last function invoked with {@link Parser#IDLE}.
@@ -159,6 +242,47 @@ public final class Functions {
 
 			if (operator != null) {
 				Parser wrapped = operator.apply(product);
+
+				if (wrapped != null)
+					product = wrapped;
+			}
+		}
+
+		return product;
+	}
+
+	/**
+	 * Construct a new processor from executing the given {@code processors} functions
+	 * from the last to the first with the argument being the result of invoking the
+	 * previous function with the last function invoked with {@link Processor#IDLE}.
+	 * <br>
+	 * The following is a pseudo-code demonstration of how the product is computed.
+	 * <pre>
+	 *     product = function0(function1(function2(function3(...functionLast(Processor.IDLE)))))
+	 * </pre>
+	 * <br>
+	 * Note: null operators in the given array will be completely ignored.
+	 * <br>
+	 * Note: an operator will be completely ignored when it returns null.
+	 *
+	 * @param processors the wrappers constructors.
+	 * @return the final product.
+	 * @throws NullPointerException if the given {@code processors} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@SafeVarargs
+	public static Processor processor(@NotNull UnaryOperator<Processor>... processors) {
+		ListIterator<UnaryOperator<Processor>> iterator =
+				Arrays.asList(processors)
+					  .listIterator(processors.length);
+
+		Processor product = Processor.IDLE;
+
+		while (iterator.hasPrevious()) {
+			UnaryOperator<Processor> operator = iterator.previous();
+
+			if (operator != null) {
+				Processor wrapped = operator.apply(product);
 
 				if (wrapped != null)
 					product = wrapped;

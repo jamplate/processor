@@ -18,14 +18,16 @@ package org.jamplate.glucose.spec.parameter.resource;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
 import org.jamplate.glucose.spec.syntax.enclosure.DoubleQuotesSpec;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONTokener;
+
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Parameter string specification.
@@ -54,13 +56,13 @@ public class StringSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target double quotes
-				c -> new FilterByKindCompiler(DoubleQuotesSpec.KIND, c),
+				c -> filter(c, is(DoubleQuotesSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//read the tree
-					String text = IO.read(tree).toString();
+					String text = Source.read(tree).toString();
 
 					try {
 						//re-interpret the text (unescape, including '\n', "\""... etc)

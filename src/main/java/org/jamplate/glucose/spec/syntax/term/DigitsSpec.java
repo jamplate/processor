@@ -17,14 +17,13 @@ package org.jamplate.glucose.spec.syntax.term;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.function.parser.pattern.TermParser;
-import org.jamplate.internal.function.parser.router.HierarchyParser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.function.parser.TermParser.term;
+import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * Digits sequence specification.
@@ -61,13 +60,17 @@ public class DigitsSpec implements Spec {
 	@NotNull
 	@Override
 	public Parser getParser() {
-		return Functions.parser(
+		return parser(
 				//search in the whole hierarchy
-				HierarchyParser::new,
+				p -> hierarchy(p),
 				//target digits sequences
-				p -> new TermParser(
-						Pattern.compile("(?:0[xb]|[0-9.])[0-9A-Fa-f_.]*(?:[Ee][0-9]*)?"),
-						(d, r) -> new Tree(d, r, new Sketch(DigitsSpec.KIND))
+				p -> term(
+						"(?:0[xb]|[0-9.])[0-9A-Fa-f_.]*(?:[Ee][0-9]*)?",
+						(d, r) -> new Tree(
+								d,
+								r,
+								new Sketch(DigitsSpec.KIND)
+						)
 				)
 		);
 	}

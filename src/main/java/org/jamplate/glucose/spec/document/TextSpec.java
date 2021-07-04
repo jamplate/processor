@@ -22,11 +22,13 @@ import org.jamplate.glucose.instruction.memory.console.FPrint;
 import org.jamplate.glucose.instruction.memory.heap.Access;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastObject;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.util.IO;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * A document-wise spec that transform any unrecognized token into an {@link FPrint}.
@@ -55,10 +57,13 @@ public class TextSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return new FlattenCompiler(
-				FallbackCompiler.INSTANCE,
-				(compiler, compilation, tree) -> {
-					String text = IO.read(tree).toString();
+		return compiler(
+				c -> flatten(
+						fallback(),
+						c
+				),
+				c -> (compiler, compilation, tree) -> {
+					String text = Source.read(tree).toString();
 
 					return new Block(
 							new PushConst(tree, new TextValue(text)),

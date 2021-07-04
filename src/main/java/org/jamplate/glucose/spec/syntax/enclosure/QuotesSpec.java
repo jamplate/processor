@@ -17,15 +17,14 @@ package org.jamplate.glucose.spec.syntax.enclosure;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.function.parser.pattern.EnclosureParser;
-import org.jamplate.internal.function.parser.router.HierarchyParser;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
-import org.jamplate.internal.util.Functions;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
+import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * Quotes {@code ''} specification.
@@ -62,13 +61,13 @@ public class QuotesSpec implements Spec {
 	@NotNull
 	@Override
 	public Parser getParser() {
-		return Functions.parser(
+		return parser(
 				//search in the whole hierarchy
-				HierarchyParser::new,
+				p -> hierarchy(p),
 				//target quotes
-				p -> new EnclosureParser(
-						Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
-						Pattern.compile("(?<!(?<!\\\\)\\\\)'"),
+				p -> enclosure(
+						"(?<!(?<!\\\\)\\\\)'",
+						"(?<!(?<!\\\\)\\\\)'",
 						//enclosure constructor
 						(d, r) -> new Tree(
 								d,

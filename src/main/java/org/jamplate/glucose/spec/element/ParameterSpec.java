@@ -19,25 +19,27 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
+import org.jamplate.glucose.instruction.flow.Idle;
 import org.jamplate.impl.api.MultiSpec;
-import org.jamplate.internal.function.analyzer.filter.FilterByHierarchyKindAnalyzer;
-import org.jamplate.internal.function.analyzer.group.SequentialAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterWhitespaceCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.function.compiler.mode.ExclusiveCompiler;
-import org.jamplate.internal.function.compiler.mode.MandatoryCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.function.parser.filter.FilterByKindParser;
-import org.jamplate.internal.function.parser.router.HierarchyParser;
-import org.jamplate.internal.util.Functions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
+
+import static org.jamplate.internal.util.Query.whitespace;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.impl.function.analyzer.SequentialAnalyzer.sequential;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.function.compiler.FirstCompileCompiler.first;
+import static org.jamplate.impl.function.compiler.ExclusiveCompiler.exclusive;
+import static org.jamplate.internal.function.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.function.parser.FilterParser.filter;
+import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.util.Functions.*;
 
 /**
  * A class containing parameter context internal specifications.
@@ -93,42 +95,54 @@ public class ParameterSpec extends MultiSpec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return new SequentialAnalyzer(
-				this.specs.stream()
-						  .map(Spec::getAnalyzer)
-						  .map(a -> new FilterByHierarchyKindAnalyzer(ParameterSpec.KIND, a))
-						  .map(HierarchyAnalyzer::new)
-						  .collect(Collectors.toList())
+		return analyzer(
+				a -> sequential(
+						//foreach subspec analyzer
+						this.specs.stream().map(spec -> analyzer(
+								//search the whole hierarchy
+								aa -> hierarchy(aa),
+								//stop at parameter scopes
+								aa -> filter(aa, is(ParameterSpec.KIND)),
+								//search the whole parameter scope
+								aa -> hierarchy(aa),
+								//analyze
+								aa -> spec.getAnalyzer()
+						)).collect(Collectors.toList())
+				)
 		);
 	}
 
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//compile parameters only
-				c -> new FilterByKindCompiler(ParameterSpec.KIND, c),
+				c -> filter(c, is(ParameterSpec.KIND)),
 				//flatten
-				FlattenCompiler::new,
+				c -> flatten(c),
 				//set fallback to be this compiler
-				ExclusiveCompiler::new,
+				c -> exclusive(c),
 				//compiling is mandatory
-				MandatoryCompiler::new,
+				c -> mandatory(c),
 				//compile
-				c -> new FirstCompileCompiler(
+				c -> first(
 						//compile using subspecs compilers
 						super.getCompiler(),
 						//compile nested parameters using this
-						Functions.compiler(
+						compiler(
 								//target parameters
-								cc -> new FilterByKindCompiler(ParameterSpec.KIND, cc),
+								cc -> filter(cc, is(ParameterSpec.KIND)),
 								//flatten components
-								FlattenCompiler::new,
+								cc -> flatten(cc),
 								//fallback to this
-								cc -> FallbackCompiler.INSTANCE
+								cc -> fallback()
 						),
 						//compile leftover whitespaces to Idle
-						new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE)
+						compiler(
+								cc -> filter(cc, whitespace()),
+								cc -> (compiler, compilation, tree) ->
+										new Idle(tree)
+						)
 				)
 		);
 	}
@@ -136,19 +150,13 @@ public class ParameterSpec extends MultiSpec {
 	@NotNull
 	@Override
 	public Parser getParser() {
-		return Functions.parser(
+		return parser(
 				//search in the whole hierarchy
-				HierarchyParser::new,
+				p -> hierarchy(p),
 				//parse parameter trees
-				p -> new FilterByKindParser(ParameterSpec.KIND, p),
+				p -> filter(p, is(ParameterSpec.KIND)),
 				//parse using subspecs parsers
 				p -> super.getParser()
 		);
-	}
-
-	@NotNull
-	@Override
-	public String getQualifiedName() {
-		return ParameterSpec.NAME;
 	}
 }

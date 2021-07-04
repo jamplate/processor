@@ -17,15 +17,15 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.ParenthesesSpec;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Logical group specification.
@@ -54,26 +54,17 @@ public class GroupSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target parentheses
-				c -> new FilterByKindCompiler(ParenthesesSpec.KIND, c),
+				c -> filter(c, is(ParenthesesSpec.KIND)),
 				//flatten parts
-				FlattenCompiler::new,
-				//compile anchors and body
-				c -> new FirstCompileCompiler(
-						//compile opening anchors to Idle
-						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToIdleCompiler.INSTANCE),
-						//compile closing anchors to Idle
-						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToIdleCompiler.INSTANCE),
-						//compile body
-						c
-				),
-				//target body
-				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
-				//flatten body parts
-				FlattenCompiler::new,
-				//compile each part using the fallback compiler
-				c -> FallbackCompiler.INSTANCE
+				c -> flatten(c),
+				//compile target the body
+				c -> filter(c, is(AnchorSpec.KIND_BODY)),
+				//flatten the body
+				c -> flatten(c),
+				//compile the body parts using the fallback compiler
+				c -> fallback()
 		);
 	}
 

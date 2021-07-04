@@ -21,20 +21,23 @@ import org.jamplate.function.Initializer;
 import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.compiler.group.CombineCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.impl.model.CompilationImpl;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.impl.model.CompilationImpl;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.function.compiler.CombineCompiler.combine;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Functions.initializer;
 
 /**
  * A specification that targets root trees.
@@ -43,7 +46,6 @@ import java.io.File;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.19
  */
-@SuppressWarnings("OverlyCoupledMethod")
 public class RootSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -79,15 +81,18 @@ public class RootSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target the root
-				c -> new FilterByKindCompiler(RootSpec.KIND, c),
+				c -> filter(c, is(RootSpec.KIND)),
 				//compile the root with the proceeding compiler and the children (flattened) with the other compilers
-				c -> new CombineCompiler(c, new FlattenCompiler(FallbackCompiler.INSTANCE)),
+				c -> combine(
+						c,
+						flatten(fallback())
+				),
 				//compile the root
 				c -> (compiler, compilation, tree) -> {
 					//determine the line where the root was declared
-					String line = String.valueOf(IO.line(tree));
+					String line = String.valueOf(Source.line(tree));
 					//determine the file where the root was declared
 					String file = tree.getDocument().toString();
 					//determine the directory where the root was declared
@@ -116,15 +121,17 @@ public class RootSpec implements Spec {
 	@NotNull
 	@Override
 	public Initializer getInitializer() {
-		return (environment, document) ->
-				new CompilationImpl(
-						environment,
-						new Tree(
-								document,
-								new Sketch(RootSpec.KIND),
-								RootSpec.WEIGHT
+		return initializer(
+				i -> (environment, document) ->
+						new CompilationImpl(
+								environment,
+								new Tree(
+										document,
+										new Sketch(RootSpec.KIND),
+										RootSpec.WEIGHT
+								)
 						)
-				);
+		);
 	}
 
 	@NotNull

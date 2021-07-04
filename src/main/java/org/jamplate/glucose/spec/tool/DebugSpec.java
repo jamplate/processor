@@ -42,7 +42,7 @@ import java.util.StringJoiner;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings({"UseOfSystemOutOrSystemErr", "MethodMayBeStatic"})
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class DebugSpec implements Spec {
 	/**
 	 * An instance of this spec.

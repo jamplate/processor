@@ -25,18 +25,23 @@ import org.jamplate.glucose.instruction.memory.frame.PushFrame;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastPair;
 import org.jamplate.glucose.instruction.operator.cast.CastQuote;
-import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.*;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ColonSpec;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.CompileException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.internal.function.analyzer.BinaryOperatorAnalyzer.binaryOperator;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Pair operator specifications.
@@ -45,7 +50,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.27
  */
-@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+@SuppressWarnings("OverlyCoupledMethod")
 public class PairSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -74,15 +79,18 @@ public class PairSpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
+		return analyzer(
 				//analyze the whole hierarchy
-				HierarchyAnalyzer::new,
-				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(PairSpec.KIND, a),
-				//target colons
-				a -> new FilterByKindAnalyzer(ColonSpec.KIND, a),
-				//wrap
-				a -> new BinaryOperatorAnalyzer(
+				a -> hierarchy(a),
+				//target valid non processed trees
+				a -> filter(a, and(
+						//target colon symbols
+						is(ColonSpec.KIND),
+						//skip if already wrapped
+						parent(not(PairSpec.KIND))
+				)),
+				//analyze
+				a -> binaryOperator(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
@@ -120,9 +128,9 @@ public class PairSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target pair operator
-				c -> new FilterByKindCompiler(PairSpec.KIND, c),
+				c -> filter(c, is(PairSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -148,9 +156,9 @@ public class PairSpec implements Spec {
 					if (leftI == null || rightI == null)
 						throw new CompileException(
 								"The operator PAIR (:) cannot be applied to <" +
-								IO.read(leftT) +
+								Source.read(leftT) +
 								"> and <" +
-								IO.read(rightT) +
+								Source.read(rightT) +
 								">",
 								tree
 						);

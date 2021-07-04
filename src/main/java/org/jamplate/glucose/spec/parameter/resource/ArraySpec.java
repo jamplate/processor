@@ -19,30 +19,33 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.glucose.instruction.flow.Idle;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastArray;
 import org.jamplate.glucose.instruction.operator.cast.CastQuote;
-import org.jamplate.internal.function.analyzer.alter.MultiSeparatorAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByNotChildKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.ChildrenAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToIdleCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToPushConstCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterWhitespaceCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
+import org.jamplate.glucose.value.GluedValue;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.internal.function.analyzer.SeparatorsAnalyzer.separators;
+import static org.jamplate.impl.function.analyzer.ChildrenAnalyzer.children;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.function.compiler.FirstCompileCompiler.first;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Parameter array specification.
@@ -51,7 +54,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
-@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+@SuppressWarnings("OverlyCoupledMethod")
 public class ArraySpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -72,20 +75,25 @@ public class ArraySpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
+		return analyzer(
 				//search in the whole hierarchy
-				HierarchyAnalyzer::new,
+				a -> hierarchy(a),
 				//target brackets
-				a -> new FilterByKindAnalyzer(BracketsSpec.KIND, a),
-				//for each child
-				ChildrenAnalyzer::new,
+				a -> filter(a, is(BracketsSpec.KIND)),
+				//foreach child
+				a -> children(a),
 				//target the body
-				a -> new FilterByKindAnalyzer(AnchorSpec.KIND_BODY, a),
-				//skip if already separated
-				a -> new FilterByNotChildKindAnalyzer(AnchorSpec.KIND_SLOT, a),
+				a -> filter(a, and(
+						//target the body
+						is(AnchorSpec.KIND_BODY),
+						//skip if already separated
+						child(is(AnchorSpec.KIND_SLOT)).negate()
+				)),
 				//separate
-				a -> new MultiSeparatorAnalyzer(
-						CommaSpec.KIND,
+				a -> separators(
+						//separator predicate
+						is(CommaSpec.KIND),
+						//constructor
 						(t, r) -> t.offer(new Tree(
 								t.getDocument(),
 								r,
@@ -99,9 +107,9 @@ public class ArraySpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target brackets
-				c -> new FilterByKindCompiler(BracketsSpec.KIND, c),
+				c -> filter(c, is(BracketsSpec.KIND)),
 				//compile the whole context
 				c -> (compiler, compilation, tree) ->
 						new Block(
@@ -118,47 +126,72 @@ public class ArraySpec implements Spec {
 								new DumpFrame(tree)
 						),
 				//flatten parts
-				FlattenCompiler::new,
+				c -> flatten(c),
 				//compile anchors, body, commas, slots, else
-				c -> new FirstCompileCompiler(
+				c -> first(
 						//compile opening anchors to PushConst
-						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToPushConstCompiler.INSTANCE),
-						//compile closing anchors to PushConst
-						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToPushConstCompiler.INSTANCE),
-						//compile body, commas, slots, else
+						compiler(
+								cc -> filter(cc, or(
+										is(AnchorSpec.KIND_OPEN),
+										is(AnchorSpec.KIND_CLOSE)
+								)),
+								cc -> (compiler, compilation, tree) ->
+										new PushConst(
+												tree,
+												new GluedValue(Source.read(tree))
+										)
+						),
 						c
 				),
 				//target body
-				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
+				c -> filter(c, is(AnchorSpec.KIND_BODY)),
 				//flatten body parts
-				FlattenCompiler::new,
+				c -> flatten(c),
 				//compile commas, slots, else
-				c -> new FirstCompileCompiler(
-						//compile commas (,) to PushConst
-						new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
+				c -> first(
+						//compile commas
+						compiler(
+								cc -> filter(cc, is(CommaSpec.KIND)),
+								cc -> (compiler, compilation, tree) ->
+										new PushConst(
+												tree,
+												new GluedValue(Source.read(tree))
+										)
+						),
 						//compile the slots
-						c,
+						compiler(
+								//target the slots
+								cc -> filter(cc, is(AnchorSpec.KIND_SLOT)),
+								//flatten slots parts
+								cc -> flatten(cc),
+								//compile each slot part
+								cc -> first(
+										//ignore whitespaces
+										compiler(
+												ccc -> filter(ccc, whitespace()),
+												ccc -> (compiler, compilation, tree) ->
+														new Idle(tree)
+										),
+										compiler(
+												//compile quoted
+												ccc -> (compiler, compilation, tree) ->
+														new Block(
+																//use the fallback
+																ccc.compile(
+																		compiler,
+																		compilation,
+																		tree
+																),
+																//quote the slot
+																new CastQuote(tree)
+														),
+												ccc -> fallback()
+										)
+								)
+						),
 						//compile others using the fallback compiler
-						FallbackCompiler.INSTANCE
-				),
-				//target the slots
-				c -> new FilterByKindCompiler(AnchorSpec.KIND_SLOT, c),
-				//flatten slots parts
-				FlattenCompiler::new,
-				//compile each slot part
-				c -> new FirstCompileCompiler(
-						//ignore whitespaces
-						new FilterWhitespaceCompiler(ToIdleCompiler.INSTANCE),
-						//compile quoted
-						(compiler, compilation, tree) -> new Block(
-								//use the fallback
-								FallbackCompiler.INSTANCE.compile(compiler, compilation, tree),
-								//quote the slot
-								new CastQuote(tree)
-						)
-				),
-				//compile each slot part using the fallback compiler
-				c -> FallbackCompiler.INSTANCE
+						fallback()
+				)
 		);
 	}
 

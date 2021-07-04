@@ -21,15 +21,17 @@ import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Suppressed new line specification. Suppresses newlines nearby commands.
@@ -66,30 +68,20 @@ public class NewlineSuppressedSpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
-				//search the whole hierarchy
-				HierarchyAnalyzer::new,
+		return analyzer(
+				a -> hierarchy(a),
 				//target newlines
-				a -> new FilterByKindAnalyzer(NewlineSpec.KIND, a),
+				a -> filter(a, and(
+						is(NewlineSpec.KIND),
+						or(
+								next(equal("^command.*")),
+								previous(equal("^command.*"))
+						)
+				)),
 				//analyze
 				a -> (compilation, tree) -> {
-					//gather surroundings
-					Tree previous = tree.getPrevious();
-					Tree next = tree.getNext();
-
-					//suppress trees that its kind starts with 'command'
-					if (
-							previous != null &&
-							previous.getSketch().getKind().startsWith("command") ||
-							next != null &&
-							next.getSketch().getKind().startsWith("command")
-					) {
-						tree.getSketch().setKind(NewlineSuppressedSpec.KIND);
-						return true;
-					}
-
-					//nothing interesting...
-					return false;
+					tree.getSketch().setKind(NewlineSuppressedSpec.KIND);
+					return true;
 				}
 		);
 	}
@@ -97,13 +89,13 @@ public class NewlineSuppressedSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target suppressed newlines
-				c -> new FilterByKindCompiler(NewlineSuppressedSpec.KIND, c),
+				c -> filter(c, is(NewlineSuppressedSpec.KIND)),
 				//compile the suppressed newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					String line = String.valueOf(IO.line(tree) + 1);
+					String line = String.valueOf(Source.line(tree) + 1);
 
 					return new Block(
 							//Define __LINE__

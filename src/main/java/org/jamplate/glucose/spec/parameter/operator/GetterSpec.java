@@ -21,22 +21,24 @@ import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.struct.Get;
-import org.jamplate.internal.function.analyzer.alter.UnaryExtensionAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.CompileException;
-import org.jamplate.model.Instruction;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.ExtensionSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.glucose.value.NumberValue;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.CompileException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.internal.function.analyzer.UnaryExtensionAnalyzer.unaryExtension;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Getter operator specifications.
@@ -73,15 +75,18 @@ public class GetterSpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
+		return analyzer(
 				//search in the whole hierarchy
-				HierarchyAnalyzer::new,
-				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(GetterSpec.KIND, a),
-				//target square brackets
-				a -> new FilterByKindAnalyzer(BracketsSpec.KIND, a),
-				//analytic
-				a -> new UnaryExtensionAnalyzer(
+				a -> hierarchy(a),
+				//target valid non processed trees
+				a -> filter(a, and(
+						//target brackets symbols
+						is(BracketsSpec.KIND),
+						//skip if already wrapped
+						parent(not(GetterSpec.KIND))
+				)),
+				//analyze
+				a -> unaryExtension(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,
@@ -110,9 +115,9 @@ public class GetterSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target getter context
-				c -> new FilterByKindCompiler(GetterSpec.KIND, c),
+				c -> filter(c, is(GetterSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree targetT = tree.getSketch().get(ExtensionSpec.KEY_TARGET).getTree();
@@ -138,9 +143,9 @@ public class GetterSpec implements Spec {
 					if (targetI == null || signI == null)
 						throw new CompileException(
 								"The operator GETTER cannot be applied to <" +
-								IO.read(targetT) +
+								Source.read(targetT) +
 								"> with <" +
-								IO.read(signT) +
+								Source.read(signT) +
 								">",
 								tree
 						);

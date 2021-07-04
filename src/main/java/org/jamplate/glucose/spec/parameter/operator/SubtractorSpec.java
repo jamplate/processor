@@ -21,22 +21,24 @@ import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.math.Difference;
-import org.jamplate.internal.function.analyzer.alter.BinaryOperatorAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByNotParentKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.CompileException;
-import org.jamplate.model.Instruction;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
 import org.jamplate.glucose.value.NumberValue;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.CompileException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.internal.function.analyzer.BinaryOperatorAnalyzer.binaryOperator;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Subtractor operator specifications.
@@ -73,15 +75,18 @@ public class SubtractorSpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
+		return analyzer(
 				//analyze the whole hierarchy
-				HierarchyAnalyzer::new,
-				//filter only if not already wrapped
-				a -> new FilterByNotParentKindAnalyzer(SubtractorSpec.KIND, a),
-				//target minuses
-				a -> new FilterByKindAnalyzer(MinusSpec.KIND, a),
-				//wrap
-				a -> new BinaryOperatorAnalyzer(
+				a -> hierarchy(a),
+				//target valid non processed trees
+				a -> filter(a, and(
+						//target minus symbols
+						is(MinusSpec.KIND),
+						//skip if already wrapped
+						parent(not(SubtractorSpec.KIND))
+				)),
+				//analyze
+				a -> binaryOperator(
 						//context wrapper constructor
 						(d, r) ->
 								new Tree(
@@ -120,9 +125,9 @@ public class SubtractorSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target subtractor operator
-				c -> new FilterByKindCompiler(SubtractorSpec.KIND, c),
+				c -> filter(c, is(SubtractorSpec.KIND)),
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					Tree leftT = tree.getSketch().get(OperatorSpec.KEY_LEFT).getTree();
@@ -143,7 +148,7 @@ public class SubtractorSpec implements Spec {
 					if (rightI == null)
 						throw new CompileException(
 								"The operator SUBTRACTOR (-) cannot be applied to <" +
-								IO.read(rightT) +
+								Source.read(rightT) +
 								">",
 								tree
 						);
@@ -169,9 +174,9 @@ public class SubtractorSpec implements Spec {
 					if (leftI == null)
 						throw new CompileException(
 								"The operator SUBTRACTOR (-) cannot be applied to <" +
-								IO.read(leftT) +
+								Source.read(leftT) +
 								"> and <" +
-								IO.read(rightT) +
+								Source.read(rightT) +
 								">",
 								tree
 						);

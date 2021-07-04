@@ -22,25 +22,29 @@ import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastObject;
 import org.jamplate.glucose.instruction.operator.cast.CastPair;
-import org.jamplate.internal.function.analyzer.alter.MultiSeparatorAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByNotChildKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.ChildrenAnalyzer;
-import org.jamplate.internal.function.analyzer.filter.FilterByKindAnalyzer;
-import org.jamplate.internal.function.analyzer.router.HierarchyAnalyzer;
-import org.jamplate.internal.function.compiler.router.FlattenCompiler;
-import org.jamplate.internal.function.compiler.concrete.ToPushConstCompiler;
-import org.jamplate.internal.function.compiler.group.FirstCompileCompiler;
-import org.jamplate.internal.function.compiler.router.FallbackCompiler;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracesSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
+import org.jamplate.glucose.value.GluedValue;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.internal.function.analyzer.SeparatorsAnalyzer.separators;
+import static org.jamplate.impl.function.analyzer.ChildrenAnalyzer.children;
+import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.function.compiler.FirstCompileCompiler.first;
+import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.util.Functions.analyzer;
+import static org.jamplate.internal.util.Functions.compiler;
 
 /**
  * Parameter object specification.
@@ -49,7 +53,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
-@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+@SuppressWarnings("OverlyCoupledMethod")
 public class ObjectSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -69,20 +73,24 @@ public class ObjectSpec implements Spec {
 	@NotNull
 	@Override
 	public Analyzer getAnalyzer() {
-		return Functions.analyzer(
+		return analyzer(
 				//search in the whole hierarchy
-				HierarchyAnalyzer::new,
+				a -> hierarchy(a),
 				//target braces
-				a -> new FilterByKindAnalyzer(BracesSpec.KIND, a),
+				a -> filter(a, is(BracesSpec.KIND)),
 				//foreach child
-				ChildrenAnalyzer::new,
+				a -> children(a),
 				//target the body
-				a -> new FilterByKindAnalyzer(AnchorSpec.KIND_BODY, a),
-				//skip if already separated
-				a -> new FilterByNotChildKindAnalyzer(AnchorSpec.KIND_SLOT, a),
+				a -> filter(a, and(
+						//target the body
+						is(AnchorSpec.KIND_BODY),
+						//skip if already separated
+						child(is(AnchorSpec.KIND_SLOT)).negate()
+				)),
 				//separate
-				a -> new MultiSeparatorAnalyzer(
-						CommaSpec.KIND,
+				a -> separators(
+						//separator predicate
+						is(CommaSpec.KIND),
 						(t, r) -> t.offer(new Tree(
 								t.getDocument(),
 								r,
@@ -96,9 +104,9 @@ public class ObjectSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target braces
-				c -> new FilterByKindCompiler(BracesSpec.KIND, c),
+				c -> filter(c, is(BracesSpec.KIND)),
 				//compile the whole context
 				c -> (compiler, compilation, tree) ->
 						new Block(
@@ -115,37 +123,53 @@ public class ObjectSpec implements Spec {
 								new DumpFrame(tree)
 						),
 				//flatten parts
-				FlattenCompiler::new,
+				c -> flatten(c),
 				//compile anchors, body, commas, slots, else
-				c -> new FirstCompileCompiler(
+				c -> first(
 						//compile opening anchors to PushConst
-						new FilterByKindCompiler(AnchorSpec.KIND_OPEN, ToPushConstCompiler.INSTANCE),
-						//compile closing anchors to PushConst
-						new FilterByKindCompiler(AnchorSpec.KIND_CLOSE, ToPushConstCompiler.INSTANCE),
-						//compile body, commas, slots, else
+						compiler(
+								cc -> filter(cc, or(
+										is(AnchorSpec.KIND_OPEN),
+										is(AnchorSpec.KIND_CLOSE)
+								)),
+								cc -> (compiler, compilation, tree) ->
+										new PushConst(
+												tree,
+												new GluedValue(Source.read(tree))
+										)
+						),
 						c
 				),
 				//target body
-				c -> new FilterByKindCompiler(AnchorSpec.KIND_BODY, c),
+				c -> filter(c, is(AnchorSpec.KIND_BODY)),
 				//flatten body parts
-				FlattenCompiler::new,
+				c -> flatten(c),
 				//compile commas, slots, else
-				c -> new FirstCompileCompiler(
-						//compile commas (,) to PushConst
-						new FilterByKindCompiler(CommaSpec.KIND, ToPushConstCompiler.INSTANCE),
+				c -> first(
+						//compile commas
+						compiler(
+								cc -> filter(cc, is(CommaSpec.KIND)),
+								cc -> (compiler, compilation, tree) ->
+										new PushConst(
+												tree,
+												new GluedValue(Source.read(tree))
+										)
+						),
 						//compile the slots
-						c
-				),
-				c -> (compiler, compilation, tree) -> new Block(
-						//compile
-						c.compile(compiler, compilation, tree),
-						//cast
-						new CastPair(tree)
-				),
-				//flatten slots parts
-				FlattenCompiler::new,
-				//compile pairs using the fallback compiler
-				c -> FallbackCompiler.INSTANCE
+						compiler(
+								cc -> (compiler, compilation, tree) ->
+										new Block(
+												//compile
+												cc.compile(compiler, compilation, tree),
+												//cast
+												new CastPair(tree)
+										),
+								//flatten slots parts
+								cc -> flatten(cc),
+								//compile pairs using the fallback compiler
+								cc -> fallback()
+						)
+				)
 		);
 	}
 

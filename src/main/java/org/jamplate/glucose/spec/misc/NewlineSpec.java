@@ -22,17 +22,18 @@ import org.jamplate.glucose.instruction.flow.Block;
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.internal.function.compiler.filter.FilterByKindCompiler;
-import org.jamplate.internal.function.parser.pattern.TermParser;
-import org.jamplate.internal.util.Functions;
-import org.jamplate.internal.util.IO;
-import org.jamplate.model.Sketch;
-import org.jamplate.model.Tree;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.internal.util.Source;
+import org.jamplate.model.Sketch;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.function.parser.TermParser.term;
+import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Functions.parser;
 
 /**
  * Line separators ({@code \n}, {@code \r}, {@code \r\n}) spec.
@@ -69,15 +70,15 @@ public class NewlineSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
-		return Functions.compiler(
+		return compiler(
 				//target newlines
-				c -> new FilterByKindCompiler(NewlineSpec.KIND, c),
+				c -> filter(c, is(NewlineSpec.KIND)),
 				//compile the newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					int line = IO.line(tree) + 1;
+					int line = Source.line(tree) + 1;
 					//read the tree
-					String text = IO.read(tree).toString();
+					String text = Source.read(tree).toString();
 
 					return new Block(
 							//Define __LINE__
@@ -96,12 +97,14 @@ public class NewlineSpec implements Spec {
 	@Override
 	public Parser getParser() {
 		//parse only on the first round
-		return new TermParser(
-				Pattern.compile("(?<!\\\\)(?:\r\n|\r|\n)"),
-				(d, r) -> new Tree(
-						d,
-						r,
-						new Sketch(NewlineSpec.KIND)
+		return parser(
+				p -> term(
+						"(?<!\\\\)(?:\r\n|\r|\n)",
+						(d, r) -> new Tree(
+								d,
+								r,
+								new Sketch(NewlineSpec.KIND)
+						)
 				)
 		);
 	}

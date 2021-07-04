@@ -17,11 +17,13 @@ package org.jamplate.glucose.spec.document;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Initializer;
+import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
-import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jamplate.internal.util.Functions.initializer;
 
 /**
  * A specification for logical root compilations.
@@ -50,15 +52,17 @@ public class LogicSpec implements Spec {
 	@NotNull
 	@Override
 	public Initializer getInitializer() {
-		return (environment, document) ->
-				new CompilationImpl(
-						environment,
-						new Tree(
-								document,
-								new Sketch(ParameterSpec.KIND),
-								ParameterSpec.WEIGHT
+		return initializer(
+				i -> (environment, document) ->
+						new CompilationImpl(
+								environment,
+								new Tree(
+										document,
+										new Sketch(ParameterSpec.KIND),
+										ParameterSpec.WEIGHT
+								)
 						)
-				);
+		);
 	}
 
 	@NotNull
