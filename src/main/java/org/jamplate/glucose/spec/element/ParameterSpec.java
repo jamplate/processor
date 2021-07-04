@@ -26,20 +26,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
 
-import static org.jamplate.internal.util.Query.whitespace;
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.impl.analyzer.SequentialAnalyzer.sequential;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.analyzer.SequentialAnalyzer.sequential;
+import static org.jamplate.impl.compiler.ExclusiveCompiler.exclusive;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.compiler.FirstCompileCompiler.first;
-import static org.jamplate.impl.compiler.ExclusiveCompiler.exclusive;
-import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
-import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.impl.parser.FilterParser.filter;
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.internal.parser.NaturalMergeParser.merge;
+import static org.jamplate.internal.util.Collisions.nested;
 import static org.jamplate.internal.util.Functions.*;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Query.whitespace;
 
 /**
  * A class containing parameter context internal specifications.
@@ -142,6 +144,8 @@ public class ParameterSpec extends MultiSpec {
 	@Override
 	public Parser getParser() {
 		return parser(
+				//merge
+				p -> merge(p, nested()),
 				//search in the whole hierarchy
 				p -> hierarchy(p),
 				//parse parameter trees
