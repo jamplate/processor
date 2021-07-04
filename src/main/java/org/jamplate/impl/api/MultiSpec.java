@@ -109,6 +109,42 @@ public class MultiSpec implements Spec {
 	}
 
 	@Override
+	public Spec addAfter(@NotNull String qualifiedName, @NotNull Spec spec) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		Objects.requireNonNull(spec, "spec");
+		ListIterator<Spec> iterator = this.specs.listIterator();
+
+		while (iterator.hasNext()) {
+			Spec next = iterator.next();
+
+			if (next.getQualifiedName().equals(qualifiedName)) {
+				iterator.add(spec);
+				return this;
+			}
+		}
+
+		throw new IllegalArgumentException("Spec not found: " + qualifiedName);
+	}
+
+	@Override
+	public Spec addAfter(@NotNull Class<? extends Spec> type, @NotNull Spec spec) {
+		Objects.requireNonNull(type, "type");
+		Objects.requireNonNull(spec, "spec");
+		ListIterator<Spec> iterator = this.specs.listIterator();
+
+		while (iterator.hasNext()) {
+			Spec next = iterator.next();
+
+			if (type.isInstance(next)) {
+				iterator.add(spec);
+				return this;
+			}
+		}
+
+		throw new IllegalArgumentException("Spec not found: " + type);
+	}
+
+	@Override
 	public Spec addBefore(@NotNull Spec ref, @NotNull Spec spec) {
 		Objects.requireNonNull(ref, "ref");
 		Objects.requireNonNull(spec, "spec");
@@ -125,6 +161,44 @@ public class MultiSpec implements Spec {
 		}
 
 		throw new IllegalArgumentException("Spec not found: " + ref);
+	}
+
+	@Override
+	public Spec addBefore(@NotNull String qualifiedName, @NotNull Spec spec) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		Objects.requireNonNull(spec, "spec");
+		ListIterator<Spec> iterator = this.specs.listIterator(this.specs.size());
+
+		while (iterator.hasPrevious()) {
+			Spec previous = iterator.previous();
+
+			if (previous.getQualifiedName().equals(qualifiedName)) {
+				iterator.set(spec);
+				iterator.add(previous);
+				return this;
+			}
+		}
+
+		throw new IllegalArgumentException("Spec not found: " + qualifiedName);
+	}
+
+	@Override
+	public Spec addBefore(@NotNull Class<? extends Spec> type, @NotNull Spec spec) {
+		Objects.requireNonNull(type, "type");
+		Objects.requireNonNull(spec, "spec");
+		ListIterator<Spec> iterator = this.specs.listIterator(this.specs.size());
+
+		while (iterator.hasPrevious()) {
+			Spec previous = iterator.previous();
+
+			if (type.isInstance(previous)) {
+				iterator.set(spec);
+				iterator.add(previous);
+				return this;
+			}
+		}
+
+		throw new IllegalArgumentException("Spec not found: " + type);
 	}
 
 	@Override

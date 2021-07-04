@@ -19,6 +19,7 @@ import org.jamplate.function.Compiler;
 import org.jamplate.function.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,6 +45,7 @@ import java.util.Objects;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.16
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public interface Spec extends Iterable<Spec> {
 	/**
 	 * Return an iterator iterating over the subspecs in this spec.
@@ -96,6 +98,47 @@ public interface Spec extends Iterable<Spec> {
 	}
 
 	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added after
+	 * the given spec with the given {@code qualifiedName} spec.
+	 *
+	 * @param qualifiedName the name of the spec for the given {@code spec} to be added
+	 *                      after it.
+	 * @param spec          the spec to be added.
+	 * @return this.
+	 * @throws NullPointerException          if the given {@code qualifiedName} is null.
+	 * @throws IllegalArgumentException      if no spec with the given {@code
+	 *                                       qualifiedName} was found in this spec.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addAfter(@NotNull String qualifiedName, @NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpecAfter");
+	}
+
+	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added after
+	 * the given spec with the given {@code type} spec.
+	 *
+	 * @param type the type of the spec for the given {@code spec} to be added after it.
+	 * @param spec the spec to be added.
+	 * @return this.
+	 * @throws NullPointerException          if the given {@code spec} is null.
+	 * @throws IllegalArgumentException      if no spec with the given {@code type} was
+	 *                                       found in this spec.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addAfter(@NotNull Class<? extends Spec> type, @NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpecAfter");
+	}
+
+	/**
 	 * Add the given {@code spec} as a subspec to this spec. The spec will be added before
 	 * the given {@code ref} spec.
 	 *
@@ -112,6 +155,47 @@ public interface Spec extends Iterable<Spec> {
 	 */
 	@Contract(value = "_,_->this", mutates = "this")
 	default Spec addBefore(@NotNull Spec ref, @NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpecBefore");
+	}
+
+	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added before
+	 * the given spec with the given {@code qualifiedName} spec.
+	 *
+	 * @param qualifiedName the name of the spec for the given {@code spec} to be added
+	 *                      before it.
+	 * @param spec          the spec to be added.
+	 * @return this.
+	 * @throws NullPointerException          if the given {@code qualifiedName} is null.
+	 * @throws IllegalArgumentException      if no spec with the given {@code
+	 *                                       qualifiedName} was found in this spec.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addBefore(@NotNull String qualifiedName, @NotNull Spec spec) {
+		throw new UnsupportedOperationException("addSpecBefore");
+	}
+
+	/**
+	 * Add the given {@code spec} as a subspec to this spec. The spec will be added before
+	 * the given spec with the given {@code type} spec.
+	 *
+	 * @param type the type of the spec for the given {@code spec} to be added before it.
+	 * @param spec the spec to be added.
+	 * @return this.
+	 * @throws NullPointerException          if the given {@code spec} is null.
+	 * @throws IllegalArgumentException      if no spec with the given {@code type} was
+	 *                                       found in this spec.
+	 * @throws UnsupportedOperationException if this spec does not allow sub-specs.
+	 * @implSpec this implementation will throw {@link UnsupportedOperationException}
+	 * 		immediately.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_,_->this", mutates = "this")
+	default Spec addBefore(@NotNull Class<? extends Spec> type, @NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecBefore");
 	}
 
@@ -147,6 +231,47 @@ public interface Spec extends Iterable<Spec> {
 	@Contract(value = "_->this", mutates = "this")
 	default Spec addLast(@NotNull Spec spec) {
 		throw new UnsupportedOperationException("addSpecLast");
+	}
+
+	/**
+	 * Get the subspec with the given {@code qualifiedName} from the subspecs in this
+	 * spec.
+	 *
+	 * @param qualifiedName the name of the targeted spec.
+	 * @return the subspec with the given {@code qualifiedName} in this spec, or {@code
+	 * 		null} if no spec was found.
+	 * @throws NullPointerException if the given {@code qualifiedName} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Nullable
+	@Contract(pure = true)
+	default Spec get(@NotNull String qualifiedName) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		for (Spec spec : this)
+			if (spec.getQualifiedName().equals(qualifiedName))
+				return spec;
+
+		return null;
+	}
+
+	/**
+	 * Get the subspec with the given {@code type} from the subspecs in this spec.
+	 *
+	 * @param type the type of the targeted spec.
+	 * @return the subspec with the given {@code type} in this spec, or {@code null} if no
+	 * 		spec was found.
+	 * @throws NullPointerException if the given {@code type} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Nullable
+	@Contract(pure = true)
+	default Spec get(@NotNull Class<? extends Spec> type) {
+		Objects.requireNonNull(type, "type");
+		for (Spec spec : this)
+			if (type.isInstance(spec))
+				return spec;
+
+		return null;
 	}
 
 	/**
@@ -300,6 +425,44 @@ public interface Spec extends Iterable<Spec> {
 		Iterator<Spec> iterator = this.iterator();
 		while (iterator.hasNext())
 			if (iterator.next() == spec)
+				iterator.remove();
+		return this;
+	}
+
+	/**
+	 * Remove the subspec with the given {@code qualifiedName} in this spec.
+	 *
+	 * @param qualifiedName the name of the subspec to be removed.
+	 * @return this.
+	 * @throws NullPointerException if the given {@code qualifiedName} is null.
+	 * @implSpec this implementation uses {@link #iterator()} to remove the spec.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_->this", mutates = "this")
+	default Spec remove(@NotNull String qualifiedName) {
+		Objects.requireNonNull(qualifiedName, "qualifiedName");
+		Iterator<Spec> iterator = this.iterator();
+		while (iterator.hasNext())
+			if (iterator.next().getQualifiedName().equals(qualifiedName))
+				iterator.remove();
+		return this;
+	}
+
+	/**
+	 * Remove the subspec with the given {@code type} in this spec.
+	 *
+	 * @param type the type of the subspec to be removed.
+	 * @return this.
+	 * @throws NullPointerException if the given {@code type} is null.
+	 * @implSpec this implementation uses {@link #iterator()} to remove the spec.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@Contract(value = "_->this", mutates = "this")
+	default Spec remove(@NotNull Class<? extends Spec> type) {
+		Objects.requireNonNull(type, "type");
+		Iterator<Spec> iterator = this.iterator();
+		while (iterator.hasNext())
+			if (type.isInstance(iterator.next()))
 				iterator.remove();
 		return this;
 	}
