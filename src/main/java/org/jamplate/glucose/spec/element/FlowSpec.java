@@ -83,15 +83,6 @@ public class FlowSpec extends MultiSpec {
 	/**
 	 * Construct a new flow spec.
 	 *
-	 * @since 0.3.0 ~2021.07.04
-	 */
-	public FlowSpec() {
-		super(FlowSpec.NAME);
-	}
-
-	/**
-	 * Construct a new flow spec.
-	 *
 	 * @param subspecs the initial subspecs.
 	 * @throws NullPointerException if the given {@code subspecs} is null.
 	 * @since 0.3.0 ~2021.07.04

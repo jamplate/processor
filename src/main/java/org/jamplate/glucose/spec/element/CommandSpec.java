@@ -98,15 +98,6 @@ public class CommandSpec extends MultiSpec {
 	/**
 	 * Construct a new commands spec.
 	 *
-	 * @since 0.3.0 ~2021.06.25
-	 */
-	public CommandSpec() {
-		super(CommandSpec.NAME);
-	}
-
-	/**
-	 * Construct a new commands spec.
-	 *
 	 * @param subspecs the initial subspecs.
 	 * @throws NullPointerException if the given {@code subspecs} is null.
 	 * @since 0.3.0 ~2021.06.25

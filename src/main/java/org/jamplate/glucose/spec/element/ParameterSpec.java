@@ -75,15 +75,6 @@ public class ParameterSpec extends MultiSpec {
 	/**
 	 * Construct a new parameter spec.
 	 *
-	 * @since 0.3.0 ~2021.06.25
-	 */
-	public ParameterSpec() {
-		super(ParameterSpec.NAME);
-	}
-
-	/**
-	 * Construct a new parameter spec.
-	 *
 	 * @param subspecs the initial subspecs.
 	 * @throws NullPointerException if the given {@code subspecs} is null.
 	 * @since 0.3.0 ~2021.06.25
