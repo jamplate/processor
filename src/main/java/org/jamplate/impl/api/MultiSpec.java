@@ -66,7 +66,7 @@ public class MultiSpec implements Spec {
 	 */
 	public MultiSpec(@Nullable Spec @NotNull ... subspecs) {
 		Objects.requireNonNull(subspecs, "subspecs");
-		this.qualifiedName = "ContextSpec" + this.hashCode();
+		this.qualifiedName = "MultiSpec" + this.hashCode();
 		for (Spec spec : subspecs)
 			if (spec != null)
 				this.specs.add(spec);
