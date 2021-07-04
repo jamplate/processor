@@ -101,7 +101,7 @@ public class SetConsole implements Instruction {
 		Value value0 = memory.pop();
 		String text0 = value0.evaluate(memory);
 
-		if (value0 == Value.NULL) {
+		if (text0.trim().isEmpty()) {
 			memory.getConsole().close();
 			memory.setConsole(new BufferedConsole());
 			return;
@@ -114,6 +114,7 @@ public class SetConsole implements Instruction {
 			if (parent != null && !parent.exists())
 				Files.createDirectories(parent.toPath());
 
+			memory.getConsole().close();
 			memory.setConsole(new FileConsole(file));
 		} catch (IOException | IOError e0) {
 			throw new ExecutionException(e0, this.tree);
