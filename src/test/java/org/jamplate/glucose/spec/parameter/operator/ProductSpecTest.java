@@ -22,8 +22,8 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 

@@ -18,10 +18,10 @@ import org.jamplate.memory.Memory;
 import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.function.compiler.MandatoryCompiler.mandatory;
-import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;

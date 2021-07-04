@@ -22,7 +22,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
+import static org.jamplate.internal.parser.EnclosureParser.enclosure;
 import static org.jamplate.internal.util.Functions.parser;
 
 /**

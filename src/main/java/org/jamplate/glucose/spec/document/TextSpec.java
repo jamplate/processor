@@ -26,8 +26,8 @@ import org.jamplate.glucose.value.TextValue;
 import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
 
 /**

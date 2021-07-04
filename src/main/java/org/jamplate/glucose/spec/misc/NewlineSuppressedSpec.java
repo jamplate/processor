@@ -27,9 +27,9 @@ import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.internal.util.Query.*;
-import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 

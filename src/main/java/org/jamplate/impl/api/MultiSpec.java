@@ -18,12 +18,12 @@ package org.jamplate.impl.api;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.*;
-import org.jamplate.impl.function.analyzer.SequentialAnalyzer;
-import org.jamplate.impl.function.compiler.FirstCompileCompiler;
-import org.jamplate.impl.function.initializer.FirstInitializeInitializer;
-import org.jamplate.impl.function.listener.SequentialListener;
-import org.jamplate.impl.function.parser.CombineParser;
-import org.jamplate.impl.function.processor.SequentialProcessor;
+import org.jamplate.impl.analyzer.SequentialAnalyzer;
+import org.jamplate.impl.compiler.FirstCompileCompiler;
+import org.jamplate.impl.initializer.FirstInitializeInitializer;
+import org.jamplate.impl.listener.SequentialListener;
+import org.jamplate.impl.parser.CombineParser;
+import org.jamplate.impl.processor.SequentialProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

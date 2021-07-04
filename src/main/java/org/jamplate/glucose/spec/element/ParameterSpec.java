@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
 
 import static org.jamplate.internal.util.Query.whitespace;
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.impl.function.analyzer.SequentialAnalyzer.sequential;
-import static org.jamplate.impl.function.analyzer.HierarchyAnalyzer.hierarchy;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
-import static org.jamplate.impl.function.compiler.FirstCompileCompiler.first;
-import static org.jamplate.impl.function.compiler.ExclusiveCompiler.exclusive;
-import static org.jamplate.internal.function.compiler.MandatoryCompiler.mandatory;
-import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
-import static org.jamplate.impl.function.parser.FilterParser.filter;
-import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
+import static org.jamplate.impl.analyzer.SequentialAnalyzer.sequential;
+import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.compiler.FirstCompileCompiler.first;
+import static org.jamplate.impl.compiler.ExclusiveCompiler.exclusive;
+import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.parser.FilterParser.filter;
+import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
 import static org.jamplate.internal.util.Functions.*;
 
 /**

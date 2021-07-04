@@ -32,9 +32,9 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
-import static org.jamplate.impl.function.parser.HierarchyParser.hierarchy;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.parser.EnclosureParser.enclosure;
+import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.parser;
 

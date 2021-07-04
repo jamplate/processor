@@ -24,7 +24,7 @@ import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.compiler;
 
 /**

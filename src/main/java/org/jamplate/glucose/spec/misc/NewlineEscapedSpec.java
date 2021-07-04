@@ -29,8 +29,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.function.parser.TermParser.term;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.parser.TermParser.term;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.parser;
 

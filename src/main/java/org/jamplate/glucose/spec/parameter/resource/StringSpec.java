@@ -26,7 +26,7 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.compiler;
 
 /**

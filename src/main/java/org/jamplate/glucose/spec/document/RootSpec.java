@@ -32,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.function.compiler.FilterCompiler.filter;
-import static org.jamplate.impl.function.compiler.CombineCompiler.combine;
-import static org.jamplate.impl.function.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.function.compiler.FlattenCompiler.flatten;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.impl.compiler.CombineCompiler.combine;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.initializer;
 

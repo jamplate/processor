@@ -24,8 +24,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.jamplate.internal.function.parser.EnclosureParser.enclosure;
-import static org.jamplate.internal.function.parser.SelectParser.select;
+import static org.jamplate.internal.parser.EnclosureParser.enclosure;
+import static org.jamplate.internal.parser.SelectParser.select;
 import static org.jamplate.internal.util.Functions.parser;
 
 /**
