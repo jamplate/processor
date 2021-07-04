@@ -102,52 +102,59 @@ public final class Trees {
 
 		Iterator<Tree> iterator = tree.iterator();
 
-		if (iterator.hasNext()) {
-			Tree previous = iterator.next();
+		if (!iterator.hasNext())
+			//got a huge gap
+			return Collections.singletonList(
+					new Tree(
+							tree.getDocument(),
+							tree.getReference()
+					)
+			);
 
-			if (!Intersection.START.test(tree, previous)) {
-				int p = tree.getReference().position();
-				int l = previous.getReference().position() - p;
+		Tree previous = iterator.next();
 
-				if (l > 0) {
-					Tree gap = new Tree(tree.getDocument(), new Reference(p, l));
+		if (!Intersection.START.test(tree, previous)) {
+			int p = tree.getReference().position();
+			int l = previous.getReference().position() - p;
 
-					children.add(gap);
-				}
+			if (l > 0) {
+				Tree gap = new Tree(tree.getDocument(), new Reference(p, l));
+
+				children.add(gap);
 			}
+		}
 
-			children.add(previous);
+		children.add(previous);
 
-			while (iterator.hasNext()) {
-				Tree next = iterator.next();
+		while (iterator.hasNext()) {
+			Tree next = iterator.next();
 
-				if (!Intersection.NEXT.test(previous, next)) {
-					int p = previous.getReference().position() +
-							previous.getReference().length();
-					int l = next.getReference().position() - p;
-
-					if (l > 0) {
-						Tree gap = new Tree(tree.getDocument(), new Reference(p, l));
-
-						children.add(gap);
-					}
-				}
-
-				children.add(next);
-				previous = next;
-			}
-
-			if (!Intersection.END.test(tree, previous)) {
+			if (!Intersection.NEXT.test(previous, next)) {
 				int p = previous.getReference().position() +
 						previous.getReference().length();
-				int l = tree.getReference().position() +
-						tree.getReference().length() - p;
+				int l = next.getReference().position() - p;
 
 				if (l > 0) {
 					Tree gap = new Tree(tree.getDocument(), new Reference(p, l));
 
 					children.add(gap);
 				}
+			}
+
+			children.add(next);
+			previous = next;
+		}
+
+		if (!Intersection.END.test(tree, previous)) {
+			int p = previous.getReference().position() +
+					previous.getReference().length();
+			int l = tree.getReference().position() +
+					tree.getReference().length() - p;
+
+			if (l > 0) {
+				Tree gap = new Tree(tree.getDocument(), new Reference(p, l));
+
+				children.add(gap);
 			}
 		}
 
