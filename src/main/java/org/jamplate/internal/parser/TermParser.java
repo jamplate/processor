@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * A parser parsing literal sketches depending on a specific pattern.
@@ -47,6 +48,12 @@ public class TermParser implements Parser {
 	 */
 	@NotNull
 	protected final BiFunction<Document, Reference, Tree> constructor;
+	/**
+	 * True, to parse all valid matches each time.
+	 *
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	protected final boolean global;
 	/**
 	 * A pattern matching the literal.
 	 *
@@ -67,36 +74,25 @@ public class TermParser implements Parser {
 	 *
 	 * @param pattern     the pattern matching the areas the constructed parser will be
 	 *                    looking for.
-	 * @param constructor the constructor.
-	 * @throws NullPointerException if the given {@code pattern} or {@code constructor} is
-	 *                              null.
-	 * @since 0.2.0 ~2021.05.16
-	 */
-	public TermParser(@NotNull Pattern pattern, @NotNull BiFunction<Document, Reference, Tree> constructor) {
-		Objects.requireNonNull(pattern, "pattern");
-		Objects.requireNonNull(constructor, "constructor");
-		this.pattern = pattern;
-		this.weight = 0;
-		this.constructor = constructor;
-	}
-
-	/**
-	 * Construct a new literal parser that parses the sketches looking for areas that
-	 * matches the given {@code pattern}.
-	 *
-	 * @param pattern     the pattern matching the areas the constructed parser will be
-	 *                    looking for.
 	 * @param weight      the weight to accept.
+	 * @param global      pass {@code true} to parse all valid matches each time, pass
+	 *                    {@code false} to parse only the first match each time.
 	 * @param constructor the constructor.
 	 * @throws NullPointerException if the given {@code pattern} or {@code constructor} is
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.16
 	 */
-	public TermParser(@NotNull Pattern pattern, int weight, @NotNull BiFunction<Document, Reference, Tree> constructor) {
+	public TermParser(
+			@NotNull Pattern pattern,
+			int weight,
+			boolean global,
+			@NotNull BiFunction<Document, Reference, Tree> constructor
+	) {
 		Objects.requireNonNull(pattern, "pattern");
 		Objects.requireNonNull(constructor, "constructor");
 		this.pattern = pattern;
 		this.weight = weight;
+		this.global = global;
 		this.constructor = constructor;
 	}
 
@@ -122,6 +118,8 @@ public class TermParser implements Parser {
 		Objects.requireNonNull(regex, "regex");
 		return new TermParser(
 				Pattern.compile(regex),
+				0,
+				false,
 				constructor
 		);
 	}
@@ -133,6 +131,8 @@ public class TermParser implements Parser {
 	 * @param regex       the regex matching the areas the constructed parser will be
 	 *                    looking for.
 	 * @param weight      the weight to accept.
+	 * @param global      pass {@code true} to parse all valid matches each time, pass
+	 *                    {@code false} to parse only the first match each time.
 	 * @param constructor the constructor.
 	 * @return a new term parser.
 	 * @throws NullPointerException   if the given {@code regex} or {@code constructor} is
@@ -141,16 +141,18 @@ public class TermParser implements Parser {
 	 * @since 0.3.0 ~2021.07.04
 	 */
 	@NotNull
-	@Contract(value = "_,_,_->new", pure = true)
+	@Contract(value = "_,_,_,_->new", pure = true)
 	public static TermParser term(
 			@NotNull @Language("RegExp") String regex,
 			int weight,
+			boolean global,
 			@NotNull BiFunction<Document, Reference, Tree> constructor
 	) {
 		Objects.requireNonNull(regex, "regex");
 		return new TermParser(
 				Pattern.compile(regex),
 				weight,
+				global,
 				constructor
 		);
 	}
@@ -160,21 +162,29 @@ public class TermParser implements Parser {
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "sketch");
-		Reference match = Parsing.parseFirst(
-				tree,
-				this.pattern,
-				this.weight
-		);
+		if (this.global) {
+			Set<Reference> matches = Parsing.parseAll(
+					tree,
+					this.pattern,
+					this.weight
+			);
 
-		if (match == null)
-			return Collections.emptySet();
+			return matches
+					.parallelStream()
+					.map(match -> this.constructor.apply(tree.getDocument(), match))
+					.collect(Collectors.toSet());
+		} else {
+			Reference match = Parsing.parseFirst(
+					tree,
+					this.pattern,
+					this.weight
+			);
 
-		Tree result = this.constructor.apply(tree.getDocument(), match);
-
-		return Collections.singleton(result);
-		//		return Parsing.parseAll(tree, this.pattern, this.weight)
-		//					  .parallelStream()
-		//					  .map(m -> this.constructor.apply(tree.getDocument(), m))
-		//					  .collect(Collectors.toSet());
+			return match == null ?
+				   Collections.emptySet() :
+				   Collections.singleton(
+						   this.constructor.apply(tree.getDocument(), match)
+				   );
+		}
 	}
 }

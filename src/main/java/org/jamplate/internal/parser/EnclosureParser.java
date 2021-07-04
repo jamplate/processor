@@ -18,6 +18,7 @@ package org.jamplate.internal.parser;
 import org.intellij.lang.annotations.Language;
 import org.jamplate.function.Parser;
 import org.jamplate.internal.util.Parsing;
+import org.jamplate.internal.util.References;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -34,6 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * A parser parsing scope sketches depending on a specific starting and ending pattern.
@@ -72,6 +74,12 @@ public class EnclosureParser implements Parser {
 	@NotNull
 	protected final Pattern endPattern;
 	/**
+	 * True, to parse all valid matches each time.
+	 *
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	protected final boolean global;
+	/**
 	 * The constructor of the starting anchor. (optional)
 	 *
 	 * @since 0.3.0 ~2021.07.04
@@ -100,45 +108,10 @@ public class EnclosureParser implements Parser {
 	 *                         parser will be looking for.
 	 * @param endPattern       the pattern matching the end of the areas the constructed
 	 *                         parser will be looking for.
-	 * @param constructor      the constructor of the result trees.
-	 * @param startConstructor the constructor of the starting anchor. (optional)
-	 * @param endConstructor   the constructor of the ending anchor. (optional)
-	 * @param bodyConstructor  the constructor of the area between the starting anchor and
-	 *                         the ending anchor (the body). (optional)
-	 * @throws NullPointerException if the given {@code startPattern} or {@code
-	 *                              endPattern} or {@code constructor} is null.
-	 * @since 0.3.0 ~2021.07.04
-	 */
-	@SuppressWarnings("ConstructorWithTooManyParameters")
-	public EnclosureParser(
-			@NotNull Pattern startPattern,
-			@NotNull Pattern endPattern,
-			@NotNull BiFunction<Document, Reference, Tree> constructor,
-			@Nullable BiConsumer<Tree, Reference> startConstructor,
-			@Nullable BiConsumer<Tree, Reference> endConstructor,
-			@Nullable BiConsumer<Tree, Reference> bodyConstructor
-	) {
-		Objects.requireNonNull(startPattern, "startPattern");
-		Objects.requireNonNull(endPattern, "endPattern");
-		Objects.requireNonNull(constructor, "constructor");
-		this.startPattern = startPattern;
-		this.endPattern = endPattern;
-		this.weight = 0;
-		this.constructor = constructor;
-		this.startConstructor = startConstructor;
-		this.endConstructor = endConstructor;
-		this.bodyConstructor = bodyConstructor;
-	}
-
-	/**
-	 * Construct a new scope parser that parses the trees looking for areas that starts
-	 * with the given {@code startPattern} and ends with the given {@code endPattern}.
-	 *
-	 * @param startPattern     the pattern matching the start of the areas the constructed
-	 *                         parser will be looking for.
-	 * @param endPattern       the pattern matching the end of the areas the constructed
-	 *                         parser will be looking for.
 	 * @param weight           the weight to accept.
+	 * @param global           pass {@code true} to parse all valid matches each time,
+	 *                         pass {@code false} to parse only the first match each
+	 *                         time.
 	 * @param constructor      the constructor of the result trees.
 	 * @param startConstructor the constructor of the starting anchor. (optional)
 	 * @param endConstructor   the constructor of the ending anchor. (optional)
@@ -153,6 +126,7 @@ public class EnclosureParser implements Parser {
 			@NotNull Pattern startPattern,
 			@NotNull Pattern endPattern,
 			int weight,
+			boolean global,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Reference> startConstructor,
 			@Nullable BiConsumer<Tree, Reference> endConstructor,
@@ -164,6 +138,7 @@ public class EnclosureParser implements Parser {
 		this.startPattern = startPattern;
 		this.endPattern = endPattern;
 		this.weight = weight;
+		this.global = global;
 		this.constructor = constructor;
 		this.startConstructor = startConstructor;
 		this.endConstructor = endConstructor;
@@ -206,6 +181,8 @@ public class EnclosureParser implements Parser {
 		return new EnclosureParser(
 				Pattern.compile(startRegex),
 				Pattern.compile(endRegex),
+				0,
+				false,
 				constructor,
 				startConstructor,
 				endConstructor,
@@ -222,6 +199,9 @@ public class EnclosureParser implements Parser {
 	 * @param endRegex         the pattern matching the end of the areas the constructed
 	 *                         parser will be looking for.
 	 * @param weight           the weight to accept.
+	 * @param global           pass {@code true} to parse all valid matches each time,
+	 *                         pass {@code false} to parse only the first match each
+	 *                         time.
 	 * @param constructor      the constructor of the result trees.
 	 * @param startConstructor the constructor of the starting anchor. (optional)
 	 * @param endConstructor   the constructor of the ending anchor. (optional)
@@ -236,11 +216,12 @@ public class EnclosureParser implements Parser {
 	 */
 	@SuppressWarnings("MethodWithTooManyParameters")
 	@NotNull
-	@Contract(value = "_,_,_,_,_,_,_->new", pure = true)
+	@Contract(value = "_,_,_,_,_,_,_,_->new", pure = true)
 	public static EnclosureParser enclosure(
 			@NotNull @Language("RegExp") String startRegex,
 			@NotNull @Language("RegExp") String endRegex,
 			int weight,
+			boolean global,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Reference> startConstructor,
 			@Nullable BiConsumer<Tree, Reference> endConstructor,
@@ -252,6 +233,7 @@ public class EnclosureParser implements Parser {
 				Pattern.compile(startRegex),
 				Pattern.compile(endRegex),
 				weight,
+				global,
 				constructor,
 				startConstructor,
 				endConstructor,
@@ -259,59 +241,63 @@ public class EnclosureParser implements Parser {
 		);
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	@NotNull
 	@Override
 	public Set<Tree> parse(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
-		List<Reference> match = Parsing.parseFirst(
-				tree,
-				this.startPattern,
-				this.endPattern,
-				this.weight
-		);
+		if (this.global) {
+			Set<List<Reference>> matches = Parsing.parseAll(tree, this.startPattern, this.endPattern, this.weight);
 
-		if (match.isEmpty())
-			return Collections.emptySet();
+			return matches
+					.parallelStream()
+					.map(match -> {
+						Tree result = this.constructor.apply(tree.getDocument(), match.get(0));
 
-		Tree result = this.constructor.apply(tree.getDocument(), match.get(0));
+						if (this.startConstructor != null)
+							this.startConstructor.accept(result, match.get(1));
+						if (this.endConstructor != null)
+							this.endConstructor.accept(result, match.get(2));
+						if (this.bodyConstructor != null)
+							this.bodyConstructor.accept(
+									result,
+									References.exclusive(
+											match.get(1),
+											match.get(2)
+									)
+							);
 
-		if (this.startConstructor != null)
-			this.startConstructor.accept(result, match.get(1));
-		if (this.endConstructor != null)
-			this.endConstructor.accept(result, match.get(2));
-		if (this.bodyConstructor != null) {
-			int position = match.get(1).position() + match.get(1).length();
-			int length = match.get(2).position() - position;
-
-			this.bodyConstructor.accept(
-					result,
-					new Reference(position, length)
+						return result;
+					})
+					.collect(Collectors.toSet());
+		} else {
+			List<Reference> match = Parsing.parseFirst(
+					tree,
+					this.startPattern,
+					this.endPattern,
+					this.weight
 			);
-		}
 
-		return Collections.singleton(result);
-		//		return Parsing.parseAll(tree, this.startPattern, this.endPattern, this.weight)
-		//					  .parallelStream()
-		//					  .map(m -> {
-		//						  Tree result = this.constructor.apply(tree.getDocument(), m.get(0));
-		//
-		//						  if (this.startConstructor != null)
-		//							  this.startConstructor.accept(result, m.get(1));
-		//						  if (this.endConstructor != null)
-		//							  this.endConstructor.accept(result, m.get(2));
-		//						  if (this.bodyConstructor != null) {
-		//							  int position = m.get(1).position() + m.get(1).length();
-		//							  int length = m.get(2).position() - position;
-		//
-		//							  this.bodyConstructor.accept(
-		//									  result,
-		//									  new Reference(position, length)
-		//							  );
-		//						  }
-		//
-		//						  return result;
-		//					  })
-		//					  .collect(Collectors.toSet());
+			if (match.isEmpty())
+				return Collections.emptySet();
+
+			Tree result = this.constructor.apply(tree.getDocument(), match.get(0));
+
+			if (this.startConstructor != null)
+				this.startConstructor.accept(result, match.get(1));
+			if (this.endConstructor != null)
+				this.endConstructor.accept(result, match.get(2));
+			if (this.bodyConstructor != null)
+				this.bodyConstructor.accept(
+						result,
+						References.exclusive(
+								match.get(1),
+								match.get(2)
+						)
+				);
+
+			return Collections.singleton(result);
+		}
 	}
 }
