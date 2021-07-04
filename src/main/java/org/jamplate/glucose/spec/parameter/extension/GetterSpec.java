@@ -13,7 +13,7 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.glucose.spec.parameter.operator;
+package org.jamplate.glucose.spec.parameter.extension;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
@@ -32,16 +32,16 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.*;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.internal.analyzer.UnaryExtensionAnalyzer.unaryExtension;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.analyzer.UnaryExtensionAnalyzer.unaryExtension;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.*;
 
 /**
- * Getter operator specifications.
+ * Getter extension specifications.
  *
  * @author LSafer
  * @version 0.3.0
@@ -57,12 +57,12 @@ public class GetterSpec implements Spec {
 	public static final GetterSpec INSTANCE = new GetterSpec();
 
 	/**
-	 * The kind of a getter operator context.
+	 * The kind of a getter extension context.
 	 *
 	 * @since 0.3.0 ~2021.06.22
 	 */
 	@NotNull
-	public static final String KIND = "operator:getter";
+	public static final String KIND = "extension:getter";
 
 	/**
 	 * The qualified name of this spec.
@@ -94,7 +94,7 @@ public class GetterSpec implements Spec {
 								new Sketch(GetterSpec.KIND),
 								ExtensionSpec.WEIGHT
 						),
-						//operator constructor
+						//extension constructor
 						(w, t) -> w.getSketch().set(
 								ExtensionSpec.KEY_SIGN,
 								t.getSketch()
@@ -142,7 +142,7 @@ public class GetterSpec implements Spec {
 
 					if (targetI == null || signI == null)
 						throw new CompileException(
-								"The operator GETTER cannot be applied to <" +
+								"The extension GETTER cannot be applied to <" +
 								Source.read(targetT) +
 								"> with <" +
 								Source.read(signT) +
