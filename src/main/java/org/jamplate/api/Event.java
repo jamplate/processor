@@ -40,7 +40,7 @@ public class Event {
 	 * @since 0.3.0 ~2021.07.05
 	 */
 	@NotNull
-	protected String action;
+	protected final String action;
 	/**
 	 * The compilation.
 	 *
