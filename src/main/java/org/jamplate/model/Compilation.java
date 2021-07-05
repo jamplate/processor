@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * A compilation is a structure holding the variables for a single compilation unit (like
@@ -52,19 +51,6 @@ public interface Compilation extends Serializable {
 	@Nullable
 	@Contract(pure = true)
 	Instruction getInstruction();
-
-	/**
-	 * Returns the meta-data map of this compilation.
-	 * <br>
-	 * By default, the returned map will be a modifiable checked map. Unless, the class of
-	 * this said otherwise.
-	 *
-	 * @return the meta-data map of this.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	@Contract(pure = true)
-	Map<String, Object> getMeta();
 
 	/**
 	 * Return the root tree of this compilation.

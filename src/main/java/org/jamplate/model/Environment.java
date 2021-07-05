@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
@@ -87,19 +86,6 @@ public interface Environment extends Iterable<Compilation>, Serializable {
 	@NotNull
 	@Contract(pure = true)
 	Diagnostic getDiagnostic();
-
-	/**
-	 * Returns the meta-data map of this environment.
-	 * <br>
-	 * By default, the returned map will be a modifiable checked map. Unless, the class of
-	 * this said otherwise.
-	 *
-	 * @return the meta-data map of this.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	@Contract(pure = true)
-	Map<String, Object> getMeta();
 
 	/**
 	 * Associate the given {@code compilation} to the given {@code document} in this

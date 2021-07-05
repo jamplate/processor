@@ -24,7 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A basic implementation of the interface {@link Environment}.
@@ -51,13 +54,6 @@ public class EnvironmentImpl implements Environment {
 	 */
 	@NotNull
 	protected final Diagnostic diagnostic = new DiagnosticImpl();
-	/**
-	 * The additional meta-data of this sketch.
-	 *
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	protected final Map<String, Object> meta = new HashMap<>();
 
 	@Nullable
 	@Override
@@ -86,12 +82,6 @@ public class EnvironmentImpl implements Environment {
 	@Override
 	public Diagnostic getDiagnostic() {
 		return this.diagnostic;
-	}
-
-	@NotNull
-	@Override
-	public Map<String, Object> getMeta() {
-		return Collections.checkedMap(this.meta, String.class, Object.class);
 	}
 
 	@NotNull
