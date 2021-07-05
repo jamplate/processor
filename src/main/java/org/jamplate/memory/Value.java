@@ -78,7 +78,7 @@ public interface Value<T> extends Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	default Value<T> apply(@NotNull Pipe<T> pipe) {
+	default Value<T> apply(@NotNull Pipe<T, T> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		return this.getPipe().apply(pipe).toValue();
 	}
@@ -93,7 +93,7 @@ public interface Value<T> extends Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	default Pipe<T> getPipe() {
+	default Pipe<Object, T> getPipe() {
 		return (m, v) -> (T) this.evaluate(m);
 	}
 

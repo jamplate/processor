@@ -23,20 +23,22 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A function that takes the value {@code T} and return a modified version of it.
+ * A function that takes the value {@link P} and return a value {@link R}.
  *
- * @param <T> the type of the value the accumulator accepts.
+ * @param <P> the type of the parameter value.
+ * @param <R> the type of the eval value.
  * @author LSafer
  * @version 0.3.0
  * @since 0.3.0 ~2021.07.03
  */
 @FunctionalInterface
-public interface Pipe<T> extends Serializable {
+public interface Pipe<P, R> extends Serializable {
 	/**
 	 * Return a pipe that evaluates to the value of evaluating the given {@code pipe} with
 	 * the value of evaluating this pipe as the parameter.
 	 *
 	 * @param pipe the wrapper pipe.
+	 * @param <T>  the type of the eval value of the returned pipe.
 	 * @return a pipe that evaluates the given {@code pipe} with the value of this pipe as
 	 * 		the parameter.
 	 * @throws NullPointerException if the given {@code pipe} is null.
@@ -44,9 +46,9 @@ public interface Pipe<T> extends Serializable {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	default Pipe<T> apply(@NotNull Pipe<T> pipe) {
+	default <T> Pipe<P, T> apply(@NotNull Pipe<R, T> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
-		return (m, v) -> pipe.eval(m, this.eval(m, v));
+		return (m, u) -> pipe.eval(m, this.eval(m, u));
 	}
 
 	/**
@@ -59,7 +61,7 @@ public interface Pipe<T> extends Serializable {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	default T eval(@NotNull Memory memory) {
+	default R eval(@NotNull Memory memory) {
 		return this.eval(memory, null);
 	}
 
@@ -72,8 +74,8 @@ public interface Pipe<T> extends Serializable {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	default Value<T> toValue() {
-		return new Value<T>() {
+	default Value<R> toValue() {
+		return new Value<R>() {
 			@SuppressWarnings("JavaDoc")
 			private static final long serialVersionUID = 8887217069908351493L;
 
@@ -85,8 +87,8 @@ public interface Pipe<T> extends Serializable {
 
 			@NotNull
 			@Override
-			public Pipe<T> getPipe() {
-				return Pipe.this;
+			public Pipe<Object, R> getPipe() {
+				return (Pipe<Object, R>) Pipe.this;
 			}
 		};
 	}
@@ -104,5 +106,5 @@ public interface Pipe<T> extends Serializable {
 	 */
 	@Nullable
 	@Contract(pure = true)
-	T eval(@NotNull Memory memory, @Nullable T value);
+	R eval(@NotNull Memory memory, @Nullable P value);
 }
