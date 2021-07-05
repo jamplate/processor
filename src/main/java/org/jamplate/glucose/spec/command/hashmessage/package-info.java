@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Filtering analyzers.
+ * The {@code #message} command specifications.
  *
  * @author LSafer
- * @version 0.3.0
- * @since 0.3.0 ~2021.06.27
+ * @version 0.0.0
+ * @since 0.0.0 ~2021.07.03
  */
-package org.jamplate.internal.function.analyzer.filter;
+package org.jamplate.glucose.spec.command.hashmessage;

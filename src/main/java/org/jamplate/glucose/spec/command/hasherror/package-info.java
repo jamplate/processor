@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Analyzers that alter the hierarchy of the trees given to it.
+ * The {@code #error} command specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.23
+ * @since 0.3.0 ~2021.07.03
  */
-package org.jamplate.internal.function.analyzer.alter;
+package org.jamplate.glucose.spec.command.hasherror;

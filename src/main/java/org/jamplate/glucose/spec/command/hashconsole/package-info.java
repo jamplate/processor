@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Internal grouping analyzers.
+ * The {@code #console} command specifications.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.19
+ * @since 0.3.0 ~2021.07.04
  */
-package org.jamplate.internal.function.analyzer.group;
+package org.jamplate.glucose.spec.command.hashconsole;
