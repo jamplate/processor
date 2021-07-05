@@ -24,6 +24,17 @@ import java.io.Serializable;
 
 /**
  * A diagnostic message containing the details about an error, warning or even a note.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>criticalPoints: {@link Tree}[]</li>
+ *     <li>errorKind: {@link String}</li>
+ *     <li>exception?: {@link Throwable}</li>
+ *     <li>messagePhrase: {@link String}</li>
+ *     <li>priority: {@link String}</li>
+ *     <li>stackTrace: {@link Tree}[]</li>
+ *     <li>fetal: {@link Boolean}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

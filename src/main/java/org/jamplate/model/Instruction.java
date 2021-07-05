@@ -28,6 +28,12 @@ import java.util.Objects;
 /**
  * An instruction is a function that executes depending on the state of the environment
  * and memory given to it but does not have a state itself.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Instruction}[]</li>
+ *     <li>tree?: {@link Tree}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

@@ -22,6 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * A gate unit that holds the variables necessary to do any jamplate task.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>spec: {@link Spec}</li>
+ *     <li>environment: {@link Environment}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.3.0

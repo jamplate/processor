@@ -24,6 +24,11 @@ import java.util.Iterator;
 
 /**
  * A function that get invoked when an event occurred while processing a compilation.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Listener}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.3.0

@@ -27,6 +27,11 @@ import java.util.Iterator;
 /**
  * A function that analyzes the trees given to it and modify them (if necessary) depending
  * on its analytic results.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Analyzer}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

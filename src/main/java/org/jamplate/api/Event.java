@@ -28,6 +28,20 @@ import java.util.Objects;
 
 /**
  * An object holding the parameters of an event.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>action: {@link String}</li>
+ *     <li>compilation?: {@link Compilation}</li>
+ *     <li>diagnostic?: {@link Diagnostic}</li>
+ *     <li>document?: {@link Document}</li>
+ *     <li>environment?: {@link Environment}</li>
+ *     <li>instruction?: {@link Instruction}</li>
+ *     <li>memory?: {@link Memory}</li>
+ *     <li>tree?: {@link Tree}</li>
+ *     <li>unit?: {@link Unit}</li>
+ *     <li>extra: {{@link String}:{@link Object}}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.3.0

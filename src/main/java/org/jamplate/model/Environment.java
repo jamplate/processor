@@ -26,8 +26,12 @@ import java.util.Iterator;
 /**
  * The environment is a unit holding all the data, managers and variables about a single
  * process.
- * <br>
- * The subclasses must support serialization.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Compilation}[]</li>
+ *     <li>diagnostic: {@link Diagnostic}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

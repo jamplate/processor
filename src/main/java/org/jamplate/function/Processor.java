@@ -25,6 +25,11 @@ import java.util.Iterator;
 /**
  * A processor is a function that takes a sketch and a compilation and process it its way
  * (for example: parsing its value).
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Processor}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

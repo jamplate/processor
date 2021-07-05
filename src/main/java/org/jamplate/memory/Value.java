@@ -24,6 +24,11 @@ import java.util.Objects;
 /**
  * The value function is a function that evaluates to a value depending on the state of
  * the memory given to it.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>pipe: {@link Pipe}</li>
+ * </ul>
  *
  * @param <T> the type of the object that the pipe of the value will evaluate to.
  * @author LSafer

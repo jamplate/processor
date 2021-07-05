@@ -53,6 +53,19 @@ import java.util.Objects;
  * Two identical trees in one structure is allowed only if the two trees has the same
  * {@link #getWeight() weight}. The tree with the higher weight can fit inside the tree
  * with the lower weight.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Tree}[]</li>
+ *     <li>document: {@link Document}</li>
+ *     <li>reference: {@link Reference}</li>
+ *     <li>sketch: {@link Sketch}</li>
+ *     <li>weight: {@link Integer}</li>
+ *     <li>parent?: {@link Tree}</li>
+ *     <li>previous?: {@link Tree}</li>
+ *     <li>next?: {@link Tree}</li>
+ *     <li>child?: {@link Tree}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

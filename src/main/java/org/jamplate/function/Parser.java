@@ -27,6 +27,11 @@ import java.util.Set;
 
 /**
  * A function that takes a compilation and a sketch and parses new sketches from them.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Parser}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

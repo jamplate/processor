@@ -30,6 +30,11 @@ import java.util.Iterator;
 /**
  * A compiler is a function that compiles {@link Tree}s into {@link Instruction}s
  * depending on the state of the trees and compilations provided to it.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Compiler}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

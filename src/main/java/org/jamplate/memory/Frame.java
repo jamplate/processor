@@ -26,6 +26,14 @@ import java.util.function.UnaryOperator;
 
 /**
  * An isolated part in the memory.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Value}[]</li>
+ *     <li>stack: {@link Value}[]</li>
+ *     <li>heap: {{@link String}:{@link Value}}</li>
+ *     <li>instruction?: {@link Instruction}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

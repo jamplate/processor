@@ -28,6 +28,11 @@ import java.util.Iterator;
 /**
  * The initializer is a function that constructs a compilation for the document provided
  * to it.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Initializer}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.3.0

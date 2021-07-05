@@ -28,6 +28,13 @@ import java.util.stream.Collectors;
 
 /**
  * The memory is a structure that saves the variables at the runtime.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Frame}[]</li>
+ *     <li>frame: {@link Frame}</li>
+ *     <li>console: {@link Console}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

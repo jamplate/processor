@@ -27,19 +27,28 @@ import java.util.Objects;
 
 /**
  * A spec is a unit containing functions necessary to apply a syntax/runtime
- * specification.
- * <br>
- * Every spec can have sub-specs that it enclosing it. Every spec must specify how the
- * sub-specs are treated inside it. Otherwise, the spec must not support sub-specs.
- * <br>
- * Other than registering sub-specs, the user of a spec must not query nor modify the
- * sub-specs since the spec already delegates to the sub-specs its own way.
- * <br>
- * For a spec to support sub-specs, it must implement the method {@link #iterator()}.
- * <br>
- * For a spec to support variable sub-specs, it must implement the methods {@link
+ * specification; Every spec can have sub-specs that it enclosing it. Every spec must
+ * specify how the sub-specs are treated inside it. Otherwise, the spec must not support
+ * sub-specs; Other than registering sub-specs, the user of a spec must not query nor
+ * modify the sub-specs since the spec already delegates to the sub-specs its own way; For
+ * a spec to support sub-specs, it must implement the method {@link #iterator()}; For a
+ * spec to support variable sub-specs, it must implement the methods {@link
  * #addFirst(Spec)}, {@link #addBefore(Spec, Spec)}, {@link #addLast(Spec)}, {@link
  * #addAfter(Spec, Spec)}.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Spec}[]</li>
+ *     <li>qualifiedName: {@link String}</li>
+ *     <li>initializer: {@link Initializer}</li>
+ *     <li>parser: {@link Parser}</li>
+ *     <li>analyzer: {@link Analyzer}</li>
+ *     <li>compiler: {@link Compiler}</li>
+ *     <li>listener: {@link Listener}</li>
+ *     <li>parserProcessor: {@link Processor}</li>
+ *     <li>analyzeProcessor: {@link Processor}</li>
+ *     <li>compileProcessor: {@link Processor}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.3.0

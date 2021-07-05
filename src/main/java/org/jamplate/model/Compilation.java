@@ -24,8 +24,13 @@ import java.io.Serializable;
 /**
  * A compilation is a structure holding the variables for a single compilation unit (like
  * a file).
- * <br>
- * The implementing class must support serialization.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>environment: {@link Environment}</li>
+ *     <li>rootTree: {@link Tree}</li>
+ *     <li>instruction?: {@link Instruction}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

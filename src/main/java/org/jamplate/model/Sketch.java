@@ -26,6 +26,14 @@ import java.util.Objects;
 
 /**
  * A class that holds the thoughts about a syntax or runtime component.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>name: {@link String}</li>
+ *     <li>kind: {@link String}</li>
+ *     <li>tree?: {@link Tree}</li>
+ *     <li>components: {{@link Node.Key}:{@link Sketch}}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0
