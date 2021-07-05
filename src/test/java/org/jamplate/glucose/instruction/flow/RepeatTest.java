@@ -13,6 +13,8 @@ import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Compare;
 import org.jamplate.glucose.instruction.operator.struct.Invert;
 import org.jamplate.glucose.instruction.operator.struct.Split;
+import org.jamplate.impl.instruction.Block;
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.impl.model.PseudoDocument;

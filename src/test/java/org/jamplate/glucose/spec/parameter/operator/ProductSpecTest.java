@@ -3,7 +3,7 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.glucose.instruction.flow.Idle;
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.NumberSpec;

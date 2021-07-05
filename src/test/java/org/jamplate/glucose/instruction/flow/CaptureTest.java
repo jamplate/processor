@@ -3,6 +3,7 @@ package org.jamplate.glucose.instruction.flow;
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.Environment;

@@ -16,7 +16,7 @@
 package org.jamplate.impl.compiler;
 
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;

@@ -18,7 +18,7 @@ package org.jamplate.glucose.spec.misc;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.value.NumberValue;

@@ -1,7 +1,7 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Compare;

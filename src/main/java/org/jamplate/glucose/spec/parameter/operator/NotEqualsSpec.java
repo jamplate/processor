@@ -18,7 +18,7 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Compare;
 import org.jamplate.glucose.spec.element.ParameterSpec;

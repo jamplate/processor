@@ -13,11 +13,11 @@
  *	See the License for the specific language governing permissions and
  *	limitations under the License.
  */
-package org.jamplate.glucose.instruction.flow;
+package org.jamplate.impl.instruction;
 
+import org.jamplate.memory.Memory;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
-import org.jamplate.memory.Memory;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

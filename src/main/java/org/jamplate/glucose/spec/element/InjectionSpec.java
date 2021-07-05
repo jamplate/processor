@@ -19,7 +19,7 @@ import cufy.util.Node;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.glucose.instruction.flow.Block;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;

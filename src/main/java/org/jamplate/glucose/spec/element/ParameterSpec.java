@@ -19,7 +19,7 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.glucose.instruction.flow.Idle;
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.impl.api.MultiSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
