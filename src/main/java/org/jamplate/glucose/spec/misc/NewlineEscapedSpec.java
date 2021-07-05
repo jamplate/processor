@@ -18,21 +18,21 @@ package org.jamplate.glucose.spec.misc;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.parser.TermParser.term;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.parser;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Source.line;
 
 /**
  * Escaped line separators {@code \\\n}, {@code \\\r}, {@code \\\r\n} spec.
@@ -75,7 +75,7 @@ public class NewlineEscapedSpec implements Spec {
 				//compile the escaped newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					int line = Source.line(tree) + 1;
+					int line = line(tree) + 1;
 
 					return new Block(
 							//Define __LINE__

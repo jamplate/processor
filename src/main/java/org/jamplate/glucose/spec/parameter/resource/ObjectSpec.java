@@ -18,7 +18,6 @@ package org.jamplate.glucose.spec.parameter.resource;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
@@ -29,22 +28,23 @@ import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracesSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
 import org.jamplate.glucose.value.GluedValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.*;
-import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.internal.analyzer.SeparatorsAnalyzer.separators;
 import static org.jamplate.impl.analyzer.ChildrenAnalyzer.children;
+import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
+import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.compiler.FirstCompileCompiler.first;
-import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.internal.analyzer.SeparatorsAnalyzer.separators;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Parameter object specification.
@@ -135,7 +135,7 @@ public class ObjectSpec implements Spec {
 								cc -> (compiler, compilation, tree) ->
 										new PushConst(
 												tree,
-												new GluedValue(Source.read(tree))
+												new GluedValue(read(tree))
 										)
 						),
 						c
@@ -152,7 +152,7 @@ public class ObjectSpec implements Spec {
 								cc -> (compiler, compilation, tree) ->
 										new PushConst(
 												tree,
-												new GluedValue(Source.read(tree))
+												new GluedValue(read(tree))
 										)
 						),
 						//compile the slots

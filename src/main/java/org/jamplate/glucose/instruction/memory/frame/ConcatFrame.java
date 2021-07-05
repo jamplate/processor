@@ -15,10 +15,13 @@
  */
 package org.jamplate.glucose.instruction.memory.frame;
 
+import org.jamplate.glucose.value.ArrayValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
-import org.jamplate.model.*;
-import org.jamplate.glucose.value.ArrayValue;
+import org.jamplate.model.Environment;
+import org.jamplate.model.ExecutionException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

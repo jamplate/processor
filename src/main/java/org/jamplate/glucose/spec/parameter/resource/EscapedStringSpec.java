@@ -21,13 +21,13 @@ import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.QuotesSpec;
 import org.jamplate.glucose.value.TextValue;
-import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Parameter escaped string specification.
@@ -67,7 +67,7 @@ public class EscapedStringSpec implements Spec {
 				c -> (compiler, compilation, tree) ->
 						new PushConst(
 								tree,
-								new TextValue(Source.read(tree))
+								new TextValue(read(tree))
 						)
 		);
 	}

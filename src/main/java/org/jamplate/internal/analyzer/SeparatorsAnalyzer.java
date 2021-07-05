@@ -16,7 +16,6 @@
 package org.jamplate.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.References;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
@@ -27,6 +26,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+
+import static org.jamplate.internal.util.References.*;
 
 /**
  * An analyzer that wraps a context of a separator tokens.
@@ -114,7 +115,7 @@ public class SeparatorsAnalyzer implements Analyzer {
 					//from the start to the next separator
 					this.constructor.accept(
 							tree,
-							References.inclusiveExclusive(
+							inclusiveExclusive(
 									tree,
 									next
 							)
@@ -123,7 +124,7 @@ public class SeparatorsAnalyzer implements Analyzer {
 					//from the last separator to the next separator
 					this.constructor.accept(
 							tree,
-							References.exclusive(
+							exclusive(
 									last,
 									next
 							)
@@ -137,7 +138,7 @@ public class SeparatorsAnalyzer implements Analyzer {
 			//from the first separator to the end
 			this.constructor.accept(
 					tree,
-					References.exclusiveInclusive(
+					exclusiveInclusive(
 							last,
 							tree
 					)

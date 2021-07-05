@@ -59,7 +59,9 @@ public class ExclusiveCompiler implements Compiler {
 	 * @throws NullPointerException if the given {@code compiler} is null.
 	 * @since 0.2.0 ~2021.05.28
 	 */
-	public ExclusiveCompiler(@NotNull Compiler compiler) {
+	public ExclusiveCompiler(
+			@NotNull Compiler compiler
+	) {
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
 		this.fallback = this;
@@ -74,7 +76,10 @@ public class ExclusiveCompiler implements Compiler {
 	 * @param fallback the fallback compiler to be passed to the given {@code compiler}.
 	 * @since 0.2.0 ~2021.05.28
 	 */
-	public ExclusiveCompiler(@NotNull Compiler compiler, @NotNull Compiler fallback) {
+	public ExclusiveCompiler(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallback
+	) {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(fallback, "fallback");
 		this.compiler = compiler;
@@ -93,8 +98,12 @@ public class ExclusiveCompiler implements Compiler {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static ExclusiveCompiler exclusive(@NotNull Compiler compiler) {
-		return new ExclusiveCompiler(compiler);
+	public static ExclusiveCompiler exclusive(
+			@NotNull Compiler compiler
+	) {
+		return new ExclusiveCompiler(
+				compiler
+		);
 	}
 
 	/**
@@ -111,8 +120,14 @@ public class ExclusiveCompiler implements Compiler {
 	 */
 	@NotNull
 	@Contract(pure = true)
-	public static ExclusiveCompiler exclusive(@NotNull Compiler compiler, @NotNull Compiler fallback) {
-		return new ExclusiveCompiler(compiler, fallback);
+	public static ExclusiveCompiler exclusive(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallback
+	) {
+		return new ExclusiveCompiler(
+				compiler,
+				fallback
+		);
 	}
 
 	@Nullable

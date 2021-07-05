@@ -18,26 +18,26 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Negate;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ExclamationSpec;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.*;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.internal.analyzer.UnaryOperatorAnalyzer.unaryOperator;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.analyzer.UnaryOperatorAnalyzer.unaryOperator;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Not operator specifications.
@@ -136,7 +136,7 @@ public class NotSpec implements Spec {
 					if (rightI == null)
 						throw new CompileException(
 								"The operator NOT (!) cannot be applied to <" +
-								Source.read(rightT) +
+								read(rightT) +
 								">",
 								tree
 						);

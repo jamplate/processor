@@ -17,9 +17,7 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.flow.Branch;
-import org.jamplate.impl.instruction.Idle;
 import org.jamplate.glucose.instruction.memory.heap.Access;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.memory.stack.Dup;
@@ -27,12 +25,14 @@ import org.jamplate.glucose.instruction.memory.stack.Pop;
 import org.jamplate.glucose.instruction.operator.logic.Defined;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.value.TextValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
+import org.jamplate.impl.instruction.Idle;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Parameter reference specification.
@@ -68,7 +68,7 @@ public class ReferenceSpec implements Spec {
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//read the tree
-					String text = Source.read(tree).toString();
+					String text = read(tree).toString();
 
 					//compile to Access
 					return new Block(

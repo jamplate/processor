@@ -17,18 +17,18 @@ package org.jamplate.glucose.spec.document;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.console.FPrint;
 import org.jamplate.glucose.instruction.memory.heap.Access;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastObject;
 import org.jamplate.glucose.value.TextValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * A document-wise spec that transform any unrecognized token into an {@link FPrint}.
@@ -63,7 +63,7 @@ public class TextSpec implements Spec {
 						c
 				),
 				c -> (compiler, compilation, tree) -> {
-					String text = Source.read(tree).toString();
+					String text = read(tree).toString();
 
 					return new Block(
 							new PushConst(tree, new TextValue(text)),

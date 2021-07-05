@@ -17,7 +17,6 @@ package org.jamplate.internal.compiler;
 
 import org.jamplate.function.Compiler;
 import org.jamplate.impl.instruction.Block;
-import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
@@ -26,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static org.jamplate.internal.util.Trees.flatChildren;
 
 /**
  * A compiler that compiles using two compilers.
@@ -60,21 +61,6 @@ public class FlattenCompiler implements Compiler {
 
 	/**
 	 * Construct a new strict compiler that compiles the unreserved ranges using the given
-	 * {@code compiler}.
-	 *
-	 * @param compiler the compiler. also, the compiler to be used to compile unreserved
-	 *                 ranges.
-	 * @throws NullPointerException if the given {@code compiler} is null.
-	 * @since 0.3.0 ~2021.06.24
-	 */
-	public FlattenCompiler(@NotNull Compiler compiler) {
-		Objects.requireNonNull(compiler, "compiler");
-		this.compiler = compiler;
-		this.fallBack = compiler;
-	}
-
-	/**
-	 * Construct a new strict compiler that compiles the unreserved ranges using the given
 	 * {@code fallback} compiler.
 	 *
 	 * @param compiler the compiler.
@@ -83,7 +69,10 @@ public class FlattenCompiler implements Compiler {
 	 *                              null.
 	 * @since 0.2.0 ~2021.05.23
 	 */
-	public FlattenCompiler(@NotNull Compiler compiler, @NotNull Compiler fallBack) {
+	public FlattenCompiler(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallBack
+	) {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(fallBack, "fallBack");
 		this.compiler = compiler;
@@ -101,8 +90,13 @@ public class FlattenCompiler implements Compiler {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static FlattenCompiler flatten(@NotNull Compiler compiler) {
-		return new FlattenCompiler(compiler);
+	public static FlattenCompiler flatten(
+			@NotNull Compiler compiler
+	) {
+		return new FlattenCompiler(
+				compiler,
+				compiler
+		);
 	}
 
 	/**
@@ -120,8 +114,14 @@ public class FlattenCompiler implements Compiler {
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static FlattenCompiler flatten(@NotNull Compiler compiler, @NotNull Compiler fallBack) {
-		return new FlattenCompiler(compiler, fallBack);
+	public static FlattenCompiler flatten(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallBack
+	) {
+		return new FlattenCompiler(
+				compiler,
+				fallBack
+		);
 	}
 
 	@Nullable
@@ -130,7 +130,7 @@ public class FlattenCompiler implements Compiler {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		List<Instruction> instructions = new ArrayList<>();
-		List<Tree> children = Trees.flatChildren(tree);
+		List<Tree> children = flatChildren(tree);
 
 		if (children.isEmpty())
 			//got no children

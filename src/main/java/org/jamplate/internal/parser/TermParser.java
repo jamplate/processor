@@ -17,7 +17,6 @@ package org.jamplate.internal.parser;
 
 import org.intellij.lang.annotations.Language;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.util.Parsing;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -32,6 +31,9 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
+
+import static org.jamplate.internal.util.Parsing.parseAll;
+import static org.jamplate.internal.util.Parsing.parseFirst;
 
 /**
  * A parser parsing literal sketches depending on a specific pattern.
@@ -163,7 +165,7 @@ public class TermParser implements Parser {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "sketch");
 		if (this.global) {
-			Set<Reference> matches = Parsing.parseAll(
+			Set<Reference> matches = parseAll(
 					tree,
 					this.pattern,
 					this.weight
@@ -174,7 +176,7 @@ public class TermParser implements Parser {
 					.map(match -> this.constructor.apply(tree.getDocument(), match))
 					.collect(Collectors.toSet());
 		} else {
-			Reference match = Parsing.parseFirst(
+			Reference match = parseFirst(
 					tree,
 					this.pattern,
 					this.weight

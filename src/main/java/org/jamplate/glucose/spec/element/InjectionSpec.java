@@ -19,24 +19,24 @@ import cufy.util.Node;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.parser.EnclosureParser.enclosure;
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.parser.EnclosureParser.enclosure;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.parser;
+import static org.jamplate.internal.util.Query.is;
 
 /**
  * Injection {@code #{...}#} specification.

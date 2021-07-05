@@ -17,8 +17,6 @@ package org.jamplate.internal.parser;
 
 import org.intellij.lang.annotations.Language;
 import org.jamplate.function.Parser;
-import org.jamplate.internal.util.Parsing;
-import org.jamplate.internal.util.References;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -36,6 +34,10 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
+
+import static org.jamplate.internal.util.Parsing.parseAll;
+import static org.jamplate.internal.util.Parsing.parseFirst;
+import static org.jamplate.internal.util.References.exclusive;
 
 /**
  * A parser parsing scope sketches depending on a specific starting and ending pattern.
@@ -248,7 +250,7 @@ public class EnclosureParser implements Parser {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		if (this.global) {
-			Set<List<Reference>> matches = Parsing.parseAll(tree, this.startPattern, this.endPattern, this.weight);
+			Set<List<Reference>> matches = parseAll(tree, this.startPattern, this.endPattern, this.weight);
 
 			return matches
 					.parallelStream()
@@ -262,7 +264,7 @@ public class EnclosureParser implements Parser {
 						if (this.bodyConstructor != null)
 							this.bodyConstructor.accept(
 									result,
-									References.exclusive(
+									exclusive(
 											match.get(1),
 											match.get(2)
 									)
@@ -272,7 +274,7 @@ public class EnclosureParser implements Parser {
 					})
 					.collect(Collectors.toSet());
 		} else {
-			List<Reference> match = Parsing.parseFirst(
+			List<Reference> match = parseFirst(
 					tree,
 					this.startPattern,
 					this.endPattern,
@@ -291,7 +293,7 @@ public class EnclosureParser implements Parser {
 			if (this.bodyConstructor != null)
 				this.bodyConstructor.accept(
 						result,
-						References.exclusive(
+						exclusive(
 								match.get(1),
 								match.get(2)
 						)

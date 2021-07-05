@@ -16,8 +16,6 @@
 package org.jamplate.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.References;
-import org.jamplate.internal.util.Trees;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+
+import static org.jamplate.internal.util.References.inclusive;
+import static org.jamplate.internal.util.Trees.head;
 
 /**
  * An analyzer that wraps the trees given to it with an extension context.
@@ -135,11 +136,11 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 		Tree previous = tree.getPrevious();
 
 		if (previous != null && Intersection.PREVIOUS.test(tree, previous)) {
-			Tree head = Trees.head(previous);
+			Tree head = head(previous);
 
 			Tree wrapper = this.constructor.apply(
 					document,
-					References.inclusive(head, tree)
+					inclusive(head, tree)
 			);
 
 			tree.offer(wrapper);
@@ -152,7 +153,7 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 			if (this.leftConstructor != null)
 				this.leftConstructor.accept(
 						wrapper,
-						References.inclusive(head, previous)
+						inclusive(head, previous)
 				);
 			return true;
 		}

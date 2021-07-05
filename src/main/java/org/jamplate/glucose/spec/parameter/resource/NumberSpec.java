@@ -20,12 +20,12 @@ import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.internal.util.Source;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.is;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Parameter number specification.
@@ -60,7 +60,7 @@ public class NumberSpec implements Spec {
 				//compile
 				c -> (compiler, compilation, tree) -> {
 					//read the tree
-					String text = Source.read(tree).toString();
+					String text = read(tree).toString();
 
 					try {
 						//re-interpret the text (binary, octal, hex)

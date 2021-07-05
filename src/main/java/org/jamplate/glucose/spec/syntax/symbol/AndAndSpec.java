@@ -21,8 +21,8 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.parser.TermParser.term;
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
+import static org.jamplate.internal.parser.TermParser.term;
 import static org.jamplate.internal.util.Functions.parser;
 
 /**

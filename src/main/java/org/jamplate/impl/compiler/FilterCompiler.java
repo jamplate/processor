@@ -62,7 +62,10 @@ public class FilterCompiler implements Compiler {
 	 *                              null.
 	 * @since 0.3.0 ~2021.07.04
 	 */
-	public FilterCompiler(@NotNull Predicate<Tree> predicate, @NotNull Compiler compiler) {
+	public FilterCompiler(
+			@NotNull Predicate<Tree> predicate,
+			@NotNull Compiler compiler
+	) {
 		Objects.requireNonNull(predicate, "predicate");
 		Objects.requireNonNull(compiler, "compiler");
 		this.predicate = predicate;
@@ -83,8 +86,14 @@ public class FilterCompiler implements Compiler {
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static FilterCompiler filter(@NotNull Compiler compiler, @NotNull Predicate<Tree> predicate) {
-		return new FilterCompiler(predicate, compiler);
+	public static FilterCompiler filter(
+			@NotNull Compiler compiler,
+			@NotNull Predicate<Tree> predicate
+	) {
+		return new FilterCompiler(
+				predicate,
+				compiler
+		);
 	}
 
 	@Nullable

@@ -16,8 +16,6 @@
 package org.jamplate.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.References;
-import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -29,6 +27,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+
+import static org.jamplate.internal.util.References.inclusive;
+import static org.jamplate.internal.util.Trees.tail;
 
 /**
  * An analyzer that wraps the trees given to it with an operator context.
@@ -138,11 +139,11 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 		Tree next = tree.getNext();
 
 		if (next != null) {
-			Tree tail = Trees.tail(next);
+			Tree tail = tail(next);
 
 			Tree wrapper = this.constructor.apply(
 					document,
-					References.inclusive(tree, tail)
+					inclusive(tree, tail)
 			);
 
 			tree.offer(wrapper);
@@ -155,7 +156,7 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 			if (this.rightConstructor != null)
 				this.rightConstructor.accept(
 						wrapper,
-						References.inclusive(next, tail)
+						inclusive(next, tail)
 				);
 			return true;
 		}

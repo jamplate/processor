@@ -18,26 +18,26 @@ package org.jamplate.glucose.spec.document;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Initializer;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.CompilationImpl;
-import org.jamplate.internal.util.Source;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.compiler.CombineCompiler.combine;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
+import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Functions.initializer;
+import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.internal.util.Source.line;
 
 /**
  * A specification that targets root trees.
@@ -92,7 +92,7 @@ public class RootSpec implements Spec {
 				//compile the root
 				c -> (compiler, compilation, tree) -> {
 					//determine the line where the root was declared
-					String line = String.valueOf(Source.line(tree));
+					int line = line(tree);
 					//determine the file where the root was declared
 					String file = tree.getDocument().toString();
 					//determine the directory where the root was declared

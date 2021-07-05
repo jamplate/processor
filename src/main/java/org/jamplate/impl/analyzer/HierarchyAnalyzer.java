@@ -16,7 +16,6 @@
 package org.jamplate.impl.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
@@ -25,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
+
+import static org.jamplate.internal.util.Trees.children;
 
 /**
  * An analyzer that analyzes the whole hierarchy of the trees given to it using a
@@ -78,7 +79,7 @@ public class HierarchyAnalyzer implements Analyzer {
 
 		boolean modified = this.analyzer.analyze(compilation, tree);
 
-		for (Tree child : Trees.children(tree))
+		for (Tree child : children(tree))
 			modified |= this.analyze(compilation, child);
 
 		return modified;

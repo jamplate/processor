@@ -18,20 +18,20 @@ package org.jamplate.glucose.spec.misc;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.TextValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.*;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.internal.util.Source.line;
 
 /**
  * Suppressed new line specification. Suppresses newlines nearby commands.
@@ -95,7 +95,7 @@ public class NewlineSuppressedSpec implements Spec {
 				//compile the suppressed newlines
 				c -> (compiler, compilation, tree) -> {
 					//determine the line number of the next line
-					String line = String.valueOf(Source.line(tree) + 1);
+					int line = line(tree) + 1;
 
 					return new Block(
 							//Define __LINE__

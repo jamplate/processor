@@ -16,7 +16,6 @@
 package org.jamplate.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.References;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -29,6 +28,9 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+
+import static org.jamplate.internal.util.References.exclusive;
+import static org.jamplate.internal.util.References.inclusive;
 
 /**
  * An analyzer that wraps a context starting with a tree satisfying a pre-specified
@@ -196,7 +198,7 @@ public class BinaryFlowAnalyzer implements Analyzer {
 		if (startT != null && endT != null) {
 			Tree wrapper = this.constructor.apply(
 					document,
-					References.inclusive(
+					inclusive(
 							startT,
 							endT
 					)
@@ -217,7 +219,7 @@ public class BinaryFlowAnalyzer implements Analyzer {
 			if (this.bodyConstructor != null)
 				this.bodyConstructor.accept(
 						wrapper,
-						References.exclusive(
+						exclusive(
 								startT,
 								endT
 						)

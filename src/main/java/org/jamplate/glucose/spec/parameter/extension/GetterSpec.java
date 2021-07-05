@@ -18,14 +18,13 @@ package org.jamplate.glucose.spec.parameter.extension;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.struct.Get;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.ExtensionSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
@@ -39,6 +38,7 @@ import static org.jamplate.internal.analyzer.UnaryExtensionAnalyzer.unaryExtensi
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Getter extension specifications.
@@ -143,9 +143,9 @@ public class GetterSpec implements Spec {
 					if (targetI == null || signI == null)
 						throw new CompileException(
 								"The extension GETTER cannot be applied to <" +
-								Source.read(targetT) +
+								read(targetT) +
 								"> with <" +
-								Source.read(signT) +
+								read(signT) +
 								">",
 								tree
 						);

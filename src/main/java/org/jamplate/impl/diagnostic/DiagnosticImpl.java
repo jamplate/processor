@@ -17,7 +17,6 @@ package org.jamplate.impl.diagnostic;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.internal.util.Source;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +24,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+
+import static org.jamplate.internal.util.Source.*;
 
 /**
  * A basic implementation of the interface {@link Diagnostic}.
@@ -86,15 +87,15 @@ public class DiagnosticImpl implements Diagnostic {
 					   .append("(")
 					   .append(criticalPoint.getDocument())
 					   .append(":")
-					   .append(Source.optLine(criticalPoint))
+					   .append(optLine(criticalPoint))
 					   .append(") ")
 					   .append("\n\t")
-					   .append(Source.optReadLine(criticalPoint))
+					   .append(optReadLine(criticalPoint))
 					   .append("\n\t")
 					   .append(String.join(
 							   "",
 							   Collections.nCopies(
-									   Source.optLinePosition(criticalPoint),
+									   optLinePosition(criticalPoint),
 									   " "
 							   )
 					   ))
@@ -115,7 +116,7 @@ public class DiagnosticImpl implements Diagnostic {
 				   .append("(")
 				   .append(trace.getDocument())
 				   .append(":")
-				   .append(Source.optLine(trace))
+				   .append(optLine(trace))
 				   .append(")");
 
 		if (debug || message.getPriority().equals(MessagePriority.DEBUG)) {

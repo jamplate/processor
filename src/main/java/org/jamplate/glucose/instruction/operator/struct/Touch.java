@@ -15,13 +15,16 @@
  */
 package org.jamplate.glucose.instruction.operator.struct;
 
-import org.jamplate.memory.Memory;
-import org.jamplate.memory.Value;
-import org.jamplate.model.*;
 import org.jamplate.glucose.value.ArrayValue;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.ObjectValue;
 import org.jamplate.glucose.value.QuoteValue;
+import org.jamplate.memory.Memory;
+import org.jamplate.memory.Value;
+import org.jamplate.model.Environment;
+import org.jamplate.model.ExecutionException;
+import org.jamplate.model.Instruction;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

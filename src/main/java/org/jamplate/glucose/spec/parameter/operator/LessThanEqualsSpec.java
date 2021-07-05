@@ -18,7 +18,6 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.memory.stack.Dup;
 import org.jamplate.glucose.instruction.memory.stack.Swap;
@@ -30,20 +29,21 @@ import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.OpenChevronEqualSpec;
 import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.internal.util.Source;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Query.*;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
-import static org.jamplate.internal.analyzer.BinaryOperatorAnalyzer.binaryOperator;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
+import static org.jamplate.internal.analyzer.BinaryOperatorAnalyzer.binaryOperator;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
+import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.internal.util.Source.read;
 
 /**
  * Less-Than-Equals operator specifications.
@@ -158,9 +158,9 @@ public class LessThanEqualsSpec implements Spec {
 					if (leftI == null || rightI == null)
 						throw new CompileException(
 								"The operator LESS_THAN_EQUALS (<=) cannot be applied to <" +
-								Source.read(leftT) +
+								read(leftT) +
 								"> and <" +
-								Source.read(rightT) +
+								read(rightT) +
 								">",
 								tree
 						);

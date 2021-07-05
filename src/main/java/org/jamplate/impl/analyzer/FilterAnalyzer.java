@@ -60,7 +60,10 @@ public class FilterAnalyzer implements Analyzer {
 	 *                              null.
 	 * @since 0.3.0 ~2021.07.03
 	 */
-	public FilterAnalyzer(@NotNull Predicate<Tree> predicate, @NotNull Analyzer analyzer) {
+	public FilterAnalyzer(
+			@NotNull Predicate<Tree> predicate,
+			@NotNull Analyzer analyzer
+	) {
 		Objects.requireNonNull(predicate, "predicate");
 		Objects.requireNonNull(analyzer, "analyzer");
 		this.predicate = predicate;
@@ -81,8 +84,14 @@ public class FilterAnalyzer implements Analyzer {
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static FilterAnalyzer filter(@NotNull Analyzer analyzer, @NotNull Predicate<Tree> predicate) {
-		return new FilterAnalyzer(predicate, analyzer);
+	public static FilterAnalyzer filter(
+			@NotNull Analyzer analyzer,
+			@NotNull Predicate<Tree> predicate
+	) {
+		return new FilterAnalyzer(
+				predicate,
+				analyzer
+		);
 	}
 
 	@Override

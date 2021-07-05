@@ -27,6 +27,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.jamplate.internal.util.Source.read;
+
 /**
  * Trees predicates.
  *
@@ -393,6 +395,6 @@ public final class Query {
 	@NotNull
 	@Contract(value = "->new", pure = true)
 	public static Predicate<Tree> whitespace() {
-		return tree -> Source.read(tree).toString().trim().isEmpty();
+		return tree -> read(tree).toString().trim().isEmpty();
 	}
 }

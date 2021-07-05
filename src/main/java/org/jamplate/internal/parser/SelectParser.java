@@ -86,7 +86,10 @@ public class SelectParser implements Parser {
 			@NotNull Parser selector,
 			@NotNull Parser parser
 	) {
-		return new SelectParser(selector, parser);
+		return new SelectParser(
+				selector,
+				parser
+		);
 	}
 
 	@NotNull

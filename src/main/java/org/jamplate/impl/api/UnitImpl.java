@@ -24,7 +24,6 @@ import org.jamplate.impl.diagnostic.MessageImpl;
 import org.jamplate.impl.diagnostic.MessageKind;
 import org.jamplate.impl.diagnostic.MessagePriority;
 import org.jamplate.impl.model.EnvironmentImpl;
-import org.jamplate.internal.util.Trees;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.*;
 import org.jetbrains.annotations.Contract;
@@ -33,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOError;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.jamplate.internal.util.Trees.collect;
 
 /**
  * An implementation of the interface {@link Unit}.
@@ -410,7 +411,7 @@ public class UnitImpl implements Unit {
 					break;
 
 				for (Tree tree : treeSet)
-					for (Tree relative : Trees.collect(tree))
+					for (Tree relative : collect(tree))
 						root.offer(relative);
 			}
 

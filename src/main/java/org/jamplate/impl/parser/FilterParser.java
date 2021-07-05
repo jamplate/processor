@@ -60,7 +60,10 @@ public class FilterParser implements Parser {
 	 *                              null.
 	 * @since 0.3.0 ~2021.07.04
 	 */
-	public FilterParser(@NotNull Predicate<Tree> predicate, @NotNull Parser parser) {
+	public FilterParser(
+			@NotNull Predicate<Tree> predicate,
+			@NotNull Parser parser
+	) {
 		Objects.requireNonNull(predicate, "predicate");
 		Objects.requireNonNull(parser, "parser");
 		this.predicate = predicate;
@@ -81,8 +84,14 @@ public class FilterParser implements Parser {
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static FilterParser filter(@NotNull Parser parser, @NotNull Predicate<Tree> predicate) {
-		return new FilterParser(predicate, parser);
+	public static FilterParser filter(
+			@NotNull Parser parser,
+			@NotNull Predicate<Tree> predicate
+	) {
+		return new FilterParser(
+				predicate,
+				parser
+		);
 	}
 
 	@NotNull
