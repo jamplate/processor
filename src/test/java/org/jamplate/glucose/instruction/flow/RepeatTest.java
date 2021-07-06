@@ -1,8 +1,8 @@
 package org.jamplate.glucose.instruction.flow;
 
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.memory.stack.Dup;
@@ -21,10 +21,10 @@ import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.*;
-import org.jamplate.glucose.value.ArrayValue;
-import org.jamplate.glucose.value.TextValue;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.glucose.internal.util.Values.array;
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RepeatTest {
@@ -38,7 +38,7 @@ public class RepeatTest {
 		String keyV = "MyKey";
 		String resultKeyV = "ResultKeyV";
 
-		Instruction valueI = new PushConst(new ArrayValue("[X, Y, Z, '', 'Z', 'Y', 'X']"));
+		Instruction valueI = new PushConst(array("[X, Y, Z, '', 'Z', 'Y', 'X']"));
 		Instruction bodyI = (env, mem) -> {
 			Value next = mem.get(keyV);
 			mem.compute(resultKeyV, prev -> m ->
@@ -54,7 +54,7 @@ public class RepeatTest {
 				//run the value
 				valueI,
 				//glue the answer
-				JoinFrame.INSTANCE,
+				GlueFrame.INSTANCE,
 				//cast the answer into array
 				CastArray.INSTANCE,
 				//reverse the array
@@ -90,7 +90,7 @@ public class RepeatTest {
 				//iterate until the anchoring null
 				new Repeat(new Block(
 						//push the allocation address
-						new PushConst(new TextValue(keyV)),
+						new PushConst(text(keyV)),
 						//swap the address with the value
 						Swap.INSTANCE,
 						//allocate the loop variable

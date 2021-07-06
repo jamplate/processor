@@ -24,11 +24,11 @@ import org.jamplate.glucose.instruction.memory.stack.Dup;
 import org.jamplate.glucose.instruction.memory.stack.Pop;
 import org.jamplate.glucose.instruction.operator.logic.Defined;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.instruction.Idle;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.is;
@@ -70,11 +70,11 @@ public class ReferenceSpec implements Spec {
 					//read the tree
 					String text = read(tree).toString();
 
-					//compile to Access
+					//compile
 					return new Block(
 							tree,
 							//push the address
-							new PushConst(tree, new TextValue(text)),
+							new PushConst(tree, text(text)),
 							//access
 							new Access(tree),
 							//duplicate the value to be null checked first
@@ -92,7 +92,7 @@ public class ReferenceSpec implements Spec {
 											//pop the duplicate value (it is null)
 											new Pop(tree),
 											//push the name of the reference
-											new PushConst(tree, new TextValue(text))
+											new PushConst(tree, text(text))
 									)
 							)
 					);

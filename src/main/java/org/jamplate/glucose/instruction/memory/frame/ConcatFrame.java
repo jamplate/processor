@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.array;
+
 /**
  * An instruction that pops the items from the last item and before the last {@link
  * Value#NULL} and then pushes a value that evaluates to the results of concatenating all
@@ -98,7 +100,7 @@ public class ConcatFrame implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		ArrayValue array0 = new ArrayValue();
+		ArrayValue array0 = array();
 
 		while (true) {
 			Value value1 = memory.pop();

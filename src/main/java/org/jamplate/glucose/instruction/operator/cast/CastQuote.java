@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.instruction.operator.cast;
 
-import org.jamplate.glucose.value.QuoteValue;
+import org.jamplate.glucose.internal.util.Values;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -26,9 +26,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.quote;
+
 /**
  * An instruction that pops the last value in the stack and pushes the value of casting it
- * with {@link QuoteValue#cast(Object)}.
+ * with {@link Values#quote(Object)}.
  * <br><br>
  * Memory Visualization:
  * <pre>
@@ -61,7 +63,7 @@ public class CastQuote implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes the
-	 * value of casting it with {@link QuoteValue#cast(Object)}.
+	 * value of casting it with {@link Values#quote(Object)}.
 	 *
 	 * @since 0.3.0 ~2021.06.27
 	 */
@@ -71,7 +73,7 @@ public class CastQuote implements Instruction {
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes the
-	 * value of casting it with {@link QuoteValue#cast(Object)}.
+	 * value of casting it with {@link Values#quote(Object)}.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
@@ -88,7 +90,7 @@ public class CastQuote implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		Value value1 = QuoteValue.cast(value0);
+		Value value1 = quote(value0);
 
 		memory.push(value1);
 	}

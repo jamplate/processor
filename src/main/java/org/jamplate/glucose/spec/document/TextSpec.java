@@ -21,10 +21,10 @@ import org.jamplate.glucose.instruction.memory.console.FPrint;
 import org.jamplate.glucose.instruction.memory.heap.Access;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastObject;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
@@ -58,21 +58,28 @@ public class TextSpec implements Spec {
 	@Override
 	public Compiler getCompiler() {
 		return compiler(
+				//flatten the tree
 				c -> flatten(
+						//try to compile parsed trees
 						fallback(),
+						//fallback for unparsed trees and trees that failed to compile
 						c
 				),
-				c -> (compiler, compilation, tree) -> {
-					String text = read(tree).toString();
-
-					return new Block(
-							new PushConst(tree, new TextValue(text)),
-							new PushConst(tree, new TextValue("__DEFINE__")),
-							new Access(tree),
-							new CastObject(tree),
-							new FPrint(tree)
-					);
-				}
+				//compile non-compiled trees
+				c -> (compiler, compilation, tree) ->
+						new Block(
+								tree,
+								//push the text of the tree
+								new PushConst(tree, text(read(tree))),
+								//push the address to the default replacements object
+								new PushConst(tree, text("__DEFINE__")),
+								//access the default replacements object
+								new Access(tree),
+								//cast to object (if the user replaced it with non-object value)
+								new CastObject(tree),
+								//fprint
+								new FPrint(tree)
+						)
 		);
 	}
 

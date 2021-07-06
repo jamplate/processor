@@ -21,7 +21,7 @@ import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.impl.instruction.Block;
@@ -120,14 +120,18 @@ public class InjectionSpec implements Spec {
 					//compile to print operation
 					return new Block(
 							tree,
-							//push a new frame
-							new PushFrame(tree),
-							//run the value
-							valueI,
-							//glue the answer
-							new JoinFrame(tree),
-							//dump the frame
-							new DumpFrame(tree),
+							//value sandbox
+							new Block(
+									tree,
+									//push a new frame to encapsulate the value content
+									new PushFrame(tree),
+									//run the value
+									valueI,
+									//glue the answer
+									new GlueFrame(tree),
+									//dump the frame
+									new DumpFrame(tree)
+							),
 							//print
 							new Print(tree)
 					);

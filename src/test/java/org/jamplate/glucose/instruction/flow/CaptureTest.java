@@ -2,13 +2,13 @@ package org.jamplate.glucose.instruction.flow;
 
 import org.jamplate.glucose.instruction.memory.console.Print;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CaptureTest {
@@ -18,13 +18,13 @@ public class CaptureTest {
 		Memory memory = new Memory();
 
 		Block instruction = new Block(
-				new PushConst(new TextValue("FirstValue")),
+				new PushConst(text("FirstValue")),
 				Print.INSTANCE,
 				new Capture(new Block(
-						new PushConst(new TextValue("SecondValue")),
+						new PushConst(text("SecondValue")),
 						Print.INSTANCE
 				)),
-				new PushConst(new TextValue("ThirdValue")),
+				new PushConst(text("ThirdValue")),
 				Print.INSTANCE
 		);
 

@@ -19,11 +19,10 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.cast.CastPair;
-import org.jamplate.glucose.instruction.operator.cast.CastQuote;
+import org.jamplate.glucose.instruction.operator.cast.BuildPair;
+import org.jamplate.glucose.instruction.operator.cast.CastGlue;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ColonSpec;
@@ -165,15 +164,36 @@ public class PairSpec implements Spec {
 
 					return new Block(
 							tree,
-							new PushFrame(tree),
-							leftI,
-							new CastQuote(tree),
-							new PushConst(tree, m -> ":"),
-							rightI,
-							new CastQuote(tree),
-							new JoinFrame(tree),
-							new CastPair(tree),
-							new DumpFrame(tree)
+							//key sandbox
+							new Block(
+									tree,
+									//push a frame to encapsulate key values
+									new PushFrame(tree),
+									//run the key
+									leftI,
+									//glue the key parts
+									new GlueFrame(tree),
+									//if single value
+									new CastGlue(tree),
+									//dump the frame
+									new DumpFrame(tree)
+							),
+							//value sandbox
+							new Block(
+									tree,
+									//push a frame to encapsulate value values
+									new PushFrame(tree),
+									//run the value
+									rightI,
+									//glue the value parts
+									new GlueFrame(tree),
+									//if single value
+									new CastGlue(tree),
+									//dump the frame
+									new DumpFrame(tree)
+							),
+							//build a pair from the glued values
+							new BuildPair(tree)
 					);
 				}
 		);

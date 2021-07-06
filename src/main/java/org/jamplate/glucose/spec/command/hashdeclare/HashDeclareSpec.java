@@ -19,15 +19,14 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.memory.stack.Eval;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -35,6 +34,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.parser.GroupParser.group;
 import static org.jamplate.internal.util.Functions.compiler;
@@ -95,7 +95,7 @@ public class HashDeclareSpec implements Spec {
 					//compile the key
 					Instruction keyI = new PushConst(
 							keyT,
-							new TextValue(read(keyT))
+							text(read(keyT))
 					);
 					//compile the value
 					Instruction valueI = compiler.compile(
@@ -125,7 +125,7 @@ public class HashDeclareSpec implements Spec {
 									//run the value
 									valueI,
 									//glue the answer
-									new JoinFrame(tree),
+									new GlueFrame(tree),
 									//dump frame
 									new DumpFrame(tree),
 									//evaluate

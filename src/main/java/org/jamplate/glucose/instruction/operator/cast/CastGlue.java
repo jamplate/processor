@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.instruction.operator.cast;
 
+import org.jamplate.glucose.value.GlueValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -25,61 +26,61 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static org.jamplate.glucose.internal.util.Values.object;
+import static org.jamplate.glucose.internal.util.Values.glue;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
- * to the popped value interpreted as an object.
+ * to the popped value interpreted as a {@link GlueValue}.
  * <br><br>
  * Memory Visualization:
  * <pre>
  *     [..., param:value*]
- *     [..., result:object*]
+ *     [..., result:glue*]
  * </pre>
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.13
+ * @since 0.3.0 ~2021.07.06
  */
-public class CastObject implements Instruction {
+public class CastGlue implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.07.06
 	 */
 	@NotNull
-	public static final CastObject INSTANCE = new CastObject();
+	public static final CastGlue INSTANCE = new CastGlue();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = 9027069127434903248L;
+	private static final long serialVersionUID = 4663666280068528631L;
 
 	/**
 	 * A reference of this instruction in the source code.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.07.06
 	 */
 	@Nullable
 	protected final Tree tree;
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * value that evaluate to the popped value interpreted as a {@link GlueValue}.
 	 *
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.07.06
 	 */
-	public CastObject() {
+	public CastGlue() {
 		this.tree = null;
 	}
 
 	/**
 	 * Construct a new instruction that pops the last value in the stack and pushes a
-	 * value that evaluate to the popped value interpreted as an object.
+	 * value that evaluate to the popped value interpreted as a {@link GlueValue}.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.3.0 ~2021.06.13
+	 * @since 0.3.0 ~2021.07.06
 	 */
-	public CastObject(@NotNull Tree tree) {
+	public CastGlue(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -90,7 +91,7 @@ public class CastObject implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		Value value1 = object(value0);
+		Value value1 = glue(value0);
 
 		memory.push(value1);
 	}
@@ -104,6 +105,6 @@ public class CastObject implements Instruction {
 	@NotNull
 	@Override
 	public Instruction optimize(int mode) {
-		return mode < 0 ? CastObject.INSTANCE : new CastObject(new Tree(this.tree));
+		return mode < 0 ? CastGlue.INSTANCE : new CastGlue(new Tree(this.tree));
 	}
 }

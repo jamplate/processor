@@ -18,10 +18,7 @@ package org.jamplate.glucose.spec.command.hashdeclare;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.frame.ConcatFrame;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.frame.*;
 import org.jamplate.glucose.instruction.memory.heap.Access;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
@@ -32,7 +29,6 @@ import org.jamplate.glucose.instruction.operator.struct.Touch;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -40,6 +36,7 @@ import org.jamplate.model.Intersection;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -189,7 +186,7 @@ public class TouchDeclareSpec implements Spec {
 					//compile the key
 					Instruction keyI = new PushConst(
 							keyT,
-							new TextValue(read(keyT))
+							text(read(keyT))
 					);
 					//compile the value
 					Instruction valueI = compiler.compile(
@@ -250,7 +247,7 @@ public class TouchDeclareSpec implements Spec {
 									//run the value
 									valueI,
 									//glue the answer
-									new JoinFrame(tree),
+									new GlueFrame(tree),
 									//dump frame
 									new DumpFrame(tree),
 									//evaluate

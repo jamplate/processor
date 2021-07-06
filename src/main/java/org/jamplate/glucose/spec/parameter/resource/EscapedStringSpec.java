@@ -20,9 +20,9 @@ import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.QuotesSpec;
-import org.jamplate.glucose.value.TextValue;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.compiler;
@@ -56,6 +56,7 @@ public class EscapedStringSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
+		//this implementation will ignore custom trees outside the body
 		return compiler(
 				//target quotes
 				c -> filter(c, is(QuotesSpec.KIND)),
@@ -67,7 +68,7 @@ public class EscapedStringSpec implements Spec {
 				c -> (compiler, compilation, tree) ->
 						new PushConst(
 								tree,
-								new TextValue(read(tree))
+								text(read(tree))
 						)
 		);
 	}

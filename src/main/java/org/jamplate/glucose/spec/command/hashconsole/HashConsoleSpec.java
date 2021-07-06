@@ -20,8 +20,8 @@ import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.console.SetConsole;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
@@ -114,7 +114,7 @@ public class HashConsoleSpec implements Spec {
 									//run the value
 									valueI,
 									//glue the answer
-									new JoinFrame(tree),
+									new GlueFrame(tree),
 									//dump the frame
 									new DumpFrame(tree)
 							),

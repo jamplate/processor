@@ -15,7 +15,6 @@
  */
 package org.jamplate.glucose.instruction.operator.cast;
 
-import org.jamplate.glucose.value.PairValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -25,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import static org.jamplate.glucose.internal.util.Values.pair;
 
 /**
  * An instruction that pops the last value in the stack and pushes a value that evaluate
@@ -89,7 +90,7 @@ public class CastPair implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		Value value1 = PairValue.cast(value0);
+		Value value1 = pair(value0);
 
 		memory.push(value1);
 	}

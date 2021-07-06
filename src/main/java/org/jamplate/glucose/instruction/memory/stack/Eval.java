@@ -15,7 +15,6 @@
  */
 package org.jamplate.glucose.instruction.memory.stack;
 
-import org.jamplate.glucose.value.Tokenizer;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -25,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import static org.jamplate.glucose.internal.util.Values.value;
 
 /**
  * An instruction that pops the top value at the stack and pushes the result of evaluating
@@ -93,7 +94,7 @@ public class Eval implements Instruction {
 
 		//result
 		String text1 = value0.evaluate(memory);
-		Value value1 = Tokenizer.cast(text1);
+		Value value1 = value(text1);
 
 		//push the result
 		memory.push(value1);

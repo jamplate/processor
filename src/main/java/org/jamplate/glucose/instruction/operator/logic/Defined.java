@@ -15,7 +15,6 @@
  */
 package org.jamplate.glucose.instruction.operator.logic;
 
-import org.jamplate.glucose.value.BooleanValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -25,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import static org.jamplate.glucose.internal.util.Values.bool;
 
 /**
  * An instruction that pops the last value and pushes {@code true} if the value is not
@@ -93,9 +94,9 @@ public class Defined implements Instruction {
 		Value value0 = memory.pop();
 
 		if (value0 == Value.NULL)
-			memory.push(new BooleanValue(false));
+			memory.push(bool(false));
 		else
-			memory.push(new BooleanValue(true));
+			memory.push(bool(true));
 	}
 
 	@Nullable

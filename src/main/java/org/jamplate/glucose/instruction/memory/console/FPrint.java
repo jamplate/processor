@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.object;
+
 /**
  * An instruction that pops the last two values from the stack and prints the results of
  * evaluating the second popped value to the console with applying the replacements of
@@ -100,13 +102,14 @@ public class FPrint implements Instruction {
 		String text1 = value1.evaluate(memory);
 
 		//right
-		ObjectValue object0 = ObjectValue.cast(value0);
+		ObjectValue object0 = object(value0);
 
 		//result
 		String text2 = object0
 				.getPipe()
 				.eval(memory)
 				.stream()
+				.map(p -> p.getPipe().eval(memory))
 				.reduce(
 						text1,
 						(s, e) ->

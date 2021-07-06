@@ -161,10 +161,15 @@ public class EqualsSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run the value at the left
 							leftI,
+							//run the value at the right
 							rightI,
+							//compare values
 							new Compare(tree),
+							//cast result to boolean (if equal, then result would be `0`)
 							new CastBoolean(tree),
+							//negate result
 							new Negate(tree)
 					);
 				}

@@ -20,8 +20,6 @@ import org.jamplate.function.Compiler;
 import org.jamplate.function.Initializer;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.model.Sketch;
@@ -30,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import static org.jamplate.glucose.internal.util.Values.number;
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.CombineCompiler.combine;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -84,37 +84,37 @@ public class RootSpec implements Spec {
 		return compiler(
 				//target the root
 				c -> filter(c, is(RootSpec.KIND)),
-				//compile the root with the proceeding compiler and the children (flattened) with the other compilers
+				//combined compile
 				c -> combine(
-						c,
-						flatten(fallback())
-				),
-				//compile the root
-				c -> (compiler, compilation, tree) -> {
-					//determine the line where the root was declared
-					int line = line(tree);
-					//determine the file where the root was declared
-					String file = tree.getDocument().toString();
-					//determine the directory where the root was declared
-					String dir = new File(file).getParent();
+						//compile the root
+						(compiler, compilation, tree) -> {
+							//determine the line where the root was declared
+							int line = line(tree);
+							//determine the file where the root was declared
+							String file = tree.getDocument().toString();
+							//determine the directory where the root was declared
+							String dir = new File(file).getParent();
 
-					//document initiation block
-					return new Block(
-							tree,
-							//Define __PATH__
-							new PushConst(tree, new TextValue("__PATH__")),
-							new PushConst(tree, new TextValue(file)),
-							new Alloc(tree),
-							//Define __DIR__
-							new PushConst(tree, new TextValue("__DIR__")),
-							new PushConst(tree, TextValue.cast(dir)),
-							new Alloc(tree),
-							//Define __LINE__
-							new PushConst(tree, new TextValue("__LINE__")),
-							new PushConst(tree, new NumberValue(line)),
-							new Alloc(tree)
-					);
-				}
+							//document initiation block
+							return new Block(
+									tree,
+									//Define __PATH__
+									new PushConst(tree, text("__PATH__")),
+									new PushConst(tree, text(file)),
+									new Alloc(tree),
+									//Define __DIR__
+									new PushConst(tree, text("__DIR__")),
+									new PushConst(tree, text((Object) dir)),
+									new Alloc(tree),
+									//Define __LINE__
+									new PushConst(tree, text("__LINE__")),
+									new PushConst(tree, number(line)),
+									new Alloc(tree)
+							);
+						},
+						//compile children (flattened) with the other compilers
+						flatten(fallback())
+				)
 		);
 	}
 

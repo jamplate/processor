@@ -95,7 +95,7 @@ public class InjectionSpecTest {
 		String expectedConsole =
 				"The first lineThe second line\n" +
 				"1\n" +
-				"2{\"a\":\"b\",\"c\":2,\"d\":4}\n" +
+				"2{a:b,c:2,d:4}\n" +
 				"3\\nd\n" +
 				"4e\n" +
 				"5f\n\n" +

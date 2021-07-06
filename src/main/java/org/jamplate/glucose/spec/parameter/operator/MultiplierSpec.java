@@ -159,8 +159,11 @@ public class MultiplierSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run the value at the left
 							leftI,
+							//run the value at the right
 							rightI,
+							//operate
 							new Product(tree)
 					);
 				}

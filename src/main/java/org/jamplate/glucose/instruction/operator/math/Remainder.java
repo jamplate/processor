@@ -105,7 +105,7 @@ public class Remainder implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) -> {
-				double nn = number0.getPipe().eval(m);
+				double nn = number0.getPipe().eval(m).doubleValue();
 
 				if (nn == 0)
 					throw new ExecutionException(
@@ -113,7 +113,7 @@ public class Remainder implements Instruction {
 							this.tree
 					);
 
-				return n % nn;
+				return n.doubleValue() % nn;
 			});
 
 			memory.push(number2);

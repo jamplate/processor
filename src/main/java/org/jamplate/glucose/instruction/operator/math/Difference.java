@@ -105,7 +105,8 @@ public class Difference implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) ->
-					n - number0.getPipe().eval(m)
+					n.doubleValue() -
+					number0.getPipe().eval(m).doubleValue()
 			);
 
 			memory.push(number2);

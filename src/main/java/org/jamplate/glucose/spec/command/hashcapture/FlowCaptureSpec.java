@@ -23,7 +23,6 @@ import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.FlowSpec;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -31,6 +30,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -158,7 +158,7 @@ public class FlowCaptureSpec implements Spec {
 					//compile the key
 					Instruction keyI = new PushConst(
 							keyT,
-							new TextValue(read(keyT))
+							text(read(keyT))
 					);
 					//compile the body
 					Instruction bodyI = compiler.compile(

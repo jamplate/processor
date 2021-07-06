@@ -28,7 +28,6 @@ import org.jamplate.glucose.instruction.operator.logic.Or;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CloseChevronEqualSpec;
-import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -36,6 +35,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -52,7 +52,7 @@ import static org.jamplate.internal.util.Source.read;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.25
  */
-@SuppressWarnings({"OverlyCoupledMethod", "OverlyCoupledClass"})
+@SuppressWarnings("OverlyCoupledMethod")
 public class MoreThanEqualsSpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -167,7 +167,9 @@ public class MoreThanEqualsSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run the value at the left
 							leftI,
+							//run the value at the right
 							rightI,
 							//compare the values
 							new Compare(tree),
@@ -180,7 +182,7 @@ public class MoreThanEqualsSpec implements Spec {
 							//swap the duplicates
 							new Swap(tree),
 							//push '1' to compare with the duplicate
-							new PushConst(tree, new NumberValue(1)),
+							new PushConst(tree, number(1)),
 							//compare the second duplicate with `1`
 							new Compare(tree),
 							//cast the second duplicate to boolean

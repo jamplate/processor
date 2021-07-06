@@ -25,15 +25,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * A value that evaluate to an object and can be evaluated to a raw list of pair values.
+ * A value from gluing multiple other values.
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.29
+ * @since 0.3.0 ~2021.07.01
  */
-public final class ObjectValue implements Value<List<PairValue>> {
+public final class GlueValue implements Value<List<Value>> {
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -5610810574617562364L;
+	private static final long serialVersionUID = 8228913560756371483L;
 
 	/**
 	 * The evaluating function that evaluates to the raw value of this value.
@@ -41,27 +41,27 @@ public final class ObjectValue implements Value<List<PairValue>> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Pipe<Object, List<PairValue>> pipe;
+	private final Pipe<Object, List<Value>> pipe;
 
 	/**
-	 * An internal constructor to construct a new object value with the given {@code
+	 * An internal constructor to construct a new glued value with the given {@code
 	 * function}.
 	 *
-	 * @param pipe the function that evaluates to the pairs of the constructed object
+	 * @param pipe the function that evaluates to the values of the constructed glued
 	 *             value.
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	public ObjectValue(@NotNull Pipe<Object, List<PairValue>> pipe) {
+	public GlueValue(@NotNull Pipe<Object, List<Value>> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		this.pipe = pipe;
 	}
 
 	@NotNull
 	@Override
-	public ObjectValue apply(@NotNull Pipe<List<PairValue>, List<PairValue>> pipe) {
+	public Value<List<Value>> apply(@NotNull Pipe<List<Value>, List<Value>> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
-		return new ObjectValue(this.pipe.apply(pipe));
+		return new GlueValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
@@ -71,19 +71,19 @@ public final class ObjectValue implements Value<List<PairValue>> {
 		return this.pipe
 				.eval(memory)
 				.stream()
-				.map(pair -> pair.evaluate(memory))
-				.collect(Collectors.joining(",", "{", "}"));
+				.map(value -> value.evaluate(memory))
+				.collect(Collectors.joining());
 	}
 
 	@NotNull
 	@Override
-	public Pipe<Object, List<PairValue>> getPipe() {
+	public Pipe<Object, List<Value>> getPipe() {
 		return this.pipe;
 	}
 
 	@NotNull
 	@Override
 	public String toString() {
-		return "Object:" + Integer.toHexString(this.hashCode());
+		return "Glued:" + Integer.toHexString(this.hashCode());
 	}
 }

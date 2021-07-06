@@ -160,11 +160,11 @@ public class LogicalAndSpec implements Spec {
 
 					return new Block(
 							tree,
-							//run first param
+							//run the value at the left
 							leftI,
 							//cast first param into boolean
 							new CastBoolean(tree),
-							//run second param
+							//run the value at the right
 							rightI,
 							//cast second param into boolean
 							new CastBoolean(tree),

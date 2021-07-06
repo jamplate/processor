@@ -18,9 +18,7 @@ package org.jamplate.glucose.value;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Pipe;
 import org.jamplate.memory.Value;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -42,20 +40,7 @@ public final class QuoteValue implements Value<Value> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Pipe<Value> pipe;
-
-	/**
-	 * Construct a new quoted text value that evaluate to the evaluation of the given
-	 * {@code value}.
-	 *
-	 * @param value the value of the constructed value.
-	 * @throws NullPointerException if the given {@code value} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public QuoteValue(@NotNull Value<?> value) {
-		Objects.requireNonNull(value, "value");
-		this.pipe = (m, v) -> value;
-	}
+	private final Pipe<Object, Value> pipe;
 
 	/**
 	 * An internal constructor to construct a quoted new text value with the given {@code
@@ -66,40 +51,16 @@ public final class QuoteValue implements Value<Value> {
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	private QuoteValue(@NotNull Pipe<Value> pipe) {
+	public QuoteValue(@NotNull Pipe<Object, Value> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		this.pipe = pipe;
 	}
 
-	/**
-	 * Cast the given {@code object} into a quoted text value.
-	 *
-	 * @param object the object to be cast.
-	 * @return a new text value evaluating to the value of the given {@code object}.
-	 * @throws NullPointerException if the given {@code object} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public static QuoteValue cast(@Nullable Object object) {
-		//it
-		if (object instanceof QuoteValue)
-			return (QuoteValue) object;
-		//wrap
-		if (object instanceof Value)
-			return new QuoteValue((Value) object);
-
-		//turn into value
-		return new QuoteValue(Tokenizer.cast(object));
-	}
-
 	@NotNull
 	@Override
-	public QuoteValue apply(@NotNull Pipe<Value> pipe) {
+	public QuoteValue apply(@NotNull Pipe<Value, Value> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
-		return new QuoteValue(
-				this.pipe.apply(pipe)
-		);
+		return new QuoteValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
@@ -116,7 +77,7 @@ public final class QuoteValue implements Value<Value> {
 
 	@NotNull
 	@Override
-	public Pipe<Value> getPipe() {
+	public Pipe<Object, Value> getPipe() {
 		return this.pipe;
 	}
 

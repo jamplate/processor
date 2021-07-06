@@ -159,8 +159,11 @@ public class DividerSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run the value at the left
 							leftI,
+							//run the value at the right
 							rightI,
+							//operate
 							new Quotient(tree)
 					);
 				}

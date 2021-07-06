@@ -1,7 +1,6 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.Compare;
@@ -13,9 +12,9 @@ import org.jamplate.glucose.spec.syntax.symbol.CloseChevronSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.impl.api.Action;
 import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.memory.Memory;
@@ -24,6 +23,7 @@ import org.jamplate.model.Document;
 import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;
 
+import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,12 +40,12 @@ public class MoreThanSpecTest {
 				Environment environment = new EnvironmentImpl();
 				Memory memory = new Memory();
 				new Block(
-						(env, mem) -> mem.push(new NumberValue(left)),
-						(env, mem) -> mem.push(new NumberValue(right)),
+						(env, mem) -> mem.push(number(left)),
+						(env, mem) -> mem.push(number(right)),
 						//compare the values
 						Compare.INSTANCE,
 						//push `1` to compare the comparison result
-						new PushConst(new NumberValue(1)),
+						new PushConst(number(1)),
 						//compare the comparison result with `1`
 						Compare.INSTANCE,
 						//cast the result to boolean

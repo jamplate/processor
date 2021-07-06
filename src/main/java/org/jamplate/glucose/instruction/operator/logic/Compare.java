@@ -26,6 +26,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static java.lang.Double.compare;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static org.jamplate.glucose.internal.util.Values.number;
+
 /**
  * An instruction that pops the last two values and pushes a value that evaluates to
  * results of comparing the second popped value to the first popped value as specified by
@@ -105,15 +110,15 @@ public class Compare implements Instruction {
 		if (value1 == Value.NULL) {
 			if (value0 == Value.NULL)
 				//both the values are null
-				memory.push(new NumberValue(0));
+				memory.push(number(0));
 			else
 				//only the left value is null
-				memory.push(new NumberValue(-1));
+				memory.push(number(-1));
 			return;
 		}
 		if (value0 == Value.NULL) {
 			//only the right value is null
-			memory.push(new NumberValue(1));
+			memory.push(number(1));
 			return;
 		}
 
@@ -124,17 +129,19 @@ public class Compare implements Instruction {
 			NumberValue number1 = (NumberValue) value1;
 
 			//result
-			NumberValue number2 = number1.apply((m, n) -> {
-				int num3 = n.compareTo(number0.getPipe().eval(m));
-				return (double) (num3 > 1 ? 1 : num3 < -1 ? -1 : num3);
-			});
+			NumberValue number2 = number1.apply((m, n) ->
+					min(1, max(-1, compare(
+							n.doubleValue(),
+							number0.getPipe().eval(m).doubleValue()
+					)))
+			);
 
 			memory.push(number2);
 			return;
 		}
 
 		//both the values are nonnull
-		memory.push(new NumberValue(m -> {
+		memory.push(number((m, v) -> {
 			//right
 			String text0 = value0.evaluate(m);
 			//left
@@ -144,7 +151,7 @@ public class Compare implements Instruction {
 			int num3 = text1.compareTo(text0);
 			int num4 = num3 > 1 ? 1 : num3 < -1 ? -1 : num3;
 
-			return Integer.toString(num4);
+			return (double) num4;
 		}));
 	}
 

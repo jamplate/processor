@@ -20,11 +20,11 @@ import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.heap.Alloc;
 import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.text;
+import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -99,8 +99,8 @@ public class NewlineSuppressedSpec implements Spec {
 
 					return new Block(
 							//Define __LINE__
-							new PushConst(tree, new TextValue("__LINE__")),
-							new PushConst(tree, new NumberValue(line)),
+							new PushConst(tree, text("__LINE__")),
+							new PushConst(tree, number(line)),
 							new Alloc(tree)
 					);
 				}

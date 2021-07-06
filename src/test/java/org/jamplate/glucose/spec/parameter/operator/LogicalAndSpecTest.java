@@ -1,7 +1,6 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.impl.instruction.Block;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.instruction.operator.logic.And;
 import org.jamplate.glucose.spec.document.LogicSpec;
@@ -10,9 +9,9 @@ import org.jamplate.glucose.spec.parameter.resource.ReferenceSpec;
 import org.jamplate.glucose.spec.syntax.symbol.AndAndSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.glucose.value.BooleanValue;
 import org.jamplate.impl.api.Action;
 import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.EnvironmentImpl;
 import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.memory.Memory;
@@ -23,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.jamplate.glucose.internal.util.Values.bool;
 import static org.jamplate.internal.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,11 +40,11 @@ public class LogicalAndSpecTest {
 				Memory memory = new Memory();
 				new Block(
 						//run first param
-						(env, mem) -> mem.push(new BooleanValue(left)),
+						(env, mem) -> mem.push(bool(left)),
 						//cast first param into boolean
 						CastBoolean.INSTANCE,
 						//run second param
-						(env, mem) -> mem.push(new BooleanValue(right)),
+						(env, mem) -> mem.push(bool(right)),
 						//cast second param into boolean
 						CastBoolean.INSTANCE,
 						//do the logic

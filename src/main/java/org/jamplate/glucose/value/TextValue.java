@@ -18,9 +18,7 @@ package org.jamplate.glucose.value;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Pipe;
 import org.jamplate.memory.Value;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -41,45 +39,7 @@ public final class TextValue implements Value<String> {
 	 * @since 0.3.0 ~2021.06.30
 	 */
 	@NotNull
-	private final Pipe<String> pipe;
-
-	/**
-	 * Construct a new text value that evaluates to the given {@code text}.
-	 *
-	 * @param text the value of the constructed text value.
-	 * @throws NullPointerException if the given {@code text} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	public TextValue(@NotNull String text) {
-		Objects.requireNonNull(text, "text");
-		this.pipe = (m, v) -> text;
-	}
-
-	/**
-	 * Construct a new text value that evaluates to the given {@code text}.
-	 *
-	 * @param text the value of the constructed text value.
-	 * @throws NullPointerException if the given {@code text} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	public TextValue(@NotNull Object text) {
-		Objects.requireNonNull(text, "text");
-		String string = Tokenizer.toString(text);
-		this.pipe = (m, v) -> string;
-	}
-
-	/**
-	 * Construct a new text value that evaluate to the evaluation of the given {@code
-	 * value}.
-	 *
-	 * @param value the value of the constructed value.
-	 * @throws NullPointerException if the given {@code value} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	public TextValue(@NotNull Value<?> value) {
-		Objects.requireNonNull(value, "value");
-		this.pipe = (m, v) -> value.evaluate(m);
-	}
+	private final Pipe<Object, String> pipe;
 
 	/**
 	 * An internal constructor to construct a new text value with the given {@code
@@ -89,40 +49,16 @@ public final class TextValue implements Value<String> {
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	private TextValue(@NotNull Pipe<String> pipe) {
+	public TextValue(@NotNull Pipe<Object, String> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		this.pipe = pipe;
 	}
 
-	/**
-	 * Cast the given {@code object} into a text value.
-	 *
-	 * @param object the object to be cast.
-	 * @return a new text value evaluating to the value of the given {@code object}.
-	 * @throws NullPointerException if the given {@code object} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public static TextValue cast(@Nullable Object object) {
-		//it
-		if (object instanceof TextValue)
-			return (TextValue) object;
-		//wrap
-		if (object instanceof Value)
-			return new TextValue((Value) object);
-
-		//stringify
-		return new TextValue(Tokenizer.toString(object));
-	}
-
 	@NotNull
 	@Override
-	public TextValue apply(@NotNull Pipe<String> pipe) {
+	public TextValue apply(@NotNull Pipe<String, String> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
-		return new TextValue(
-				this.pipe.apply(pipe)
-		);
+		return new TextValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
@@ -134,7 +70,7 @@ public final class TextValue implements Value<String> {
 
 	@NotNull
 	@Override
-	public Pipe<String> getPipe() {
+	public Pipe<Object, String> getPipe() {
 		return this.pipe;
 	}
 

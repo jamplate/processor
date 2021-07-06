@@ -15,7 +15,6 @@
  */
 package org.jamplate.glucose.instruction.flow;
 
-import org.jamplate.glucose.value.TextValue;
 import org.jamplate.impl.memory.BufferedConsole;
 import org.jamplate.memory.Console;
 import org.jamplate.memory.Memory;
@@ -29,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
+
+import static org.jamplate.glucose.internal.util.Values.text;
 
 /**
  * An instruction that replaces the console with a temporary buffer, then executes a
@@ -126,7 +127,7 @@ public class Capture implements Instruction {
 
 		//the captured text
 		String text3 = console1.read();
-		Value value3 = new TextValue(text3);
+		Value value3 = text(text3);
 
 		//push the captured text
 		memory.push(value3);

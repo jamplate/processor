@@ -19,15 +19,13 @@ import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.cast.CastArray;
-import org.jamplate.glucose.instruction.operator.cast.CastQuote;
+import org.jamplate.glucose.instruction.operator.cast.BuildArray;
+import org.jamplate.glucose.instruction.operator.cast.CastGlue;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
-import org.jamplate.glucose.value.GluedValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.instruction.Idle;
 import org.jamplate.model.Sketch;
@@ -45,7 +43,6 @@ import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.*;
-import static org.jamplate.internal.util.Source.read;
 
 /**
  * Parameter array specification.
@@ -54,7 +51,6 @@ import static org.jamplate.internal.util.Source.read;
  * @version 0.3.0
  * @since 0.3.0 ~2021.06.20
  */
-@SuppressWarnings("OverlyCoupledMethod")
 public class ArraySpec implements Spec {
 	/**
 	 * An instance of this spec.
@@ -112,85 +108,86 @@ public class ArraySpec implements Spec {
 				c -> filter(c, is(BracketsSpec.KIND)),
 				//compile the whole context
 				c -> (compiler, compilation, tree) ->
+						//array sandbox
 						new Block(
 								tree,
 								//push a frame to encapsulate the content of the array
 								new PushFrame(tree),
 								//execute inner parts
-								c.compile(compiler, compilation, tree),
-								//join the execution result
-								new JoinFrame(tree),
-								//reformat the array
-								new CastArray(tree),
+								c.compile(
+										compiler,
+										compilation,
+										tree
+								),
+								//glue the frame values
+								new GlueFrame(tree),
+								//in case single value
+								new CastGlue(tree),
+								//build an array from the glued value
+								new BuildArray(tree),
 								//dump the frame
 								new DumpFrame(tree)
 						),
 				//flatten parts
 				c -> flatten(c),
-				//compile anchors, body, commas, slots, else
+				//compile
 				c -> first(
-						//compile opening anchors to PushConst
+						//compile the anchors
 						compiler(
+								//target open and close anchors
 								cc -> filter(cc, or(
 										is(AnchorSpec.KIND_OPEN),
 										is(AnchorSpec.KIND_CLOSE)
 								)),
+								//compile
 								cc -> (compiler, compilation, tree) ->
-										new PushConst(
-												tree,
-												new GluedValue(read(tree))
-										)
+										new Idle(tree)
 						),
-						c
-				),
-				//target body
-				c -> filter(c, is(AnchorSpec.KIND_BODY)),
-				//flatten body parts
-				c -> flatten(c),
-				//compile commas, slots, else
-				c -> first(
-						//compile commas
+						//compile the body
 						compiler(
-								cc -> filter(cc, is(CommaSpec.KIND)),
-								cc -> (compiler, compilation, tree) ->
-										new PushConst(
-												tree,
-												new GluedValue(read(tree))
-										)
-						),
-						//compile the slots
-						compiler(
-								//target the slots
-								cc -> filter(cc, is(AnchorSpec.KIND_SLOT)),
-								//flatten slots parts
+								//target body
+								cc -> filter(cc, is(AnchorSpec.KIND_BODY)),
+								//flatten body parts
 								cc -> flatten(cc),
-								//compile each slot part
+								//compile
 								cc -> first(
-										//ignore whitespaces
+										//compile the commas
 										compiler(
-												ccc -> filter(ccc, whitespace()),
+												//target commas
+												ccc -> filter(ccc, is(CommaSpec.KIND)),
+												//compile
 												ccc -> (compiler, compilation, tree) ->
 														new Idle(tree)
 										),
+										//compile the slots
 										compiler(
-												//compile quoted
+												//target slots
+												ccc -> filter(ccc, is(AnchorSpec.KIND_SLOT)),
+												//compile
 												ccc -> (compiler, compilation, tree) ->
+														//element sandbox
 														new Block(
-																//use the fallback
+																tree,
+																//push a frame to encapsulate the elements
+																new PushFrame(tree),
+																//compile the parts
 																ccc.compile(
 																		compiler,
 																		compilation,
 																		tree
 																),
-																//quote the slot
-																new CastQuote(tree)
+																//glue the slot answer
+																new GlueFrame(tree),
+																//dump the frame
+																new DumpFrame()
 														),
+												//flatten slots parts
+												ccc -> flatten(ccc),
+												//compile
 												ccc -> fallback()
 										)
 								)
-						),
-						//compile others using the fallback compiler
-						fallback()
+						)
 				)
 		);
 	}

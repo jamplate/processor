@@ -20,8 +20,8 @@ import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.Repeat;
 import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.JoinFrame;
 import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
 import org.jamplate.glucose.instruction.memory.stack.Pop;
 import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
 import org.jamplate.glucose.spec.element.CommandSpec;
@@ -192,7 +192,7 @@ public class FlowWhileSpec implements Spec {
 							//run the condition
 							valueI,
 							//glue the answer
-							new JoinFrame(tree),
+							new GlueFrame(tree),
 							//cast the answer to boolean
 							new CastBoolean(tree),
 							//dump the frame

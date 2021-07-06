@@ -30,7 +30,7 @@ public class ObjectSpecTest {
 	public void test0() {
 		Unit unit = new UnitImpl();
 		Document document = new PseudoDocument("{1 + [1, 2, 3]}");
-		String expected = "{1[1,2,3]:\"\"}";
+		String expected = "{1[1,2,3]:}";
 
 		unit.getSpec().add(LogicSpec.INSTANCE);
 		unit.getSpec().add(new ParameterSpec(
@@ -83,7 +83,7 @@ public class ObjectSpecTest {
 		Unit unit = new UnitImpl();
 		//		Document document = new PseudoDocument("{1 + [1,2,3]}");
 		Document document = new PseudoDocument("{1, 2, 3, 4}");
-		String expected = "{1:\"\",2:\"\",3:\"\",4:\"\"}";
+		String expected = "{1:,2:,3:,4:}";
 
 		unit.getSpec().add(LogicSpec.INSTANCE);
 		unit.getSpec().add(new ParameterSpec(

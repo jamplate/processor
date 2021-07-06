@@ -29,6 +29,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Structs.put;
+import static org.jamplate.glucose.internal.util.Structs.set;
+import static org.jamplate.glucose.internal.util.Values.*;
+
 /**
  * An instruction that pops the top three values in the stack and put the first popped
  * value in the third popped value at the key resultant from evaluating the second popped
@@ -102,26 +106,34 @@ public class Put implements Instruction {
 		Value value2 = memory.pop();
 
 		//value
-		QuoteValue quote0 = QuoteValue.cast(value0);
+		QuoteValue quote0 = quote(value0);
 
 		if (!(value2 instanceof ObjectValue) && value1 instanceof NumberValue) {
 			//key
-			NumberValue number1 = NumberValue.cast(value1);
+			NumberValue number1 = (NumberValue) value1;
 			//struct
-			ArrayValue array2 = ArrayValue.cast(value2);
+			ArrayValue array2 = array(value2);
 
 			//result
-			ArrayValue array3 = array2.put(number1, quote0);
+			ArrayValue array3 = set(
+					array2,
+					number1,
+					quote0
+			);
 
 			memory.push(array3);
 		} else {
 			//key
-			QuoteValue quote1 = QuoteValue.cast(value1);
+			QuoteValue quote1 = quote(value1);
 			//struct
-			ObjectValue object2 = ObjectValue.cast(value2);
+			ObjectValue object2 = object(value2);
 
 			//result
-			ObjectValue object3 = object2.put(quote1, quote0);
+			ObjectValue object3 = put(
+					object2,
+					quote1,
+					quote0
+			);
 
 			memory.push(object3);
 		}

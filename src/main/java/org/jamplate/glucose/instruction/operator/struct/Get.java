@@ -18,7 +18,6 @@ package org.jamplate.glucose.instruction.operator.struct;
 import org.jamplate.glucose.value.ArrayValue;
 import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.glucose.value.ObjectValue;
-import org.jamplate.glucose.value.UnquoteValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -28,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import static org.jamplate.glucose.internal.util.Structs.get;
+import static org.jamplate.glucose.internal.util.Values.number;
 
 /**
  * An instruction that pops the top two values in the stack and pushes the property in the
@@ -97,30 +99,31 @@ public class Get implements Instruction {
 		Value value1 = memory.pop();
 
 		if (value1 instanceof ObjectValue) {
-			//right
-			Object key0 = value0.evaluate(memory);
 			//left
 			ObjectValue object1 = (ObjectValue) value1;
 
 			//result
-			Value value3 = object1.evaluateAt(memory, key0);
-			Value value4 = UnquoteValue.cast(value3);
+			Value value3 = get(
+					object1,
+					value0
+			);
 
-			memory.push(value4);
+			memory.push(value3);
 			return;
 		}
 		if (value1 instanceof ArrayValue) {
 			//right
-			NumberValue number0 = NumberValue.cast(value0);
-			int index0 = number0.getPipe().eval(memory).intValue();
+			NumberValue number0 = number(value0);
 			//left
 			ArrayValue array1 = (ArrayValue) value1;
 
 			//result
-			Value value3 = array1.evaluateAt(memory, index0);
-			Value value4 = UnquoteValue.cast(value3);
+			Value value3 = get(
+					array1,
+					number0
+			);
 
-			memory.push(value4);
+			memory.push(value3);
 			return;
 		}
 

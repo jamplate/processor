@@ -23,7 +23,6 @@ import org.jamplate.glucose.instruction.operator.math.Difference;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
-import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -31,6 +30,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -158,7 +158,7 @@ public class SubtractorSpec implements Spec {
 						return new Block(
 								tree,
 								//no left value, default to `0`
-								new PushConst(tree, new NumberValue(0)),
+								new PushConst(tree, number(0)),
 								//execute the right value
 								rightI,
 								//do the work
@@ -187,7 +187,7 @@ public class SubtractorSpec implements Spec {
 							leftI,
 							//execute the right value
 							rightI,
-							//do the work
+							//operate
 							new Difference(tree)
 					);
 				}

@@ -31,6 +31,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Structs.touch;
+import static org.jamplate.glucose.internal.util.Values.*;
+
 /**
  * An instruction that pops the top three values in the stack and put the first popped
  * value in the third popped value at the key resultant from evaluating the second popped
@@ -41,7 +44,7 @@ import java.util.Objects;
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., param:value*|array*|object*, key:array&, value:value*]
+ *     [..., param:value*|array*|object*, key:array*, value:value*]
  *     [..., result:array*|object*]
  * </pre>
  *
@@ -113,27 +116,35 @@ public class Touch implements Instruction {
 			);
 
 		//value
-		QuoteValue quote0 = QuoteValue.cast(value0);
+		QuoteValue quote0 = quote(value0);
 		//key
 		ArrayValue array1 = (ArrayValue) value1;
 		List<Value> list1 = array1.getPipe().eval(memory);
 		//first key
-		Value value3 = array1.evaluateAt(memory, 0);
+		Value value3 = list1.get(0);
 
 		if (!(value2 instanceof ObjectValue) && value3 instanceof NumberValue) {
 			//struct
-			ArrayValue array2 = ArrayValue.cast(value2);
+			ArrayValue array2 = array(value2);
 
 			//result
-			ArrayValue array4 = array2.put(list1, value0);
+			ArrayValue array4 = touch(
+					array2,
+					list1,
+					value0
+			);
 
 			memory.push(array4);
 		} else {
 			//struct
-			ObjectValue object2 = ObjectValue.cast(value2);
+			ObjectValue object2 = object(value2);
 
 			//result
-			ObjectValue object4 = object2.put(list1, value0);
+			ObjectValue object4 = touch(
+					object2,
+					list1,
+					value0
+			);
 
 			memory.push(object4);
 		}

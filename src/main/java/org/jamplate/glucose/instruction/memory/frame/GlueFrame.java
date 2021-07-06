@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.instruction.memory.frame;
 
+import org.jamplate.glucose.value.GlueValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -23,64 +24,66 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.glue;
+
 /**
- * An instruction that pops the items from the last item and before the last {@link
- * Value#NULL} and then pushes a value that evaluates to the results of joining all the
- * popped values from the last popped to the first popped.
+ * An instruction that glues the values from the top value to the first {@link Value#NULL
+ * null} in the stack of the top frame into a single value and pushes the result to the
+ * top of the stack. If the glued values are just one value, that one value will be placed
+ * untouched, otherwise, the values will be wrapped in a {@link GlueValue}.
  * <br><br>
  * Memory Visualization:
  * <pre>
- *     [..., ...param:array*]
- *     [..., result:value*]
- * </pre>
+ *      [..., ...param:value*]
+ *      [..., result:value*|glue*]
+ *  </pre>
  *
  * @author LSafer
  * @version 0.3.0
- * @since 0.3.0 ~2021.06.11
+ * @since 0.3.0 ~2021.07.05
  */
-public class JoinFrame implements Instruction {
+public class GlueFrame implements Instruction {
 	/**
 	 * An instance of this instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.11
+	 * @since 0.3.0 ~2021.07.06
 	 */
 	@NotNull
-	public static final JoinFrame INSTANCE = new JoinFrame();
+	public static final GlueFrame INSTANCE = new GlueFrame();
 
 	@SuppressWarnings("JavaDoc")
-	private static final long serialVersionUID = -4496436508554172838L;
+	private static final long serialVersionUID = 7763753752267957709L;
 
 	/**
 	 * A reference of this instruction in the source code.
 	 *
-	 * @since 0.3.0 ~2021.06.11
+	 * @since 0.3.0 ~2021.07.06
 	 */
 	@Nullable
 	protected final Tree tree;
 
 	/**
-	 * Construct a new instruction that pops the items in the stack from the last item and
-	 * before the last null then pushes a value that evaluate to the popped items joint
-	 * into one string.
+	 * Construct a new reduce frame instruction.
 	 *
-	 * @since 0.3.0 ~2021.06.12
+	 * @since 0.3.0 ~2021.07.06
 	 */
-	public JoinFrame() {
+	public GlueFrame() {
 		this.tree = null;
 	}
 
 	/**
-	 * Construct a new instruction that pops the items in the stack from the last item and
-	 * before the last null then pushes a value that evaluate to the popped items joint
-	 * into one string.
+	 * Construct a new reduce frame instruction.
 	 *
 	 * @param tree a reference for the constructed instruction in the source code.
 	 * @throws NullPointerException if the given {@code tree} is null.
-	 * @since 0.3.0 ~2021.06.12
+	 * @since 0.3.0 ~2021.07.06
 	 */
-	public JoinFrame(@NotNull Tree tree) {
+	public GlueFrame(@NotNull Tree tree) {
 		Objects.requireNonNull(tree, "tree");
 		this.tree = tree;
 	}
@@ -90,23 +93,24 @@ public class JoinFrame implements Instruction {
 		Objects.requireNonNull(environment, "environment");
 		Objects.requireNonNull(memory, "memory");
 
-		Value<?> value0 = memory.pop();
+		List<Value> values = new ArrayList<>();
 
 		while (true) {
-			Value value1 = value0;
-			Value value2 = memory.peek();
+			Value value0 = memory.pop();
 
-			if (value2 == Value.NULL) {
-				memory.push(value1);
+			if (value0 == Value.NULL)
 				break;
-			}
 
-			memory.pop();
-
-			value0 = m ->
-					value2.evaluate(m) +
-					value1.evaluate(m);
+			values.add(value0);
 		}
+
+		Collections.reverse(values);
+
+		Value value1 = values.size() == 1 ?
+					   values.get(0) :
+					   glue(values);
+
+		memory.push(value1);
 	}
 
 	@Nullable
@@ -118,6 +122,6 @@ public class JoinFrame implements Instruction {
 	@NotNull
 	@Override
 	public Instruction optimize(int mode) {
-		return mode < 0 ? JoinFrame.INSTANCE : new JoinFrame(new Tree(this.tree));
+		return mode < 0 ? GlueFrame.INSTANCE : new GlueFrame(new Tree(this.tree));
 	}
 }

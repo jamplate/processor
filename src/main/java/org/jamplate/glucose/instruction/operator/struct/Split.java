@@ -15,8 +15,8 @@
  */
 package org.jamplate.glucose.instruction.operator.struct;
 
+import org.jamplate.glucose.internal.util.Values;
 import org.jamplate.glucose.value.ArrayValue;
-import org.jamplate.glucose.value.UnquoteValue;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -103,11 +103,9 @@ public class Split implements Instruction {
 
 			array0.getPipe()
 				  .eval(memory)
-				  .forEach(value1 -> {
-					  UnquoteValue unquote1 = UnquoteValue.cast(value1);
-
-					  memory.push(unquote1);
-				  });
+				  .stream()
+				  .map(Values::unquote)
+				  .forEach(memory::push);
 
 			return;
 		}

@@ -54,12 +54,13 @@ public class GroupSpec implements Spec {
 	@NotNull
 	@Override
 	public Compiler getCompiler() {
+		//this implementation will ignore custom trees outside the body
 		return compiler(
 				//target parentheses
 				c -> filter(c, is(ParenthesesSpec.KIND)),
 				//flatten parts
 				c -> flatten(c),
-				//compile target the body
+				//target the body
 				c -> filter(c, is(AnchorSpec.KIND_BODY)),
 				//flatten the body
 				c -> flatten(c),

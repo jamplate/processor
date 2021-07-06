@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.text;
+
 /**
  * An instruction that pops the last two values and pushes a value that evaluates to the
  * results of adding/joining the result of evaluating the two popped values.
@@ -107,7 +109,8 @@ public class Sum implements Instruction {
 
 			//result
 			NumberValue number2 = number1.apply((m, n) ->
-					n + number0.getPipe().eval(m)
+					n.doubleValue() +
+					number0.getPipe().eval(m).doubleValue()
 			);
 
 			memory.push(number2);
@@ -115,9 +118,9 @@ public class Sum implements Instruction {
 		}
 
 		//right
-		TextValue text0 = TextValue.cast(value0);
+		TextValue text0 = text(value0);
 		//left
-		TextValue text1 = TextValue.cast(value1);
+		TextValue text1 = text(value1);
 
 		//result
 		TextValue text2 = text1.apply((m, s) ->

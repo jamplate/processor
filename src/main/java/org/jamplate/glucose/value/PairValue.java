@@ -18,14 +18,8 @@ package org.jamplate.glucose.value;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Pipe;
 import org.jamplate.memory.Value;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.AbstractMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 
@@ -47,63 +41,7 @@ public final class PairValue implements Value<Entry<Value, Value>> {
 	 * @since 0.3.0 ~2021.06.29
 	 */
 	@NotNull
-	private final Pipe<Entry<Value, Value>> pipe;
-
-	/**
-	 * Construct a new pair value that evaluates to the result of parsing the given {@code
-	 * source}.
-	 *
-	 * @param source the source text.
-	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public PairValue(@NotNull String source) {
-		Objects.requireNonNull(source, "source");
-		Entry<Value, Value> pair = PairValue.parse(source);
-		this.pipe = (m, v) -> pair;
-	}
-
-	/**
-	 * Construct a new pair value that evaluates to the given raw {@code key} and {@code
-	 * value} pair.
-	 *
-	 * @param key   the raw key of the pair of the constructed pair value.
-	 * @param value the raw value of the pair of the constructed pair value.
-	 * @throws NullPointerException if the given {@code pair} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public PairValue(@NotNull Object key, @NotNull Object value) {
-		Objects.requireNonNull(key, "key");
-		Objects.requireNonNull(value, "value");
-		Entry<Value, Value> entry = PairValue.transformPair(key, value);
-		this.pipe = (m, v) -> entry;
-	}
-
-	/**
-	 * Construct a new pair value that evaluates to the given raw {@code pair}.
-	 *
-	 * @param pair the raw pair of the constructed pair value.
-	 * @throws NullPointerException if the given {@code pair} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public PairValue(@NotNull Entry<?, ?> pair) {
-		Objects.requireNonNull(pair, "pair");
-		Entry<Value, Value> entry = PairValue.transformPair(pair);
-		this.pipe = (m, v) -> entry;
-	}
-
-	/**
-	 * Construct a new pair value that evaluate to the result of parsing the evaluation of
-	 * the given {@code value}.
-	 *
-	 * @param value the value of the constructed pair value.
-	 * @throws NullPointerException if the given {@code value} is null.
-	 * @since 0.3.0 ~2021.06.29
-	 */
-	public PairValue(@NotNull Value<?> value) {
-		Objects.requireNonNull(value, "value");
-		this.pipe = (m, v) -> PairValue.parse(value.evaluate(m));
-	}
+	private final Pipe<Object, Entry<Value, Value>> pipe;
 
 	/**
 	 * An internal constructor to construct a new pair value with the given {@code
@@ -113,121 +51,16 @@ public final class PairValue implements Value<Entry<Value, Value>> {
 	 * @throws NullPointerException if the given {@code function} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	private PairValue(@NotNull Pipe<Entry<Value, Value>> pipe) {
+	public PairValue(@NotNull Pipe<Object, Entry<Value, Value>> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		this.pipe = pipe;
 	}
 
-	/**
-	 * Cast the given {@code object} into a pair.
-	 *
-	 * @param object the object to be cast.
-	 * @return a pair evaluating to a pair interpretation of the given {@code object}.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public static PairValue cast(@Nullable Object object) {
-		//it
-		if (object instanceof PairValue)
-			return (PairValue) object;
-		//wrap
-		if (object instanceof Value)
-			return new PairValue((Value) object);
-		//raw
-		if (object instanceof Entry)
-			return new PairValue((Entry) object);
-
-		//parse
-		return new PairValue(Tokenizer.toString(object));
-	}
-
-	/**
-	 * Parse the given {@code source} into a pair.
-	 *
-	 * @param source the source to be parsed.
-	 * @return a pair from parsing the given {@code source}.
-	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Unmodifiable
-	@Contract(pure = true)
-	public static Entry<Value, Value> parse(@NotNull String source) {
-		Objects.requireNonNull(source, "source");
-		//attempt to parse as singleton object
-		try {
-			JSONObject object = new JSONObject("{" + source + "}");
-
-			return object.toMap()
-						 .entrySet()
-						 .stream()
-						 .map(e -> new AbstractMap.SimpleImmutableEntry<>(
-								 Tokenizer.cast(e.getKey()),
-								 Tokenizer.cast(e.getValue())
-						 ))
-						 .findFirst()
-						 .orElse(new AbstractMap.SimpleImmutableEntry<>(
-								 Value.NULL,
-								 Value.NULL
-						 ));
-		} catch (JSONException ignored) {
-		}
-		//attempt to parse as marker
-		return new AbstractMap.SimpleImmutableEntry<>(
-				m -> JSONObject.quote(source),
-				m -> "\"\""
-		);
-	}
-
-	/**
-	 * Transform the given {@code key} and {@code value} pair into a pair values entry.
-	 *
-	 * @param key   the key.
-	 * @param value the value.
-	 * @return an immutable values entry interpretation of the given {@code key} and
-	 *        {@code value} pair.
-	 * @throws NullPointerException if the given {@code pair} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Unmodifiable
-	@Contract(pure = true)
-	public static Entry<Value, Value> transformPair(@NotNull Object key, @NotNull Object value) {
-		Objects.requireNonNull(key, "key");
-		Objects.requireNonNull(value, "value");
-		return new AbstractMap.SimpleImmutableEntry<>(
-				Tokenizer.cast(key),
-				Tokenizer.cast(value)
-		);
-	}
-
-	/**
-	 * Transform the given {@code pair} entry into a pair values entry.
-	 *
-	 * @param pair the entry to be transformed.
-	 * @return an immutable values entry interpretation of the given {@code pair} entry.
-	 * @throws NullPointerException if the given {@code pair} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Unmodifiable
-	@Contract(pure = true)
-	public static Entry<Value, Value> transformPair(@NotNull Entry<?, ?> pair) {
-		Objects.requireNonNull(pair, "pair");
-		return new AbstractMap.SimpleImmutableEntry<>(
-				Tokenizer.cast(pair.getKey()),
-				Tokenizer.cast(pair.getValue())
-		);
-	}
-
 	@NotNull
 	@Override
-	public PairValue apply(@NotNull Pipe<Entry<Value, Value>> pipe) {
+	public PairValue apply(@NotNull Pipe<Entry<Value, Value>, Entry<Value, Value>> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
-		return new PairValue(
-				this.pipe.apply(pipe)
-		);
+		return new PairValue(this.pipe.apply(pipe));
 	}
 
 	@NotNull
@@ -242,7 +75,7 @@ public final class PairValue implements Value<Entry<Value, Value>> {
 
 	@NotNull
 	@Override
-	public Pipe<Entry<Value, Value>> getPipe() {
+	public Pipe<Object, Entry<Value, Value>> getPipe() {
 		return this.pipe;
 	}
 
@@ -250,37 +83,5 @@ public final class PairValue implements Value<Entry<Value, Value>> {
 	@Override
 	public String toString() {
 		return "Pair:" + Integer.toHexString(this.hashCode());
-	}
-
-	//--------
-
-	/**
-	 * Return a value that evaluates to the key of this pair.
-	 *
-	 * @return a value of the key of this.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Value<?> getKey() {
-		return m -> this.pipe
-				.eval(m)
-				.getKey()
-				.evaluate(m);
-	}
-
-	/**
-	 * Return a value that evaluates to the value of this pair.
-	 *
-	 * @return a value of the value of this.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Value<?> getValue() {
-		return m -> this.pipe
-				.eval(m)
-				.getValue()
-				.evaluate(m);
 	}
 }

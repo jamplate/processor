@@ -18,9 +18,7 @@ package org.jamplate.glucose.value;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Pipe;
 import org.jamplate.memory.Value;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -41,44 +39,7 @@ public final class BooleanValue implements Value<Boolean> {
 	 * @since 0.3.0 ~2021.07.01
 	 */
 	@NotNull
-	private final Pipe<Boolean> pipe;
-
-	/**
-	 * Construct a new boolean value that evaluates to the result of parsing the given
-	 * {@code source}.
-	 *
-	 * @param source the source text.
-	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public BooleanValue(@NotNull String source) {
-		Objects.requireNonNull(source, "source");
-		boolean state = BooleanValue.parse(source);
-		this.pipe = (m, v) -> state;
-	}
-
-	/**
-	 * Construct a new boolean value that evaluates to the given raw {@code state}.
-	 *
-	 * @param state the raw value of the constructed boolean value.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public BooleanValue(boolean state) {
-		this.pipe = (m, v) -> state;
-	}
-
-	/**
-	 * Construct a new boolean value that evaluates to the result of parsing the
-	 * evaluation of the given {@code value}.
-	 *
-	 * @param value the value of the constructed boolean value.
-	 * @throws NullPointerException if the given {@code value} is null.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	public BooleanValue(@NotNull Value<?> value) {
-		Objects.requireNonNull(value, "value");
-		this.pipe = (m, v) -> BooleanValue.parse(value.evaluate(m));
-	}
+	private final Pipe<Object, Boolean> pipe;
 
 	/**
 	 * An internal constructor to construct a new boolean value with the given {@code
@@ -88,64 +49,14 @@ public final class BooleanValue implements Value<Boolean> {
 	 * @throws NullPointerException if the given {@code pipe} is null.
 	 * @since 0.3.0 ~2021.07.01
 	 */
-	private BooleanValue(@NotNull Pipe<Boolean> pipe) {
+	public BooleanValue(@NotNull Pipe<Object, Boolean> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		this.pipe = pipe;
 	}
 
-	/**
-	 * Cast the given {@code object} into a boolean value.
-	 *
-	 * @param object the object to be cast.
-	 * @return a new boolean value evaluating to a boolean interpretation of the given
-	 *        {@code object}.
-	 * @since 0.3.0 ~2021.07.01
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public static BooleanValue cast(@Nullable Object object) {
-		//it
-		if (object instanceof BooleanValue)
-			return (BooleanValue) object;
-		//wrap
-		if (object instanceof Value)
-			return new BooleanValue((Value) object);
-		//raw
-		if (object instanceof Boolean)
-			//noinspection AutoUnboxing
-			return new BooleanValue((boolean) object);
-
-		//parse
-		return new BooleanValue(Tokenizer.toString(object));
-	}
-
-	/**
-	 * Parse the given {@code source} text into a state.
-	 *
-	 * @param source the source to be parsed.
-	 * @return a state from parsing the given {@code source}.
-	 * @throws NullPointerException if the given {@code source} is null.
-	 * @since 0.3.0 ~2021.06.30
-	 */
-	@Contract(pure = true)
-	public static boolean parse(@NotNull String source) {
-		Objects.requireNonNull(source, "source");
-		switch (source) {
-			case "":
-			case "0":
-			case "false":
-			case "null":
-				return false;
-			case "1":
-			case "true":
-			default:
-				return true;
-		}
-	}
-
 	@NotNull
 	@Override
-	public BooleanValue apply(@NotNull Pipe<Boolean> pipe) {
+	public BooleanValue apply(@NotNull Pipe<Boolean, Boolean> pipe) {
 		Objects.requireNonNull(pipe, "pipe");
 		return new BooleanValue(this.pipe.apply(pipe));
 	}
@@ -161,7 +72,7 @@ public final class BooleanValue implements Value<Boolean> {
 
 	@NotNull
 	@Override
-	public Pipe<Boolean> getPipe() {
+	public Pipe<Object, Boolean> getPipe() {
 		return this.pipe;
 	}
 

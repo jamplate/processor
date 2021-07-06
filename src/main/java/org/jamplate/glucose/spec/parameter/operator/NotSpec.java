@@ -143,8 +143,11 @@ public class NotSpec implements Spec {
 
 					return new Block(
 							tree,
+							//run the parameter
 							rightI,
+							//cast to boolean
 							new CastBoolean(tree),
+							//negate
 							new Negate(tree)
 					);
 				}

@@ -23,7 +23,6 @@ import org.jamplate.glucose.instruction.operator.struct.Get;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.ExtensionSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
-import org.jamplate.glucose.value.NumberValue;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
@@ -31,6 +30,7 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
@@ -150,16 +150,21 @@ public class GetterSpec implements Spec {
 								tree
 						);
 
-					Block signWrapI = new Block(
-							signI,
-							new PushConst(tree, new NumberValue(0)),
-							new Get(tree)
-					);
-
 					return new Block(
 							tree,
+							//run the target
 							targetI,
-							signWrapI,
+							//key sandbox
+							new Block(
+									tree,
+									//run the sign
+									signI,
+									//push `0` to access the key
+									new PushConst(tree, number(0)),
+									//get the key
+									new Get(tree)
+							),
+							//get
 							new Get(tree)
 					);
 				}

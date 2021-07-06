@@ -129,7 +129,7 @@ public class HashDeclareSpecTest {
 		Document document = new PseudoDocument(
 				"#declare Address[Key][Nested][Plex][3] 123"
 		);
-		String expectedAddress = "{\"Key\":{\"Nested\":{\"Plex\":[\"\",\"\",\"\",123]}}}";
+		String expectedAddress = "{\"Key\":{\"Nested\":{\"Plex\":[,,,123]}}}";
 
 		Unit unit = new UnitImpl();
 
