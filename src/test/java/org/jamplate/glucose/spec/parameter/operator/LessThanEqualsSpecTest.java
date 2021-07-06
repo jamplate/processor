@@ -1,13 +1,13 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.memory.stack.Dup;
-import org.jamplate.glucose.instruction.memory.stack.Swap;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Compare;
-import org.jamplate.glucose.instruction.operator.logic.Negate;
-import org.jamplate.glucose.instruction.operator.logic.Or;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.memory.stack.IDup;
+import org.jamplate.glucose.instruction.memory.stack.ISwap;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.ICompare;
+import org.jamplate.glucose.instruction.operator.logic.INegate;
+import org.jamplate.glucose.instruction.operator.logic.IOr;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.NumberSpec;
@@ -46,25 +46,25 @@ public class LessThanEqualsSpecTest {
 						(env, mem) -> mem.push(number(left)),
 						(env, mem) -> mem.push(number(right)),
 						//compare the values
-						Compare.INSTANCE,
+						ICompare.INSTANCE,
 						//duplicate for the two checks
-						Dup.INSTANCE,
+						IDup.INSTANCE,
 						//cast the first duplicate to boolean
-						CastBoolean.INSTANCE,
+						ICastBoolean.INSTANCE,
 						//negate the first duplicate to boolean
-						Negate.INSTANCE,
+						INegate.INSTANCE,
 						//swap the duplicates
-						Swap.INSTANCE,
+						ISwap.INSTANCE,
 						//push '-1' to compare with the duplicate
-						new PushConst(number(-1)),
+						new IPushConst(number(-1)),
 						//compare the second duplicate with `-1`
-						Compare.INSTANCE,
+						ICompare.INSTANCE,
 						//cast the second duplicate to boolean
-						CastBoolean.INSTANCE,
+						ICastBoolean.INSTANCE,
 						//negate the second duplicate
-						Negate.INSTANCE,
+						INegate.INSTANCE,
 						//less than or equals
-						Or.INSTANCE
+						IOr.INSTANCE
 				).exec(environment, memory);
 
 				Value value = memory.pop();

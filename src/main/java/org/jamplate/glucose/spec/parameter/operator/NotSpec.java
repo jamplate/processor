@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Negate;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.INegate;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ExclamationSpec;
@@ -146,9 +146,9 @@ public class NotSpec implements Spec {
 							//run the parameter
 							rightI,
 							//cast to boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//negate
-							new Negate(tree)
+							new INegate(tree)
 					);
 				}
 		);

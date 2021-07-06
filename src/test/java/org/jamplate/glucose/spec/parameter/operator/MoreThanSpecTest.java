@@ -1,10 +1,10 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Compare;
-import org.jamplate.glucose.instruction.operator.logic.Negate;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.ICompare;
+import org.jamplate.glucose.instruction.operator.logic.INegate;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.NumberSpec;
@@ -43,15 +43,15 @@ public class MoreThanSpecTest {
 						(env, mem) -> mem.push(number(left)),
 						(env, mem) -> mem.push(number(right)),
 						//compare the values
-						Compare.INSTANCE,
+						ICompare.INSTANCE,
 						//push `1` to compare the comparison result
-						new PushConst(number(1)),
+						new IPushConst(number(1)),
 						//compare the comparison result with `1`
-						Compare.INSTANCE,
+						ICompare.INSTANCE,
 						//cast the result to boolean
-						CastBoolean.INSTANCE,
+						ICastBoolean.INSTANCE,
 						//invert the results
-						Negate.INSTANCE
+						INegate.INSTANCE
 				).exec(environment, memory);
 
 				Value value = memory.pop();

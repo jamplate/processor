@@ -17,10 +17,10 @@ package org.jamplate.glucose.spec.document;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.console.FPrint;
-import org.jamplate.glucose.instruction.memory.heap.Access;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.cast.CastObject;
+import org.jamplate.glucose.instruction.memory.console.IFPrint;
+import org.jamplate.glucose.instruction.memory.heap.IAccess;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.operator.cast.ICastObject;
 import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Source.read;
 
 /**
- * A document-wise spec that transform any unrecognized token into an {@link FPrint}.
+ * A document-wise spec that transform any unrecognized token into an {@link IFPrint}.
  *
  * @author LSafer
  * @version 0.3.0
@@ -70,15 +70,15 @@ public class TextSpec implements Spec {
 						new Block(
 								tree,
 								//push the text of the tree
-								new PushConst(tree, text(read(tree))),
+								new IPushConst(tree, text(read(tree))),
 								//push the address to the default replacements object
-								new PushConst(tree, text("__DEFINE__")),
+								new IPushConst(tree, text("__DEFINE__")),
 								//access the default replacements object
-								new Access(tree),
+								new IAccess(tree),
 								//cast to object (if the user replaced it with non-object value)
-								new CastObject(tree),
+								new ICastObject(tree),
 								//fprint
-								new FPrint(tree)
+								new IFPrint(tree)
 						)
 		);
 	}

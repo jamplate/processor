@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.misc;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.heap.Alloc;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.memory.heap.IAlloc;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -99,9 +99,9 @@ public class NewlineSuppressedSpec implements Spec {
 
 					return new Block(
 							//Define __LINE__
-							new PushConst(tree, text("__LINE__")),
-							new PushConst(tree, number(line)),
-							new Alloc(tree)
+							new IPushConst(tree, text("__LINE__")),
+							new IPushConst(tree, number(line)),
+							new IAlloc(tree)
 					);
 				}
 		);

@@ -19,10 +19,10 @@ import cufy.util.Node;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.glucose.instruction.memory.console.Print;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
+import org.jamplate.glucose.instruction.memory.console.IPrint;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.CompileException;
@@ -124,16 +124,16 @@ public class InjectionSpec implements Spec {
 							new Block(
 									tree,
 									//push a new frame to encapsulate the value content
-									new PushFrame(tree),
+									new IPushFrame(tree),
 									//run the value
 									valueI,
 									//glue the answer
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//dump the frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//print
-							new Print(tree)
+							new IPrint(tree)
 					);
 				}
 		);

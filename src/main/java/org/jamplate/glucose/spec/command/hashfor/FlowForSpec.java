@@ -18,18 +18,18 @@ package org.jamplate.glucose.spec.command.hashfor;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Repeat;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.memory.heap.Set;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.memory.stack.Dup;
-import org.jamplate.glucose.instruction.memory.stack.Swap;
-import org.jamplate.glucose.instruction.operator.cast.CastArray;
-import org.jamplate.glucose.instruction.operator.logic.Defined;
-import org.jamplate.glucose.instruction.operator.struct.Invert;
-import org.jamplate.glucose.instruction.operator.struct.Split;
+import org.jamplate.glucose.instruction.flow.IRepeat;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.memory.heap.ISet;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.memory.stack.IDup;
+import org.jamplate.glucose.instruction.memory.stack.ISwap;
+import org.jamplate.glucose.instruction.operator.cast.ICastArray;
+import org.jamplate.glucose.instruction.operator.logic.IDefined;
+import org.jamplate.glucose.instruction.operator.struct.IReverse;
+import org.jamplate.glucose.instruction.operator.struct.ISplit;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.FlowSpec;
 import org.jamplate.impl.instruction.Block;
@@ -167,7 +167,7 @@ public class FlowForSpec implements Spec {
 								startT
 						);
 
-					Instruction keyI = new PushConst(
+					Instruction keyI = new IPushConst(
 							keyT,
 							text(read(keyT))
 					);
@@ -203,51 +203,51 @@ public class FlowForSpec implements Spec {
 					return new Block(
 							tree,
 							//push an anchoring null
-							new PushConst(tree, Value.NULL),
+							new IPushConst(tree, Value.NULL),
 							//value sandbox
 							new Block(
 									tree,
 									//push a new frame
-									new PushFrame(valueT),
+									new IPushFrame(valueT),
 									//run the value
 									valueI,
 									//glue the answer
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//cast the answer into array
-									new CastArray(tree),
+									new ICastArray(tree),
 									//reverse the array
-									new Invert(tree),
+									new IReverse(tree),
 									//dump the frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//spread the evaluated value
-							new Split(tree),
+							new ISplit(tree),
 							//duplicate the value
-							new Dup(tree),
+							new IDup(tree),
 							//check if anchor
-							new Defined(tree),
+							new IDefined(tree),
 							//iterate until the anchoring null
-							new Repeat(tree, new Block(
+							new IRepeat(tree, new Block(
 									tree,
 									//push the allocation address
 									keyI,
 									//swap the address with the value
-									new Swap(tree),
+									new ISwap(tree),
 									//allocate the loop variable, at top frame
-									new Set(tree),
+									new ISet(tree),
 									//execute the body
 									bodyI,
 									//duplicate the value
-									new Dup(tree),
+									new IDup(tree),
 									//check if null
-									new Defined(tree)
+									new IDefined(tree)
 							)),
 							//push the allocation address (to deallocate it from the top frame)
 							keyI,
 							//swap the anchoring null with the allocation address
-							new Swap(tree),
+							new ISwap(tree),
 							//allocate the anchoring null to the allocation address, at top frame
-							new Set(tree)
+							new ISet(tree)
 					);
 				}
 		);

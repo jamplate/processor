@@ -15,10 +15,10 @@
  */
 package org.jamplate.glucose.internal.util;
 
-import org.jamplate.glucose.value.ArrayValue;
-import org.jamplate.glucose.value.NumberValue;
-import org.jamplate.glucose.value.ObjectValue;
-import org.jamplate.glucose.value.PairValue;
+import org.jamplate.glucose.value.VArray;
+import org.jamplate.glucose.value.VNumber;
+import org.jamplate.glucose.value.VObject;
+import org.jamplate.glucose.value.VPair;
 import org.jamplate.memory.Value;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public final class Structs {
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
 	public static Value<Value> get(
-			@NotNull ObjectValue object,
+			@NotNull VObject object,
 			@NotNull Value key
 	) {
 		Objects.requireNonNull(object, "object");
@@ -104,8 +104,8 @@ public final class Structs {
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
 	public static Value<Value> get(
-			@NotNull ArrayValue array,
-			@NotNull NumberValue index
+			@NotNull VArray array,
+			@NotNull VNumber index
 	) {
 		Objects.requireNonNull(array, "array");
 		Objects.requireNonNull(index, "index");
@@ -133,7 +133,7 @@ public final class Structs {
 	@NotNull
 	@Contract(value = "_->new", pure = true)
 	public static Value<Value> getKey(
-			@NotNull PairValue pair
+			@NotNull VPair pair
 	) {
 		Objects.requireNonNull(pair, "pair");
 		return unquote((m, v) ->
@@ -152,7 +152,7 @@ public final class Structs {
 	@NotNull
 	@Contract(value = "_->new", pure = true)
 	public static Value<Value> getValue(
-			@NotNull PairValue pair
+			@NotNull VPair pair
 	) {
 		Objects.requireNonNull(pair, "pair");
 		return unquote((m, v) ->
@@ -174,8 +174,8 @@ public final class Structs {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static ObjectValue put(
-			@NotNull ObjectValue object,
+	public static VObject put(
+			@NotNull VObject object,
 			@NotNull Value key,
 			@NotNull Value value
 	) {
@@ -186,7 +186,7 @@ public final class Structs {
 			String k = key.eval(m);
 
 			//result
-			List<PairValue> pairs = new ArrayList<>(v);
+			List<VPair> pairs = new ArrayList<>(v);
 
 			//fill
 			int i = IntStream
@@ -230,9 +230,9 @@ public final class Structs {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static ArrayValue set(
-			@NotNull ArrayValue array,
-			@NotNull NumberValue index,
+	public static VArray set(
+			@NotNull VArray array,
+			@NotNull VNumber index,
 			@NotNull Value value
 	) {
 		Objects.requireNonNull(array, "array");
@@ -273,8 +273,8 @@ public final class Structs {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static ObjectValue touch(
-			@NotNull ObjectValue object,
+	public static VObject touch(
+			@NotNull VObject object,
 			@NotNull List<@NotNull Value> keys,
 			@NotNull Value value
 	) {
@@ -307,7 +307,7 @@ public final class Structs {
 			String k = key.eval(m);
 
 			//result
-			List<PairValue> pairs = new ArrayList<>(v);
+			List<VPair> pairs = new ArrayList<>(v);
 
 			//fill
 			int i = IntStream
@@ -331,7 +331,7 @@ public final class Structs {
 			Value mk = ks[1];
 			Value mv = pairs.get(i).getPipe().eval(m).getValue();
 
-			if (mk instanceof NumberValue && !(mv instanceof ObjectValue))
+			if (mk instanceof VNumber && !(mv instanceof VObject))
 				pairs.set(i, pair(key,
 						Structs.touch(
 								array(mv),
@@ -366,13 +366,13 @@ public final class Structs {
 	 *                                  {@code value} is null.
 	 * @throws IllegalArgumentException if the given {@code keys} is empty or contain
 	 *                                  {@code null} or the first value is not {@link
-	 *                                  NumberValue}.
+	 *                                  VNumber}.
 	 * @since 0.3.0 ~2021.07.06
 	 */
 	@NotNull
 	@Contract(value = "_,_,_->new", pure = true)
-	public static ArrayValue touch(
-			@NotNull ArrayValue array,
+	public static VArray touch(
+			@NotNull VArray array,
 			@NotNull List<@NotNull Value> keys,
 			@NotNull Value value
 	) {
@@ -388,12 +388,12 @@ public final class Structs {
 			throw new IllegalArgumentException(
 					"Empty keys list"
 			);
-		if (!(ks[0] instanceof NumberValue))
+		if (!(ks[0] instanceof VNumber))
 			throw new IllegalArgumentException(
 					"First key is not an index"
 			);
 
-		NumberValue index = (NumberValue) ks[0];
+		VNumber index = (VNumber) ks[0];
 
 		if (ks.length == 1)
 			return Structs.set(
@@ -417,7 +417,7 @@ public final class Structs {
 			Value mv = elements.get(i);
 
 			//touch
-			if (mk instanceof NumberValue && !(mv instanceof ObjectValue))
+			if (mk instanceof VNumber && !(mv instanceof VObject))
 				elements.set(i,
 						Structs.touch(
 								array(mv),

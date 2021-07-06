@@ -18,9 +18,9 @@ package org.jamplate.glucose.spec.command.hashcapture;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Capture;
-import org.jamplate.glucose.instruction.memory.heap.Alloc;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.flow.ICapture;
+import org.jamplate.glucose.instruction.memory.heap.IAlloc;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.FlowSpec;
 import org.jamplate.impl.instruction.Block;
@@ -156,7 +156,7 @@ public class FlowCaptureSpec implements Spec {
 						);
 
 					//compile the key
-					Instruction keyI = new PushConst(
+					Instruction keyI = new IPushConst(
 							keyT,
 							text(read(keyT))
 					);
@@ -181,12 +181,12 @@ public class FlowCaptureSpec implements Spec {
 							//push the address to where to allocate the result
 							keyI,
 							//capture sandbox
-							new Capture(
+							new ICapture(
 									tree,
 									bodyI
 							),
 							//allocate
-							new Alloc(tree)
+							new IAlloc(tree)
 					);
 				}
 		);

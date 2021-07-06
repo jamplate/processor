@@ -67,10 +67,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ArrayValue array(@Nullable Object object) {
+	public static VArray array(@Nullable Object object) {
 		//it
-		if (object instanceof ArrayValue)
-			return (ArrayValue) object;
+		if (object instanceof VArray)
+			return (VArray) object;
 		//raw
 		if (object instanceof Iterable) {
 			Iterable iterable = (Iterable) object;
@@ -94,8 +94,8 @@ public final class Values {
 			return Values.array(elements);
 		}
 		//wrap object
-		if (object instanceof ObjectValue) {
-			ObjectValue obj = (ObjectValue) object;
+		if (object instanceof VObject) {
+			VObject obj = (VObject) object;
 			return Values.array((m, v) ->
 					Values.fromPairsToElements(obj.getPipe().eval(m))
 			);
@@ -124,7 +124,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ArrayValue array(@Nullable Object @NotNull ... elements) {
+	public static VArray array(@Nullable Object @NotNull ... elements) {
 		Objects.requireNonNull(elements, "elements");
 		return Values.array((Object) elements);
 	}
@@ -141,7 +141,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ArrayValue array(@NotNull List<@NotNull Value> elements) {
+	public static VArray array(@NotNull List<@NotNull Value> elements) {
 		Objects.requireNonNull(elements, "elements");
 		//noinspection ZeroLengthArrayAllocation
 		Value[] array = elements.toArray(new Value[0]);
@@ -163,8 +163,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ArrayValue array(@NotNull Pipe<Object, List<Value>> pipe) {
-		return new ArrayValue(pipe);
+	public static VArray array(@NotNull Pipe<Object, List<Value>> pipe) {
+		return new VArray(pipe);
 	}
 
 	// bool ------------------------------------------------------------------------------
@@ -179,10 +179,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static BooleanValue bool(@Nullable Object object) {
+	public static VBoolean bool(@Nullable Object object) {
 		//it
-		if (object instanceof BooleanValue)
-			return (BooleanValue) object;
+		if (object instanceof VBoolean)
+			return (VBoolean) object;
 		//raw
 		if (object instanceof Boolean)
 			//noinspection AutoUnboxing
@@ -210,7 +210,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static BooleanValue bool(boolean state) {
+	public static VBoolean bool(boolean state) {
 		return Values.bool((m, v) -> state);
 	}
 
@@ -224,8 +224,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static BooleanValue bool(@NotNull Pipe<Object, Boolean> pipe) {
-		return new BooleanValue(pipe);
+	public static VBoolean bool(@NotNull Pipe<Object, Boolean> pipe) {
+		return new VBoolean(pipe);
 	}
 
 	// glue ------------------------------------------------------------------------------
@@ -240,10 +240,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static GlueValue glue(@Nullable Object object) {
+	public static VGlue glue(@Nullable Object object) {
 		//it
-		if (object instanceof GlueValue)
-			return (GlueValue) object;
+		if (object instanceof VGlue)
+			return (VGlue) object;
 		//raw
 		if (object instanceof Iterable) {
 			Iterable iterable = (Iterable) object;
@@ -279,7 +279,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static GlueValue glue(@NotNull List<@NotNull Value> values) {
+	public static VGlue glue(@NotNull List<@NotNull Value> values) {
 		Objects.requireNonNull(values, "values");
 		//noinspection ZeroLengthArrayAllocation
 		Value[] array = values.toArray(new Value[0]);
@@ -301,8 +301,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static GlueValue glue(@NotNull Pipe<Object, List<Value>> pipe) {
-		return new GlueValue(pipe);
+	public static VGlue glue(@NotNull Pipe<Object, List<Value>> pipe) {
+		return new VGlue(pipe);
 	}
 
 	// number ----------------------------------------------------------------------------
@@ -318,10 +318,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static NumberValue number(@Nullable Object object) {
+	public static VNumber number(@Nullable Object object) {
 		//it
-		if (object instanceof NumberValue)
-			return (NumberValue) object;
+		if (object instanceof VNumber)
+			return (VNumber) object;
 		//raw
 		if (object instanceof Number)
 			return Values.number((Number) object);
@@ -349,7 +349,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static NumberValue number(@NotNull Number number) {
+	public static VNumber number(@NotNull Number number) {
 		Objects.requireNonNull(number, "number");
 		return Values.number((m, v) -> number);
 	}
@@ -364,8 +364,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static NumberValue number(@NotNull Pipe<Object, Number> pipe) {
-		return new NumberValue(pipe);
+	public static VNumber number(@NotNull Pipe<Object, Number> pipe) {
+		return new VNumber(pipe);
 	}
 
 	// object ----------------------------------------------------------------------------
@@ -380,35 +380,35 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ObjectValue object(@Nullable Object object) {
+	public static VObject object(@Nullable Object object) {
 		//it
-		if (object instanceof ObjectValue)
-			return (ObjectValue) object;
+		if (object instanceof VObject)
+			return (VObject) object;
 		//raw
 		if (object instanceof Map) {
 			Map map = (Map) object;
-			List<PairValue> pairs = Values.fromPairsToPairs(map.entrySet());
+			List<VPair> pairs = Values.fromPairsToPairs(map.entrySet());
 			return Values.object(pairs);
 		}
 		if (object instanceof JSONObject) {
 			JSONObject json = (JSONObject) object;
-			List<PairValue> pairs = Values.fromPairsToPairs(json.toMap().entrySet());
+			List<VPair> pairs = Values.fromPairsToPairs(json.toMap().entrySet());
 			return Values.object(pairs);
 		}
 		//raw array
 		if (object instanceof Iterable) {
 			Iterable iterable = (Iterable) object;
-			List<PairValue> pairs = Values.fromElementsToPairs(iterable);
+			List<VPair> pairs = Values.fromElementsToPairs(iterable);
 			return Values.object(pairs);
 		}
 		if (object instanceof Object[]) {
 			Object[] array = (Object[]) object;
-			List<PairValue> pairs = Values.fromElementsToPairs(Arrays.asList(array));
+			List<VPair> pairs = Values.fromElementsToPairs(Arrays.asList(array));
 			return Values.object(pairs);
 		}
 		//wrap array
-		if (object instanceof ArrayValue) {
-			ArrayValue array = (ArrayValue) object;
+		if (object instanceof VArray) {
+			VArray array = (VArray) object;
 			return Values.object((m, v) ->
 					Values.fromElementsToPairs(array.getPipe().eval(m))
 			);
@@ -423,7 +423,7 @@ public final class Values {
 
 		//parse
 		String string = Values.stringify(object);
-		List<PairValue> pairs = Values.parsePairs(string);
+		List<VPair> pairs = Values.parsePairs(string);
 		return Values.object(pairs);
 	}
 
@@ -438,11 +438,11 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ObjectValue object(@NotNull List<@NotNull PairValue> pairs) {
+	public static VObject object(@NotNull List<@NotNull VPair> pairs) {
 		Objects.requireNonNull(pairs, "pairs");
 		//noinspection ZeroLengthArrayAllocation
-		PairValue[] array = pairs.toArray(new PairValue[0]);
-		for (PairValue pair : array)
+		VPair[] array = pairs.toArray(new VPair[0]);
+		for (VPair pair : array)
 			if (pair == null)
 				throw new IllegalArgumentException(
 						"Null value"
@@ -460,8 +460,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static ObjectValue object(@NotNull Pipe<Object, List<PairValue>> pipe) {
-		return new ObjectValue(pipe);
+	public static VObject object(@NotNull Pipe<Object, List<VPair>> pipe) {
+		return new VObject(pipe);
 	}
 
 	// pair ------------------------------------------------------------------------------
@@ -475,10 +475,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static PairValue pair(@Nullable Object object) {
+	public static VPair pair(@Nullable Object object) {
 		//it
-		if (object instanceof PairValue)
-			return (PairValue) object;
+		if (object instanceof VPair)
+			return (VPair) object;
 		//raw
 		if (object instanceof Entry) {
 			Entry entry = (Entry) object;
@@ -510,7 +510,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_,_->new", pure = true)
-	public static PairValue pair(@Nullable Object key, @Nullable Object value) {
+	public static VPair pair(@Nullable Object key, @Nullable Object value) {
 		return Values.pair(new AbstractMap.SimpleEntry<>(key, value));
 	}
 
@@ -524,7 +524,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static PairValue pair(@NotNull Map.Entry<Value, Value> pair) {
+	public static VPair pair(@NotNull Map.Entry<Value, Value> pair) {
 		Objects.requireNonNull(pair, "pair");
 		Entry<Value, Value> entry = new AbstractMap.SimpleImmutableEntry<>(pair);
 		return Values.pair((m, v) -> entry);
@@ -540,8 +540,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static PairValue pair(@NotNull Pipe<Object, Entry<Value, Value>> pipe) {
-		return new PairValue(pipe);
+	public static VPair pair(@NotNull Pipe<Object, Entry<Value, Value>> pipe) {
+		return new VPair(pipe);
 	}
 
 	// quote -----------------------------------------------------------------------------
@@ -556,10 +556,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static QuoteValue quote(@Nullable Object object) {
+	public static VQuote quote(@Nullable Object object) {
 		//it
-		if (object instanceof QuoteValue)
-			return (QuoteValue) object;
+		if (object instanceof VQuote)
+			return (VQuote) object;
 		//raw
 		if (object instanceof Value) {
 			Value value = (Value) object;
@@ -582,7 +582,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static QuoteValue quote(@NotNull Value<?> value) {
+	public static VQuote quote(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
 		return Values.quote((m, v) -> value);
 	}
@@ -597,8 +597,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static QuoteValue quote(@NotNull Pipe<Object, Value> pipe) {
-		return new QuoteValue(pipe);
+	public static VQuote quote(@NotNull Pipe<Object, Value> pipe) {
+		return new VQuote(pipe);
 	}
 
 	// text ------------------------------------------------------------------------------
@@ -613,10 +613,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static TextValue text(@Nullable Object object) {
+	public static VText text(@Nullable Object object) {
 		//it
-		if (object instanceof TextValue)
-			return (TextValue) object;
+		if (object instanceof VText)
+			return (VText) object;
 		//wrap
 		if (object instanceof Value) {
 			Value value = (Value) object;
@@ -640,7 +640,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static TextValue text(@NotNull String text) {
+	public static VText text(@NotNull String text) {
 		Objects.requireNonNull(text, "text");
 		return Values.text((m, v) -> text);
 	}
@@ -655,8 +655,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static TextValue text(@NotNull Pipe<Object, String> pipe) {
-		return new TextValue(pipe);
+	public static VText text(@NotNull Pipe<Object, String> pipe) {
+		return new VText(pipe);
 	}
 
 	// unquote ---------------------------------------------------------------------------
@@ -671,10 +671,10 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static UnquoteValue unquote(@Nullable Object object) {
+	public static VUnquote unquote(@Nullable Object object) {
 		//it
-		if (object instanceof UnquoteValue)
-			return (UnquoteValue) object;
+		if (object instanceof VUnquote)
+			return (VUnquote) object;
 		//wrap
 		if (object instanceof Value) {
 			Value value = (Value) object;
@@ -697,7 +697,7 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static UnquoteValue unquote(@NotNull Value<?> value) {
+	public static VUnquote unquote(@NotNull Value<?> value) {
 		Objects.requireNonNull(value, "value");
 		return Values.unquote((m, v) -> value);
 	}
@@ -712,8 +712,8 @@ public final class Values {
 	 */
 	@NotNull
 	@Contract(value = "_->new", pure = true)
-	public static UnquoteValue unquote(@NotNull Pipe<Object, Value> pipe) {
-		return new UnquoteValue(pipe);
+	public static VUnquote unquote(@NotNull Pipe<Object, Value> pipe) {
+		return new VUnquote(pipe);
 	}
 
 	// auto ------------------------------------------------------------------------------
@@ -811,7 +811,7 @@ public final class Values {
 	@NotNull
 	@Unmodifiable
 	@Contract(value = "_->new", pure = true)
-	private static List<PairValue> fromElementsToPairs(@NotNull Iterable<?> elements) {
+	private static List<VPair> fromElementsToPairs(@NotNull Iterable<?> elements) {
 		Objects.requireNonNull(elements, "elements");
 		int[] index = {0};
 		return Collections.unmodifiableList(
@@ -878,7 +878,7 @@ public final class Values {
 	@NotNull
 	@Unmodifiable
 	@Contract(value = "_->new", pure = true)
-	private static List<PairValue> fromPairsToPairs(@NotNull Iterable<?> iterable) {
+	private static List<VPair> fromPairsToPairs(@NotNull Iterable<?> iterable) {
 		Objects.requireNonNull(iterable, "iterable");
 		return Collections.unmodifiableList(
 				StreamSupport
@@ -1050,7 +1050,7 @@ public final class Values {
 	@NotNull
 	@Unmodifiable
 	@Contract(value = "_->new", pure = true)
-	private static List<PairValue> parsePairs(@NotNull String source) {
+	private static List<VPair> parsePairs(@NotNull String source) {
 		Objects.requireNonNull(source, "source");
 		//attempt to parse as object
 		try {

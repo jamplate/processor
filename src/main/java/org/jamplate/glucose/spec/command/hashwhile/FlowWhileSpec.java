@@ -18,12 +18,12 @@ package org.jamplate.glucose.spec.command.hashwhile;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Repeat;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.memory.stack.Pop;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
+import org.jamplate.glucose.instruction.flow.IRepeat;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.memory.stack.IPop;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.FlowSpec;
 import org.jamplate.impl.instruction.Block;
@@ -188,15 +188,15 @@ public class FlowWhileSpec implements Spec {
 					Instruction valueWrapI = new Block(
 							tree,
 							//push a new frame
-							new PushFrame(valueT),
+							new IPushFrame(valueT),
 							//run the condition
 							valueI,
 							//glue the answer
-							new GlueFrame(tree),
+							new IGlueFrame(tree),
 							//cast the answer to boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//dump the frame
-							new DumpFrame(tree)
+							new IDumpFrame(tree)
 					);
 
 					//compile as a simple REPEAT
@@ -205,14 +205,14 @@ public class FlowWhileSpec implements Spec {
 							//evaluate the value for the first round
 							valueWrapI,
 							//repeat while the answer evaluate to true
-							new Repeat(tree, new Block(
+							new IRepeat(tree, new Block(
 									//execute the body
 									bodyI,
 									//evaluate the value for the next round
 									valueWrapI
 							)),
 							//pop the original value
-							new Pop(tree)
+							new IPop(tree)
 					);
 				}
 		);

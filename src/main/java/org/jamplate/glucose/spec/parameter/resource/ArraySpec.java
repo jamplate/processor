@@ -18,11 +18,11 @@ package org.jamplate.glucose.spec.parameter.resource;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.operator.cast.BuildArray;
-import org.jamplate.glucose.instruction.operator.cast.CastGlue;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.operator.cast.IBuildArray;
+import org.jamplate.glucose.instruction.operator.cast.ICastGlue;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
@@ -112,7 +112,7 @@ public class ArraySpec implements Spec {
 						new Block(
 								tree,
 								//push a frame to encapsulate the content of the array
-								new PushFrame(tree),
+								new IPushFrame(tree),
 								//execute inner parts
 								c.compile(
 										compiler,
@@ -120,13 +120,13 @@ public class ArraySpec implements Spec {
 										tree
 								),
 								//glue the frame values
-								new GlueFrame(tree),
+								new IGlueFrame(tree),
 								//in case single value
-								new CastGlue(tree),
+								new ICastGlue(tree),
 								//build an array from the glued value
-								new BuildArray(tree),
+								new IBuildArray(tree),
 								//dump the frame
-								new DumpFrame(tree)
+								new IDumpFrame(tree)
 						),
 				//flatten parts
 				c -> flatten(c),
@@ -169,7 +169,7 @@ public class ArraySpec implements Spec {
 														new Block(
 																tree,
 																//push a frame to encapsulate the elements
-																new PushFrame(tree),
+																new IPushFrame(tree),
 																//compile the parts
 																ccc.compile(
 																		compiler,
@@ -177,9 +177,9 @@ public class ArraySpec implements Spec {
 																		tree
 																),
 																//glue the slot answer
-																new GlueFrame(tree),
+																new IGlueFrame(tree),
 																//dump the frame
-																new DumpFrame()
+																new IDumpFrame()
 														),
 												//flatten slots parts
 												ccc -> flatten(ccc),

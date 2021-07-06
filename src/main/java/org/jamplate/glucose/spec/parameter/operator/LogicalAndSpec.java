@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.And;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.IAnd;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.AndAndSpec;
@@ -163,13 +163,13 @@ public class LogicalAndSpec implements Spec {
 							//run the value at the left
 							leftI,
 							//cast first param into boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//run the value at the right
 							rightI,
 							//cast second param into boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//do the logic
-							new And(tree)
+							new IAnd(tree)
 					);
 				}
 		);

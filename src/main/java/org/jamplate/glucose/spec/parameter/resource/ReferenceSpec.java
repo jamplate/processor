@@ -17,12 +17,12 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.flow.Branch;
-import org.jamplate.glucose.instruction.memory.heap.Access;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.memory.stack.Dup;
-import org.jamplate.glucose.instruction.memory.stack.Pop;
-import org.jamplate.glucose.instruction.operator.logic.Defined;
+import org.jamplate.glucose.instruction.flow.IBranch;
+import org.jamplate.glucose.instruction.memory.heap.IAccess;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.memory.stack.IDup;
+import org.jamplate.glucose.instruction.memory.stack.IPop;
+import org.jamplate.glucose.instruction.operator.logic.IDefined;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.instruction.Idle;
@@ -74,15 +74,15 @@ public class ReferenceSpec implements Spec {
 					return new Block(
 							tree,
 							//push the address
-							new PushConst(tree, text(text)),
+							new IPushConst(tree, text(text)),
 							//access
-							new Access(tree),
+							new IAccess(tree),
 							//duplicate the value to be null checked first
-							new Dup(tree),
+							new IDup(tree),
 							//null check (true if not null)
-							new Defined(tree),
+							new IDefined(tree),
 							//branch if not null
-							new Branch(
+							new IBranch(
 									tree,
 									//the value is not null, no need to replace
 									new Idle(tree),
@@ -90,9 +90,9 @@ public class ReferenceSpec implements Spec {
 									new Block(
 											tree,
 											//pop the duplicate value (it is null)
-											new Pop(tree),
+											new IPop(tree),
 											//push the name of the reference
-											new PushConst(tree, text(text))
+											new IPushConst(tree, text(text))
 									)
 							)
 					);

@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.document;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Initializer;
-import org.jamplate.glucose.instruction.memory.heap.Alloc;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.memory.heap.IAlloc;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.impl.model.CompilationImpl;
 import org.jamplate.model.Sketch;
@@ -99,17 +99,17 @@ public class RootSpec implements Spec {
 							return new Block(
 									tree,
 									//Define __PATH__
-									new PushConst(tree, text("__PATH__")),
-									new PushConst(tree, text(file)),
-									new Alloc(tree),
+									new IPushConst(tree, text("__PATH__")),
+									new IPushConst(tree, text(file)),
+									new IAlloc(tree),
 									//Define __DIR__
-									new PushConst(tree, text("__DIR__")),
-									new PushConst(tree, text((Object) dir)),
-									new Alloc(tree),
+									new IPushConst(tree, text("__DIR__")),
+									new IPushConst(tree, text((Object) dir)),
+									new IAlloc(tree),
 									//Define __LINE__
-									new PushConst(tree, text("__LINE__")),
-									new PushConst(tree, number(line)),
-									new Alloc(tree)
+									new IPushConst(tree, text("__LINE__")),
+									new IPushConst(tree, number(line)),
+									new IAlloc(tree)
 							);
 						},
 						//compile children (flattened) with the other compilers

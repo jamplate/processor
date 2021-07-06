@@ -18,10 +18,10 @@ package org.jamplate.glucose.spec.command.hasherror;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.system.Serr;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.system.ISerr;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
@@ -110,16 +110,16 @@ public class HashErrorSpec implements Spec {
 							new Block(
 									tree,
 									//push a new frame
-									new PushFrame(valueT),
+									new IPushFrame(valueT),
 									//run the value
 									valueI,
 									//glue the answer
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//dump the frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//System.err.print(...)
-							new Serr(tree)
+							new ISerr(tree)
 					);
 				}
 		);

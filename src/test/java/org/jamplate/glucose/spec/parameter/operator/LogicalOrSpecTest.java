@@ -1,8 +1,8 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Or;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.IOr;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.ReferenceSpec;
@@ -42,13 +42,13 @@ public class LogicalOrSpecTest {
 						//run first param
 						(env, mem) -> mem.push(bool(left)),
 						//cast first param into boolean
-						CastBoolean.INSTANCE,
+						ICastBoolean.INSTANCE,
 						//run second param
 						(env, mem) -> mem.push(bool(right)),
 						//cast second param into boolean
-						CastBoolean.INSTANCE,
+						ICastBoolean.INSTANCE,
 						//do the logic
-						Or.INSTANCE
+						IOr.INSTANCE
 				).exec(environment, memory);
 
 				Value value = memory.pop();

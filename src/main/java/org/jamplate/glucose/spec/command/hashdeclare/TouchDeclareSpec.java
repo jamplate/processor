@@ -18,17 +18,17 @@ package org.jamplate.glucose.spec.command.hashdeclare;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.frame.ConcatFrame;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.memory.heap.Access;
-import org.jamplate.glucose.instruction.memory.heap.Alloc;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.memory.stack.Dup;
-import org.jamplate.glucose.instruction.memory.stack.Eval;
-import org.jamplate.glucose.instruction.operator.struct.Invert;
-import org.jamplate.glucose.instruction.operator.struct.Touch;
+import org.jamplate.glucose.instruction.memory.frame.IConcatFrame;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.memory.heap.IAccess;
+import org.jamplate.glucose.instruction.memory.heap.IAlloc;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.memory.stack.IDup;
+import org.jamplate.glucose.instruction.memory.stack.IEval;
+import org.jamplate.glucose.instruction.operator.struct.IReverse;
+import org.jamplate.glucose.instruction.operator.struct.ITouch;
 import org.jamplate.glucose.spec.element.CommandSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
@@ -187,7 +187,7 @@ public class TouchDeclareSpec implements Spec {
 						);
 
 					//compile the key
-					Instruction keyI = new PushConst(
+					Instruction keyI = new IPushConst(
 							keyT,
 							text(read(keyT))
 					);
@@ -225,43 +225,43 @@ public class TouchDeclareSpec implements Spec {
 							//push the address
 							keyI,
 							//duplicate the address (to access the current value)
-							new Dup(tree),
+							new IDup(tree),
 							//get the current value at the address
-							new Access(tree),
+							new IAccess(tree),
 							//keys sandbox
 							new Block(
 									tree,
 									//push a new frame for the keys list
-									new PushFrame(tree),
+									new IPushFrame(tree),
 									//push the nesting keys
 									accessorI,
 									//glue the answer
-									new ConcatFrame(tree),
+									new IConcatFrame(tree),
 									//reverse the answer
-									new Invert(tree),
+									new IReverse(tree),
 									//dump frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//value sandbox
 							new Block(
 									tree,
 									//push a new frame for the value
-									new PushFrame(tree),
+									new IPushFrame(tree),
 									//run the value
 									valueI,
 									//glue the answer
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//dump frame
-									new DumpFrame(tree),
+									new IDumpFrame(tree),
 									//evaluate
-									new Eval(tree)
+									new IEval(tree)
 							),
 							//nested put
-							new Touch(tree),
+							new ITouch(tree),
 							//evaluate
-							new Eval(tree),
+							new IEval(tree),
 							//allocate
-							new Alloc(tree)
+							new IAlloc(tree)
 					);
 				}
 		);

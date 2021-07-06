@@ -18,7 +18,7 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.operator.math.Sum;
+import org.jamplate.glucose.instruction.operator.math.ISum;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
@@ -164,7 +164,7 @@ public class AdderSpec implements Spec {
 							//run the value at the right
 							rightI,
 							//operate
-							new Sum(tree)
+							new ISum(tree)
 					);
 				}
 		);

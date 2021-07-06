@@ -17,7 +17,7 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,7 +87,7 @@ public class NumberSpec implements Spec {
 								Double.parseDouble(text);
 
 						//compile
-						return new PushConst(tree, number(interpreted));
+						return new IPushConst(tree, number(interpreted));
 					} catch (NumberFormatException ignored) {
 						//cannot interpret, skip ;P
 						return null;

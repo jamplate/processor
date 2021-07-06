@@ -18,11 +18,11 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.operator.cast.BuildPair;
-import org.jamplate.glucose.instruction.operator.cast.CastGlue;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.operator.cast.IBuildPair;
+import org.jamplate.glucose.instruction.operator.cast.ICastGlue;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ColonSpec;
@@ -168,32 +168,32 @@ public class PairSpec implements Spec {
 							new Block(
 									tree,
 									//push a frame to encapsulate key values
-									new PushFrame(tree),
+									new IPushFrame(tree),
 									//run the key
 									leftI,
 									//glue the key parts
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//if single value
-									new CastGlue(tree),
+									new ICastGlue(tree),
 									//dump the frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//value sandbox
 							new Block(
 									tree,
 									//push a frame to encapsulate value values
-									new PushFrame(tree),
+									new IPushFrame(tree),
 									//run the value
 									rightI,
 									//glue the value parts
-									new GlueFrame(tree),
+									new IGlueFrame(tree),
 									//if single value
-									new CastGlue(tree),
+									new ICastGlue(tree),
 									//dump the frame
-									new DumpFrame(tree)
+									new IDumpFrame(tree)
 							),
 							//build a pair from the glued values
-							new BuildPair(tree)
+							new IBuildPair(tree)
 					);
 				}
 		);

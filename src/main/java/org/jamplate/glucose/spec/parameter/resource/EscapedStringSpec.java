@@ -17,7 +17,7 @@ package org.jamplate.glucose.spec.parameter.resource;
 
 import org.jamplate.api.Spec;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.QuotesSpec;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +66,7 @@ public class EscapedStringSpec implements Spec {
 				c -> filter(c, is(AnchorSpec.KIND_BODY)),
 				//compile
 				c -> (compiler, compilation, tree) ->
-						new PushConst(
+						new IPushConst(
 								tree,
 								text(read(tree))
 						)

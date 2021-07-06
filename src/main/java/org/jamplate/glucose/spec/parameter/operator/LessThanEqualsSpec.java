@@ -18,13 +18,13 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.memory.stack.Dup;
-import org.jamplate.glucose.instruction.memory.stack.Swap;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Compare;
-import org.jamplate.glucose.instruction.operator.logic.Negate;
-import org.jamplate.glucose.instruction.operator.logic.Or;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.memory.stack.IDup;
+import org.jamplate.glucose.instruction.memory.stack.ISwap;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.ICompare;
+import org.jamplate.glucose.instruction.operator.logic.INegate;
+import org.jamplate.glucose.instruction.operator.logic.IOr;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.OpenChevronEqualSpec;
@@ -172,25 +172,25 @@ public class LessThanEqualsSpec implements Spec {
 							//run the value at the right
 							rightI,
 							//compare the values
-							new Compare(tree),
+							new ICompare(tree),
 							//duplicate for the two checks
-							new Dup(tree),
+							new IDup(tree),
 							//cast the first duplicate to boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//negate the first duplicate
-							new Negate(tree),
+							new INegate(tree),
 							//swap the duplicates
-							new Swap(tree),
+							new ISwap(tree),
 							//push '-1' to compare with the duplicate
-							new PushConst(tree, number(-1)),
+							new IPushConst(tree, number(-1)),
 							//compare the second duplicate with `-1`
-							new Compare(tree),
+							new ICompare(tree),
 							//cast the second duplicate to boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//negate the second duplicate
-							new Negate(tree),
+							new INegate(tree),
 							//less than or equals
-							new Or(tree)
+							new IOr(tree)
 					);
 				}
 		);

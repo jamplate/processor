@@ -18,10 +18,10 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Compare;
-import org.jamplate.glucose.instruction.operator.logic.Negate;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.ICompare;
+import org.jamplate.glucose.instruction.operator.logic.INegate;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.OpenChevronSpec;
@@ -168,15 +168,15 @@ public class LessThanSpec implements Spec {
 							//run the value at the right
 							rightI,
 							//compare the values
-							new Compare(tree),
+							new ICompare(tree),
 							//push `-1` to compare the comparison result
-							new PushConst(tree, number(-1)),
+							new IPushConst(tree, number(-1)),
 							//compare the comparison result with `-1`
-							new Compare(tree),
+							new ICompare(tree),
 							//cast the result to boolean
-							new CastBoolean(tree),
+							new ICastBoolean(tree),
 							//negate the results
-							new Negate(tree)
+							new INegate(tree)
 					);
 				}
 		);

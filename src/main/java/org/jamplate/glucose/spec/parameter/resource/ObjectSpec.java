@@ -18,12 +18,12 @@ package org.jamplate.glucose.spec.parameter.resource;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.frame.DumpFrame;
-import org.jamplate.glucose.instruction.memory.frame.GlueFrame;
-import org.jamplate.glucose.instruction.memory.frame.PushFrame;
-import org.jamplate.glucose.instruction.operator.cast.BuildObject;
-import org.jamplate.glucose.instruction.operator.cast.CastGlue;
-import org.jamplate.glucose.instruction.operator.cast.CastPair;
+import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
+import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
+import org.jamplate.glucose.instruction.operator.cast.IBuildObject;
+import org.jamplate.glucose.instruction.operator.cast.ICastGlue;
+import org.jamplate.glucose.instruction.operator.cast.ICastPair;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracesSpec;
 import org.jamplate.glucose.spec.syntax.symbol.CommaSpec;
@@ -112,7 +112,7 @@ public class ObjectSpec implements Spec {
 						new Block(
 								tree,
 								//push a frame to encapsulate the content of the object
-								new PushFrame(tree),
+								new IPushFrame(tree),
 								//execute inner parts
 								c.compile(
 										compiler,
@@ -120,13 +120,13 @@ public class ObjectSpec implements Spec {
 										tree
 								),
 								//glue the frame values
-								new GlueFrame(tree),
+								new IGlueFrame(tree),
 								//in case single value
-								new CastGlue(tree),
+								new ICastGlue(tree),
 								//build an object from the glued value
-								new BuildObject(tree),
+								new IBuildObject(tree),
 								//dump the frame
-								new DumpFrame(tree)
+								new IDumpFrame(tree)
 						),
 				//flatten parts
 				c -> flatten(c),
@@ -175,7 +175,7 @@ public class ObjectSpec implements Spec {
 																		tree
 																),
 																//cast to pair
-																new CastPair(tree)
+																new ICastPair(tree)
 														),
 												//flatten slots parts
 												ccc -> flatten(ccc),

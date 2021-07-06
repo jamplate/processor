@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.parameter.extension;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.struct.Get;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.operator.struct.IGet;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.ExtensionSpec;
 import org.jamplate.glucose.spec.syntax.enclosure.BracketsSpec;
@@ -160,12 +160,12 @@ public class GetterSpec implements Spec {
 									//run the sign
 									signI,
 									//push `0` to access the key
-									new PushConst(tree, number(0)),
+									new IPushConst(tree, number(0)),
 									//get the key
-									new Get(tree)
+									new IGet(tree)
 							),
 							//get
-							new Get(tree)
+							new IGet(tree)
 					);
 				}
 		);

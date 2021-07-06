@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.memory.resource.PushConst;
-import org.jamplate.glucose.instruction.operator.math.Difference;
+import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.instruction.operator.math.IDifference;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
@@ -158,11 +158,11 @@ public class SubtractorSpec implements Spec {
 						return new Block(
 								tree,
 								//no left value, default to `0`
-								new PushConst(tree, number(0)),
+								new IPushConst(tree, number(0)),
 								//execute the right value
 								rightI,
 								//do the work
-								new Difference(tree)
+								new IDifference(tree)
 						);
 
 					Instruction leftI = compiler.compile(
@@ -188,7 +188,7 @@ public class SubtractorSpec implements Spec {
 							//execute the right value
 							rightI,
 							//operate
-							new Difference(tree)
+							new IDifference(tree)
 					);
 				}
 		);

@@ -18,8 +18,8 @@ package org.jamplate.glucose.spec.parameter.operator;
 import org.jamplate.api.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
-import org.jamplate.glucose.instruction.operator.cast.CastBoolean;
-import org.jamplate.glucose.instruction.operator.logic.Compare;
+import org.jamplate.glucose.instruction.operator.cast.ICastBoolean;
+import org.jamplate.glucose.instruction.operator.logic.ICompare;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.standard.OperatorSpec;
 import org.jamplate.glucose.spec.syntax.symbol.ExclamationEqualSpec;
@@ -165,9 +165,9 @@ public class NotEqualsSpec implements Spec {
 							//run the value at the right
 							rightI,
 							//compare values
-							new Compare(tree),
+							new ICompare(tree),
 							//cast result to boolean (if equal, then result would be `0`)
-							new CastBoolean(tree)
+							new ICastBoolean(tree)
 					);
 				}
 		);
