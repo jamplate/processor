@@ -27,32 +27,17 @@
  * <br>
  * Default implementations packages:
  * <ul>
- *     <li>{@link org.jamplate.impl.api}</li>
- *     <li>{@link org.jamplate.impl.diagnostic}</li>
- *     <li>{@link org.jamplate.impl.instruction}</li>
- *     <li>{@link org.jamplate.impl.memory}</li>
- *     <li>{@link org.jamplate.impl.model}</li>
- *     <li>{@link org.jamplate.impl.analyzer}</li>
- *     <li>{@link org.jamplate.impl.compiler}</li>
- *     <li>{@link org.jamplate.impl.initializer}</li>
- *     <li>{@link org.jamplate.impl.listener}</li>
- *     <li>{@link org.jamplate.impl.parser}</li>
- *     <li>{@link org.jamplate.impl.processor}</li>
+ *     <li>{@link org.jamplate.impl}</li>
  * </ul>
  * <br>
  * Internal packages:
  * <ul>
- *     <li>{@link org.jamplate.internal.util}</li>
- *     <li>{@link org.jamplate.internal.analyzer}</li>
- *     <li>{@link org.jamplate.internal.compiler}</li>
- *     <li>{@link org.jamplate.internal.parser}</li>
+ *     <li>{@link org.jamplate.internal}</li>
  * </ul>
  * <br>
  * Glucose implementation packages:
  * <ul>
- *     <li>{@link org.jamplate.glucose.instruction}</li>
- *     <li>{@link org.jamplate.glucose.spec}</li>
- *     <li>{@link org.jamplate.glucose.value}</li>
+ *     <li>{@link org.jamplate.glucose}</li>
  * </ul>
  * <br><br>
  * <table style="width: 100%;">
