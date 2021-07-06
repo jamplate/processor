@@ -25,8 +25,8 @@ import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.glucose.internal.util.Values.number;
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.internal.parser.TermParser.term;
 import static org.jamplate.internal.util.Functions.compiler;

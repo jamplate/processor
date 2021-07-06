@@ -23,8 +23,8 @@ import org.jamplate.glucose.instruction.memory.resource.PushConst;
 import org.jamplate.impl.instruction.Block;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.glucose.internal.util.Values.number;
+import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
