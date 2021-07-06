@@ -88,7 +88,7 @@ public class Sout implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.evaluate(memory);
+		String text0 = value0.eval(memory);
 
 		//noinspection UseOfSystemOutOrSystemErr
 		System.out.print(text0);

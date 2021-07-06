@@ -63,7 +63,7 @@ public final class TextValue implements Value<String> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		return this.pipe.eval(memory);
 	}

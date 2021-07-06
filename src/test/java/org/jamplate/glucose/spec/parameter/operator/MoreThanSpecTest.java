@@ -55,7 +55,7 @@ public class MoreThanSpecTest {
 				).exec(environment, memory);
 
 				Value value = memory.pop();
-				String text = value.evaluate(memory);
+				String text = value.eval(memory);
 
 				assertEquals(
 						String.valueOf(result),
@@ -93,7 +93,7 @@ public class MoreThanSpecTest {
 				unit.getSpec().add(listener(event -> {
 					if (event.getAction().equals(Action.POST_EXEC)) {
 						Memory memory = event.getMemory();
-						String actual = memory.peek().evaluate(memory);
+						String actual = memory.peek().eval(memory);
 
 						assertEquals(
 								expected,

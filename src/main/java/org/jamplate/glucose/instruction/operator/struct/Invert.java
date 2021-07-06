@@ -115,7 +115,7 @@ public class Invert implements Instruction {
 
 		throw new ExecutionException(
 				"INVERT expected array but got: " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}

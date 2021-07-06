@@ -111,7 +111,8 @@ public class Touch implements Instruction {
 
 		if (!(value1 instanceof ArrayValue))
 			throw new ExecutionException(
-					"TOUCH expected array but got: " + value1.evaluate(memory),
+					"TOUCH expected array but got: " +
+					value1.eval(memory),
 					this.tree
 			);
 

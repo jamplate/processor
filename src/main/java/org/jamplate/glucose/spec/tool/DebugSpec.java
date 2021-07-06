@@ -420,7 +420,7 @@ public class DebugSpec implements Spec {
 			buffer.append(value.toString());
 			buffer.append("]");
 			buffer.append("\t");
-			buffer.append(value.evaluate(memory));
+			buffer.append(value.eval(memory));
 			buffer.append("\n");
 		});
 
@@ -435,7 +435,7 @@ public class DebugSpec implements Spec {
 			buffer.append(value.toString());
 			buffer.append("]");
 			buffer.append("\t");
-			buffer.append(value.evaluate(memory));
+			buffer.append(value.eval(memory));
 			buffer.append("\n");
 		});
 	}

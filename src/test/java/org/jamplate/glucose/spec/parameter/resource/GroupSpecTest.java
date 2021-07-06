@@ -53,7 +53,7 @@ public class GroupSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String actual = memory.peek().evaluate(memory);
+				String actual = memory.peek().eval(memory);
 
 				assertEquals(
 						expected,
@@ -120,7 +120,7 @@ public class GroupSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String actual = memory.peek().evaluate(memory);
+				String actual = memory.peek().eval(memory);
 
 				assertEquals(
 						expected,

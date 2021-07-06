@@ -104,7 +104,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.array((m, v) ->
-					Values.parseElements(value.evaluate(m))
+					Values.parseElements(value.eval(m))
 			);
 		}
 
@@ -191,7 +191,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.bool((m, v) ->
-					Values.parseBoolean(value.evaluate(m))
+					Values.parseBoolean(value.eval(m))
 			);
 		}
 
@@ -329,7 +329,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.number((m, v) ->
-					Values.parseNumber(value.evaluate(m))
+					Values.parseNumber(value.eval(m))
 			);
 		}
 
@@ -417,7 +417,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.object((m, v) ->
-					Values.parsePairs(value.evaluate(m))
+					Values.parsePairs(value.eval(m))
 			);
 		}
 
@@ -489,7 +489,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.pair((m, v) ->
-					Values.parsePair(value.evaluate(m))
+					Values.parsePair(value.eval(m))
 			);
 		}
 
@@ -621,7 +621,7 @@ public final class Values {
 		if (object instanceof Value) {
 			Value value = (Value) object;
 			return Values.text((m, v) ->
-					value.evaluate(m)
+					value.eval(m)
 			);
 		}
 

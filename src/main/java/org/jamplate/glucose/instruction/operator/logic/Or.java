@@ -117,9 +117,9 @@ public class Or implements Instruction {
 
 		throw new ExecutionException(
 				"OR expected two booleans but got: " +
-				value1.evaluate(memory) +
+				value1.eval(memory) +
 				" and " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}

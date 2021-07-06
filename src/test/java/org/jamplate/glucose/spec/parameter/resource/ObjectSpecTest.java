@@ -55,7 +55,7 @@ public class ObjectSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String results = memory.peek().evaluate(memory);
+				String results = memory.peek().eval(memory);
 
 				assertEquals(
 						expected,
@@ -108,7 +108,7 @@ public class ObjectSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String results = memory.peek().evaluate(memory);
+				String results = memory.peek().eval(memory);
 
 				assertEquals(
 						expected,
@@ -159,7 +159,7 @@ public class ObjectSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String results = memory.peek().evaluate(memory);
+				String results = memory.peek().eval(memory);
 
 				assertEquals(
 						"{1:9,2:8,3:7,4:6,5:5}",

@@ -66,12 +66,12 @@ public final class ObjectValue implements Value<List<PairValue>> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		return this.pipe
 				.eval(memory)
 				.stream()
-				.map(pair -> pair.evaluate(memory))
+				.map(pair -> pair.eval(memory))
 				.collect(Collectors.joining(",", "{", "}"));
 	}
 

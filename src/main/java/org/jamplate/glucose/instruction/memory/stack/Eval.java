@@ -93,7 +93,7 @@ public class Eval implements Instruction {
 		Value value0 = memory.pop();
 
 		//result
-		String text1 = value0.evaluate(memory);
+		String text1 = value0.eval(memory);
 		Value value1 = value(text1);
 
 		//push the result

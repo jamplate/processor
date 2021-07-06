@@ -67,12 +67,12 @@ public final class ArrayValue implements Value<List<Value>> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		return this.pipe
 				.eval(memory)
 				.stream()
-				.map(value -> value.evaluate(memory))
+				.map(value -> value.eval(memory))
 				.collect(Collectors.joining(",", "[", "]"));
 	}
 

@@ -117,7 +117,7 @@ public class Repeat implements Instruction {
 
 			throw new ExecutionException(
 					"REPEAT expected a boolean but got: " +
-					value0.evaluate(memory),
+					value0.eval(memory),
 					this.tree
 			);
 		}

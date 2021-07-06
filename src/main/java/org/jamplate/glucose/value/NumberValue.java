@@ -64,7 +64,7 @@ public final class NumberValue implements Value<Number> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		double number = this.pipe.eval(memory).doubleValue();
 		//noinspection DynamicRegexReplaceableByCompiledPattern

@@ -112,7 +112,7 @@ public class BuildArray implements Instruction {
 
 		throw new ExecutionException(
 				"BUILD_ARRAY expected glue but got: " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}

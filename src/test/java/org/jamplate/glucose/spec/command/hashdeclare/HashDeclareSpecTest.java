@@ -83,7 +83,7 @@ public class HashDeclareSpecTest {
 		unit.getSpec().add(listener(event -> {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
-				String address = memory.get("Address").evaluate(memory);
+				String address = memory.get("Address").eval(memory);
 				String console = memory.getConsole().read();
 
 				assertEquals(
@@ -174,7 +174,7 @@ public class HashDeclareSpecTest {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
 
-				String address = memory.get("Address").evaluate(memory);
+				String address = memory.get("Address").eval(memory);
 				String console = memory.getConsole().toString();
 
 				assertEquals(

@@ -122,7 +122,8 @@ public class ConcatFrame implements Instruction {
 			}
 
 			throw new ExecutionException(
-					"CONCAT expected array but got: " + value1.evaluate(memory),
+					"CONCAT expected array but got: " +
+					value1.eval(memory),
 					this.tree
 			);
 		}

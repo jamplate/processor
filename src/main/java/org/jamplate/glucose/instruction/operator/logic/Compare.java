@@ -143,9 +143,9 @@ public class Compare implements Instruction {
 		//both the values are nonnull
 		memory.push(number((m, v) -> {
 			//right
-			String text0 = value0.evaluate(m);
+			String text0 = value0.eval(m);
 			//left
-			String text1 = value1.evaluate(m);
+			String text1 = value1.eval(m);
 
 			//result
 			int num3 = text1.compareTo(text0);

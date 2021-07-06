@@ -92,7 +92,7 @@ public class Exec implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.evaluate(memory);
+		String text0 = value0.eval(memory);
 
 		Compilation compilation = environment.getCompilation(text0);
 

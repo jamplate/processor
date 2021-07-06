@@ -75,7 +75,7 @@ public class FlowCaptureSpecTest {
 			if (event.getAction().equals(Action.POST_EXEC)) {
 				Memory memory = event.getMemory();
 				String actualConsole = memory.getConsole().read();
-				String actualX = memory.get("X").evaluate(memory);
+				String actualX = memory.get("X").eval(memory);
 
 				assertEquals(
 						expectedConsole,

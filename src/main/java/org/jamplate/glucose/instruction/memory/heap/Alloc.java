@@ -93,7 +93,7 @@ public class Alloc implements Instruction {
 		Value value0 = memory.pop();
 		//address
 		Value value1 = memory.pop();
-		String text1 = value1.evaluate(memory);
+		String text1 = value1.eval(memory);
 
 		memory.set(text1, value0);
 	}

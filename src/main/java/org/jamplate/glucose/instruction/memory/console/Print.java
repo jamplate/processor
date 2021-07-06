@@ -88,7 +88,7 @@ public class Print implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.evaluate(memory);
+		String text0 = value0.eval(memory);
 
 		memory.print(text0);
 	}

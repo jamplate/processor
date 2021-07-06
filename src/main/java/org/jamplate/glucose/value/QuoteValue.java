@@ -65,14 +65,14 @@ public final class QuoteValue implements Value<Value> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		Value value = this.pipe.eval(memory);
 
 		if (value instanceof TextValue)
-			return JSONObject.quote(value.evaluate(memory));
+			return JSONObject.quote(value.eval(memory));
 
-		return value.evaluate(memory);
+		return value.eval(memory);
 	}
 
 	@NotNull

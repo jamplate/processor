@@ -49,7 +49,7 @@ public interface Value<T> extends Serializable {
 
 		@NotNull
 		@Override
-		public String evaluate(@NotNull Memory memory) {
+		public String eval(@NotNull Memory memory) {
 			return "";
 		}
 
@@ -88,13 +88,13 @@ public interface Value<T> extends Serializable {
 	 *
 	 * @return the pipe of this value.
 	 * @implSpec the default implementation will return a pipe that delegates to the
-	 *        {@link #evaluate(Memory)} method of this value unsafely casted to {@link T}.
+	 *        {@link #eval(Memory)} method of this value unsafely casted to {@link T}.
 	 * @since 0.3.0 ~2021.07.03
 	 */
 	@NotNull
 	@Contract(pure = true)
 	default Pipe<Object, T> getPipe() {
-		return (m, v) -> (T) this.evaluate(m);
+		return (m, v) -> (T) this.eval(m);
 	}
 
 	/**
@@ -106,5 +106,5 @@ public interface Value<T> extends Serializable {
 	 * @since 0.2.0 ~2021.05.21
 	 */
 	@NotNull
-	String evaluate(@NotNull Memory memory);
+	String eval(@NotNull Memory memory);
 }

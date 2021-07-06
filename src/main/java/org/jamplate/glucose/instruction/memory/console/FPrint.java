@@ -99,7 +99,7 @@ public class FPrint implements Instruction {
 		Value value1 = memory.pop();
 
 		//left
-		String text1 = value1.evaluate(memory);
+		String text1 = value1.eval(memory);
 
 		//right
 		ObjectValue object0 = object(value0);
@@ -114,8 +114,8 @@ public class FPrint implements Instruction {
 						text1,
 						(s, e) ->
 								s.replace(
-										e.getKey().evaluate(memory),
-										e.getValue().evaluate(memory)
+										e.getKey().eval(memory),
+										e.getValue().eval(memory)
 								),
 						(a, b) -> a + b
 				);

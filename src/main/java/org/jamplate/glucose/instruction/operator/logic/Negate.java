@@ -109,7 +109,7 @@ public class Negate implements Instruction {
 
 		throw new ExecutionException(
 				"NEG (!) expected a boolean but got: " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}

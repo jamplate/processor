@@ -81,7 +81,7 @@ public interface Pipe<P, R> extends Serializable {
 
 			@NotNull
 			@Override
-			public String evaluate(@NotNull Memory memory) {
+			public String eval(@NotNull Memory memory) {
 				return String.valueOf(Pipe.this.eval(memory));
 			}
 

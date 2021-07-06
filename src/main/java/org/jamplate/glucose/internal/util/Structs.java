@@ -69,7 +69,7 @@ public final class Structs {
 		Objects.requireNonNull(object, "object");
 		Objects.requireNonNull(key, "key");
 		return unquote((m, v) -> {
-			String k = key.evaluate(m);
+			String k = key.eval(m);
 
 			return object
 					.getPipe()
@@ -79,7 +79,7 @@ public final class Structs {
 							p.getPipe()
 							 .eval(m)
 							 .getKey()
-							 .evaluate(m)
+							 .eval(m)
 							 .equals(k)
 					)
 					.findFirst()
@@ -183,7 +183,7 @@ public final class Structs {
 		Objects.requireNonNull(key, "key");
 		Objects.requireNonNull(value, "value");
 		return object.apply((m, v) -> {
-			String k = key.evaluate(m);
+			String k = key.eval(m);
 
 			//result
 			List<PairValue> pairs = new ArrayList<>(v);
@@ -196,7 +196,7 @@ public final class Structs {
 								 .getPipe()
 								 .eval(m)
 								 .getKey()
-								 .evaluate(m)
+								 .eval(m)
 								 .equals(k)
 					)
 					.findFirst()
@@ -304,7 +304,7 @@ public final class Structs {
 			);
 
 		return object.apply((m, v) -> {
-			String k = key.evaluate(m);
+			String k = key.eval(m);
 
 			//result
 			List<PairValue> pairs = new ArrayList<>(v);
@@ -317,7 +317,7 @@ public final class Structs {
 								 .getPipe()
 								 .eval(m)
 								 .getKey()
-								 .evaluate(m)
+								 .eval(m)
 								 .equals(k)
 					)
 					.findFirst()

@@ -42,9 +42,9 @@ public class RepeatTest {
 		Instruction bodyI = (env, mem) -> {
 			Value next = mem.get(keyV);
 			mem.compute(resultKeyV, prev -> m ->
-					prev.evaluate(m) +
+					prev.eval(m) +
 					", " +
-					next.evaluate(m)
+					next.eval(m)
 			);
 		};
 
@@ -106,7 +106,7 @@ public class RepeatTest {
 
 		block.exec(environment, memory);
 
-		String result = memory.get(resultKeyV).evaluate(memory);
+		String result = memory.get(resultKeyV).eval(memory);
 
 		assertEquals(
 				", X, Y, Z, , Z, Y, X",

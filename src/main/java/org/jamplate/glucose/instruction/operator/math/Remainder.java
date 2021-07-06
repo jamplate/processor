@@ -122,9 +122,9 @@ public class Remainder implements Instruction {
 
 		throw new ExecutionException(
 				"REMAINDER (%) expected two numbers but got: " +
-				value1.evaluate(memory) +
+				value1.eval(memory) +
 				" and " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}

@@ -31,7 +31,7 @@ public class CaptureTest {
 		instruction.exec(environment, memory);
 
 		String console = memory.getConsole().read();
-		String stack = memory.pop().evaluate(memory);
+		String stack = memory.pop().eval(memory);
 
 		assertEquals(
 				"FirstValueThirdValue",

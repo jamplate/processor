@@ -168,7 +168,7 @@ public class InjectionSpecTest {
 				);
 				assertEquals(
 						terminationLine,
-						line.evaluate(memory),
+						line.eval(memory),
 						"Termination line"
 				);
 			}

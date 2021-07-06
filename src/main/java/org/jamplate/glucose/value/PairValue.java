@@ -65,12 +65,12 @@ public final class PairValue implements Value<Entry<Value, Value>> {
 
 	@NotNull
 	@Override
-	public String evaluate(@NotNull Memory memory) {
+	public String eval(@NotNull Memory memory) {
 		Objects.requireNonNull(memory, "memory");
 		Entry<Value, Value> pair = this.pipe.eval(memory);
-		return pair.getKey().evaluate(memory) +
+		return pair.getKey().eval(memory) +
 			   ":" +
-			   pair.getValue().evaluate(memory);
+			   pair.getValue().eval(memory);
 	}
 
 	@NotNull

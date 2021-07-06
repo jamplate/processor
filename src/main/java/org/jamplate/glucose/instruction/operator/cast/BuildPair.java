@@ -125,9 +125,9 @@ public class BuildPair implements Instruction {
 
 		throw new ExecutionException(
 				"BUILD_PAIR expected two glues but got: " +
-				value0.evaluate(memory) +
+				value0.eval(memory) +
 				" and " +
-				value1.evaluate(memory),
+				value1.eval(memory),
 				this.tree
 		);
 	}

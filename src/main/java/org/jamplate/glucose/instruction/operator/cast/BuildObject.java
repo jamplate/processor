@@ -118,7 +118,7 @@ public class BuildObject implements Instruction {
 
 		throw new ExecutionException(
 				"BUILD_OBJECT expected glue but got: " +
-				value0.evaluate(memory),
+				value0.eval(memory),
 				this.tree
 		);
 	}
