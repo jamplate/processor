@@ -64,7 +64,7 @@ public class ExtensionSpec implements Spec {
 	 *
 	 * @since 0.3.0 ~2021.06.23
 	 */
-	public static final int WEIGHT = 0;
+	public static final int WEIGHT = -1;
 
 	@NotNull
 	@Override
