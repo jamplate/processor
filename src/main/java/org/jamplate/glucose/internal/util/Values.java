@@ -58,6 +58,22 @@ public final class Values {
 	// Array -----------------------------------------------------------------------------
 
 	/**
+	 * Construct a new array value with the given {@code elements} values.
+	 *
+	 * @param elements the values of the elements of the constructed array value.
+	 * @return a new array value with the given {@code elements}.
+	 * @throws NullPointerException     if the given {@code elements} is null.
+	 * @throws IllegalArgumentException if the given {@code elements} contain {@code
+	 *                                  null}.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static VArray arr(@NotNull Value @NotNull ... elements) {
+		return Values.array(Arrays.asList(elements));
+	}
+
+	/**
 	 * Cast the given {@code object} into an array value.
 	 *
 	 * @param object the object to be cast
@@ -231,6 +247,21 @@ public final class Values {
 	// glue ------------------------------------------------------------------------------
 
 	/**
+	 * Construct a new glued value that evaluates to the given raw {@code values}.
+	 *
+	 * @param values the raw array of the values the constructed valued will have.
+	 * @return a new glue gluing the given {@code values}.
+	 * @throws NullPointerException     if the given {@code pairs} is or contain null.
+	 * @throws IllegalArgumentException if the given {@code values} contain null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static VGlue glu(@NotNull Value @NotNull ... values) {
+		return Values.glue(Arrays.asList(values));
+	}
+
+	/**
 	 * Cast the given {@code object} into an glued value.
 	 *
 	 * @param object the object to be cast
@@ -272,7 +303,7 @@ public final class Values {
 	 * Construct a new glued value that evaluates to the given raw {@code values}.
 	 *
 	 * @param values the raw array of the values the constructed valued will have.
-	 * @return a new
+	 * @return a new glue gluing the given {@code values}.
 	 * @throws NullPointerException     if the given {@code pairs} is or contain null.
 	 * @throws IllegalArgumentException if the given {@code values} contain null.
 	 * @since 0.3.0 ~2021.07.01
@@ -369,6 +400,21 @@ public final class Values {
 	}
 
 	// object ----------------------------------------------------------------------------
+
+	/**
+	 * Construct a new object value from the given {@code pairs} values list.
+	 *
+	 * @param pairs the pairs for the returned object value.
+	 * @return a new object value with the given {@code pairs}.
+	 * @throws NullPointerException     if the given {@code pairs} is null.
+	 * @throws IllegalArgumentException if the given {@code pairs} contains a null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static VObject obj(@NotNull VPair @NotNull ... pairs) {
+		return Values.object(Arrays.asList(pairs));
+	}
 
 	/**
 	 * Cast the given {@code object} into an object value.
