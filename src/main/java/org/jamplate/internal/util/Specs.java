@@ -43,6 +43,26 @@ public final class Specs {
 	}
 
 	/**
+	 * Return a new spec with the analyzer of the given {@code spec}.
+	 *
+	 * @param spec the spec to get the initial analyzer of the returned spec.
+	 * @return a new spec with the analyzer of the given {@code spec}.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Spec analyzer(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		return Specs.analyzer(
+				"AnalyzerSpec" + Integer.toHexString(spec.hashCode()),
+				spec.getAnalyzer()
+		).setAnalyzeProcessor(
+				spec.getAnalyzeProcessor()
+		);
+	}
+
+	/**
 	 * Return a new spec with the given {@code analyzer}.
 	 *
 	 * @param analyzer the initial analyzer set to the returned spec.
@@ -77,6 +97,26 @@ public final class Specs {
 		Objects.requireNonNull(analyzer, "analyzer");
 		return new EditSpec(name)
 				.setAnalyzer(analyzer);
+	}
+
+	/**
+	 * Return a new spec with the compiler of the given {@code spec}.
+	 *
+	 * @param spec the spec to get the initial compiler of the returned spec.
+	 * @return a new spec with the compiler of the given {@code spec}.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Spec compiler(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		return Specs.compiler(
+				"CompilerSpec" + Integer.toHexString(spec.hashCode()),
+				spec.getCompiler()
+		).setAnalyzeProcessor(
+				spec.getCompileProcessor()
+		);
 	}
 
 	/**
@@ -117,6 +157,24 @@ public final class Specs {
 	}
 
 	/**
+	 * Return a new spec with the initializer of the given {@code spec}.
+	 *
+	 * @param spec the spec to get the initial initializer of the returned spec.
+	 * @return a new spec with the initializer of the given {@code spec}.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Spec initializer(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		return Specs.initializer(
+				"InitializerSpec" + Integer.toHexString(spec.hashCode()),
+				spec.getInitializer()
+		);
+	}
+
+	/**
 	 * Return a new spec with the given {@code initializer}.
 	 *
 	 * @param initializer the initial initializer set to the returned spec.
@@ -154,6 +212,24 @@ public final class Specs {
 	}
 
 	/**
+	 * Return a new spec with the listener of the given {@code spec}.
+	 *
+	 * @param spec the spec to get the initial listener of the returned spec.
+	 * @return a new spec with the listener of the given {@code spec}.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Spec listener(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		return Specs.listener(
+				"ListenerSpec" + Integer.toHexString(spec.hashCode()),
+				spec.getListener()
+		);
+	}
+
+	/**
 	 * Return a new spec with the given {@code listener}.
 	 *
 	 * @param listener the initial listener set to the returned spec.
@@ -188,6 +264,26 @@ public final class Specs {
 		Objects.requireNonNull(listener, "listener");
 		return new EditSpec(name)
 				.setListener(listener);
+	}
+
+	/**
+	 * Return a new spec with the parser of the given {@code spec}.
+	 *
+	 * @param spec the spec to get the initial parser of the returned spec.
+	 * @return a new spec with the parser of the given {@code spec}.
+	 * @throws NullPointerException if the given {@code spec} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static Spec parser(@NotNull Spec spec) {
+		Objects.requireNonNull(spec, "spec");
+		return Specs.parser(
+				"ParserSpec" + Integer.toHexString(spec.hashCode()),
+				spec.getParser()
+		).setAnalyzeProcessor(
+				spec.getParseProcessor()
+		);
 	}
 
 	/**
