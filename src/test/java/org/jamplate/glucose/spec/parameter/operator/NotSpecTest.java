@@ -1,7 +1,6 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
 import org.jamplate.api.Unit;
-import org.jamplate.impl.instruction.Idle;
 import org.jamplate.glucose.spec.document.LogicSpec;
 import org.jamplate.glucose.spec.element.ParameterSpec;
 import org.jamplate.glucose.spec.parameter.resource.ReferenceSpec;
@@ -10,11 +9,14 @@ import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
 import org.jamplate.impl.api.Action;
+import org.jamplate.impl.api.MultiSpec;
 import org.jamplate.impl.api.UnitImpl;
+import org.jamplate.impl.instruction.Idle;
 import org.jamplate.impl.model.PseudoDocument;
 import org.jamplate.internal.util.Query;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.Document;
+import org.jamplate.model.Tree;
 import org.junit.jupiter.api.Test;
 
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
@@ -28,6 +30,63 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class NotSpecTest {
+	@Test
+	public void singleton() {
+		Document document = new PseudoDocument(
+				//name
+				"Test",
+				//content
+				"!"
+		);
+
+		Unit unit = new UnitImpl(new MultiSpec(
+				//name
+				"MainSpec",
+				//document
+				LogicSpec.INSTANCE,
+				//parameters
+				new ParameterSpec(
+						//syntax
+						ExclamationSpec.INSTANCE,
+						//operators
+						NotSpec.INSTANCE
+				),
+				//listeners
+				listener(event -> {
+					if (event.getAction().equals(Action.POST_ANALYZE)) {
+						Tree parameter = event.getTree();
+						Tree not = parameter.getChild();
+						Tree exclamation = not.getChild();
+
+						assertEquals(
+								ParameterSpec.KIND,
+								parameter.getSketch().getKind(),
+								"The root is not a parameter"
+						);
+						assertEquals(
+								NotSpec.KIND,
+								not.getSketch().getKind(),
+								"Not operator not applied"
+						);
+						assertEquals(
+								ExclamationSpec.KIND,
+								exclamation.getSketch().getKind(),
+								"Exclamation not detected"
+						);
+					}
+				})
+		));
+
+		if (
+				!unit.initialize(document) ||
+				!unit.parse(document) ||
+				!unit.analyze(document)
+		) {
+			unit.diagnostic();
+			fail("Test not completed");
+		}
+	}
+
 	@Test
 	public void test0() {
 		for (boolean i : new boolean[]{false, true}) {
