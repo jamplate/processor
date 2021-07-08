@@ -34,7 +34,7 @@ import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.analyzer.UnaryExtensionAnalyzer.unaryExtension;
+import static org.jamplate.internal.analyzer.UnaryExtensionAnalyzer.extension;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.*;
@@ -86,7 +86,8 @@ public class GetterSpec implements Spec {
 						parent(not(GetterSpec.KIND))
 				)),
 				//analyze
-				a -> unaryExtension(
+				a -> extension(
+						true,
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,

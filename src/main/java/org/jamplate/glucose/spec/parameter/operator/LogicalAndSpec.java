@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.analyzer.BinaryOperatorAnalyzer.binaryOperator;
+import static org.jamplate.internal.analyzer.BinaryOperatorAnalyzer.operator;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.*;
@@ -85,7 +85,7 @@ public class LogicalAndSpec implements Spec {
 						parent(not(LogicalAndSpec.KIND))
 				)),
 				//analyze
-				a -> binaryOperator(
+				a -> operator(
 						//context wrapper constructor
 						(d, r) -> new Tree(
 								d,

@@ -16,7 +16,10 @@
 package org.jamplate.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.model.*;
+import org.jamplate.model.Compilation;
+import org.jamplate.model.Document;
+import org.jamplate.model.Reference;
+import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +30,9 @@ import java.util.function.BiFunction;
 
 import static org.jamplate.internal.util.References.inclusive;
 import static org.jamplate.internal.util.Trees.head;
+import static org.jamplate.internal.util.Trees.tail;
+import static org.jamplate.model.Intersection.NEXT;
+import static org.jamplate.model.Intersection.PREVIOUS;
 
 /**
  * An analyzer that wraps the trees given to it with an extension context.
@@ -36,6 +42,13 @@ import static org.jamplate.internal.util.Trees.head;
  * @since 0.3.0 ~2021.06.22
  */
 public class UnaryExtensionAnalyzer implements Analyzer {
+	/**
+	 * An optional constructor to wrap the body of the extension.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@Nullable
+	protected final BiConsumer<Tree, Reference> bodyConstructor;
 	/**
 	 * The wrapper constructor.
 	 *
@@ -51,17 +64,18 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 	@Nullable
 	protected final BiConsumer<Tree, Tree> extensionConstructor;
 	/**
-	 * An optional constructor to wrap the left-side of the extension.
+	 * True, analyzer the left side. False, analyzer the right side.
 	 *
-	 * @since 0.3.0 ~2021.06.24
+	 * @since 0.3.0 ~2021.07.08
 	 */
-	@Nullable
-	protected final BiConsumer<Tree, Reference> leftConstructor;
+	protected final boolean left;
 
 	/**
 	 * Construct a new analyzer that wraps the trees given to it with the result of
 	 * invoking the given {@code constructor}.
 	 *
+	 * @param left                 true, the analyzer will wrap the left-side. false, the
+	 *                             analyzer will wrap the right-side.
 	 * @param constructor          the wrapper constructor.
 	 *                             <div style="padding: 5px">
 	 *                                 <b>Input:</b> document, wrapper reference.
@@ -72,29 +86,33 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 	 *                             <div style="padding: 5px">
 	 *                                 <b>Input:</b> wrapper tree, extension tree
 	 *                             </div>
-	 * @param leftConstructor      a constructor to wrap the left-side of the extension.
+	 * @param bodyConstructor      a constructor to wrap the body of the extension.
 	 *                             (optional)
 	 *                             <div style="padding: 5px">
-	 *                                 <b>Input:</b> wrapper tree, left-side reference
+	 *                                 <b>Input:</b> wrapper tree, left-side or right-side reference
 	 *                             </div>
 	 * @throws NullPointerException if the given {@code constructor} is null.
 	 * @since 0.3.0 ~2021.06.22
 	 */
 	public UnaryExtensionAnalyzer(
+			boolean left,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Tree> extensionConstructor,
-			@Nullable BiConsumer<Tree, Reference> leftConstructor
+			@Nullable BiConsumer<Tree, Reference> bodyConstructor
 	) {
 		Objects.requireNonNull(constructor, "constructor");
+		this.left = left;
 		this.constructor = constructor;
 		this.extensionConstructor = extensionConstructor;
-		this.leftConstructor = leftConstructor;
+		this.bodyConstructor = bodyConstructor;
 	}
 
 	/**
 	 * Construct a new analyzer that wraps the trees given to it with the result of
 	 * invoking the given {@code constructor}.
 	 *
+	 * @param left                 true, the analyzer will wrap the left-side. false, the
+	 *                             analyzer will wrap the right-side.
 	 * @param constructor          the wrapper constructor.
 	 *                             <div style="padding: 5px">
 	 *                                 <b>Input:</b> document, wrapper reference.
@@ -105,26 +123,28 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 	 *                             <div style="padding: 5px">
 	 *                                 <b>Input:</b> wrapper tree, extension tree
 	 *                             </div>
-	 * @param leftConstructor      a constructor to wrap the left-side of the extension.
+	 * @param bodyConstructor      a constructor to wrap the body of the extension.
 	 *                             (optional)
 	 *                             <div style="padding: 5px">
-	 *                                 <b>Input:</b> wrapper tree, left-side reference
+	 *                                 <b>Input:</b> wrapper tree, left-side or right-side reference
 	 *                             </div>
 	 * @return a new unary extension analyzer that uses the given constructors.
 	 * @throws NullPointerException if the given {@code constructor} is null.
 	 * @since 0.3.0 ~2021.07.04
 	 */
 	@NotNull
-	@Contract(value = "_,_,_->new", pure = true)
-	public static UnaryExtensionAnalyzer unaryExtension(
+	@Contract(value = "_,_,_,_->new", pure = true)
+	public static UnaryExtensionAnalyzer extension(
+			boolean left,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Tree> extensionConstructor,
-			@Nullable BiConsumer<Tree, Reference> leftConstructor
+			@Nullable BiConsumer<Tree, Reference> bodyConstructor
 	) {
 		return new UnaryExtensionAnalyzer(
+				left,
 				constructor,
 				extensionConstructor,
-				leftConstructor
+				bodyConstructor
 		);
 	}
 
@@ -133,29 +153,57 @@ public class UnaryExtensionAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		Document document = tree.getDocument();
-		Tree previous = tree.getPrevious();
 
-		if (previous != null && Intersection.PREVIOUS.test(tree, previous)) {
-			Tree head = head(previous);
+		if (this.left) {
+			Tree previous = tree.getPrevious();
 
-			Tree wrapper = this.constructor.apply(
-					document,
-					inclusive(head, tree)
-			);
+			if (previous != null && PREVIOUS.test(tree, previous)) {
+				Tree head = head(previous);
 
-			tree.offer(wrapper);
-
-			if (this.extensionConstructor != null)
-				this.extensionConstructor.accept(
-						wrapper,
-						tree
+				Tree wrapper = this.constructor.apply(
+						document,
+						inclusive(head, tree)
 				);
-			if (this.leftConstructor != null)
-				this.leftConstructor.accept(
-						wrapper,
-						inclusive(head, previous)
+
+				tree.offer(wrapper);
+
+				if (this.extensionConstructor != null)
+					this.extensionConstructor.accept(
+							wrapper,
+							tree
+					);
+				if (this.bodyConstructor != null)
+					this.bodyConstructor.accept(
+							wrapper,
+							inclusive(head, previous)
+					);
+				return true;
+			}
+		} else {
+			Tree next = tree.getNext();
+
+			if (next != null && NEXT.test(tree, next)) {
+				Tree tail = tail(next);
+
+				Tree wrapper = this.constructor.apply(
+						document,
+						inclusive(tree, tail)
 				);
-			return true;
+
+				tree.offer(wrapper);
+
+				if (this.extensionConstructor != null)
+					this.extensionConstructor.accept(
+							wrapper,
+							tree
+					);
+				if (this.bodyConstructor != null)
+					this.bodyConstructor.accept(
+							wrapper,
+							inclusive(next, tail)
+					);
+				return true;
+			}
 		}
 
 		return false;

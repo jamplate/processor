@@ -34,7 +34,7 @@ import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.analyzer.BinaryFlowAnalyzer.binaryFlow;
+import static org.jamplate.internal.analyzer.BinaryFlowAnalyzer.flow;
 import static org.jamplate.internal.util.Functions.analyzer;
 import static org.jamplate.internal.util.Functions.compiler;
 import static org.jamplate.internal.util.Query.*;
@@ -91,7 +91,7 @@ public class FlowCaptureSpec implements Spec {
 						))
 				)),
 				//analyze
-				a -> binaryFlow(
+				a -> flow(
 						//start command predicate
 						is(HashCaptureSpec.KIND),
 						//end command predicate

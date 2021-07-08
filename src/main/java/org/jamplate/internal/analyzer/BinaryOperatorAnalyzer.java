@@ -139,7 +139,7 @@ public class BinaryOperatorAnalyzer implements Analyzer {
 	 */
 	@NotNull
 	@Contract(value = "_,_,_,_->new", pure = true)
-	public static BinaryOperatorAnalyzer binaryOperator(
+	public static BinaryOperatorAnalyzer operator(
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Tree> operatorConstructor,
 			@Nullable BiConsumer<Tree, Reference> leftConstructor,

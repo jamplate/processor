@@ -162,7 +162,7 @@ public class BinaryFlowAnalyzer implements Analyzer {
 	@SuppressWarnings("MethodWithTooManyParameters")
 	@NotNull
 	@Contract(value = "_,_,_,_,_,_->new", pure = true)
-	public static BinaryFlowAnalyzer binaryFlow(
+	public static BinaryFlowAnalyzer flow(
 			@NotNull Predicate<Tree> startPredicate,
 			@NotNull Predicate<Tree> endPredicate,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,

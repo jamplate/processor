@@ -29,6 +29,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import static org.jamplate.internal.util.References.inclusive;
+import static org.jamplate.internal.util.Trees.head;
 import static org.jamplate.internal.util.Trees.tail;
 
 /**
@@ -40,6 +41,13 @@ import static org.jamplate.internal.util.Trees.tail;
  */
 public class UnaryOperatorAnalyzer implements Analyzer {
 	/**
+	 * An optional constructor to wrap the body of the operator.
+	 *
+	 * @since 0.3.0 ~2021.06.24
+	 */
+	@Nullable
+	protected final BiConsumer<Tree, Reference> bodyConstructor;
+	/**
 	 * The wrapper constructor.
 	 *
 	 * @since 0.3.0 ~2021.06.22
@@ -47,24 +55,25 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 	@NotNull
 	protected final BiFunction<Document, Reference, Tree> constructor;
 	/**
+	 * True, analyze the left side. False, analyze the right side.
+	 *
+	 * @since 0.3.0 ~2021.07.08
+	 */
+	protected final boolean left;
+	/**
 	 * An optional constructor to alter the operator tree.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@Nullable
 	protected final BiConsumer<Tree, Tree> operatorConstructor;
-	/**
-	 * An optional constructor to wrap the right-side of the operator.
-	 *
-	 * @since 0.3.0 ~2021.06.24
-	 */
-	@Nullable
-	protected final BiConsumer<Tree, Reference> rightConstructor;
 
 	/**
 	 * Construct a new analyzer that wraps the trees given to it with the result of
 	 * invoking the given {@code constructor}.
 	 *
+	 * @param left                true, the analyzer will wrap the left-side. false, the
+	 *                            analyzer will wrap the right-side.
 	 * @param constructor         the wrapper constructor.
 	 *                            <div style="padding: 5px">
 	 *                                <b>Input:</b> document, wrapper reference.
@@ -75,29 +84,33 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 	 *                            <div style="padding: 5px">
 	 *                                <b>Input:</b> wrapper tree, operator tree
 	 *                            </div>
-	 * @param rightConstructor    a constructor to wrap the right-side of the operator.
+	 * @param bodyConstructor     a constructor to wrap the body of the operator.
 	 *                            (optional)
 	 *                            <div style="padding: 5px">
-	 *                                <b>Input:</b> wrapper tree, right-side reference
+	 *                                <b>Input:</b> wrapper tree, left-side or right-side reference
 	 *                            </div>
 	 * @throws NullPointerException if the given {@code constructor} is null.
 	 * @since 0.3.0 ~2021.06.22
 	 */
 	public UnaryOperatorAnalyzer(
+			boolean left,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Tree> operatorConstructor,
-			@Nullable BiConsumer<Tree, Reference> rightConstructor
+			@Nullable BiConsumer<Tree, Reference> bodyConstructor
 	) {
 		Objects.requireNonNull(constructor, "constructor");
+		this.left = left;
 		this.constructor = constructor;
 		this.operatorConstructor = operatorConstructor;
-		this.rightConstructor = rightConstructor;
+		this.bodyConstructor = bodyConstructor;
 	}
 
 	/**
 	 * Construct a new analyzer that wraps the trees given to it with the result of
 	 * invoking the given {@code constructor}.
 	 *
+	 * @param left                true, the analyzer will wrap the left-side. false, the
+	 *                            analyzer will wrap the right-side.
 	 * @param constructor         the wrapper constructor.
 	 *                            <div style="padding: 5px">
 	 *                                <b>Input:</b> document, wrapper reference.
@@ -108,26 +121,28 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 	 *                            <div style="padding: 5px">
 	 *                                <b>Input:</b> wrapper tree, operator tree
 	 *                            </div>
-	 * @param rightConstructor    a constructor to wrap the right-side of the operator.
+	 * @param bodyConstructor     a constructor to wrap the body of the operator.
 	 *                            (optional)
 	 *                            <div style="padding: 5px">
-	 *                                <b>Input:</b> wrapper tree, right-side reference
+	 *                                <b>Input:</b> wrapper tree, left-side or right-side reference
 	 *                            </div>
 	 * @return a new unary operator analyzer that uses the given constructors.
 	 * @throws NullPointerException if the given {@code constructor} is null.
 	 * @since 0.3.0 ~2021.07.04
 	 */
 	@NotNull
-	@Contract(value = "_,_,_->new", pure = true)
-	public static UnaryOperatorAnalyzer unaryOperator(
+	@Contract(value = "_,_,_,_->new", pure = true)
+	public static UnaryOperatorAnalyzer operator(
+			boolean left,
 			@NotNull BiFunction<Document, Reference, Tree> constructor,
 			@Nullable BiConsumer<Tree, Tree> operatorConstructor,
-			@Nullable BiConsumer<Tree, Reference> rightConstructor
+			@Nullable BiConsumer<Tree, Reference> bodyConstructor
 	) {
 		return new UnaryOperatorAnalyzer(
+				left,
 				constructor,
 				operatorConstructor,
-				rightConstructor
+				bodyConstructor
 		);
 	}
 
@@ -136,10 +151,33 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 		Objects.requireNonNull(compilation, "compilation");
 		Objects.requireNonNull(tree, "tree");
 		Document document = tree.getDocument();
-		Tree next = tree.getNext();
 
-		if (next != null) {
-			Tree tail = tail(next);
+		if (this.left) {
+			Tree previous = tree.getPrevious();
+
+			Tree head = head(tree);
+
+			Tree wrapper = this.constructor.apply(
+					document,
+					inclusive(head, tree)
+			);
+
+			tree.offer(wrapper);
+
+			if (this.operatorConstructor != null)
+				this.operatorConstructor.accept(
+						wrapper,
+						tree
+				);
+			if (previous != null && this.bodyConstructor != null)
+				this.bodyConstructor.accept(
+						wrapper,
+						inclusive(head, previous)
+				);
+		} else {
+			Tree next = tree.getNext();
+
+			Tree tail = tail(tree);
 
 			Tree wrapper = this.constructor.apply(
 					document,
@@ -153,14 +191,13 @@ public class UnaryOperatorAnalyzer implements Analyzer {
 						wrapper,
 						tree
 				);
-			if (this.rightConstructor != null)
-				this.rightConstructor.accept(
+			if (next != null && this.bodyConstructor != null)
+				this.bodyConstructor.accept(
 						wrapper,
 						inclusive(next, tail)
 				);
-			return true;
 		}
 
-		return false;
+		return true;
 	}
 }
