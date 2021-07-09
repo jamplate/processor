@@ -31,33 +31,40 @@ import org.jetbrains.annotations.Nullable;
  */
 public class FlowSpec extends MultiSpec {
 	/**
-	 * The key to access the body of a command context.
+	 * The key to access the body of a command flow.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final Node.Key KEY_BODY = Sketch.component("context:body");
+	public static final Node.Key KEY_BODY = Sketch.component("flow:body");
 	/**
-	 * The key to access the end command of a command context.
+	 * The key to access the end command of a command flow.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final Node.Key KEY_END = Sketch.component("context:end");
+	public static final Node.Key KEY_END = Sketch.component("flow:end");
 	/**
-	 * The key to access the middle command of a command context.
+	 * The key to access the middle command of a command flow.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final Node.Key KEY_MIDDLE = Sketch.component("context:middle");
+	public static final Node.Key KEY_MIDDLE = Sketch.component("flow:middle");
 	/**
-	 * The key to access the start command of a command context.
+	 * The key to access the start command of a command flow.
 	 *
 	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	public static final Node.Key KEY_START = Sketch.component("context:start");
+	public static final Node.Key KEY_START = Sketch.component("flow:start");
+	/**
+	 * The key to access the sub command of a command flow.
+	 *
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	public static final Node.Key KEY_SUB = Sketch.component("flow:sub");
 
 	/**
 	 * The qualified name of this spec.
