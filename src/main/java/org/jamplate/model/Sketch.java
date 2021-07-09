@@ -383,13 +383,13 @@ public class Sketch implements Serializable {
 			if (object == this)
 				return true;
 			if (object instanceof StringKey) {
-				if (this.value == null)
-					return this.opposite.equals(object);
-
 				StringKey key = (StringKey) object;
 
+				if (this.value == null)
+					return this.opposite.equals(key.opposite);
+
 				if (key.value == null)
-					return this.equals(key.opposite);
+					return false;
 
 				return this.value.equals(key.value);
 			}
