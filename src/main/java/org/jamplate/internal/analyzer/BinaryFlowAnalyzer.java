@@ -224,6 +224,8 @@ public class BinaryFlowAnalyzer implements Analyzer {
 								endT
 						)
 				);
+
+			return true;
 		}
 
 		return false;
