@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.instruction.memory.stack;
 
+import org.jamplate.glucose.value.VQuote;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+import static org.jamplate.glucose.internal.util.Values.unquote;
 import static org.jamplate.glucose.internal.util.Values.value;
 
 /**
@@ -95,9 +97,12 @@ public class IEval implements Instruction {
 		//result
 		String text1 = value0.eval(memory);
 		Value value1 = value(text1);
+		Value value2 = value1 instanceof VQuote ?
+					   unquote(value1) :
+					   value1;
 
 		//push the result
-		memory.push(value1);
+		memory.push(value2);
 	}
 
 	@Nullable
