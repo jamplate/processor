@@ -69,7 +69,7 @@ public final class VQuote implements Value<Value> {
 		Objects.requireNonNull(memory, "memory");
 		Value value = this.pipe.eval(memory);
 
-		if (value instanceof VText)
+		if (value instanceof VText || value instanceof VUnquote)
 			return JSONObject.quote(value.eval(memory));
 
 		return value.eval(memory);
