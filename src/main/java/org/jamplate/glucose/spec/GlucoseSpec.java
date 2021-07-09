@@ -134,6 +134,8 @@ public class GlucoseSpec extends MultiSpec {
 						//#declare
 						HashDeclareSpec.INSTANCE,
 						TouchDeclareSpec.INSTANCE,
+						//#define
+						HashDefineSpec.INSTANCE,
 						//#undec
 						HashUndecSpec.INSTANCE,
 						//#error
