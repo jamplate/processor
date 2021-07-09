@@ -212,7 +212,88 @@ public final class Structs {
 					value
 			));
 
+			//done
 			return unmodifiableList(pairs);
+		});
+	}
+
+	/**
+	 * Return an object that evaluates to the value of {@code object} but without the
+	 * mapping for the given {@code key}.
+	 *
+	 * @param object the value of the object.
+	 * @param key    the value of the key.
+	 * @return a copy of {@code object} without the mapping for {@code key}.
+	 * @throws NullPointerException if the given {@code object} or {@code key} is null.
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public static VObject remove(
+			@NotNull VObject object,
+			@NotNull Value key
+	) {
+		Objects.requireNonNull(object, "object");
+		Objects.requireNonNull(key, "key");
+		return object.apply((m, v) -> {
+			String k = key.eval(m);
+
+			//result
+			List<VPair> pairs = new ArrayList<>(v);
+
+			//search
+			int i = IntStream
+					.range(0, pairs.size())
+					.filter(x ->
+							pairs.get(x)
+								 .getPipe()
+								 .eval(m)
+								 .getKey()
+								 .eval(m)
+								 .equals(k)
+					)
+					.findFirst()
+					.orElse(-1);
+
+			//remove if found
+			if (i != -1)
+				pairs.remove(i);
+
+			//done
+			return unmodifiableList(pairs);
+		});
+	}
+
+	/**
+	 * Return an array that evaluates to the value of {@code array} but without value at
+	 * the given {@code index}.
+	 *
+	 * @param array the value of the array.
+	 * @param index the value of the index.
+	 * @return a copy of {@code array} without the value at {@code index}.
+	 * @throws NullPointerException if the given {@code array} or {@code index} is null.
+	 * @since 0.3.0 ~2021.07.06
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public static VArray remove(
+			@NotNull VArray array,
+			@NotNull VNumber index
+	) {
+		Objects.requireNonNull(array, "array");
+		Objects.requireNonNull(index, "index");
+		return array.apply((m, v) -> {
+			int i = index.getPipe().eval(m).intValue();
+
+			//result
+			List<Value> elements = new ArrayList<>(v);
+
+			//remove if found
+			if (i > 0 && i < elements.size())
+				elements.remove(i);
+
+			//done
+			return unmodifiableList(elements);
 		});
 	}
 
@@ -246,7 +327,7 @@ public final class Structs {
 
 			//fill
 			while (elements.size() <= i)
-				elements.add(text(""));
+				elements.add(quote(text("")));
 
 			//set
 			elements.set(i, value);
@@ -410,7 +491,7 @@ public final class Structs {
 
 			//fill
 			while (elements.size() <= i)
-				elements.add(text(""));
+				elements.add(quote(""));
 
 			//vars
 			Value mk = ks[1];
