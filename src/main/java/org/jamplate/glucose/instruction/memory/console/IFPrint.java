@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 import static org.jamplate.glucose.internal.util.Values.object;
+import static org.jamplate.glucose.internal.util.Values.unquote;
 
 /**
  * An instruction that pops the last two values from the stack and prints the results of
@@ -114,8 +115,8 @@ public class IFPrint implements Instruction {
 						text1,
 						(s, e) ->
 								s.replace(
-										e.getKey().eval(memory),
-										e.getValue().eval(memory)
+										unquote(e.getKey()).eval(memory),
+										unquote(e.getValue()).eval(memory)
 								),
 						(a, b) -> a + b
 				);
