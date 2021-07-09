@@ -815,7 +815,7 @@ public final class Values {
 			}
 
 		return values.isEmpty() ?
-			   Values.text(source) :
+			   Values.quote(Values.text(source)) :
 			   values.size() == 1 ?
 			   values.get(0) :
 			   Values.glue(values);
