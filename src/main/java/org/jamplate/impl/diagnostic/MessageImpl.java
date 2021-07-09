@@ -108,7 +108,7 @@ public class MessageImpl implements Message {
 		Objects.requireNonNull(errorKind, "errorKind");
 		Objects.requireNonNull(criticalPoints, "criticalPoints");
 		this.exception = exception;
-		this.messagePhrase = exception.getClass() +
+		this.messagePhrase = exception.getClass().getTypeName() +
 							 ": " +
 							 exception.getMessage();
 		//noinspection ZeroLengthArrayAllocation
@@ -188,7 +188,7 @@ public class MessageImpl implements Message {
 		Objects.requireNonNull(errorKind, "errorKind");
 		Objects.requireNonNull(criticalPoints, "criticalPoints");
 		this.exception = exception;
-		this.messagePhrase = exception.getClass() +
+		this.messagePhrase = exception.getClass().getTypeName() +
 							 ": " +
 							 exception.getMessage();
 		this.stackTrace = memory.getStackTrace();
