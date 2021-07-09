@@ -26,6 +26,7 @@ import org.jamplate.glucose.spec.command.hasherror.HashErrorSpec;
 import org.jamplate.glucose.spec.command.hashfor.FlowForSpec;
 import org.jamplate.glucose.spec.command.hashfor.HashEndforSpec;
 import org.jamplate.glucose.spec.command.hashfor.HashForSpec;
+import org.jamplate.glucose.spec.command.hashif.*;
 import org.jamplate.glucose.spec.command.hashmessage.HashMessageSpec;
 import org.jamplate.glucose.spec.command.hashwhile.FlowWhileSpec;
 import org.jamplate.glucose.spec.command.hashwhile.HashEndwhileSpec;
@@ -105,7 +106,9 @@ public class GlucoseSpec extends MultiSpec {
 						//#while #endwhile
 						FlowWhileSpec.INSTANCE,
 						//#capture #endcapture
-						FlowCaptureSpec.INSTANCE
+						FlowCaptureSpec.INSTANCE,
+						//#if #ifdef #ifndef #elif #elifdef #elifndef #else #endif
+						FlowIfSpec.INSTANCE
 				),
 				//commands
 				new CommandSpec(
@@ -118,6 +121,15 @@ public class GlucoseSpec extends MultiSpec {
 						//#capture #endcapture
 						HashCaptureSpec.INSTANCE,
 						HashEndcaptureSpec.INSTANCE,
+						//#if #ifdef #ifndef #elif #elifdef #elifndef #else #endif
+						HashIfSpec.INSTANCE,
+						HashIfdefSpec.INSTANCE,
+						HashIfndefSpec.INSTANCE,
+						HashElifSpec.INSTANCE,
+						HashElifdefSpec.INSTANCE,
+						HashElifndefSpec.INSTANCE,
+						HashElseSpec.INSTANCE,
+						HashEndifSpec.INSTANCE,
 						//#declare
 						HashDeclareSpec.INSTANCE,
 						TouchDeclareSpec.INSTANCE,
