@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -68,6 +69,48 @@ public final class Query {
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		return tree -> ps.stream().allMatch(p -> p.test(tree));
+	}
+
+	/**
+	 * Return a tree bi-predicate that returns {@code true} if all the given {@code
+	 * predicates} evaluated to {@code true} for the same trees.
+	 * <br>
+	 * Null predicates will be ignored.
+	 *
+	 * @param predicates the predicates.
+	 * @return a predicate as described above.
+	 * @throws NullPointerException if the given {@code predicates} is null.
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	@SafeVarargs
+	@Contract(value = "_->new", pure = true)
+	public static BiPredicate<Tree, Tree> and(@Nullable BiPredicate<Tree, Tree> @NotNull ... predicates) {
+		Objects.requireNonNull(predicates, "predicates");
+		List<BiPredicate<Tree, Tree>> ps = Arrays
+				.stream(predicates)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+		return (f, s) -> ps.stream().allMatch(p -> p.test(f, s));
+	}
+
+	/**
+	 * Return a bi-predicate that returns true if the given {@code first} predicate
+	 * returned true for the first tree and the given {@code second} predicate returned
+	 * true for the second tree.
+	 *
+	 * @param first  the predicate for the first argument (tree).
+	 * @param second the predicate for the second argument (tree).
+	 * @return a predicate as described above.
+	 * @throws NullPointerException if the given {@code first} or {@code second} is null.
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	@Contract(value = "_,_->new", pure = true)
+	public static BiPredicate<Tree, Tree> bi(@NotNull Predicate<Tree> first, @NotNull Predicate<Tree> second) {
+		Objects.requireNonNull(first, "first");
+		Objects.requireNonNull(second, "second");
+		return (f, s) -> first.test(f) && second.test(s);
 	}
 
 	/**
@@ -258,6 +301,19 @@ public final class Query {
 	}
 
 	/**
+	 * Return a predicate that returns {@code true} if the tree given to it is {@code
+	 * null}.
+	 *
+	 * @return a predicate as described above.
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static Predicate<Tree> nil() {
+		return tree -> tree == null;
+	}
+
+	/**
 	 * Return a predicate that returns {@code true} if the kind of the tree given to it
 	 * does not equals the given {@code kind}.
 	 *
@@ -294,6 +350,29 @@ public final class Query {
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		return tree -> ps.stream().anyMatch(p -> p.test(tree));
+	}
+
+	/**
+	 * Return a tree bi-predicate that returns {@code true} if any of the given {@code
+	 * predicates} evaluated to {@code true} for the same trees.
+	 * <br>
+	 * Null predicates will be ignored.
+	 *
+	 * @param predicates the predicates.
+	 * @return a predicate as described above.
+	 * @throws NullPointerException if the given {@code predicates} is null.
+	 * @since 0.3.0 ~2021.07.09
+	 */
+	@NotNull
+	@SafeVarargs
+	@Contract(value = "_->new", pure = true)
+	public static BiPredicate<Tree, Tree> or(@Nullable BiPredicate<Tree, Tree> @NotNull ... predicates) {
+		Objects.requireNonNull(predicates, "predicates");
+		List<BiPredicate<Tree, Tree>> ps = Arrays
+				.stream(predicates)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+		return (f, s) -> ps.stream().anyMatch(p -> p.test(f, s));
 	}
 
 	/**
