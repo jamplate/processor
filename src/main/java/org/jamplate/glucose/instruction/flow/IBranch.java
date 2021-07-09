@@ -130,21 +130,25 @@ public class IBranch implements Instruction {
 		Objects.requireNonNull(memory, "memory");
 
 		Value value0 = memory.pop();
-		String text0 = value0.eval(memory);
 
-		switch (text0) {
-			case "true":
+		if (value0 instanceof VBoolean) {
+			VBoolean boolean0 = (VBoolean) value0;
+			boolean state0 = boolean0.getPipe().eval(memory);
+
+			if (state0)
 				this.branch.exec(environment, memory);
-				break;
-			case "false":
+			else
 				this.fallback.exec(environment, memory);
-				break;
-			default:
-				throw new ExecutionException(
-						"BRANCH expected a boolean but got: " + text0,
-						this.tree
-				);
+
+			return;
 		}
+
+		throw new ExecutionException(
+				"BRANCH expected a boolean but got: " +
+				value0.eval(memory),
+				this.tree
+		);
+
 	}
 
 	@Nullable
