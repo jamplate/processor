@@ -33,7 +33,7 @@ import static org.jamplate.internal.util.References.exclusive;
 import static org.jamplate.internal.util.References.inclusive;
 
 /**
- * An analyzer that wraps a context starting with a tree satisfying a pre-specified
+ * An analyzer that wraps a binary flow starting with a tree satisfying a pre-specified
  * predicate and ending with a tree satisfying a pre-specified predicate.
  *
  * @author LSafer
