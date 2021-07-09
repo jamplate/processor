@@ -142,7 +142,7 @@ public class FlowWhileSpec implements Spec {
 					//check required component trees
 					if (startT == null || endT == null || bodyT == null)
 						throw new CompileException(
-								"Context WHILE is missing some components",
+								"Flow WHILE is missing some components",
 								tree
 						);
 

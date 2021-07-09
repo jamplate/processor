@@ -152,7 +152,7 @@ public class FlowForSpec implements Spec {
 					//check required component trees
 					if (startT == null || endT == null || bodyT == null)
 						throw new CompileException(
-								"Context FOR is missing some components",
+								"Flow FOR is missing some components",
 								tree
 						);
 
@@ -163,7 +163,7 @@ public class FlowForSpec implements Spec {
 					//check required subcomponent trees
 					if (keyT == null || valueT == null)
 						throw new CompileException(
-								"For command is missing some components",
+								"Command FOR is missing some components",
 								startT
 						);
 
