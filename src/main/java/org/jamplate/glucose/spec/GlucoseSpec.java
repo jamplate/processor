@@ -28,6 +28,7 @@ import org.jamplate.glucose.spec.command.hashfor.FlowForSpec;
 import org.jamplate.glucose.spec.command.hashfor.HashEndforSpec;
 import org.jamplate.glucose.spec.command.hashfor.HashForSpec;
 import org.jamplate.glucose.spec.command.hashif.*;
+import org.jamplate.glucose.spec.command.hashinclude.HashIncludeSpec;
 import org.jamplate.glucose.spec.command.hashmessage.HashMessageSpec;
 import org.jamplate.glucose.spec.command.hashspread.HashSpreadSpec;
 import org.jamplate.glucose.spec.command.hashundec.HashUndecSpec;
@@ -150,7 +151,9 @@ public class GlucoseSpec extends MultiSpec {
 						//#message
 						HashMessageSpec.INSTANCE,
 						//#console
-						HashConsoleSpec.INSTANCE
+						HashConsoleSpec.INSTANCE,
+						//#include
+						HashIncludeSpec.INSTANCE
 				),
 				//parameters
 				new ParameterSpec(
