@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.spec.misc;
 
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
@@ -83,7 +84,7 @@ public class NewlineSpec implements Spec {
 
 					return new Block(
 							//Define __LINE__
-							new IPushConst(tree, text("__LINE__")),
+							new IPushConst(tree, text(Address.LINE)),
 							new IPushConst(tree, number(line)),
 							new IAlloc(tree),
 							//print the newline text

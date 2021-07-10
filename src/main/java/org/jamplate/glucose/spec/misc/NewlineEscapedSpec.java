@@ -15,20 +15,21 @@
  */
 package org.jamplate.glucose.spec.misc;
 
-import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.heap.IAlloc;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.unit.Spec;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.parser.TermParser.term;
 import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.glucose.internal.parser.TermParser.term;
 import static org.jamplate.util.Functions.compiler;
 import static org.jamplate.util.Functions.parser;
 import static org.jamplate.util.Query.is;
@@ -79,7 +80,7 @@ public class NewlineEscapedSpec implements Spec {
 
 					return new Block(
 							//Define __LINE__
-							new IPushConst(tree, text("__LINE__")),
+							new IPushConst(tree, text(Address.LINE)),
 							new IPushConst(tree, number(line)),
 							new IAlloc(tree)
 					);

@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashdefine;
 
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
@@ -145,7 +146,7 @@ public class HashDefineSpec implements Spec {
 							//allocate
 							new IAlloc(tree), /*[a,v]*/
 							//push the address __DEFINE__
-							new IPushConst(tree, text("__DEFINE__")), /*[a,v,d]*/
+							new IPushConst(tree, text(Address.DEFINE)), /*[a,v,d]*/
 							//duplicate the address __DEFINE__
 							new IDup(tree), /*[a,v,d,d]*/
 							//get object at __DEFINE__

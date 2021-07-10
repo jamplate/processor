@@ -15,18 +15,19 @@
  */
 package org.jamplate.glucose.spec.document;
 
-import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.console.IFPrint;
 import org.jamplate.glucose.instruction.memory.heap.IAccess;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.instruction.operator.cast.ICastObject;
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.impl.instruction.Block;
+import org.jamplate.unit.Spec;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
-import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.util.Functions.compiler;
 import static org.jamplate.util.Source.read;
 
@@ -72,7 +73,7 @@ public class TextSpec implements Spec {
 								//push the text of the tree
 								new IPushConst(tree, text(read(tree))),
 								//push the address to the default replacements object
-								new IPushConst(tree, text("__DEFINE__")),
+								new IPushConst(tree, text(Address.DEFINE)),
 								//access the default replacements object
 								new IAccess(tree),
 								//cast to object (if the user replaced it with non-object value)

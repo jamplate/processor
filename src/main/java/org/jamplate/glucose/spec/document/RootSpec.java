@@ -15,25 +15,26 @@
  */
 package org.jamplate.glucose.spec.document;
 
-import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Initializer;
 import org.jamplate.glucose.instruction.memory.heap.IAlloc;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
-import org.jamplate.impl.instruction.Block;
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.impl.compilation.CompilationImpl;
+import org.jamplate.impl.instruction.Block;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.unit.Spec;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.CombineCompiler.combine;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
 import static org.jamplate.util.Functions.compiler;
 import static org.jamplate.util.Functions.initializer;
 import static org.jamplate.util.Query.is;
@@ -91,23 +92,27 @@ public class RootSpec implements Spec {
 							//determine the line where the root was declared
 							int line = line(tree);
 							//determine the file where the root was declared
-							String file = tree.getDocument().toString();
+							String path = tree.getDocument().toString();
 							//determine the directory where the root was declared
-							String dir = new File(file).getParent();
+							String dir = new File(path).getParent();
+							String file = new File(path).getName();
 
 							//document initiation block
 							return new Block(
 									tree,
-									//Define __PATH__
-									new IPushConst(tree, text("__PATH__")),
+									//Define __FILE__
+									new IPushConst(tree, text(Address.FILE)),
 									new IPushConst(tree, text(file)),
+									//Define __PATH__
+									new IPushConst(tree, text(Address.PATH)),
+									new IPushConst(tree, text(path)),
 									new IAlloc(tree),
 									//Define __DIR__
-									new IPushConst(tree, text("__DIR__")),
+									new IPushConst(tree, text(Address.DIR)),
 									new IPushConst(tree, text((Object) dir)),
 									new IAlloc(tree),
 									//Define __LINE__
-									new IPushConst(tree, text("__LINE__")),
+									new IPushConst(tree, text(Address.LINE)),
 									new IPushConst(tree, number(line)),
 									new IAlloc(tree)
 							);

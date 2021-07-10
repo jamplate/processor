@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashundef;
 
+import org.jamplate.glucose.internal.memory.Address;
 import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
@@ -111,7 +112,7 @@ public class HashUndefSpec implements Spec {
 							//allocate
 							new IAlloc(tree), /*[a]*/
 							//push the address __DEFINE__
-							new IPushConst(tree, text("__DEFINE__")), /*[a,d]*/
+							new IPushConst(tree, text(Address.DEFINE)), /*[a,d]*/
 							//duplicate the address __DEFINE__
 							new IDup(tree), /*[a,d,d]*/
 							//get object at __DEFINE__
