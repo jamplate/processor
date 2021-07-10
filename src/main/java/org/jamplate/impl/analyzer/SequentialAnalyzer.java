@@ -15,16 +15,14 @@
  */
 package org.jamplate.impl.analyzer;
 
+import org.jamplate.function.Analyzer;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Analyzer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -79,6 +77,42 @@ public class SequentialAnalyzer implements Analyzer {
 				this.analyzers.add(analyzer);
 	}
 
+	/**
+	 * Construct a new analyzer that executes the given analyzers in order.
+	 * <br>
+	 * Null analyzers in the array will be ignored.
+	 *
+	 * @param analyzers the analyzers to be executed when the constructed analyzer gets
+	 *                  executed.
+	 * @return a new sequential analyzer that executes the given {@code analyzers} in
+	 * 		order.
+	 * @throws NullPointerException if the given {@code analyzer} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static SequentialAnalyzer sequential(@Nullable Analyzer @NotNull ... analyzers) {
+		return new SequentialAnalyzer(analyzers);
+	}
+
+	/**
+	 * Construct a new analyzer that executes the given analyzers in order.
+	 * <br>
+	 * Null analyzers in the list will be ignored.
+	 *
+	 * @param analyzers the analyzers to be executed when the constructed analyzer gets
+	 *                  executed.
+	 * @return a new sequential analyzer that executes the given {@code analyzers} in
+	 * 		order.
+	 * @throws NullPointerException if the given {@code analyzer} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static SequentialAnalyzer sequential(@NotNull List<Analyzer> analyzers) {
+		return new SequentialAnalyzer(analyzers);
+	}
+
 	@Override
 	public boolean analyze(@NotNull Compilation compilation, @NotNull Tree tree) {
 		Objects.requireNonNull(compilation, "compilation");
@@ -87,5 +121,11 @@ public class SequentialAnalyzer implements Analyzer {
 		for (Analyzer analyzer : this.analyzers)
 			analyzed |= analyzer.analyze(compilation, tree);
 		return analyzed;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Analyzer> iterator() {
+		return Collections.unmodifiableList(this.analyzers).iterator();
 	}
 }

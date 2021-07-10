@@ -15,16 +15,14 @@
  */
 package org.jamplate.impl.parser;
 
+import org.jamplate.function.Parser;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +74,42 @@ public class CombineParser implements Parser {
 		for (Parser parser : parsers)
 			if (parser != null)
 				this.parsers.add(parser);
+	}
+
+	/**
+	 * Construct a new parser that parses with the given {@code parsers} and combine the
+	 * answers in a single tree set.
+	 *
+	 * @param parsers the parsers to be used.
+	 * @return a parser that combines the results of the given {@code parsers}.
+	 * @throws NullPointerException if the given {@code parsers} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static CombineParser combine(@Nullable Parser @NotNull ... parsers) {
+		return new CombineParser(parsers);
+	}
+
+	/**
+	 * Construct a new parser that parses with the given {@code parsers} and combine the
+	 * answers in a single tree set.
+	 *
+	 * @param parsers the parsers to be used.
+	 * @return a parser that combines the results of the given {@code parsers}.
+	 * @throws NullPointerException if the given {@code parsers} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static CombineParser combine(@NotNull Iterable<Parser> parsers) {
+		return new CombineParser(parsers);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Parser> iterator() {
+		return Collections.unmodifiableSet(this.parsers).iterator();
 	}
 
 	@NotNull

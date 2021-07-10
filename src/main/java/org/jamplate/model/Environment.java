@@ -21,29 +21,35 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
+import java.util.Iterator;
 
 /**
  * The environment is a unit holding all the data, managers and variables about a single
  * process.
- * <br>
- * The subclasses must support serialization.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Compilation}[]</li>
+ *     <li>diagnostic: {@link Diagnostic}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.16
  */
-public interface Environment extends Serializable {
+public interface Environment extends Iterable<Compilation>, Serializable {
 	/**
-	 * Return a set view containing the compilations in this environment.
+	 * An iterator iterating over the compilations in this environment.
+	 * <br>
+	 * The mutability of the iterator is mutable by default unless the implementation
+	 * specifies otherwise.
 	 *
-	 * @return a view of the compilations in this.
-	 * @since 0.2.0 ~2021.05.23
+	 * @return an iterator iterating over the compilations in this environment.
+	 * @since 0.3.0 ~2021.06.24
 	 */
 	@NotNull
-	@Contract(pure = true)
-	Set<Compilation> compilationSet();
+	@Override
+	Iterator<Compilation> iterator();
 
 	/**
 	 * Get the compilation set to this environment with the given {@code document} or
@@ -84,34 +90,6 @@ public interface Environment extends Serializable {
 	@NotNull
 	@Contract(pure = true)
 	Diagnostic getDiagnostic();
-
-	/**
-	 * Returns the meta-data map of this environment.
-	 * <br>
-	 * By default, the returned map will be a modifiable checked map. Unless, the class of
-	 * this said otherwise.
-	 *
-	 * @return the meta-data map of this.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	@Contract(pure = true)
-	Map<String, Object> getMeta();
-
-	/**
-	 * Return the compilation set to this environment with the given {@code document} or
-	 * create a new compilation for the given {@code document}, add it to this environment
-	 * and return it.
-	 *
-	 * @param document the document to get a compilation for.
-	 * @return the compilation with the given {@code document} in this environment or a
-	 * 		newly created, then added compilation for the given {@code document}.
-	 * @throws NullPointerException if the given {@code document} is null.
-	 * @since 0.2.0 ~2021.05.23
-	 */
-	@NotNull
-	@Contract(mutates = "this")
-	Compilation optCompilation(@NotNull Document document);
 
 	/**
 	 * Associate the given {@code compilation} to the given {@code document} in this

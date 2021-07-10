@@ -15,14 +15,13 @@
  */
 package org.jamplate.impl.parser;
 
+import org.jamplate.function.Parser;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Parser;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A parser that attempt to parse every tree in the hierarchy of the tree provided to it
@@ -51,6 +50,27 @@ public class HierarchyParser implements Parser {
 	public HierarchyParser(@NotNull Parser parser) {
 		Objects.requireNonNull(parser, "parser");
 		this.parser = parser;
+	}
+
+	/**
+	 * Construct a new parser that searches the whole hierarchy of the trees given to it
+	 * and parses using the given {@code parser}.
+	 *
+	 * @param parser the parser to be used.
+	 * @return a hierarchy parser that uses the given {@code parser}.
+	 * @throws NullPointerException if the given {@code parser} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static HierarchyParser hierarchy(@NotNull Parser parser) {
+		return new HierarchyParser(parser);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Parser> iterator() {
+		return Collections.singleton(this.parser).iterator();
 	}
 
 	@NotNull

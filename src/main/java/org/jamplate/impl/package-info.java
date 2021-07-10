@@ -14,10 +14,10 @@
  *	limitations under the License.
  */
 /**
- * Jamplate specific implementations.
+ * Default model implementations.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.01.17
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.07.03
  */
 package org.jamplate.impl;

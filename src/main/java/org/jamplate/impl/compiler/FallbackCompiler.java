@@ -15,10 +15,11 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.function.Compiler;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Compiler;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +40,18 @@ public class FallbackCompiler implements Compiler {
 	 */
 	@NotNull
 	public static final FallbackCompiler INSTANCE = new FallbackCompiler();
+
+	/**
+	 * Return a compiler that uses the fallback compiler to compile.
+	 *
+	 * @return a fallback compiler.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static FallbackCompiler fallback() {
+		return FallbackCompiler.INSTANCE;
+	}
 
 	@Nullable
 	@Override

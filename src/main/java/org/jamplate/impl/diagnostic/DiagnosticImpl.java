@@ -17,7 +17,8 @@ package org.jamplate.impl.diagnostic;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
-import org.jamplate.impl.util.Trees;
+import org.jamplate.impl.message.MessageKind;
+import org.jamplate.impl.message.MessagePriority;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+
+import static org.jamplate.util.Source.*;
 
 /**
  * A basic implementation of the interface {@link Diagnostic}.
@@ -84,17 +87,17 @@ public class DiagnosticImpl implements Diagnostic {
 				builder.append("\n\tat ")
 					   .append(criticalPoint.getSketch())
 					   .append("(")
-					   .append(criticalPoint.document())
+					   .append(criticalPoint.getDocument())
 					   .append(":")
-					   .append(Trees.line(criticalPoint))
+					   .append(optLine(criticalPoint))
 					   .append(") ")
 					   .append("\n\t")
-					   .append(Trees.readLine(criticalPoint))
+					   .append(optReadLine(criticalPoint))
 					   .append("\n\t")
 					   .append(String.join(
 							   "",
 							   Collections.nCopies(
-									   Trees.positionInLine(criticalPoint),
+									   optLinePosition(criticalPoint),
 									   " "
 							   )
 					   ))
@@ -103,7 +106,8 @@ public class DiagnosticImpl implements Diagnostic {
 							   "",
 							   Collections.nCopies(
 									   Math.max(
-											   criticalPoint.reference().length() - 1, 0),
+											   criticalPoint.getReference().length() -
+											   1, 0),
 									   "-"
 							   )
 					   ));
@@ -112,9 +116,9 @@ public class DiagnosticImpl implements Diagnostic {
 			builder.append("\n\tat ")
 				   .append(trace.getSketch())
 				   .append("(")
-				   .append(trace.document())
+				   .append(trace.getDocument())
 				   .append(":")
-				   .append(Trees.line(trace))
+				   .append(optLine(trace))
 				   .append(")");
 
 		if (debug || message.getPriority().equals(MessagePriority.DEBUG)) {

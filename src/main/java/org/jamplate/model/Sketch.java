@@ -22,13 +22,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
  * A class that holds the thoughts about a syntax or runtime component.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>name: {@link String}</li>
+ *     <li>kind: {@link String}</li>
+ *     <li>tree?: {@link Tree}</li>
+ *     <li>components: {{@link Node.Key}:{@link Sketch}}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0
@@ -45,13 +50,6 @@ public class Sketch implements Serializable {
 	 */
 	@NotNull
 	protected final Node<Sketch> components = new HashNode<>(this);
-	/**
-	 * The additional meta-data of this sketch.
-	 *
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	protected final Map<String, Object> meta = new HashMap<>();
 
 	/**
 	 * The kind name of this sketch.
@@ -216,21 +214,6 @@ public class Sketch implements Serializable {
 	}
 
 	/**
-	 * Get the meta-data map of this sketch.
-	 * <br>
-	 * By default, the returned map will be a modifiable checked map. Unless, the class of
-	 * this said otherwise.
-	 *
-	 * @return the meta-data map of this.
-	 * @since 0.2.0 ~2021.05.21
-	 */
-	@NotNull
-	@Contract(pure = true)
-	public Map<String, Object> getMeta() {
-		return Collections.checkedMap(this.meta, String.class, Object.class);
-	}
-
-	/**
 	 * Get the name of this tree.
 	 *
 	 * @return the name of this tree.
@@ -272,6 +255,25 @@ public class Sketch implements Serializable {
 		this.components.put(key, sketch.components);
 
 		return sketch;
+	}
+
+	/**
+	 * Set the component of this sketch with the given {@code key} to be the given {@code
+	 * sketch}.
+	 *
+	 * @param key    the key of the component.
+	 * @param sketch the sketch to be set.
+	 * @return this.
+	 * @throws NullPointerException if the given {@code key} or {@code sketch} is null.
+	 * @since 0.3.0 ~2021.06.22
+	 */
+	@NotNull
+	@Contract(mutates = "this,param2")
+	public Sketch set(@NotNull Node.Key key, @NotNull Sketch sketch) {
+		Objects.requireNonNull(key, "key");
+		Objects.requireNonNull(sketch, "sketch");
+		this.components.put(key, sketch.components);
+		return this;
 	}
 
 	/**
@@ -381,13 +383,13 @@ public class Sketch implements Serializable {
 			if (object == this)
 				return true;
 			if (object instanceof StringKey) {
-				if (this.value == null)
-					return this.opposite.equals(object);
-
 				StringKey key = (StringKey) object;
 
+				if (this.value == null)
+					return this.opposite.equals(key.opposite);
+
 				if (key.value == null)
-					return this.equals(key.opposite);
+					return false;
 
 				return this.value.equals(key.value);
 			}

@@ -336,13 +336,13 @@ public enum Dominance {
 
 	/**
 	 * Calculate how much dominant the area {@code [s, e)} is over the given {@code
-	 * sketch}.
+	 * tree}.
 	 *
-	 * @param tree the sketch (first area).
+	 * @param tree the tree (first area).
 	 * @param s    the first index of the second area.
 	 * @param e    one past the last index of the second area.
-	 * @return how much dominant the second area over the given {@code sketch}.
-	 * @throws NullPointerException     if the given {@code sketch} is null.
+	 * @return how much dominant the second area over the given {@code tree}.
+	 * @throws NullPointerException     if the given {@code tree} is null.
 	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
@@ -350,46 +350,45 @@ public enum Dominance {
 	@NotNull
 	@Contract(pure = true)
 	public static Dominance compute(@NotNull Tree tree, int s, int e) {
-		Objects.requireNonNull(tree, "sketch");
-		return Dominance.compute(tree.reference(), s, e);
+		Objects.requireNonNull(tree, "tree");
+		return Dominance.compute(tree.getReference(), s, e);
 	}
 
 	/**
 	 * Calculate how much dominant the {@code other} reference over the given {@code
-	 * sketch}.
+	 * tree}.
 	 *
-	 * @param tree  the first sketch.
+	 * @param tree  the first tree.
 	 * @param other the second reference.
-	 * @return how much dominant the second reference over the first sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @return how much dominant the second reference over the first tree.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
 	public static Dominance compute(@NotNull Tree tree, @NotNull Reference other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(tree.reference(), other);
+		return Dominance.compute(tree.getReference(), other);
 	}
 
 	/**
-	 * Calculate how much dominant the {@code other} sketch over the given {@code
-	 * sketch}.
+	 * Calculate how much dominant the {@code other} tree over the given {@code tree}.
 	 *
-	 * @param tree  the first sketch.
-	 * @param other the second sketch.
-	 * @return how much dominant the second sketch over the first sketch.
-	 * @throws NullPointerException if the given {@code sketch} or {@code other} is null.
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return how much dominant the second tree over the first tree.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
 	 * @see Dominance#compute(int, int, int, int)
 	 * @since 0.2.0 ~2021.01.25
 	 */
 	@NotNull
 	@Contract(pure = true)
 	public static Dominance compute(@NotNull Tree tree, @NotNull Tree other) {
-		Objects.requireNonNull(tree, "sketch");
+		Objects.requireNonNull(tree, "tree");
 		Objects.requireNonNull(other, "other");
-		return Dominance.compute(tree.reference(), other.reference());
+		return Dominance.compute(tree.getReference(), other.getReference());
 	}
 
 	@NotNull
@@ -397,6 +396,104 @@ public enum Dominance {
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+
+	/**
+	 * Invoke {@link #compute(int, int, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param i the first index of the first area.
+	 * @param j one past the last index of the first area.
+	 * @param s the first index of the second area.
+	 * @param e one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws IllegalArgumentException if {@code i} is not in the range {@code [0, j]} or
+	 *                                  if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(int i, int j, int s, int e) {
+		return Dominance.compute(i, j, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, int, int)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the reference (first area).
+	 * @param s         the first index of the second area.
+	 * @param e         one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code reference} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, int s, int e) {
+		return Dominance.compute(reference, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Reference, Reference)} with the given parameters and return
+	 * true if the resultant enum is this.
+	 *
+	 * @param reference the first reference.
+	 * @param other     the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code reference} or {@code other} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Reference reference, Reference other) {
+		return Dominance.compute(reference, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, int, int)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree the tree (first area).
+	 * @param s    the first index of the second area.
+	 * @param e    one past the last index of the second area.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException     if the given {@code tree} is null.
+	 * @throws IllegalArgumentException if {@code s} is not in the range {@code [0, e]}.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, int s, int e) {
+		return Dominance.compute(tree, s, e) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Reference)} with the given parameters and return true
+	 * if the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second reference.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Reference other) {
+		return Dominance.compute(tree, other) == this;
+	}
+
+	/**
+	 * Invoke {@link #compute(Tree, Tree)} with the given parameters and return true if
+	 * the resultant enum is this.
+	 *
+	 * @param tree  the first tree.
+	 * @param other the second tree.
+	 * @return true, if the result of the computation is this.
+	 * @throws NullPointerException if the given {@code tree} or {@code other} is null.
+	 * @since 0.3.0 ~2021.06.21
+	 */
+	@Contract(pure = true)
+	public boolean test(@NotNull Tree tree, @NotNull Tree other) {
+		return Dominance.compute(tree, other) == this;
 	}
 
 	/**

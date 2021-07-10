@@ -6,7 +6,7 @@ standard C pre-processors with some features added and some missing.
 
 ### Distribution
 
-This repository is the core processor and contain no application. You might use the
+This repository is the core processor. You might use the
 [Jamplate Gradle Plugin](https://github.com/jamplate/gradle) instead. If you want to use
 the processor directly or just extend it, you might download the repository or
 use `jitpack.io`. For more info, please visit [jamplate.org](https://jamplate.org)
@@ -20,6 +20,56 @@ dependencies {
 	//replace `Tag` with the targeted version.
 	implementation 'org.jamplate:processor:Tag'
 }
+```
+
+### Usage
+
+An example of using the Glucose Implementation:
+
+```groovy 
+    Document document = new PseudoDocument(
+        //name
+        "main.jamplate",
+        //content
+        "#message Hello ' ' World"
+    )
+    
+    Unit unit = new UnitImpl(new GlucoseSpec())
+    
+    if (
+        !unit.initialize(document) ||
+        !unit.parse(document) ||
+        !unit.analyze(document) ||
+        !unit.compile(document) ||
+        !unit.execute(document)
+    ) {
+    	unit.diagnostic()
+    }
+```
+
+An example of using the Glucose Implementation with the DebugSpec:
+
+```groovy 
+    Document document = new PseudoDocument(
+        //name
+        "main.jamplate",
+        //content
+        "#{ Hello ' ' World }#"
+    )
+
+    Unit unit = new UnitImpl(new GlucoseSpec(
+        DebugSpec.INSTANCE
+    ))
+
+    if (
+        !unit.initialize(document) ||
+        !unit.parse(document) ||
+        !unit.analyze(document) ||
+        !unit.compile(document) ||
+        !unit.execute(document)
+    ) {
+        unit.diagnostic()
+    }
 ```
 
 ### Project Info

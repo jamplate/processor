@@ -15,17 +15,15 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.function.Compiler;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Compiler;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -79,6 +77,36 @@ public class FirstCompileCompiler implements Compiler {
 				this.compilers.add(compiler);
 	}
 
+	/**
+	 * Construct a new compiler that returns the instruction of the first compiler that
+	 * succeed compiling from the given {@code compilers} in order.
+	 *
+	 * @param compilers the compilers (in-order) to be used by the constructed compiler.
+	 * @return a new first-compile compiler.
+	 * @throws NullPointerException if the given {@code compilers} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static FirstCompileCompiler first(@Nullable Compiler @NotNull ... compilers) {
+		return new FirstCompileCompiler(compilers);
+	}
+
+	/**
+	 * Construct a new compiler that returns the instruction of the first compiler that
+	 * succeed compiling from the given {@code compilers} in order.
+	 *
+	 * @param compilers the compilers (in-order) to be used by the constructed compiler.
+	 * @return a new first-compile compiler.
+	 * @throws NullPointerException if the given {@code compilers} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static FirstCompileCompiler first(@NotNull List<Compiler> compilers) {
+		return new FirstCompileCompiler(compilers);
+	}
+
 	@Nullable
 	@Override
 	public Instruction compile(@NotNull Compiler compiler, @NotNull Compilation compilation, @NotNull Tree tree) {
@@ -92,5 +120,11 @@ public class FirstCompileCompiler implements Compiler {
 		}
 
 		return null;
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Collections.unmodifiableList(this.compilers).iterator();
 	}
 }

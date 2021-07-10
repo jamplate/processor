@@ -78,7 +78,7 @@
  * Built Components:
  * <ul>
  *     <li>
- *         {@link org.jamplate.model.Value Value}
+ *         {@link org.jamplate.memory.Value Value}
  *         <br>
  *         A built component that can be evaluated into a string.
  *     </li>
@@ -120,7 +120,7 @@
  * Volatile Components:
  * <ul>
  *     <li>
- *         {@link org.jamplate.model.Frame Frame}
+ *         {@link org.jamplate.memory.Frame Frame}
  *         <br>
  *         A highly stateful mutable structure that can store and release values/data in a
  *         stack and heap fashion.
@@ -129,47 +129,14 @@
  *         <li>A heap of values.</li>
  *     </li>
  *     <li>
- *         {@link org.jamplate.model.Memory Memory}
+ *         {@link org.jamplate.memory.Memory Memory}
  *         <br>
  *         A highly stateful mutable structure that can store and release frames in a
  *         stack fashion.
  *         <ul>
- *             <li>A stack of {@link org.jamplate.model.Frame Frames}.</li>
+ *             <li>A stack of {@link org.jamplate.memory.Frame Frames}.</li>
  *             <li>A console.</li>
  *         </ul>
- *     </li>
- * </ul>
- * <br>
- * Functions:
- * <ul>
- *     <li>
- *         {@link org.jamplate.model.function.Initializer Initializer}
- *         <br>
- *         A function that initializes a {@link org.jamplate.model.Document} into an
- *         {@link org.jamplate.model.Environment}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Parser Parser}
- *         <br>
- *         A function tries to constructs a set of {@link org.jamplate.model.Tree Trees}
- *         from a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Analyzer Analyzer}
- *         <br>
- *         A function that analyzes and modifies a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Compiler Compiler}
- *         <br>
- *         A function tires to construct an {@link org.jamplate.model.Instruction
- *         Instruction} from a {@link org.jamplate.model.Tree Tree}.
- *     </li>
- *     <li>
- *         {@link org.jamplate.model.function.Processor Processor}
- *         <br>
- *         An function that processes a {@link org.jamplate.model.Compilation
- *         Compilation}.
  *     </li>
  * </ul>
  *

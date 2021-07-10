@@ -15,15 +15,13 @@
  */
 package org.jamplate.impl.processor;
 
+import org.jamplate.function.Processor;
 import org.jamplate.model.Compilation;
-import org.jamplate.model.function.Processor;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +74,48 @@ public class SequentialProcessor implements Processor {
 		for (Processor processor : processors)
 			if (processor != null)
 				this.processors.add(processor);
+	}
+
+	/**
+	 * Construct a new processor that processes using the given processors in order.
+	 * <br>
+	 * Null processors in the array will be ignored.
+	 *
+	 * @param processors the processors to be executed when the constructed processor gets
+	 *                   executed.
+	 * @return a new sequential processor that executes the given {@code processors} in
+	 * 		order.
+	 * @throws NullPointerException if the given {@code processors} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static SequentialProcessor sequential(@Nullable Processor @NotNull ... processors) {
+		return new SequentialProcessor(processors);
+	}
+
+	/**
+	 * Construct a new processor that processes using the given processors in order.
+	 * <br>
+	 * Null processors in the list will be ignored.
+	 *
+	 * @param processors the processors to be executed when the constructed processor gets
+	 *                   executed.
+	 * @return a new sequential processor that executes the given {@code processors} in
+	 * 		order.
+	 * @throws NullPointerException if the given {@code processors} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(value = "_->new", pure = true)
+	public static SequentialProcessor sequential(@NotNull List<Processor> processors) {
+		return new SequentialProcessor(processors);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Processor> iterator() {
+		return Collections.unmodifiableList(this.processors).iterator();
 	}
 
 	@Override

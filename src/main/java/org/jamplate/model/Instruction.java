@@ -15,23 +15,32 @@
  */
 package org.jamplate.model;
 
+import org.jamplate.memory.Memory;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
  * An instruction is a function that executes depending on the state of the environment
  * and memory given to it but does not have a state itself.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Instruction}[]</li>
+ *     <li>tree?: {@link Tree}</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.05.21
  */
 @FunctionalInterface
-public interface Instruction extends Serializable {
+public interface Instruction extends Iterable<Instruction>, Serializable {
 	/**
 	 * Wrap the given {@code instruction} with another instruction delegates to the given
 	 * {@code instruction} when executed.
@@ -92,6 +101,20 @@ public interface Instruction extends Serializable {
 	}
 
 	/**
+	 * Returns an iterator that iterates over the sub-instructions of this instruction.
+	 * This method is very implementation-specific and the default implementation will
+	 * return an empty iterator.
+	 *
+	 * @return an iterator iterating over the sub-instructions of this instruction.
+	 * @since 0.3.0 ~2021.06.25
+	 */
+	@NotNull
+	@Override
+	default Iterator<Instruction> iterator() {
+		return Collections.emptyIterator();
+	}
+
+	/**
 	 * Return the tree from where this instruction was declared. (optional)
 	 *
 	 * @return the tree of this instruction.
@@ -102,6 +125,20 @@ public interface Instruction extends Serializable {
 	@Contract(pure = true)
 	default Tree getTree() {
 		return null;
+	}
+
+	/**
+	 * Return an optimized version of this instruction.
+	 *
+	 * @param mode the mode of the optimization. zero or positive integer for normal
+	 *             optimization and negative integer for maximum optimization.
+	 * @return an optimized version of this instruction.
+	 * @since 0.3.0 ~2021.07.01
+	 */
+	@NotNull
+	@Contract(pure = true)
+	default Instruction optimize(int mode) {
+		return this;
 	}
 
 	/**

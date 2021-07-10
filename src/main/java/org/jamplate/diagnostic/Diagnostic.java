@@ -23,6 +23,11 @@ import java.io.Serializable;
 
 /**
  * An interface to store and print notes, warnings and errors to the console.
+ * <br><br>
+ * <strong>Members</strong>
+ * <ul>
+ *     <li>{@link Message}[]</li>
+ * </ul>
  *
  * @author LSafer
  * @version 0.2.0

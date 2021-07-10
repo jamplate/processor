@@ -15,13 +15,16 @@
  */
 package org.jamplate.impl.compiler;
 
+import org.jamplate.function.Compiler;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Tree;
-import org.jamplate.model.function.Compiler;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -56,7 +59,9 @@ public class ExclusiveCompiler implements Compiler {
 	 * @throws NullPointerException if the given {@code compiler} is null.
 	 * @since 0.2.0 ~2021.05.28
 	 */
-	public ExclusiveCompiler(@NotNull Compiler compiler) {
+	public ExclusiveCompiler(
+			@NotNull Compiler compiler
+	) {
 		Objects.requireNonNull(compiler, "compiler");
 		this.compiler = compiler;
 		this.fallback = this;
@@ -71,11 +76,58 @@ public class ExclusiveCompiler implements Compiler {
 	 * @param fallback the fallback compiler to be passed to the given {@code compiler}.
 	 * @since 0.2.0 ~2021.05.28
 	 */
-	public ExclusiveCompiler(@NotNull Compiler compiler, @NotNull Compiler fallback) {
+	public ExclusiveCompiler(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallback
+	) {
 		Objects.requireNonNull(compiler, "compiler");
 		Objects.requireNonNull(fallback, "fallback");
 		this.compiler = compiler;
 		this.fallback = fallback;
+	}
+
+	/**
+	 * Construct a new compiler that compiles using the given {@code compiler} with itself
+	 * as the fallback compiler.
+	 *
+	 * @param compiler the compiler to be used.
+	 * @return a new exclusive compiler that compiles using the given {@code compiler} and
+	 * 		uses itself as the fallback compiler.
+	 * @throws NullPointerException if the given {@code compiler} is null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static ExclusiveCompiler exclusive(
+			@NotNull Compiler compiler
+	) {
+		return new ExclusiveCompiler(
+				compiler
+		);
+	}
+
+	/**
+	 * Construct a new compiler that compiles using the given {@code compiler} with the
+	 * given {@code fallback} as the fallback compiler.
+	 *
+	 * @param compiler the compiler to be used.
+	 * @param fallback the fallback compiler.
+	 * @return a new exclusive compiler that compiles using the given {@code compiler} and
+	 * 		uses the given {@code fallback} as the fallback compiler.
+	 * @throws NullPointerException if the given {@code compiler} or {@code fallback} is
+	 *                              null.
+	 * @since 0.3.0 ~2021.07.04
+	 */
+	@NotNull
+	@Contract(pure = true)
+	public static ExclusiveCompiler exclusive(
+			@NotNull Compiler compiler,
+			@NotNull Compiler fallback
+	) {
+		return new ExclusiveCompiler(
+				compiler,
+				fallback
+		);
 	}
 
 	@Nullable
@@ -88,5 +140,11 @@ public class ExclusiveCompiler implements Compiler {
 				this.fallback,
 				compilation, tree
 		);
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Compiler> iterator() {
+		return Arrays.asList(this.compiler, this.fallback).iterator();
 	}
 }

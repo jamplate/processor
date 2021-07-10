@@ -15,10 +15,10 @@
  */
 /**
  * A package containing implementations of the interface {@link
- * org.jamplate.model.function.Compiler}.
+ * org.jamplate.function.Compiler}.
  *
  * @author LSafer
- * @version 0.2.0
- * @since 0.2.0 ~2021.05.25
+ * @version 0.3.0
+ * @since 0.3.0 ~2021.07.04
  */
 package org.jamplate.impl.compiler;

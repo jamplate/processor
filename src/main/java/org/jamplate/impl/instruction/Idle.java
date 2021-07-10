@@ -15,9 +15,9 @@
  */
 package org.jamplate.impl.instruction;
 
+import org.jamplate.memory.Memory;
 import org.jamplate.model.Environment;
 import org.jamplate.model.Instruction;
-import org.jamplate.model.Memory;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,15 +25,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * <h3>{@code IDLE}</h3>
  * An instruction that does nothing. Other instructions can completely ignore executing
  * this instruction.
+ * <br><br>
+ * Memory Visualization:
+ * <pre>
+ *     No memory manipulation
+ * </pre>
  *
  * @author LSafer
  * @version 0.2.0
  * @since 0.2.0 ~2021.06.05
  */
 public class Idle implements Instruction {
+	/**
+	 * An instance of this instruction.
+	 *
+	 * @since 0.3.0 ~2021.06.15
+	 */
+	@NotNull
+	public static final Idle INSTANCE = new Idle();
+
 	@SuppressWarnings("JavaDoc")
 	private static final long serialVersionUID = -1121111314421762482L;
 
@@ -68,5 +80,17 @@ public class Idle implements Instruction {
 
 	@Override
 	public void exec(@NotNull Environment environment, @NotNull Memory memory) {
+	}
+
+	@Nullable
+	@Override
+	public Tree getTree() {
+		return this.tree;
+	}
+
+	@NotNull
+	@Override
+	public Instruction optimize(int mode) {
+		return mode < 0 ? Idle.INSTANCE : new Idle(new Tree(this.tree));
 	}
 }
