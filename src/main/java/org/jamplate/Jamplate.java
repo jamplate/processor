@@ -31,7 +31,7 @@ public final class Jamplate {
 	 * @since 0.3.0 ~2021.07.05
 	 */
 	@NotNull
-	public static final String CODE = "glucose";
+	public static final String FLAVOR = "glucose";
 	/**
 	 * The library version name.
 	 *
