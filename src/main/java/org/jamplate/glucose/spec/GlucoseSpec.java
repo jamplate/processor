@@ -15,7 +15,6 @@
  */
 package org.jamplate.glucose.spec;
 
-import org.jamplate.unit.Spec;
 import org.jamplate.glucose.spec.command.hashcapture.FlowCaptureSpec;
 import org.jamplate.glucose.spec.command.hashcapture.HashCaptureSpec;
 import org.jamplate.glucose.spec.command.hashcapture.HashEndcaptureSpec;
@@ -50,7 +49,10 @@ import org.jamplate.glucose.spec.syntax.enclosure.*;
 import org.jamplate.glucose.spec.syntax.symbol.*;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
+import org.jamplate.glucose.spec.tool.DefaultMemorySpec;
+import org.jamplate.glucose.spec.tool.OptimizeSpec;
 import org.jamplate.impl.spec.MultiSpec;
+import org.jamplate.unit.Spec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,6 +87,9 @@ public class GlucoseSpec extends MultiSpec {
 				GlucoseSpec.NAME,
 				//document
 				RootSpec.INSTANCE,
+				//tools
+				DefaultMemorySpec.INSTANCE,
+				OptimizeSpec.INSTANCE,
 				//misc
 				NewlineSpec.INSTANCE,
 				NewlineEscapedSpec.INSTANCE,
