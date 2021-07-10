@@ -16,7 +16,7 @@
 package org.jamplate.impl.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.internal.util.Trees;
+import org.jamplate.util.Trees;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.Contract;

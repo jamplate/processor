@@ -17,6 +17,8 @@ package org.jamplate.impl.diagnostic;
 
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
+import org.jamplate.impl.message.MessageKind;
+import org.jamplate.impl.message.MessagePriority;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +27,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
-import static org.jamplate.internal.util.Source.*;
+import static org.jamplate.util.Source.*;
 
 /**
  * A basic implementation of the interface {@link Diagnostic}.

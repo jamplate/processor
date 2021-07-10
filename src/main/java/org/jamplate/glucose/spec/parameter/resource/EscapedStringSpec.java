@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.parameter.resource;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.internal.util.Source.read;
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Query.is;
+import static org.jamplate.util.Source.read;
 
 /**
  * Parameter escaped string specification.

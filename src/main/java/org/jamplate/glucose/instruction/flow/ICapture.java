@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.instruction.flow;
 
-import org.jamplate.impl.memory.BufferedConsole;
+import org.jamplate.impl.console.BufferedConsole;
 import org.jamplate.memory.Console;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;

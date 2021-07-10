@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 
-import static org.jamplate.internal.util.Trees.children;
+import static org.jamplate.util.Trees.children;
 
 /**
  * An analyzer that analyzes the whole hierarchy of the trees given to it using a

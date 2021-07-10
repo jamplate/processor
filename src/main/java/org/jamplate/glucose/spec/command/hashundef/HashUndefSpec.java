@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashundef;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.heap.IAccess;
@@ -37,11 +37,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.parser.GroupParser.group;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Functions.parser;
-import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.internal.util.Source.read;
+import static org.jamplate.glucose.internal.parser.GroupParser.group;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Functions.parser;
+import static org.jamplate.util.Query.is;
+import static org.jamplate.util.Source.read;
 
 /**
  * The specification of the command {@code #undef}.

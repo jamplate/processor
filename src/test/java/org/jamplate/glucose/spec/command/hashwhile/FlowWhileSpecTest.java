@@ -1,6 +1,6 @@
 package org.jamplate.glucose.spec.command.hashwhile;
 
-import org.jamplate.api.Unit;
+import org.jamplate.unit.Unit;
 import org.jamplate.glucose.spec.command.hashdeclare.HashDeclareSpec;
 import org.jamplate.glucose.spec.document.RootSpec;
 import org.jamplate.glucose.spec.document.TextSpec;
@@ -22,9 +22,9 @@ import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
 import org.jamplate.glucose.spec.tool.OptimizeSpec;
-import org.jamplate.impl.api.MultiSpec;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.spec.MultiSpec;
+import org.jamplate.impl.unit.UnitImpl;
+import org.jamplate.impl.document.PseudoDocument;
 import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 

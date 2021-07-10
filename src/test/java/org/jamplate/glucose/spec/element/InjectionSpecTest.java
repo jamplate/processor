@@ -1,6 +1,6 @@
 package org.jamplate.glucose.spec.element;
 
-import org.jamplate.api.Unit;
+import org.jamplate.unit.Unit;
 import org.jamplate.glucose.spec.GlucoseSpec;
 import org.jamplate.glucose.spec.command.hashdeclare.HashDeclareSpec;
 import org.jamplate.glucose.spec.command.hashfor.FlowForSpec;
@@ -25,15 +25,15 @@ import org.jamplate.glucose.spec.syntax.symbol.PlusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.impl.api.Action;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.unit.Action;
+import org.jamplate.impl.unit.UnitImpl;
+import org.jamplate.impl.document.PseudoDocument;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Document;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.internal.util.Specs.listener;
+import static org.jamplate.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InjectionSpecTest {

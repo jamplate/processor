@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.parameter.resource;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
@@ -39,11 +39,11 @@ import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.compiler.FirstCompileCompiler.first;
-import static org.jamplate.internal.analyzer.SeparatorsAnalyzer.separators;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
-import static org.jamplate.internal.util.Functions.analyzer;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Query.*;
+import static org.jamplate.glucose.internal.analyzer.SeparatorsAnalyzer.separators;
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.util.Functions.analyzer;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Query.*;
 
 /**
  * Parameter object specification.

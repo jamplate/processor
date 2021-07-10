@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.glucose.spec.command.hashcapture.FlowCaptureSpec;
 import org.jamplate.glucose.spec.command.hashcapture.HashCaptureSpec;
 import org.jamplate.glucose.spec.command.hashcapture.HashEndcaptureSpec;
@@ -50,7 +50,7 @@ import org.jamplate.glucose.spec.syntax.enclosure.*;
 import org.jamplate.glucose.spec.syntax.symbol.*;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
-import org.jamplate.impl.api.MultiSpec;
+import org.jamplate.impl.spec.MultiSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

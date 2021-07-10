@@ -1,6 +1,6 @@
 package org.jamplate.glucose.spec.parameter.operator;
 
-import org.jamplate.api.Unit;
+import org.jamplate.unit.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.impl.instruction.Idle;
@@ -11,9 +11,9 @@ import org.jamplate.glucose.spec.syntax.symbol.AsteriskSpec;
 import org.jamplate.glucose.spec.syntax.symbol.MinusSpec;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.impl.api.Action;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.unit.Action;
+import org.jamplate.impl.unit.UnitImpl;
+import org.jamplate.impl.document.PseudoDocument;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
@@ -22,9 +22,9 @@ import org.jamplate.model.Tree;
 import org.junit.jupiter.api.Test;
 
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
-import static org.jamplate.internal.util.Specs.compiler;
-import static org.jamplate.internal.util.Specs.listener;
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.util.Specs.compiler;
+import static org.jamplate.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 

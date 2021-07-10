@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.parameter.resource;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.glucose.spec.syntax.term.DigitsSpec;
@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.glucose.internal.util.Values.number;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.internal.util.Source.read;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Query.is;
+import static org.jamplate.util.Source.read;
 
 /**
  * Parameter number specification.

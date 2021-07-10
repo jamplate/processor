@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.document;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.memory.console.IFPrint;
 import org.jamplate.glucose.instruction.memory.heap.IAccess;
@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.compiler.FallbackCompiler.fallback;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Source.read;
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Source.read;
 
 /**
  * A document-wise spec that transform any unrecognized token into an {@link IFPrint}.

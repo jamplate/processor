@@ -1,10 +1,10 @@
 package org.jamplate.glucose
 
-import org.jamplate.api.Unit
+import org.jamplate.unit.Unit
 import org.jamplate.glucose.spec.GlucoseSpec
 import org.jamplate.glucose.spec.tool.DebugSpec
-import org.jamplate.impl.api.UnitImpl
-import org.jamplate.impl.model.PseudoDocument
+import org.jamplate.impl.unit.UnitImpl
+import org.jamplate.impl.document.PseudoDocument
 import org.jamplate.model.Document
 import org.junit.jupiter.api.Test
 

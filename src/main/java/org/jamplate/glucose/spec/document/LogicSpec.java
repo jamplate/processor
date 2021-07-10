@@ -15,15 +15,15 @@
  */
 package org.jamplate.glucose.spec.document;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Initializer;
 import org.jamplate.glucose.spec.element.ParameterSpec;
-import org.jamplate.impl.model.CompilationImpl;
+import org.jamplate.impl.compilation.CompilationImpl;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
-import static org.jamplate.internal.util.Functions.initializer;
+import static org.jamplate.util.Functions.initializer;
 
 /**
  * A specification for logical root compilations.

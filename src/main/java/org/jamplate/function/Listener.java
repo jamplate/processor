@@ -15,7 +15,7 @@
  */
 package org.jamplate.function;
 
-import org.jamplate.api.Event;
+import org.jamplate.unit.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

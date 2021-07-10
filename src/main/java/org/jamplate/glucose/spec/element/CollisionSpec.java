@@ -15,15 +15,15 @@
  */
 package org.jamplate.glucose.spec.element;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Parser;
-import org.jamplate.impl.api.MultiSpec;
+import org.jamplate.impl.spec.MultiSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.jamplate.internal.parser.NaturalMergeParser.merge;
-import static org.jamplate.internal.util.Collisions.flat;
-import static org.jamplate.internal.util.Functions.parser;
+import static org.jamplate.glucose.internal.parser.NaturalMergeParser.merge;
+import static org.jamplate.util.Collisions.flat;
+import static org.jamplate.util.Functions.parser;
 
 /**
  * A subspec supporting implementation with collision management.

@@ -16,7 +16,7 @@
 package org.jamplate.glucose.spec.element;
 
 import cufy.util.Node;
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.instruction.memory.console.IPrint;
@@ -33,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
-import static org.jamplate.internal.parser.EnclosureParser.enclosure;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Functions.parser;
-import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.glucose.internal.parser.EnclosureParser.enclosure;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Functions.parser;
+import static org.jamplate.util.Query.is;
 
 /**
  * Injection {@code #{...}#} specification.

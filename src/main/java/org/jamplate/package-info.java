@@ -18,11 +18,11 @@
  * <br><br>
  * Abstract Packages:
  * <ul>
- *     <li>{@link org.jamplate.api}</li>
  *     <li>{@link org.jamplate.diagnostic}</li>
  *     <li>{@link org.jamplate.function}</li>
  *     <li>{@link org.jamplate.memory}</li>
  *     <li>{@link org.jamplate.model}</li>
+ *     <li>{@link org.jamplate.unit}</li>
  * </ul>
  * <br>
  * Default implementations packages:
@@ -30,9 +30,9 @@
  *     <li>{@link org.jamplate.impl}</li>
  * </ul>
  * <br>
- * Internal packages:
+ * Utility packages:
  * <ul>
- *     <li>{@link org.jamplate.internal}</li>
+ *     <li>{@link org.jamplate.util}</li>
  * </ul>
  * <br>
  * Glucose implementation packages:
@@ -47,16 +47,16 @@
  *     </tr>
  *     <tr><h2>Api</h2></tr>
  *     <tr>
- *         <td>{@link org.jamplate.api.Unit}</td>
+ *         <td>{@link org.jamplate.unit.Unit}</td>
  *         <td><ul>
- *             <li>spec: {@link org.jamplate.api.Spec}</li>
+ *             <li>spec: {@link org.jamplate.unit.Spec}</li>
  *             <li>environment: {@link org.jamplate.model.Environment}</li>
  *         </ul></td>
  *     </tr>
  *     <tr>
- *         <td>{@link org.jamplate.api.Spec}</td>
+ *         <td>{@link org.jamplate.unit.Spec}</td>
  *         <td><ul>
- *             <li>{@link org.jamplate.api.Spec}[]</li>
+ *             <li>{@link org.jamplate.unit.Spec}[]</li>
  *             <li>qualifiedName: {@link java.lang.String}</li>
  *             <li>initializer: {@link org.jamplate.function.Initializer}</li>
  *             <li>parser: {@link org.jamplate.function.Parser}</li>
@@ -69,7 +69,7 @@
  *         </ul></td>
  *     </tr>
  *     <tr>
- *         <td>{@link org.jamplate.api.Event}</td>
+ *         <td>{@link org.jamplate.unit.Event}</td>
  *         <td><ul>
  *             <li>action: {@link java.lang.String}</li>
  *             <li>compilation?: {@link org.jamplate.model.Compilation}</li>
@@ -79,7 +79,7 @@
  *             <li>instruction?: {@link org.jamplate.model.Instruction}</li>
  *             <li>memory?: {@link org.jamplate.memory.Memory}</li>
  *             <li>tree?: {@link org.jamplate.model.Tree}</li>
- *             <li>unit?: {@link org.jamplate.api.Unit}</li>
+ *             <li>unit?: {@link org.jamplate.unit.Unit}</li>
  *             <li>extra: {{@link java.lang.String}:{@link java.lang.Object}}</li>
  *         </ul></td>
  *     </tr>

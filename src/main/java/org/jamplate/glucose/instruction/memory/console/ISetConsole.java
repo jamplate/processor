@@ -15,8 +15,8 @@
  */
 package org.jamplate.glucose.instruction.memory.console;
 
-import org.jamplate.impl.memory.BufferedConsole;
-import org.jamplate.impl.memory.FileConsole;
+import org.jamplate.impl.console.BufferedConsole;
+import org.jamplate.impl.console.FileConsole;
 import org.jamplate.memory.Memory;
 import org.jamplate.memory.Value;
 import org.jamplate.model.Environment;

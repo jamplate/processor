@@ -15,11 +15,11 @@
  */
 package org.jamplate.glucose.spec.element;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
-import org.jamplate.impl.api.MultiSpec;
+import org.jamplate.impl.spec.MultiSpec;
 import org.jamplate.impl.instruction.Idle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +35,13 @@ import static org.jamplate.impl.compiler.FilterCompiler.filter;
 import static org.jamplate.impl.compiler.FirstCompileCompiler.first;
 import static org.jamplate.impl.parser.FilterParser.filter;
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
-import static org.jamplate.internal.compiler.FlattenCompiler.flatten;
-import static org.jamplate.internal.compiler.MandatoryCompiler.mandatory;
-import static org.jamplate.internal.parser.NaturalMergeParser.merge;
-import static org.jamplate.internal.util.Collisions.nested;
-import static org.jamplate.internal.util.Functions.*;
-import static org.jamplate.internal.util.Query.is;
-import static org.jamplate.internal.util.Query.whitespace;
+import static org.jamplate.glucose.internal.compiler.FlattenCompiler.flatten;
+import static org.jamplate.glucose.internal.compiler.MandatoryCompiler.mandatory;
+import static org.jamplate.glucose.internal.parser.NaturalMergeParser.merge;
+import static org.jamplate.util.Collisions.nested;
+import static org.jamplate.util.Functions.*;
+import static org.jamplate.util.Query.is;
+import static org.jamplate.util.Query.whitespace;
 
 /**
  * A class containing parameter context internal specifications.

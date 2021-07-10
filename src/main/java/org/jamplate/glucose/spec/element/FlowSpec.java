@@ -16,8 +16,8 @@
 package org.jamplate.glucose.spec.element;
 
 import cufy.util.Node;
-import org.jamplate.api.Spec;
-import org.jamplate.impl.api.MultiSpec;
+import org.jamplate.unit.Spec;
+import org.jamplate.impl.spec.MultiSpec;
 import org.jamplate.model.Sketch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

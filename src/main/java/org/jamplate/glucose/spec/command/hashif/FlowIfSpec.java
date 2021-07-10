@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashif;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.IBranch;
@@ -42,11 +42,11 @@ import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.analyzer.MultiFlowAnalyzer.flow;
-import static org.jamplate.internal.util.Functions.analyzer;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Query.*;
-import static org.jamplate.internal.util.Source.read;
+import static org.jamplate.glucose.internal.analyzer.MultiFlowAnalyzer.flow;
+import static org.jamplate.util.Functions.analyzer;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Query.*;
+import static org.jamplate.util.Source.read;
 
 /**
  * If flow specification.

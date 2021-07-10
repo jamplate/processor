@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashif;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Compiler;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.spec.element.CommandSpec;
@@ -26,10 +26,10 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.internal.parser.GroupParser.group;
-import static org.jamplate.internal.util.Functions.compiler;
-import static org.jamplate.internal.util.Functions.parser;
-import static org.jamplate.internal.util.Query.is;
+import static org.jamplate.glucose.internal.parser.GroupParser.group;
+import static org.jamplate.util.Functions.compiler;
+import static org.jamplate.util.Functions.parser;
+import static org.jamplate.util.Query.is;
 
 /**
  * The specification of the command {@code #elifndef}.

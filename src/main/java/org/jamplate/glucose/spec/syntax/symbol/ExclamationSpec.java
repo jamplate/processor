@@ -15,15 +15,15 @@
  */
 package org.jamplate.glucose.spec.syntax.symbol;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
-import static org.jamplate.internal.parser.TermParser.term;
-import static org.jamplate.internal.util.Functions.parser;
+import static org.jamplate.glucose.internal.parser.TermParser.term;
+import static org.jamplate.util.Functions.parser;
 
 /**
  * Exclamation {@code !} specification.

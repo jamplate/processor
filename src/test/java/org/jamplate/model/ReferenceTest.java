@@ -15,7 +15,7 @@
  */
 package org.jamplate.model;
 
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.document.PseudoDocument;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

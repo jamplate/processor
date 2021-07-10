@@ -15,13 +15,13 @@
  */
 package org.jamplate.glucose.spec.tool;
 
-import org.jamplate.api.Spec;
-import org.jamplate.api.Unit;
+import org.jamplate.unit.Spec;
+import org.jamplate.unit.Unit;
 import org.jamplate.diagnostic.Diagnostic;
 import org.jamplate.diagnostic.Message;
 import org.jamplate.function.Listener;
-import org.jamplate.impl.api.Action;
-import org.jamplate.impl.diagnostic.MessagePriority;
+import org.jamplate.impl.unit.Action;
+import org.jamplate.impl.message.MessagePriority;
 import org.jamplate.memory.Console;
 import org.jamplate.memory.Frame;
 import org.jamplate.memory.Memory;

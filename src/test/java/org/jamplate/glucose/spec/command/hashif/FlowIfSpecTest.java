@@ -1,6 +1,6 @@
 package org.jamplate.glucose.spec.command.hashif;
 
-import org.jamplate.api.Unit;
+import org.jamplate.unit.Unit;
 import org.jamplate.glucose.spec.GlucoseSpec;
 import org.jamplate.glucose.spec.document.RootSpec;
 import org.jamplate.glucose.spec.document.TextSpec;
@@ -13,15 +13,15 @@ import org.jamplate.glucose.spec.misc.NewlineSuppressedSpec;
 import org.jamplate.glucose.spec.parameter.resource.ReferenceSpec;
 import org.jamplate.glucose.spec.syntax.term.WordSpec;
 import org.jamplate.glucose.spec.tool.DebugSpec;
-import org.jamplate.impl.api.Action;
-import org.jamplate.impl.api.MultiSpec;
-import org.jamplate.impl.api.UnitImpl;
-import org.jamplate.impl.model.PseudoDocument;
+import org.jamplate.impl.unit.Action;
+import org.jamplate.impl.spec.MultiSpec;
+import org.jamplate.impl.unit.UnitImpl;
+import org.jamplate.impl.document.PseudoDocument;
 import org.jamplate.model.Document;
 import org.jamplate.model.Tree;
 import org.junit.jupiter.api.Test;
 
-import static org.jamplate.internal.util.Specs.listener;
+import static org.jamplate.util.Specs.listener;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FlowIfSpecTest {

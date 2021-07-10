@@ -3,7 +3,7 @@ package org.jamplate.glucose.instruction.flow;
 import org.jamplate.glucose.instruction.memory.console.IPrint;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.impl.instruction.Block;
-import org.jamplate.impl.model.EnvironmentImpl;
+import org.jamplate.impl.environment.EnvironmentImpl;
 import org.jamplate.memory.Memory;
 import org.jamplate.model.Environment;
 import org.junit.jupiter.api.Test;

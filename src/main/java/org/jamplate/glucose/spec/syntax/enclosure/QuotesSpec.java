@@ -15,7 +15,7 @@
  */
 package org.jamplate.glucose.spec.syntax.enclosure;
 
-import org.jamplate.api.Spec;
+import org.jamplate.unit.Spec;
 import org.jamplate.function.Parser;
 import org.jamplate.glucose.spec.standard.AnchorSpec;
 import org.jamplate.model.Sketch;
@@ -23,8 +23,8 @@ import org.jamplate.model.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jamplate.impl.parser.HierarchyParser.hierarchy;
-import static org.jamplate.internal.parser.EnclosureParser.enclosure;
-import static org.jamplate.internal.util.Functions.parser;
+import static org.jamplate.glucose.internal.parser.EnclosureParser.enclosure;
+import static org.jamplate.util.Functions.parser;
 
 /**
  * Quotes {@code ''} specification.

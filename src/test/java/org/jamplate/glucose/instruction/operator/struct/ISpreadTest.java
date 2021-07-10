@@ -2,7 +2,7 @@ package org.jamplate.glucose.instruction.operator.struct;
 
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
 import org.jamplate.impl.instruction.Block;
-import org.jamplate.impl.model.EnvironmentImpl;
+import org.jamplate.impl.environment.EnvironmentImpl;
 import org.jamplate.memory.Memory;
 import org.junit.jupiter.api.Test;
 
