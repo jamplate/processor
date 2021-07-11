@@ -73,7 +73,8 @@ public class HashWhileSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#While without #Endwhile closing it"
+							"#While without #Endwhile closing it",
+							tree
 					);
 				}
 		);

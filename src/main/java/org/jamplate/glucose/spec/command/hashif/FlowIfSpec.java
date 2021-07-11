@@ -222,7 +222,8 @@ public class FlowIfSpec implements Spec {
 							//check required subcomponent trees
 							if (valueT == null)
 								throw new CompileException(
-										"Command IF/ELIF is missing some components"
+										"Command IF/ELIF is missing some components",
+										tree
 								);
 
 							//compile the value
@@ -263,7 +264,8 @@ public class FlowIfSpec implements Spec {
 							//check required subcomponent trees
 							if (valueT == null)
 								throw new CompileException(
-										"Command IFDEF/ELIFDEF is missing some components"
+										"Command IFDEF/ELIFDEF is missing some components",
+										tree
 								);
 
 							//def sandbox
@@ -288,7 +290,8 @@ public class FlowIfSpec implements Spec {
 							//check required subcomponent trees
 							if (valueT == null)
 								throw new CompileException(
-										"Command IFNDEF/ELIFNDEF is missing some components"
+										"Command IFNDEF/ELIFNDEF is missing some components",
+										tree
 								);
 
 							//ndef sandbox

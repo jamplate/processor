@@ -73,7 +73,8 @@ public class HashIfSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#If without #Endif closing it"
+							"#If without #Endif closing it",
+							tree
 					);
 				}
 		);

@@ -72,7 +72,8 @@ public class HashElifdefSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#Elifdef outside if flow"
+							"#Elifdef outside if flow",
+							tree
 					);
 				}
 		);

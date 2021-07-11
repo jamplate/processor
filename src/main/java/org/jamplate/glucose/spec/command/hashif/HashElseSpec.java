@@ -72,7 +72,8 @@ public class HashElseSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#Else outside if flow"
+							"#Else outside if flow",
+							tree
 					);
 				}
 		);

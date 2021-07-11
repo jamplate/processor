@@ -72,7 +72,8 @@ public class HashIfdefSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#Ifdef without #Endif closing it"
+							"#Ifdef without #Endif closing it",
+							tree
 					);
 				}
 		);

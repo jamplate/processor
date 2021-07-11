@@ -72,7 +72,8 @@ public class HashEndcaptureSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#Endcapture without #Capture"
+							"#Endcapture without #Capture",
+							tree
 					);
 				}
 		);

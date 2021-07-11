@@ -72,7 +72,8 @@ public class HashEndwhileSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#Endwhile without #While"
+							"#Endwhile without #While",
+							tree
 					);
 				}
 		);

@@ -73,7 +73,8 @@ public class HashForSpec implements Spec {
 				//throw
 				c -> (compiler, compilation, tree) -> {
 					throw new CompileException(
-							"#For without #Endfor closing it"
+							"#For without #Endfor closing it",
+							tree
 					);
 				}
 		);
