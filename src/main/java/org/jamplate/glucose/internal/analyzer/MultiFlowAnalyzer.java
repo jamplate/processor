@@ -16,11 +16,11 @@
 package org.jamplate.glucose.internal.analyzer;
 
 import org.jamplate.function.Analyzer;
-import org.jamplate.util.References;
 import org.jamplate.model.Compilation;
 import org.jamplate.model.Document;
 import org.jamplate.model.Reference;
 import org.jamplate.model.Tree;
+import org.jamplate.util.References;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -255,14 +255,12 @@ public class MultiFlowAnalyzer implements Analyzer {
 
 		//query
 		for (Tree t : tree) {
-			//check on the start
-			if (startT == null) {
-				//possible start?
-				if (this.startPredicate.test(t))
-					//start found!
-					startT = t;
-
-				//do nothing unless you see the start
+			//possible start?
+			if (this.startPredicate.test(t)) {
+				//start found!
+				startT = t;
+				//reset middles
+				middleTs.clear();
 				continue;
 			}
 
