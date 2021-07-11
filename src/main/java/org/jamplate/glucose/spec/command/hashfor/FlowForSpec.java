@@ -15,12 +15,12 @@
  */
 package org.jamplate.glucose.spec.command.hashfor;
 
-import org.jamplate.unit.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
 import org.jamplate.glucose.instruction.flow.IRepeat;
 import org.jamplate.glucose.instruction.memory.frame.IDumpFrame;
 import org.jamplate.glucose.instruction.memory.frame.IGlueFrame;
+import org.jamplate.glucose.instruction.memory.frame.IPopFrame;
 import org.jamplate.glucose.instruction.memory.frame.IPushFrame;
 import org.jamplate.glucose.instruction.memory.heap.ISet;
 import org.jamplate.glucose.instruction.memory.resource.IPushConst;
@@ -38,13 +38,14 @@ import org.jamplate.model.CompileException;
 import org.jamplate.model.Instruction;
 import org.jamplate.model.Sketch;
 import org.jamplate.model.Tree;
+import org.jamplate.unit.Spec;
 import org.jetbrains.annotations.NotNull;
 
+import static org.jamplate.glucose.internal.analyzer.BinaryFlowAnalyzer.flow;
 import static org.jamplate.glucose.internal.util.Values.text;
 import static org.jamplate.impl.analyzer.FilterAnalyzer.filter;
 import static org.jamplate.impl.analyzer.HierarchyAnalyzer.hierarchy;
 import static org.jamplate.impl.compiler.FilterCompiler.filter;
-import static org.jamplate.glucose.internal.analyzer.BinaryFlowAnalyzer.flow;
 import static org.jamplate.util.Functions.analyzer;
 import static org.jamplate.util.Functions.compiler;
 import static org.jamplate.util.Query.*;
@@ -202,6 +203,8 @@ public class FlowForSpec implements Spec {
 					//compile as a foreach REPEAT
 					return new Block(
 							tree,
+							//push the loop frame
+							new IPushFrame(tree),
 							//push an anchoring null
 							new IPushConst(tree, Value.NULL),
 							//value sandbox
@@ -214,29 +217,33 @@ public class FlowForSpec implements Spec {
 									//glue the answer
 									new IGlueFrame(tree),
 									//cast the answer into array
-									new ICastArray(tree),
+									new ICastArray(tree),                 /*[ [first,second,third] ]*/
 									//reverse the array
-									new IReverse(tree),
+									new IReverse(tree),                   /*[ [third,second,first] ]*/
 									//dump the frame
 									new IDumpFrame(tree)
 							),
 							//spread the evaluated value
-							new ISplit(tree),
+							new ISplit(tree),                              /*[ third, second, first ]*/
 							//duplicate the value
-							new IDup(tree),
+							new IDup(tree),                                /*[ third, second, first, first ]*/
 							//check if anchor
-							new IDefined(tree),
+							new IDefined(tree),                            /*[ third, second, first, boolean ]*/
 							//iterate until the anchoring null
 							new IRepeat(tree, new Block(
 									tree,
 									//push the allocation address
-									keyI,
+									keyI,                                       /*[third, second, first, key]*/
 									//swap the address with the value
-									new ISwap(tree),
+									new ISwap(tree),                       /*[third, second, key, first]*/
 									//allocate the loop variable, at top frame
-									new ISet(tree),
+									new ISet(tree),                        /*[third, second]*/
+									//push body frame
+									new IPushFrame(tree),
 									//execute the body
 									bodyI,
+									//pop body frame
+									new IPopFrame(tree),
 									//duplicate the value
 									new IDup(tree),
 									//check if null
@@ -247,7 +254,9 @@ public class FlowForSpec implements Spec {
 							//swap the anchoring null with the allocation address
 							new ISwap(tree),
 							//allocate the anchoring null to the allocation address, at top frame
-							new ISet(tree)
+							new ISet(tree),
+							//pop the loop frame
+							new IPopFrame(tree)
 					);
 				}
 		);

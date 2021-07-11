@@ -15,6 +15,7 @@
  */
 package org.jamplate.glucose.spec.command.hashwhile;
 
+import org.jamplate.glucose.instruction.memory.frame.IPopFrame;
 import org.jamplate.unit.Spec;
 import org.jamplate.function.Analyzer;
 import org.jamplate.function.Compiler;
@@ -206,8 +207,12 @@ public class FlowWhileSpec implements Spec {
 							valueWrapI,
 							//repeat while the answer evaluate to true
 							new IRepeat(tree, new Block(
+									//push body frame
+									new IPushFrame(tree),
 									//execute the body
 									bodyI,
+									//pop body frame
+									new IPopFrame(tree),
 									//evaluate the value for the next round
 									valueWrapI
 							)),
