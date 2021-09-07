@@ -80,6 +80,12 @@ An example of using the Glucose Implementation with the DebugSpec:
 - Author: [LSafer](https://lsafer.net)
 - Licences: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+### Issues and Ideas
+
+To submit an issue or a new idea, you might:
+- Create a [new issue](https://github.com/jamplate/processor/issues/new)
+- Or send me an email on lsafer@cufy.org
+
 ### Licence
 
     Copyright 2021 Cufy
